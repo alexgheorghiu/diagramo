@@ -23,7 +23,8 @@ This folder contains:
    |    |- [mailserver] - a fake Python mail server to test emails
    |    |- [qa] - (old) testing QA scenarious
    |    |- [specs] - a lot of heterogeneous specifications
-   |    |- [sql] - the MySQL schema and it's diagram (hey, was made before diagramo was created)
+   |    |- [sql]
+   |         |- SQLiteSpy.exe - Windows tool to help visualize the SQLite databases	
    |    |- keycoders.ods - a list of key codes in JavaScript
    |    |- links.txt - various collected links
    |    
