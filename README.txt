@@ -52,8 +52,9 @@ This folder contains:
    |    
    |    
    |--README.txt - this file
+   |--README.md - this file
    |--COPYRIGHT.txt - describe copyright
-   |--INSTALL.txt - describes how to install the application
    |--LICENSE.txt - the text version of Diagramo Free License
+   |--gpl-2.0.txt - GPL 2.0 text
    |--alex-to-do.txt - Alex's personal mind stack saved in file
     
