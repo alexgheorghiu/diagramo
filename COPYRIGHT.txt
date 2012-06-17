@@ -1,0 +1,7 @@
+All Diagram code is Copyright 2010 - 2011 by the original authors.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of Diagramo Free License as published at http://diagramo.com/license.php .
+
+
+Diagramo is a registered trademark of Scriptoid s.r.l

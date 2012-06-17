@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="../../lib/ImageFrame.js"></script>
+        <script type="text/javascript" src="../../lib/primitives.js"></script>
+        <script type="text/javascript" src="../../lib/stack.js"></script>
+        <script type="text/javascript" src="../../lib/util.js"></script>
+        <script type="text/javascript" src="../../lib/style.js"></script>
+        <script type="text/javascript" src="../../lib/log.js"></script>
+        <script type="text/javascript" src="../../lib/matrix.js"></script>
+        
+        <!-- <script type="text/javascript" src="../../assets/javascript/json2.js"></script> -->
+        <script type="text/javascript" src="./json-minified.js"></script>
+    </head>
+    <body>
+        <div>Ana are mere</div>
+        <script type="text/javascript">
+            document.write('Bleah');
+        </script>
+        
+        
+        <script type="text/javascript">
+//            function draw(){
+//                //nothing
+//            }
+            
+            document.write('Itzy bitsy: ' + JSON.stringify({'age' : 20, 'name' : 'Alex'}, ['age']) );
+            
+            var url = "/test/image/NancySinatra2.jpg";
+            var x = 100;
+            var y = 100;
+//            
+//            var stack = new Stack();
+//            
+//            var figure = new Figure("Test image");
+            
+            
+            
+            var img = new ImageFrame(url, x - 200 + 150/2, y - 100 + 150 / 2, false, 150, 150);
+////            figure.addPrimitive(new Point(x, y));
+//            figure.addPrimitive(img);
+////            try{
+////                
+////            
+//                figure.finalise();
+////            } catch(err){
+////                Log.error(err);
+////            }
+////            document.write('Serialized figure ' + JSON.stringify(figure));
+//            Log.info("Image created");
+//            stack.figureAdd(figure);
+//            var diagram = { s:stack };
+            
+            //var pickle = JSON.stringify(img, ['loaded']);
+            var pickle = JSON.stringify(img);
+            //var pickle = 'offffff'
+            
+            document.write('Serialized version: ' + pickle);
+            LOG.info('Serializad version: ' + pickle);
+        </script>
+    </body>
+</html>

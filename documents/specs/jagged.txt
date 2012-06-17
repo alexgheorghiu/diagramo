@@ -1,0 +1,94 @@
+New Jagged algorithm
+=====================
+
+Description
+-----------
+Each Jagged connector that will connect two connection point will have:
+- a connection point on start figure (S0)
+- an exit point from start figure (S1)
+- a connection point on end figure (E2)
+- an exit point from end figure (E1)
+- a variable (min: none, max: 2) of turning points (T1, T2)
+
+Solutions:
+----------
+The solutions for drawing a jagged connector are:
+S0 - no turning points needed => connector = [S0, S1, E1, E2]
+S1 - only one turning point needed => connector = [S0, S1, T1, E1, E2]
+S2 - 2 turning points needed (when S0 or S1 not available)  => connector = [S0, S1, T1, T2, E1, E2]
+
+S0 - solution
+-------------
+See /documentation/specs/jagged.odg - slide S0
+You must test to see if there is a straight line between S1 and E1
+Yes -> we have a solution
+No -> move to S1
+
+S1 - solution
+-------------
+See /documentation/specs/jagged.odg - slide S1
+If we have 2 solutions (common case) pick the one with less direction changes
+so we can have a straighter connector.
+The S1 point should not go back on previous path and also it should not intersect any figure
+
+
+
+S2 - solution
+-------------
+See /documentation/specs/jagged.odg - slide S2
+If S0 or S1 not ok try S2.
+Here we have 6 possible ways to draw the connector.
+Solution I, III and V are equivalent as you can move from one to another using handles.
+Same for II, IV and VI.
+
+If possible use I or II - and from them pick the one with less direction changes
+    so we can have a straight connector.
+If not I or II try equivalents: III, V and then IV and VI.
+
+?!?! Use the length of a connector too ?!?!?!
+???What if a an edge of a connector is not connected??!?
+    In that case the edge will be used as normal turning point.
+
+Common stuff:
+- no segment of connector can overlap or intersect another segment of the same connector
+- a method to count changes of direction for a connector.
+- a method to compute the length of a connector
+
+
+
+
+Some old junk about jagged algorightm - so ignore it
+=====================================================
+lines = [[startPoint,newStartPoint]]
+lengths = [startPoint-newStartPoint]
+maxDistanceX = fig1Width+fig2Width+gap
+maxDistanceY = fig1height+fig2height+gap
+while(currentPoint!=endPoint)
+	currentPoint = lines[last][last]
+	for each direction
+		if newPoint-endPoint <maxDistance
+			if !newPoint inside fig1bounds || fig2bounds
+				lines.push lines[i].clone
+				lines[i+1].push newPoint
+		if no new point
+			lines.splice(i,1)
+			
+	end for
+end while
+
+get shortest line, if multiple, get min turn points, if multiple...who cares
+
+0000
+0100
+0010
+0000
+
+0200
+0100
+0012
+0000
+
+0233 0230 3200 3200
+0103 0133 3100 3100
+0012 0012 3312 3012
+0000 0000 0333 3333

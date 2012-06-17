@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <style type="text/css">
+            #a {
+                border: 1px solid black;
+            }
+            #log{
+                position: relative;                
+            }
+
+            body{
+                margin: 0;
+            }
+        </style>
+
+        <script type="text/javascript">
+            
+            var pressed = false;
+            var lastPos = null;
+            var ctx = null;
+            
+            function log(msg){
+                var l = document.getElementById("log");
+                l.value = l.value + "\n" + msg;
+            }
+            
+            
+            
+            /*======================APPLE=====================================*/
+            //simply forward to onMouseDown
+            function touchStart(event){
+                log("touchStart...redirect");
+                event.preventDefault();
+                
+                onMouseDown(event);                                                
+            }
+            
+            
+            //simply forward to onMouseMove
+            function touchMove(event){
+                log("touchMove...redirect");                
+                event.preventDefault();
+                                                
+                onMouseMove(event);                
+            }
+            
+            
+            //simply forward to onMouseUp
+            function touchEnd(event){
+                log("touchEnd");
+                                                
+                onMouseUp(event);
+            }
+            
+            
+            function touchCancel(event){
+                log("touch cancel");
+            }
+            /*======================END APPLE=================================*/
+            
+            
+            
+            
+            /*======================NORMAL====================================*/
+            function onMouseDown(event){
+                log("mouseDown");
+                pressed = true;
+                
+                if(event.touches){ //ipad
+                    var x = event.touches[0].pageX;
+                    var y = event.touches[0].pageY;
+                }
+                else{ //normal
+                    x = event.pageX;
+                    y = event.pageY;
+                }
+                
+                //fix bounds
+                if(x > 400){
+                    x = 400;
+                }
+                
+                if(y > 400){
+                    y = 400;
+                }
+                                
+                                
+                draw(x, y, 'start');
+                
+                lastPos = [x, y];
+                
+            }
+            
+            
+            function onMouseMove(event){
+                log("mouseMove" /*+ arguments.callee*/);
+                
+                if(pressed){
+                    if(event.touches){
+                        var x = event.touches[0].pageX;
+                        var y = event.touches[0].pageY;    
+                    }
+                    else{
+                        x = event.pageX;
+                        y = event.pageY;
+                    }
+                    
+                    if(x > 400){
+                        x = 400;
+                    }
+
+                    if(y > 400){
+                        y = 400;
+                    }
+                                        
+                    draw(x, y, 'draw');
+                    
+                    lastPos = [x, y];
+                }
+                
+                
+            }
+            
+            
+            function onMouseUp(event){
+                log("mouseUp");
+                pressed = false;
+                
+                if(event.touches){
+                    var x = event.touches[0].pageX;
+                    var y = event.touches[0].pageY;
+                }
+                else{
+                    x = event.pageX;
+                    y = event.pageY;
+                }
+                
+                
+                if(x > 400){
+                    x = 400;
+                }
+                
+                if(y > 400){
+                    y = 400;
+                }
+                
+                draw(x, y,'end');
+                
+                lastPos = null;
+            }
+            /*======================END NORMAL :) ============================*/
+                        
+            
+            function init(){
+                ctx = document.getElementById("a").getContext("2d");                
+            }
+            
+            
+            function draw(x, y, status){
+                switch(status){
+                    case 'start':
+//                        ctx.beginPath();
+//                        ctx.moveTo(x, y);
+                        break;
+                    case 'draw':
+                        ctx.beginPath();
+                        ctx.moveTo(lastPos[0], lastPos[1]);
+                        ctx.lineTo(x, y);
+                        ctx.stroke();
+                        break;
+                    case 'end':
+                        ctx.beginPath();
+                        ctx.moveTo(lastPos[0], lastPos[1]);
+                        ctx.lineTo(x, y);
+                        //ctx.closePath();
+                        ctx.stroke();
+                        break;
+                }
+            }
+            
+            
+            function clear(){
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0, 0, 400, 400);
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <canvas id="a" width="400" height="400" 
+                onmousemove="onMouseMove(event);"
+                onmousedown="onMouseDown(event);"
+                onmouseup="onMouseUp(event);"
+                onmouseout="onMouseUp(event);"
+
+                ontouchstart="touchStart(event);"
+                ontouchmove="touchMove(event);"
+                ontouchend="touchEnd(event);"
+                ontouchcancel="touchCancel(event);"
+                >            
+        </canvas>
+        <textarea id="log" cols="30" rows="20"></textarea>
+    </body>
+</html>

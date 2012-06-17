@@ -1,0 +1,92 @@
+=======
+Summary
+=======
+The bugs will be reported in a bug reporting application or as Word document.
+The application is a web application and it will be tested on:
+-Internet Explorer 7
+-Internet Explorer 8
+-Firefox 3.6 or better (but no 4.x)
+-Chrome 8.0 or better (but no 9.x)
+-Opera 10.61 or better (but no 11.x)
+-Safari 5.0.1 or better (but no 6.x)
+
+========
+Sections
+========
+There are 2 main section to test.
+    Actual drawing canvas with figures, connectors and stuff
+    All other pages (save, save as, collaboration) etc.
+
+
+=========
+Scenarios
+=========
+
+Testing plan for Diagramo (akka. Scenarious)
+See the diagram images as source of inspiration. (no: 1,2,3,8,9,14,16)
+
+
+[account]
+create account
+forgot password
+remember me
+edit settings
+login
+logout
+scenario for play and then register
+    You should be able to to play with the application through "Try now" and upon saving the
+    diagram you should be able to register and then you will automatically redirected to save screen.
+
+
+[diagrams]
+my diagrams (behind 'open' link)
+create new diagram
+    - test each figure
+        - change each property
+    - test each connector
+    - test Z order
+    - test grouping
+    - test undo
+
+test grid enable / disable
+test snap to grid enable / disable
+    - when snap enabled the "show grid" should automatically enabled
+edit diagram
+delete diagram
+change and save diagram
+
+export diagram
+    - as SVG
+    - as PNG
+    - as JPG
+
+direct link
+
+move figure
+    - back
+    - front
+    - forward
+    - backward
+
+test save
+    -from the toolbar
+    -as hotkey (Ctr-S)
+test save as
+canvas size
+undo (several times/levels)
+    - from toolbar
+    - as hotkey (Ctrl-Z)
+redo (several times/levels)
+    - from toolbar
+    - as hotkey (Ctrl-Y)
+group
+    - from toolbar
+    - as hotkey (Ctrl-G)
+ungroup
+    - from toolbar
+    - as hotkey (Ctrl-U)
+
+[collaborators]
+add new collaborator
+add existing collaborator - dropdown (already present collaborator hidden)
+remove collaborator (author)

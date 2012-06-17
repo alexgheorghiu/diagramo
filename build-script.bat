@@ -1,0 +1,1 @@
+ant -f release-script.xml build

@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <title>aaaa</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <!--[if IE]><script src="../assets/javascript/excanvas.js"></script><![endif]-->
+        <script type="text/javascript" src="../lib/util.js"></script>
+        <script type="text/javascript" src="../lib/primitives.js"></script>
+        <script type="text/javascript" src="../lib/style.js"></script>
+        <script type="text/javascript" src="../lib/matrix.js"></script>
+        <script type="text/javascript" src="../lib/text.js"></script>
+        <script type="text/javascript">
+            /**Just get the canvas*/
+            function getCanvas(){
+                var canvas = document.getElementById("a");
+                return canvas;
+            }
+
+            /**Just get the context*/
+            function getContext(){
+                var canvas = getCanvas();
+
+                if (window.G_vmlCanvasManager != undefined) { // ie IE
+                    window.G_vmlCanvasManager.initElement(canvas);
+                }
+                return canvas.getContext("2d");
+            }
+            
+            var t;
+
+            function draw(){
+                var canvas  = getCanvas();
+                var context = getContext();
+
+                /*
+                context.beginPath();
+                context.moveTo(10, 10);
+                context.lineTo(100, 100);
+                context.stroke();
+                */
+               
+                //drawCharacter('b', context);
+                var str = 'Python is a programming language that lets you work more\nquickly and integrate your systems more effectively. \n\nYou can learn to use Python and see almost immediate gains in productivity and \nlower maintenance costs.';
+                //t = new Text(str, 300, 0, 10,Text.ALIGN_RIGHT);
+                t = new Text(str, 200, 200, 'Arial', 10,Text.ALIGN_CENTER, context);
+                t.paint(context);
+            }
+
+            function rotate(){
+                var canvas  = getCanvas();
+                var context = getContext();
+                //t.vector[1].x = t.vector[1].x + 100;
+                var p = t.vector[0].clone();
+
+                t.transform(Matrix.translationMatrix(-p.x,-p.y));
+                t.transform(Matrix.rotationMatrix(Math.PI/10));
+                t.transform(Matrix.translationMatrix(p.x,p.y));
+                canvas.width=canvas.width;
+                t.paint(context);
+            }
+        </script>
+    </head>
+
+    <body onload="javascript: draw();">
+    <canvas id="a" style="border: 1px solid gray;" width="600" height="400">no canvas </canvas>
+    <input type="button" value="rotate" onclick="rotate();">
+
+</body>
+</html>

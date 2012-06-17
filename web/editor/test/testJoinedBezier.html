@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            
+            var slider = 50;
+            var A = [10,50];
+            var B  = [10, 10];
+            var C  = [150, 10];
+            var D  = [100, 350];
+            
+            
+            function init(){
+                paint();
+            }
+            
+            function paint(){
+                var P = [ (B[0] + C[0]) * slider / 100 , (B[1] + C[1]) * slider / 100]; 
+                
+                var c = document.getElementById('c');
+                var ctx = c.getContext('2d');
+            
+                ctx.clearRect(0, 0, 600, 400);
+            
+                ctx.beginPath();
+                ctx.moveTo(A[0], A[1]);
+                ctx.quadraticCurveTo(B[0], B[1], P[0], P[1]);
+                ctx.quadraticCurveTo(C[0], C[1], D[0], D[1]);
+                //                ctx.lineTo(100, 100);
+                //ctx.closePath();
+                ctx.stroke();
+                
+//                ctx.beginPath();
+//                ctx.moveTo(P[0], P[1])
+//                ctx.strokeRect(P[0] - 2, P[1] -2, 5, 5);
+//                ctx.closePath();
+                
+                ctx.stroke();
+            }
+            
+            function key(ev){
+                switch(ev.keyCode){
+                    case 39: //right
+                        console.info("right");
+                        if(slider + 5 > 100){
+                            slider = 100;
+                        }
+                        else{
+                            slider = (slider + 5 ) % 101;
+                        }
+                        break;
+
+                    case 37: //left
+                        console.info("left");
+                        if(slider - 5 < 0){
+                            slide = 0;
+                        }
+                        else{
+                            slider = (slider - 5 ) % 101;
+                        }
+                        break;
+
+                }
+                paint();
+                
+                return false;
+            }
+            
+        </script>
+    </head>
+    <body onload="init()" onkeyup="return key(event);">
+        <canvas id="c" width="600" height="400"></canvas>
+    </body>
+</html>

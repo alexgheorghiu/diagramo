@@ -1,0 +1,25 @@
+
+#container{
+    overflow: scroll;
+}
+
+#a {
+    position: relative;
+    /*border: 1px solid #000000;*/
+}
+
+#selection{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    border: 1px solid #006400;
+    background-color: #66CC66;
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+    cursor: pointer;
+}
+#minimap{
+    position: relative;
+    border: 1px solid #000000;
+    margin-top: 3px;
+}

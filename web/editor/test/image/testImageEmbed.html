@@ -1,0 +1,43 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="../../lib/log.js"></script>
+    <script type="text/javascript" src="../../assets/javascript/json2.js"></script>
+    <script type="text/javascript">
+        var img;
+        
+        function doIt(){
+            img = new Image();
+//            img.src = "/test/image/NancySinatra2.jpg";
+//            img.src = "data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw==";
+//            img.src = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiPg0KCTxyZWN0IHg9IjAiIHk9IjAiIGhlaWdodD0iMjAwIiB3aWR0aD0iMzAwIiBzdHlsZT0ic3Ryb2tlOiMwMDAwMDA7IGZpbGw6ICNGRkZGRkYiLz4NCg0KCTxwYXRoIGQ9Ik0xMDAsMTAwIEMyMDAsMjAwIDEwMCw1MCAzMDAsMTAwIiBzdHlsZT0ic3Ryb2tlOiNGRkFBRkY7ZmlsbDpub25lO3N0cm9rZS13aWR0aDozOyIgIC8+DQoJDQoJPCEtLUBzZWUgaHR0cDovL3d3dy53My5vcmcvVFIvU1ZHL2Nvb3Jkcy5odG1sI1RyYW5zZm9ybUF0dHJpYnV0ZS0tPg0KCTxyZWN0IHg9IjUwIiB5PSI1MCIgaGVpZ2h0PSI1MCIgd2lkdGg9IjUwIg0KICAgICAgICAgIHN0eWxlPSJzdHJva2U6I2ZmMDAwMDsgZmlsbDogI2NjY2NmZiIgDQoJICA+DQoJPC9yZWN0Pg0KDQo8L3N2Zz4=";
+
+            /**@see http://www.w3.org/TR/SVG/intro.html#MIMEType
+             *@see http://code.google.com/p/javascriptbase64/
+             **/
+            img.src = "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjwhLS0gKFBEKSBKYW51YXJ5IDI2LCAyMDA2IC0gX0Nyb3RhbHVzIGhvcnJpZHVzXyAgLS0+DQo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjI1MCIgaGVpZ2h0PSIyNTAiPg0KPGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDAwIiBzdHJva2Utd2lkdGg9IjIxIj4NCjxjaXJjbGUgY3g9IjEyNSIgY3k9IjEyNSIgcj0iMTA2Ii8+DQo8cGF0aCBkPSJNMTI1LDE5IHYyMTIgTTEyNSwxMjUgbC03NSw3NSBNMTI1LDEyNSBsNzUsNzUiLz4NCjwvZz4NCjwvc3ZnPg==";
+            img.onload = function() {
+                Log.info("Image loaded");
+                
+                var o = {'image' : img.src};
+                var s = JSON.stringify(o);
+                Log.info(s); 
+                
+            var i = document.createElement('img');
+            i.setAttribute("src", img.src);
+            document.getElementById("xo").appendChild(i);
+            
+        }
+            
+                  
+        }
+    </script>
+  </head>
+  <body onload ="doIt();">
+      <div id="xo">
+          
+      </div>
+  </body>
+</html>

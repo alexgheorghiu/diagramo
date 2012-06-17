@@ -1,0 +1,46 @@
+Visual style
+-----------
+http://tango.freedesktop.org/Tango_Icon_Theme_Guidelines
+
+
+CSS text shadow
+http://www.howtocreate.co.uk/textshadow.html
+
+Netbeans slow speed:
+-J-DIndexCache.size=200m -J-XX:MaxPermSize=500m
+
+
+
+Debug
+http://getfirebug.com/
+
+JSDoc
+http://en.wikipedia.org/wiki/JSDoc
+(we can place a link there too)
+
+Generate documentation
+http://code.google.com/p/jsdoc-toolkit/
+
+IE7 support
+http://code.google.com/p/explorercanvas/
+
+JavaScript diagram with connector
+    http://raphaeljs.com/graffle.html
+
+Creating an HTML 5 canvas painting application
+    http://dev.opera.com/articles/view/html5-canvas-painting/
+
+java.awt.geom.AffineTransform
+http://java.sun.com/javase/6/docs/api/java/awt/geom/AffineTransform.html
+http://mathworld.wolfram.com/AffineTransformation.html
+http://en.wikipedia.org/wiki/Affine_transformation
+
+Bezier curves
+http://en.wikipedia.org/wiki/B%C3%A9zier_curve
+"As the curve is completely contained in the convex hull of its control points [...]"
+
+
+http://ajaxian.com/archives/explorer-canvas-updated-for-ie-8-and-more
+
+
+

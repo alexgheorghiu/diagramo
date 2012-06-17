@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+A simple page to generate the SVG directly into the browser
+ - page has to be xhtml
+ - content type has to be xml
+ - for the JavaScript variables to accept HTML tags we  need to make the <script>'s inner section as CDATA
+ - to make string extend on many lines we need to use backslash \ at the end of each line
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<script type="text/javascript">
+		<![CDATA[
+		var v = '<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg" version="1.1">\
+			<rect x="0" y="0" height="200" width="300" style="stroke:#000000; fill: #FFFFFF"/>\
+				<path d="M100,100 C200,200 100,50 300,100" style="stroke:#FFAAFF;fill:none;stroke-width:3;"  />\
+				<rect x="50" y="50" height="50" width="50"\
+				  style="stroke:#ff0000; fill: #ccccff" />\
+			</svg>';
+		]]>
+		
+		function gen(){
+                    //alert(v);
+                    var log = document.getElementById('log');
+                    log.value = v;
+
+                    var render = document.getElementById('render');
+                    render.innerHTML = v;
+		}		
+	</script>
+</head>
+<body>
+<input type="button" value="Generate" onclick="javascript:gen()"/>
+<textarea id='log'></textarea>
+<div id='render'>
+</div>
+</body>
+</html>

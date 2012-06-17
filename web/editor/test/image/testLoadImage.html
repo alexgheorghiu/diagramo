@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <script src="../../lib/log.js"></script>
+  </head>
+  <body>
+      <script type="text/javascript">
+          var myImage = new Image();
+          
+          
+          myImage.onload = function(){
+              alert('loaded :' + this.src);
+              Log.info('loaded :' + this.src);
+          }
+          
+          myImage.src = "/test/image/NancySinatra2.jpg";
+          
+          myImage.src = "/test/image/duff.jpg";
+          
+      </script>
+  </body>
+</html>

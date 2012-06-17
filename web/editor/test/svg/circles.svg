@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+    "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve"
+         width="200" height="200" viewBox="0 0 200 200"  >
+
+    <rect x="0" y="0" height="200" width="200"
+              style="stroke:#ff0000; fill: #ccccff" 
+      >
+    </rect>
+    <circle cx="100" cy="100" r="20" style="stroke:#ff6600;fill:#ffffff;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;" />
+
+</svg>

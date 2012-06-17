@@ -1,0 +1,156 @@
+<!--
+Experiments with computing and drawing of non native Bezier (and other) curves 
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            /**Computes the drawing points for the Bezier curve
+             *@param points - an {Array} of points
+             *@param step - a {Number}, the incremental step
+             **/
+            function bezierPoints(points, nrSteps){
+                
+                /**Computes factorial*/
+                function fact(k){
+                    if(k==0 || k==1){
+                        return 1;
+                    }
+                    else{
+                        return k * fact(k-1);
+                    }
+                }
+                
+                /**Combination of n as k*/
+                function C(n,k){
+//                    var r = fact(n) / (fact(k) * fact(n-k));
+//                    console.info(r);
+                    return  fact(n) / (fact(k) * fact(n-k));
+                }
+            
+                /**Computes Bernstein
+                 *@param {Integer} i - the i-th term 
+                 *@param {Integer} n - the degree of the polynomial term
+                 *@param {Numeric} t - the value of parametric value :p
+                 **/
+                function B(i,n,t){
+                    //if(n < i) throw "Wrong";
+                    return  Math.pow(t, i) * Math.pow(1-t, n-i) * C(n, i);
+                }                            
+             
+                function P(t, points){
+                    var r = [0,0];
+                    var n = points.length-1;
+                    for(var i=0; i <= n; i++){
+                        r[0] += points[i][0] * B(i, n, t);
+                        r[1] += points[i][1] * B(i, n, t);
+                    }                
+                    return r;
+                }
+                
+                var temp = [];
+                for(var i=0; i<=nrSteps; i++){
+                    /*Compute t. We need to use  fractions
+                     *as if we increase it in small steps we introduce errors
+                     *Ex: iterating from 0 to 1 in steps of 0.001 will end at 0.900000 
+                     *or something instead of 1
+                     **/
+                    var t  = i / nrSteps;
+                    
+                    //console.info("t=" + t);
+                    var p = P(t, points);
+                    temp.push(p);
+                }
+                return temp;
+            }
+            
+            /**Generic paint curve method*/
+            function paint_graph(ctx, points){
+                ctx.save();
+                
+                //ctx.strokeStyle = color;
+                //                alert(ctx.strokeStyle);
+                ctx.beginPath();
+                ctx.moveTo(points[0][0], points[0][1]);
+                for(var i=1;i<points.length; i++){
+                    ctx.lineTo(points[i][0], points[i][1]);
+                }
+                ctx.stroke();
+                
+                ctx.restore();
+            } 
+            
+            function paint_point(ctx, color,  point){
+                //return;
+                ctx.save();
+                switch(color){
+                    case 'red':
+                        ctx.strokeStyle = "rgb(200, 0,0)";
+                        break;
+                        
+                    case 'black':
+                        ctx.strokeStyle = "rgb(0, 0,0)";
+                        break;
+                        
+                    case 'green':
+                        ctx.strokeStyle = "rgb(0, 200,0)";
+                        break;
+                }                
+                ctx.strokeRect(point[0]- 2 , point[1] - 2, 4, 4);
+                ctx.restore();
+            }
+            
+            function init(){
+                var ctx = document.getElementById("pinza").getContext("2d");
+               
+                var points = [[50, 50], [300, 50], [300, 300], [50, 300], [50, 500], [200, 500], [300, 700]]; //parellel (same direction)
+                
+                for(var p in points){
+                    paint_point(ctx, 'green', points[p]);
+                }
+                
+                var start = (new Date).getTime();
+                var bez1 = bezierPoints(points, 1000);
+                var end = (new Date).getTime();
+                console.info( "Generating bezier: " + (end - start) + " miliseconds");
+                console.info("Number of points: " + bez1.length)
+                console.info("Last point: " + points[points.length-1] + " last computed point: " + bez1[bez1.length - 1]);
+                
+                var start2 = (new Date).getTime();
+                ctx.strokeStyle = "rgb(200, 0, 10)";
+                paint_graph(ctx, bez1);
+                var end2 = (new Date).getTime();
+                console.info( "Painting (manual) bezier: " + (end2 - start2) + " miliseconds");
+                
+                
+                var start3 = (new Date).getTime();
+                ctx.save();
+                ctx.translate(300, 0);
+                for(var p in points){
+                    paint_point(ctx, 'black', points[p]);
+                }
+                ctx.strokeStyle = "rgb(0, 0,0)";
+                ctx.beginPath();
+                ctx.moveTo(points[0][0], points[0][1]);
+                ctx.quadraticCurveTo(points[1][0], points[1][1], points[2][0], points[2][1]);
+                ctx.stroke();
+                ctx.restore();
+                var end3 = (new Date).getTime();
+                console.info( "Painting bezier (native): " + (end3 - start3) + " miliseconds");
+                
+                
+               
+                //paint_solutions(ctx);
+            }
+        </script>
+    </head>
+    <body  onload="init()">
+        <div>
+            <div style="color: red;">-- Manual Bezier</div>
+            <div style="color: black;">-- Native Bezier</div>
+        </div>
+        <canvas style="border: 1px solid gray;" id="pinza" width="1200" height="1200"></canvas>
+    </body>
+</html>

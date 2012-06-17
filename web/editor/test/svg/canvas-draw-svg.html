@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test draw SVG in canvas</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            function init(){
+                var c = document.getElementById("board");
+                var ctx = c.getContext('2d');
+                                
+                                                
+                var img = new Image();
+                img.src = "./3figures.svg";
+                img.onload = function(){
+                    //description                    
+                    ctx.fillText("Zoom out (/2)", 10, 10);
+                    ctx.fillText("Zoom in (x2)", 130, 10);
+                    ctx.fillText("Zoom in (x3)", 230, 10);
+                    ctx.fillText("Zoom in (x4)", 430, 10);
+                
+                    //alert("Loaded");
+                    ctx.drawImage(this, 10, 10, 100, 100);
+                    ctx.drawImage(this, 100, 10, 200, 200);
+                    ctx.drawImage(this, 200, 10, 300, 300);
+                    ctx.drawImage(this, 400, 10, 400, 400);
+                }
+                
+                var img2 = new Image();
+                img2.src = "./3figuresNoSize.svg";
+                img2.onload = function(){
+                    //description
+                    ctx.fillText("Zoom out (/2)", 10, 300);
+                    ctx.fillText("Zoom in (x2)", 130, 300);
+                    ctx.fillText("Zoom in (x3)", 230, 300);
+                    ctx.fillText("Zoom in (x4)", 430, 300);
+                    
+                    //alert("Loaded");
+                    ctx.drawImage(this, 10, 300, 100, 100);
+                    ctx.drawImage(this, 100, 300, 200, 200);
+                    ctx.drawImage(this, 200, 300, 300, 300);
+                    ctx.drawImage(this, 400, 300, 400, 400);
+                }
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        
+        <p/>
+        <div style="position: relative;">
+            Description: <br/>
+            <ul>
+                <li>First row an SVG file (3figures.svg) rendered in canvas under different zoom level.</li>
+                <li>Second row and SVG <b>without size specified</b> rendered in canvas under different zoom level. </li>
+            </ul>
+            <p/>
+            
+            <canvas style="margin:auto;" id="board" width="800" height="600">
+                Use a HTML5 enabled browser.
+            </canvas>
+
+            <p/>
+            
+            Links:<br/>
+            <ul>
+                <li>Review of image support in different browsers <a href="http://www.w3.org/Graphics/SVG/WG/wiki/F2F/Auckland_2011/Intrinsic_sizing_tests" target="blank">link</a></li>
+                <li>Opera does not support SVG render <a href="http://my.opera.com/community/forums/topic.dml?id=1218952" target="blank">link</a></li>
+            </ul>                        
+            
+        </div>
+
+    </body>
+</html>

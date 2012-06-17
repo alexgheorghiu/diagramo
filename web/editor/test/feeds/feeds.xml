@@ -1,0 +1,162 @@
+<?xml version='1.0' encoding='UTF-8'?><?xml-stylesheet href="http://www.blogger.com/styles/atom.css" type="text/css"?>
+<feed xmlns='http://www.w3.org/2005/Atom' xmlns:openSearch='http://a9.com/-/spec/opensearchrss/1.0/' xmlns:georss='http://www.georss.org/georss' xmlns:thr='http://purl.org/syndication/thread/1.0'>
+    <id>tag:blogger.com,1999:blog-1219993430316064175</id>
+    <updated>2011-01-29T07:30:12.551-08:00</updated>
+    <title type='text'>Diagramo - web-based diagram editor blog</title>
+    <subtitle type='html'>News, stories and adventures from the team that created the first HTML5 diagram editor</subtitle>
+    <link rel='http://schemas.google.com/g/2005#feed' type='application/atom+xml' href='http://blog.diagramo.com/feeds/posts/default'/>
+    <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default'/>
+    <link rel='alternate' type='text/html' href='http://blog.diagramo.com/'/>
+    <link rel='hub' href='http://pubsubhubbub.appspot.com/'/>
+    <author>
+        <name>Alex</name>
+        <email>noreply@blogger.com</email>
+    </author>
+    <generator version='7.00' uri='http://www.blogger.com'>Blogger</generator>
+    <openSearch:totalResults>7</openSearch:totalResults>
+    <openSearch:startIndex>1</openSearch:startIndex>
+    <openSearch:itemsPerPage>25</openSearch:itemsPerPage>
+    <entry>
+        <id>tag:blogger.com,1999:blog-1219993430316064175.post-3343993815890449030</id>
+        <published>2011-01-28T07:04:00.000-08:00</published>
+        <updated>2011-01-29T07:30:12.564-08:00</updated>
+        <category scheme='http://www.blogger.com/atom/ns#' term='entrepreneur'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='entrepreneurship'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='success'/>
+        <title type='text'>Do not get depressed</title>
+        <content type='html'>It seems that getting &lt;a href="http://en.wikipedia.org/wiki/Depression_%28mood%29"&gt;depressed&lt;/a&gt; is the worse thing can happen to an entrepreneur.&lt;br /&gt;&lt;br /&gt;Very few people understand how difficult is to create a new thing. Most of them hear success stories and think that all of those people were struck by a great luck.&lt;br /&gt;&lt;br /&gt;I do not want to say luck is not important but most of them worked hard to acheive that success.&lt;br /&gt;Also for 1 success there are other 20 failures (or even greater in IT).&lt;br /&gt;&lt;br /&gt;Depression can appear as the result a few of reasons (list not complete):&lt;br /&gt;&lt;ul&gt;&lt;li&gt;people desert you when you most need them&lt;/li&gt;&lt;li&gt;none seems to understand you or share the vision with you&lt;/li&gt;&lt;li&gt;no investor seems a "deal" in you or your ideea&lt;/li&gt;&lt;li&gt;no one even ask you a question or leave a comment on your blog&lt;/li&gt;&lt;li&gt;you work too much&lt;/li&gt;&lt;li&gt;you did not allocate time for fun  (or for youself)&lt;/li&gt;&lt;li&gt;the level of problems (read bugs if you are in IT) are so high that you ask yourself if you are producing bugs instead of code&lt;br /&gt;&lt;/li&gt;&lt;/ul&gt;All of those reasons might make you give up.&lt;br /&gt;&lt;br /&gt;&lt;span style="font-weight: bold;"&gt;Don't do that!&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;Ancient christian monks described that state of mind as &lt;a href="http://en.wikipedia.org/wiki/Acedia"&gt;acedia&lt;/a&gt;. You can recognize it by the fact that you do not want anyhing. You are just bored and tired. You want to give up.&lt;br /&gt;&lt;br /&gt;&lt;span style="font-weight: bold;"&gt;Don't do it!&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;Then is your time, then you can rise and yell (in your mind)&lt;br /&gt;&lt;br /&gt;I WILL NOT GIVE UP! NEVER!&lt;br /&gt;&lt;br /&gt;See this &lt;a href="http://www.youtube.com/watch?v=AW579icDRSA"&gt;guy &lt;/a&gt;and think about your life.&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/1219993430316064175-3343993815890449030?l=blog.diagramo.com' alt='' /&gt;&lt;/div&gt;</content>
+        <link rel='replies' type='application/atom+xml' href='http://blog.diagramo.com/feeds/3343993815890449030/comments/default' title='Post Comments'/>
+        <link rel='replies' type='text/html' href='http://blog.diagramo.com/2011/01/do-not-get-depressed.html#comment-form' title='0 Comments'/>
+        <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/3343993815890449030'/>
+        <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/3343993815890449030'/>
+        <link rel='alternate' type='text/html' href='http://blog.diagramo.com/2011/01/do-not-get-depressed.html' title='Do not get depressed'/>
+        <author>
+            <name>Alex</name>
+            <email>noreply@blogger.com</email>
+            <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='00096774688296106739'/>
+        </author>
+        <thr:total>0</thr:total>
+    </entry>
+    <entry>
+        <id>tag:blogger.com,1999:blog-1219993430316064175.post-8437422763622220947</id>
+        <published>2011-01-28T05:40:00.000-08:00</published>
+        <updated>2011-01-28T05:45:31.854-08:00</updated>
+        <category scheme='http://www.blogger.com/atom/ns#' term='ide'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='html5'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='netbeans'/>
+        <title type='text'>HTML5 supported in NetBeans 7.0</title>
+        <content type='html'>Even if &lt;a href="http://netbeans.org/community/releases/70/"&gt;NetBeans 7.0&lt;/a&gt; is in beta it offers &lt;a href="http://en.wikipedia.org/wiki/HTML5"&gt;HTML5&lt;/a&gt; support.&lt;br /&gt;&lt;br /&gt;Awesome!&lt;br /&gt;&lt;br /&gt;We, at Diagramo, are using NetBeans from the first lines of code and we lacked that features.&lt;br /&gt;Now it's there.&lt;br /&gt;&lt;br /&gt;Thank you NetBeans team!&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/1219993430316064175-8437422763622220947?l=blog.diagramo.com' alt='' /&gt;&lt;/div&gt;</content>
+        <link rel='replies' type='application/atom+xml' href='http://blog.diagramo.com/feeds/8437422763622220947/comments/default' title='Post Comments'/>
+        <link rel='replies' type='text/html' href='http://blog.diagramo.com/2011/01/html5-supported-in-netbeans-70.html#comment-form' title='0 Comments'/>
+        <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/8437422763622220947'/>
+        <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/8437422763622220947'/>
+        <link rel='alternate' type='text/html' href='http://blog.diagramo.com/2011/01/html5-supported-in-netbeans-70.html' title='HTML5 supported in NetBeans 7.0'/>
+        <author>
+            <name>Alex</name>
+            <email>noreply@blogger.com</email>
+            <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='00096774688296106739'/>
+        </author>
+        <thr:total>0</thr:total>
+    </entry>
+    <entry>
+        <id>tag:blogger.com,1999:blog-1219993430316064175.post-6110014107133621986</id>
+        <published>2011-01-28T05:19:00.000-08:00</published>
+        <updated>2011-01-28T05:37:47.811-08:00</updated>
+        <category scheme='http://www.blogger.com/atom/ns#' term='javascript'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='productivity'/>
+        <title type='text'>JavaScript and mental stack</title>
+        <content type='html'>I've been playing with heavy JavaScript  - for &lt;a href="http://diagramo.com"&gt;Diagramo&lt;/a&gt; - for about &lt;a href="http://blog.diagramo.com/2010/06/html-5-canvas-and-diagrams.html"&gt;an year&lt;/a&gt; by now.&lt;br /&gt;&lt;br /&gt;There are things you can not realize instantly but you need time for your brain and body to realize.&lt;br /&gt;&lt;br /&gt;What do I realized?&lt;br /&gt;&lt;span style="font-weight: bold; color: rgb(153, 0, 0);"&gt;In JavaScript - for large programs - you have a heavy mental stack.&lt;/span&gt;&lt;br /&gt;Let me explain a little bit.&lt;br /&gt;&lt;br /&gt;By mental stack I mean all the things you have to load in your brain (code, exception, configs, etc) so that you can be productive.&lt;br /&gt;&lt;br /&gt;&lt;span style="font-weight: bold;"&gt;JavaScript is a "script" language&lt;/span&gt;&lt;br /&gt;Wow, that is fine...except for the case you have a large program. In Java you have strict types and it's medium difficul when you start a program but it keeps to be that way no matter how big the application grows.&lt;br /&gt;In JavaScript it's super fast to make a prototype but it starts to be harder and harder to develop and maintain as the code grows.&lt;br /&gt;&lt;br /&gt;&lt;span style="font-weight: bold;"&gt;JavaScript runs in a browser&lt;/span&gt;&lt;br /&gt;Wow, that cool....but what if you need to write some test units? Or if you need to make other automated tasks?&lt;br /&gt;You need tests and testing. You can not have a big application with a decent quality without some tests.&lt;br /&gt;I have to use the &lt;a href="http://www.mozilla.org/rhino/"&gt;Rhino&lt;/a&gt; implementation of JavaScript to run  them in console.&lt;br /&gt;&lt;br /&gt;But wait! How can you simulate a real browser enviroment in console? Well...you can not :(&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;&lt;span style="font-weight: bold;"&gt;Conclusion ?&lt;/span&gt;&lt;br /&gt;I know you can organize your code better but that is what I felt while coding in JavaScript.&lt;br /&gt;&lt;br /&gt;&lt;br /&gt;Here is what &lt;a href="http://positech.co.uk/cliffsblog/?p=1016"&gt;Cliff&lt;/a&gt; said about mental stack.&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/1219993430316064175-6110014107133621986?l=blog.diagramo.com' alt='' /&gt;&lt;/div&gt;</content>
+        <link rel='replies' type='application/atom+xml' href='http://blog.diagramo.com/feeds/6110014107133621986/comments/default' title='Post Comments'/>
+        <link rel='replies' type='text/html' href='http://blog.diagramo.com/2011/01/javascript-and-mental-stack.html#comment-form' title='0 Comments'/>
+        <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/6110014107133621986'/>
+        <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/6110014107133621986'/>
+        <link rel='alternate' type='text/html' href='http://blog.diagramo.com/2011/01/javascript-and-mental-stack.html' title='JavaScript and mental stack'/>
+        <author>
+            <name>Alex</name>
+            <email>noreply@blogger.com</email>
+            <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='00096774688296106739'/>
+        </author>
+        <thr:total>0</thr:total>
+    </entry>
+    <entry>
+        <id>tag:blogger.com,1999:blog-1219993430316064175.post-5885644487114727151</id>
+        <published>2010-11-18T10:58:00.000-08:00</published>
+        <updated>2010-11-18T12:14:08.373-08:00</updated>
+        <category scheme='http://www.blogger.com/atom/ns#' term='ethic'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='business'/>
+        <title type='text'>Fake generates fake</title>
+        <content type='html'>Lately I came across some strange informations.&lt;br /&gt;&lt;br /&gt;It seems that a lot of production business (read: food, construction, etc) are trying to fool the buyer by cutting the quality of the product to cut the price.&lt;p&gt;&lt;/p&gt;  &lt;p style="margin-bottom: 0in;"&gt;For example you go to market and buy a salami. You get an “awesome” price for it and you are happy.&lt;/p&gt; &lt;p style="margin-bottom: 0in;"&gt;What you do not know is that what you bought is far away from a normal salami. It might be just water and some salami powder mixed together.&lt;/p&gt;  &lt;p style="margin-bottom: 0in;"&gt;Putting aside the ethic and healthy aspects of this there is an &lt;span style="font-weight: bold;"&gt;economic aspect&lt;/span&gt;: we all got poorer because of that.&lt;/p&gt;  &lt;p style="margin-bottom: 0in;"&gt;Even the producer which supposedly will get more profit will need to buy other products – that will be also faked - which somehow cancel his profit.&lt;/p&gt;  &lt;p style="margin-bottom: 0in;"&gt;So fake generates fake.&lt;/p&gt;&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/1219993430316064175-5885644487114727151?l=blog.diagramo.com' alt='' /&gt;&lt;/div&gt;</content>
+        <link rel='replies' type='application/atom+xml' href='http://blog.diagramo.com/feeds/5885644487114727151/comments/default' title='Post Comments'/>
+        <link rel='replies' type='text/html' href='http://blog.diagramo.com/2010/11/fake-generates-fake.html#comment-form' title='0 Comments'/>
+        <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/5885644487114727151'/>
+        <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/5885644487114727151'/>
+        <link rel='alternate' type='text/html' href='http://blog.diagramo.com/2010/11/fake-generates-fake.html' title='Fake generates fake'/>
+        <author>
+            <name>Alex</name>
+            <email>noreply@blogger.com</email>
+            <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='00096774688296106739'/>
+        </author>
+        <thr:total>0</thr:total>
+    </entry>
+    <entry>
+        <id>tag:blogger.com,1999:blog-1219993430316064175.post-4059603030269419121</id>
+        <published>2010-10-28T20:51:00.000-07:00</published>
+        <updated>2010-10-28T20:59:19.686-07:00</updated>
+        <title type='text'>Make it simple</title>
+        <content type='html'>&lt;span style="font-style: italic; color: rgb(102, 102, 102);"&gt;"Everything should be made as &lt;/span&gt;&lt;b style="font-style: italic; color: rgb(102, 102, 102);"&gt;simple&lt;/b&gt;&lt;span style="font-style: italic; color: rgb(102, 102, 102);"&gt; as possible, but not simpler." (Albert Einstein)&lt;/span&gt;&lt;br /&gt;&lt;br /&gt;A lot of effort was spent by us in order to make Diagramo very simple.&lt;br /&gt;&lt;br /&gt;We see a lot of reviews that highlighted that so I think we going the right direction.&lt;br /&gt;&lt;br /&gt;A lot of people think that something simple is very simple to do but we found that &lt;span style="font-weight: bold;"&gt;it is much more difficult to make something simple then something complex&lt;/span&gt;.&lt;br /&gt;&lt;br /&gt;We are trying to make Diagramo visually simple but also to offer the power of a desktop application.&lt;br /&gt;&lt;br /&gt;&lt;span style="font-weight: bold;"&gt;Diagramo will be simple not simplistic&lt;/span&gt;. See &lt;a href="http://grammar.about.com/od/alightersideofwriting/a/simplesimplisticgloss.htm"&gt;here &lt;/a&gt;the difference.&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/1219993430316064175-4059603030269419121?l=blog.diagramo.com' alt='' /&gt;&lt;/div&gt;</content>
+        <link rel='replies' type='application/atom+xml' href='http://blog.diagramo.com/feeds/4059603030269419121/comments/default' title='Post Comments'/>
+        <link rel='replies' type='text/html' href='http://blog.diagramo.com/2010/10/make-it-simple.html#comment-form' title='0 Comments'/>
+        <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/4059603030269419121'/>
+        <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/4059603030269419121'/>
+        <link rel='alternate' type='text/html' href='http://blog.diagramo.com/2010/10/make-it-simple.html' title='Make it simple'/>
+        <author>
+            <name>Alex</name>
+            <email>noreply@blogger.com</email>
+            <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='00096774688296106739'/>
+        </author>
+        <thr:total>0</thr:total>
+    </entry>
+    <entry>
+        <id>tag:blogger.com,1999:blog-1219993430316064175.post-1144441768983564791</id>
+        <published>2010-10-28T11:20:00.000-07:00</published>
+        <updated>2010-10-28T11:25:39.567-07:00</updated>
+        <category scheme='http://www.blogger.com/atom/ns#' term='svg'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='html5'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='diagram'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='canvas'/>
+        <title type='text'>Diagramo to SVG</title>
+        <content type='html'>We are working to be able to export the Diagramo/HTML5 generated diagram in many formats: svg, gif, jpg and png.&lt;br /&gt;&lt;br /&gt;As any modern and decent (not IE) browser offers the option to save the canvas directly, it would have been very easy for us to just use that feature.&lt;br /&gt;&lt;br /&gt;But because there are people that might need SVG and because IE does not have that feature, we decided to make an export to SVG.&lt;br /&gt;&lt;br /&gt;What is nice about SVG is that once you have the SVG you can export in any format but not vice-versa.&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/1219993430316064175-1144441768983564791?l=blog.diagramo.com' alt='' /&gt;&lt;/div&gt;</content>
+        <link rel='replies' type='application/atom+xml' href='http://blog.diagramo.com/feeds/1144441768983564791/comments/default' title='Post Comments'/>
+        <link rel='replies' type='text/html' href='http://blog.diagramo.com/2010/10/diagramo-to-svg.html#comment-form' title='0 Comments'/>
+        <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/1144441768983564791'/>
+        <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/1144441768983564791'/>
+        <link rel='alternate' type='text/html' href='http://blog.diagramo.com/2010/10/diagramo-to-svg.html' title='Diagramo to SVG'/>
+        <author>
+            <name>Alex</name>
+            <email>noreply@blogger.com</email>
+            <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='00096774688296106739'/>
+        </author>
+        <thr:total>0</thr:total>
+    </entry>
+    <entry>
+        <id>tag:blogger.com,1999:blog-1219993430316064175.post-8889316186587811449</id>
+        <published>2010-06-29T00:35:00.000-07:00</published>
+        <updated>2010-07-08T12:53:52.427-07:00</updated>
+        <category scheme='http://www.blogger.com/atom/ns#' term='html 5'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='diagram'/>
+        <category scheme='http://www.blogger.com/atom/ns#' term='canvas'/>
+        <title type='text'>HTML 5, Canvas and diagrams</title>
+        <content type='html'>This post could be named "How it started" but first it was HTML 5 and then the story unfolds.&lt;br /&gt;&lt;br /&gt;All started back in March 2010 in Rome, Italy. I was there in a vacation with my lady and after a full day visiting interesting museums I wanted a piece of IT.&lt;br /&gt;&lt;br /&gt;Grabbed my lady netbook and sneak out of the hotel apartment while she was in shower. Went down the stair to the hall, found a cozy couch and start browsing for something interesting.&lt;br /&gt;&lt;br /&gt;I ended up on &lt;a href="http://www.w3.org/"&gt;w3&lt;/a&gt; site and from there to &lt;a href="http://www.w3.org/TR/html5/"&gt;html 5 specs&lt;/a&gt;. Later on I found some interesting stuff you can do with HTML 5 (at &lt;a href="http://www.canvasdemos.com/"&gt;canvasdemo&lt;/a&gt;) and ended up with the new tag canvas. I was amazed....it was like the first applet or first flash animation I saw...but hey WITHOUT any plugin.&lt;br /&gt;&lt;br /&gt;Vacation ended and I went back to work. As I'm involved in many projects at the same time I had to make same basic diagrams to explain stuff to people I work with. Every time I had to use Visio or other desktop application.....until the apple bump my head and I said: "Wait a minute mister, why don't we have a browser diagram editor?"&lt;br /&gt;&lt;br /&gt;From there it's only sweat, blood and hubris. I've made a small 'prototype' and later on Zack joined me to move this to 'proof of concept'. Later on two of my friends (Toni and Augustin) joined me to make a beta release of the application.&lt;br /&gt;&lt;br /&gt;I'm personally embarrassed by how unpolished the application is at this point but I think it's good way to show people what HTML 5 is capable of. See &lt;a href="http://diagramo.com"&gt;diagramo.com&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;So give it a try and let us know how do you like it.&lt;div class="blogger-post-footer"&gt;&lt;img width='1' height='1' src='https://blogger.googleusercontent.com/tracker/1219993430316064175-8889316186587811449?l=blog.diagramo.com' alt='' /&gt;&lt;/div&gt;</content>
+        <link rel='replies' type='application/atom+xml' href='http://blog.diagramo.com/feeds/8889316186587811449/comments/default' title='Post Comments'/>
+        <link rel='replies' type='text/html' href='http://blog.diagramo.com/2010/06/html-5-canvas-and-diagrams.html#comment-form' title='1 Comments'/>
+        <link rel='edit' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/8889316186587811449'/>
+        <link rel='self' type='application/atom+xml' href='http://www.blogger.com/feeds/1219993430316064175/posts/default/8889316186587811449'/>
+        <link rel='alternate' type='text/html' href='http://blog.diagramo.com/2010/06/html-5-canvas-and-diagrams.html' title='HTML 5, Canvas and diagrams'/>
+        <author>
+            <name>Alex</name>
+            <email>noreply@blogger.com</email>
+            <gd:extendedProperty xmlns:gd='http://schemas.google.com/g/2005' name='OpenSocialUserId' value='00096774688296106739'/>
+        </author>
+        <thr:total>1</thr:total>
+    </entry>
+</feed>

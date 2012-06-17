@@ -1,0 +1,296 @@
+/*
+#E65227 darker orange (logo)
+#EF6329 lighter orange (logo)
+#0288AE darker blue
+#81CFE9 lighter blue
+#F4F4F4 light gray
+#656565 gray
+#50B1D2 light blue
+#1AA851 green
+#32B050 light green
+*/
+.message {color: green;}
+.error {color: red; }
+
+body{
+    top:0;
+    margin: 0;
+    padding: 0;
+    background-color: #F6F6F6;
+}
+
+#header{
+    height: 36px;
+    background-image: url('../images/logo_background.png');
+    background-repeat:repeat-x;
+    background-position: top left;
+    /*border: 1px solid black;*/
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+}
+
+#content{
+    background-color: white;
+}
+
+/*
+#menu {
+    width: 100%;
+    height: 33px;
+    background-color: #EDEDED;
+    border-bottom: 1px solid #E1E1E1;
+    text-align: left;
+    margin: 0;
+}
+*/
+
+#actions{
+    /*padding-left: 122px;*/
+    height: 36px;
+    background-image: url('../images/logo_background.png');
+    background-repeat:repeat-x;
+    background-position: top left;
+    /*border: 1px solid #E5E5E5;*/
+    /*background-color: #F6F6F6;*/
+    /*padding-top: 5px;*/
+    /*overflow: hidden;*/
+    padding: 6px 4px 6px 10px;
+}
+
+#editor{
+    position: fixed;
+    top: 72px;
+    bottom: 0px;
+    width: 100%;
+    z-index: 0;    
+    /*border: 1px solid red;*/
+}
+
+.separator {
+    vertical-align:middle; 
+    margin: 0 10px 2px 10px;
+}
+
+#a {
+    border: 1px solid #E5E5E5;
+    background-repeat: repeat;
+    background-color: #FFFFFF;
+}
+
+#body{
+    width: 100%;
+}
+
+.copyright {
+    text-align: center;
+}
+
+#figures {
+    float: left;
+    width: 120px;
+    height: 300px;
+    /*border: 1px solid #E5E5E5;*/
+    padding-top: 5px;
+    padding-left: 5px;
+    background-color: #F6F6F6;
+}
+
+#container{
+    position: fixed;
+    top: 72px;
+    bottom: 0px;
+    left: 130px;
+    right: 260px;
+    /*height: 600px;*/
+}
+#right{
+    float: right;
+    /*overflow: scroll;*/
+}
+
+#edit{
+    width: 240px;
+    background-color: #F6F6F6;
+    padding: 10px 10px 0 10px;
+}
+
+#edit textarea {
+    width: 200px;
+    height: 50px;
+}
+
+#edit select {
+    width: 100px;
+}
+#edit div.label {
+    float: left;
+    color: #8C8C8C;
+    text-shadow: 0px 1px 0px #FFFFFF;
+}
+#edit div.line {
+    height: 22px;
+    clear: both;
+    width: 100%;
+}
+#edit div.textLine {
+    clear: both;
+    width: 100%;
+}
+.menuText {
+    color: #8B8B8B;
+    font-size: 12px;
+    /*text-decoration: none;*/
+    text-shadow: 0px 1px 0px #FFFFFF;
+    /**For IE glow you need both width and filter but also shrink the <a> area :p
+    width: 50px;
+    filter: glow(color=FFFFFF,strength=1);    
+    */
+    white-space: nowrap;
+}
+
+.toolbarText {
+    color: #8B8B8B;
+    font-size: 12px;
+    /*text-decoration: none;*/
+    text-shadow: 0px 1px 0px #FFFFFF;
+    /**For IE glow you need both width and filter but also shrink the <a> area :p
+    width: 50px;
+    filter: glow(color=FFFFFF,strength=1);
+    */
+}
+.button{
+    margin: 2px;
+    border: 1px dotted black;
+    text-decoration:  none;
+}
+
+.button:hover{
+    background-color: orange;
+}
+
+.darkgray{color: #333333;}
+
+
+.formTitle{
+    background-image: url('../images/save-background.jpg');
+    background-repeat:repeat-x;
+    background-position: top left;
+    height: 40px;
+    margin: 2px;
+    text-align: left;
+    font-weight: bold;
+    padding-top: 10px;
+    padding-left: 10px;
+    color: #8B8B8B;
+}
+
+.form{
+    background-color: #F6F6F6;
+    border: 1px #E4E4E4 solid;
+    margin-right: auto; margin-left: auto;
+}
+
+.formField{
+    height: 22px;
+    border: 1px #E4E4E4 solid;
+}
+
+.formArea {
+    border: 1px #E4E4E4 solid;
+}
+
+.formLabel {
+    color: #8B8B8B;
+    font-size: 14px;
+    text-shadow: 0px 1px 0px #FFFFFF;
+}
+
+
+
+#dropdown
+{	
+    margin: 0;
+    padding: 0;
+    z-index: 10;
+    position: relative;
+    /*display: none;*/
+}
+
+.dropdown_menu
+{	
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    float: left;
+    font: bold 14px arial;
+    z-index: 10;
+}
+
+.dropdown_menu a
+{	
+    display: block;
+    margin: 0 1px 0 0;
+    padding: 8px 10px 4px 10px;
+    /*width: 60px;*/
+    /*background: #5970B2;
+    color: #FFF;
+    */
+    color: #333;
+    text-align: left;
+    text-decoration: none;
+}
+
+.dropdown_menu a:hover
+{	
+    background: #ccc;
+}
+
+.dropdown_menu_panel
+{	
+    position: absolute;
+    visibility: hidden;
+    margin: 0;
+    padding: 0;
+    background: #eee;
+    border: 1px solid #666;
+    /*top: 36px;*/
+    
+    color: #8B8B8B;
+    font-size: 12px;
+    /*text-decoration: none;*/
+    text-shadow: 0px 1px 0px #FFFFFF;
+    /**For IE glow you need both width and filter but also shrink the <a> area :p
+    width: 50px;
+    filter: glow(color=FFFFFF,strength=1);    
+    */
+    white-space: nowrap;
+}
+
+.dropdown_menu_panel a
+{	
+    position: relative;
+    display: block;
+    margin: 0;
+    padding: 5px 10px;
+    width: auto;
+    white-space: nowrap;
+    text-align: left;
+    text-decoration: none;
+    
+    color: #8B8B8B;
+    background: #eee;
+}
+
+.dropdown_menu_panel a:hover
+{	
+    background: #fff; 
+    color: #8B8B8B;
+}
+
+.license_warning{
+    background-color: white; 
+    border: 1px solid black; 
+    font-size: 20px;
+}
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink" width="500" height="500">
+
+
+
+
+<line x1="10" y1="20" x2="40" y2="75" style="stroke:rgb(99,99,99);stroke-width:2"/>
+<polyline points="60,70 120,80 100,140 " style="fill:white;stroke:red;stroke-width:2"/>
+<polygon points="60,170 120,180 100,240 " style="fill:#cccccc;stroke:#000000;stroke-width:1"/>
+<path d="M100,100 Q120,140 200,100" fill="none" stroke="red" stroke-width="5"  />
+<path d="M200,200 C250,250 300,150 350,200" fill="none" stroke="blue" stroke-width="3"  />
+<text x="300" y="300" transform="rotate(29.99999724362742 300 ,300)" font-family="Verdana" font-size="20" style="stroke:none; fill:#000000;text-anchor: middle" >SVG is pretty cool</text>
+<text x="300" y="300" transform="rotate(0 300 ,300)" font-family="Verdana" font-size="20" style="stroke:none; fill:#000000;text-anchor: middle" >SVG is pretty cool</text>
+</svg>

@@ -1,0 +1,61 @@
+setup for function:
+	get startFigure
+	get centerPoint of startFigure (startCenterPoint)
+	get startConnectionPoint
+	get endFigure
+	get centerPoint of endFigure (endCenterPoint)
+	get endConnectionPoint
+
+
+if startFigure.x>endFigure.x
+	startFigure = endFigure
+	startConnectionPoint = endConnectionPoint
+	startCenterPoint = endCenterPoint
+	swapped = true
+
+startPoint = startConnectionPoint.point
+endPoint = endConnectionPoint.point
+
+turningPoints = [startPoint]
+
+startAngle = angle(startCenterPoint, startPoint) (round90)
+endAngle = angle(endCenterPoint, endPoint) (round90)
+
+with point = endPoint,startPoint
+	if point N centerPoint
+		point = figure.y-20
+	else if point E centerPoint
+		point = figure.y-figure.y-.width+20
+	else if point S centerPoint
+		point = figure.y-.y+efigure.y-.height+20
+	else if point W centerPoint
+		point = figure.y-.x-20
+
+intStart = line(startPoint,endPoint) intersects (startBounds)
+intEnd = line(startPoint,endPoint) intersects (endBounds)
+
+while intEnd || intStart
+	if firstPoint
+		add startPoint out of startBounds, toward endFigure in !currentDirection (i.e. NS = EW)
+	if secondPoint
+		add endPoint out of endBounds, toward startFigure in !currentDirection (i.e. NS = EW)
+
+	if counter = 3
+		break
+
+//break diagonal line in 2, first move X then Y
+if !(line ({startPoint.x,endPoint.y},endPoint) intersects endBounds && 
+   line ({startPoint.x,endPoint.y},endPoint) intersects startBounds &&
+   line (startPoint,{startPoint.x,endPoint.y}) intersects endBounds &&
+   line (startPoint,{startPoint.x,endPoint.y}) intersects startBounds)
+	add startPoint {startPoint.x,endPoint.y}
+else
+	add startPoint {endPoint.x,startPoint.y}
+
+
+for each endPoint in reverse
+	add to turningPoints
+
+if swapped
+	turningPoints.reverse
+		

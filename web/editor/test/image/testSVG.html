@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            var img = new Image();
+            
+            function init(){
+                ceas = 'nike';
+                img.onload = function(){
+                    alert("image loaded")
+                }
+                
+                img.onerror = function (){
+                    alert("Error loading image");
+                }
+                img.src = 'http://scriptoid.com/circles.svg';
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        This page's JavaScript should load a remove SVG file. 
+        It works in all browser except Opera. Why?
+        <p/>
+        View this page's source.
+    </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Canvas Primer - Example: drawImage</title>
+    <script type="text/javascript"><!--
+window.addEventListener('load', function () {
+  // Get the canvas element.
+  var elem = document.getElementById('myCanvas');
+  if (!elem || !elem.getContext) {
+    return;
+  }
+
+  // Get the canvas 2d context.
+  var context = elem.getContext('2d');
+  if (!context || !context.drawImage) {
+    return;
+  }
+
+  // Create a new image.
+  var img = new Image();
+
+  // Once it's loaded draw the image on the canvas.
+  img.addEventListener('load', function () {
+    // Original resolution: x, y.
+    context.drawImage(this, 0, 0);
+
+    // Now resize the image: x, y, w, h.
+    context.drawImage(this, 160, 0, 120, 70);
+
+    // Crop and resize the image: sx, sy, sw, sh, dx, dy, dw, dh.
+    context.drawImage(this, 8, 20, 140, 50, 0, 150, 350, 70);
+  }, false);
+
+  img.src = './3figures.svg';
+}, false);
+    // --></script>
+  </head>
+  <body>
+    <p><canvas id="myCanvas" width="350" height="250">Your browser does not have 
+    support for Canvas. You should see something like the following image: <img 
+    src="images/example-drawimage.jpg"
+    alt="Example rendering of drawImage."></canvas></p>
+  </body>
+</html>

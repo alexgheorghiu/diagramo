@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test different styles of curves</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="../lib/primitives.js"></script>
+        <script type="text/javascript"  src="../lib/style.js"></script>
+        <script type="text/javascript"  src="../lib/log.js"></script>
+        <script type="text/javascript">
+            
+            /**Computes the drawing points for the Bezier curve
+             *@param points - an {Array} of points
+             *@param step - a {Number}, the step
+             **/
+            function bezierPoints(points, step){
+                
+                /**Computes factorial*/
+                function fact(k){
+                    if(k==0 || k==1){
+                        return 1;
+                    }
+                    else{
+                        return k * fact(k-1);
+                    }
+                }
+            
+                /**Computes Bernstein*/
+                function B(i,n,u){
+                    //if(n < i) throw "Wrong";
+                    return fact(n) / (fact(i) * fact(n-i))* Math.pow(u, i) * Math.pow(1-u, n-i);
+                }                            
+             
+                /**Computes point P for t parameter*/
+                function P(t, points){
+                    var r = [0,0];
+                    var n = points.length-1;
+                    for(var i=0; i <= n; i++){
+                        r[0] += points[i][0] * B(i, n, t);
+                        r[1] += points[i][1] * B(i, n, t);
+                    }                
+                    return r;
+                }
+                
+                
+                var c = 0;
+                function gather(start, end, initial){
+                    c++;
+                    if(c>10000){
+                        throw "Limit";
+                    }
+                    
+                    
+                    var Ps = P(start, points);
+                    var Pe = P(end, points);
+                    
+                    var d = distance(Ps, Pe);
+//                    console.info("c: " + c + ". start:" + start + " end:" + end + " initial: " + initial + " distance: " + d);
+                    if(distance(Ps, Pe) >= 2){
+                        var middle = (start + end)/2;
+                        if(initial){
+                            return [].concat( start, gather(start, middle, false), middle, gather(middle, end, false), end );
+                        }
+                        else{
+                            return [].concat( gather(start, middle, false), middle, gather(middle, end, false) );
+                        }
+                    }
+                    else{
+//                        console.info("\t No more recursion");
+                       
+                        if(initial){
+                            return [start, end];
+                        }
+                        else{
+                            return [];
+                        }
+                    }
+                    
+                    
+                }
+                
+                function distance(a, b){
+                    return Math.sqrt(Math.pow(a[0]-b[0], 2) + Math.pow(a[1]-b[1], 2));
+                }
+                
+                
+//                var t1 = (new Date()).getTime();
+//                var temp = [];
+//                for(var t=0;t<=1; t=t+step){
+//                    var p = P(t, points);
+//                    temp.push(p);
+//                }
+//                var t2 = (new Date()).getTime();
+//                console.info("Computation: " + (t2-t1) + " ms" + " nr of points:  " +  temp.length);
+                
+                
+                
+                var t1 = (new Date()).getTime();
+                var temp = [];
+                
+                var aproxLength = 0;
+                for(var i=0; i<points.length-1; i++){
+                    aproxLength += distance(points[i], points[i+1]);
+                }
+                
+                var nrSteps = Math.ceil(aproxLength/2); 
+                for(var i=0; i<=nrSteps; i++){
+                    /*Compute t. We need to use  fractions
+                     *as if we increase it in small steps we introduce errors
+                     *Ex: iterating from 0 to 1 in steps of 0.001 will end at 0.900000 
+                     *or something instead of 1
+                     **/
+                    var t  = i / nrSteps;
+                    
+                    var p = P(t, points);
+                    temp.push(p);
+                }
+                var t2 = (new Date()).getTime();
+                console.info("Computation: " + (t2-t1) + " ms" + " nr of points:  " +  temp.length);
+                
+                
+//                var t1 = (new Date()).getTime();
+//                var ts = gather(0,1,true);
+//                
+////                console.info("Gather parameter values: " + ts );
+//                var temp = [];
+//                for(var i=0; i<ts.length; i++){
+//                    var p = P(ts[i], points);
+//                    temp.push( p );
+//                }
+//                var t2 = (new Date()).getTime();
+//                console.info("Computation: " + (t2-t1) + " ms" + " nr of points:  " +  ts.length);
+                
+                
+                
+//                console.info("Computed points: " + temp );
+                return temp;
+            }
+            
+            /**Computes a NURB solution out of a set P of points
+             * @returns {Array}  of CubicCurves (as {Array} )
+             * */
+            function nurbsPoints(P){
+                /**Computes factorial*/
+                function fact(k){
+                    if(k==0 || k==1){
+                        return 1;
+                    }
+                    else{
+                        return k * fact(k-1);
+                    }
+                }
+            
+                /**Computes Bernstain*/
+                function B(i,n,u){
+                    //if(n < i) throw "Wrong";
+                    return fact(n) / (fact(i) * fact(n-i))* Math.pow(u, i) * Math.pow(1-u, n-i);
+                }
+                
+                //                function P(u, points){
+                //                    var r = [0,0];
+                //                    var n = points.length-1;
+                //                    for(var i=0; i <= n; i++){
+                //                        r[0] += points[i][0] * B(i, n, u);
+                //                        r[1] += points[i][1] * B(i, n, u);
+                //                    }                
+                //                    return r;
+                //                }
+                
+                function sum(p1, p2){
+                    return [p1[0] + p2[0], p1[1] + p2[1]];
+                }
+            
+                function minus(p1, p2){
+                    return [p1[0] - p2[0], p1[1] - p2[1]];
+                }
+            
+                function divide(p, nr){
+                    if(nr == 0){ 
+                        throw "Division by zero not allowed (yet :) " + this.callee ;
+                    }
+                    return [p[0]/nr, p[1]/nr];
+                }
+            
+                function multiply(p, nr){
+                    return [p[0]*nr, p[1]*nr];
+                }
+            
+                var sol = [];
+                var n = P.length;
+                
+                /**I do not get why first 4 must be 0 and last 3 of same value.....
+                 *but otherwise we will get division by zero*/
+                var k = [0,0,0];                
+                
+                for(j=0;j<=n-3;j++){
+                    k.push(j);
+                }
+                
+                k.push(n-3, n-3);
+                //alert(k);
+                
+                //                var k = [];
+                //                for(j=0;j<=n+3;j++){
+                //                    k.push(j);
+                //                }
+                
+                //                P.unshift( [P[0][0], P[0][1]] );
+                //                P.push( [P[P.length-1][0], P[P.length-1][1]] );
+                //                var k = [];
+                //                for(j=0;j<=n+3;j++){
+                //                    k.push(j * 0.01);
+                //                }
+                
+                
+                for(i=1; i<=n-3; i++){
+                    //q1
+                    var q1 = divide( sum( multiply(P[i], k[i+4] - k[i+2]), multiply(P[i+1], k[i+2] - k[i+1]) ), k[i+4] - k[i+1]);
+                    
+                    //q0
+                    var q_01 = (k[i+3] - k[i+2]) / (k[i+3] - k[i+1]);
+                    var q_02 = divide( sum( multiply(P[i-1],k[i+3] - k[i+2]), multiply(P[i], k[i+2] - k[i])), k[i+3] - k[i]);
+                    var q_03 = multiply(q1, ( k[i+2] - k[i+1])/ (k[i+3] - k[i+1]) );
+                    var q0 = sum(multiply(q_02, q_01), q_03);
+                    
+                    //q2
+                    var q2 = divide( sum( multiply(P[i], k[i+4] - k[i+3]), multiply(P[i+1], k[i+3] - k[i+1]) ), k[i+4] - k[i+1] );
+                    
+                    //q3
+                    var q_31 = (k[i+3] - k[i+2]) / (k[i+4] - k[i+2]);
+                    var q_32 = divide( sum( multiply(P[i+1], k[i+5] - k[i+3]), multiply(P[i+2], k[i+3] - k[i+2]) ) , k[i+5] - k[i+2]);
+                    var q_33 = multiply(q2, (k[i+4] - k[i+3])/(k[i+4] - k[i+2]) );
+                    var q3 = sum(multiply(q_32, q_31), q_33);                    
+                    
+                    sol.push([q0, q1, q2, q3]);
+                }
+                
+                return sol;
+            }
+            
+            
+            /**Paint a NURB from a an array or fragments*/
+            function nurbsPaint(ctx, fragments){
+                ctx.save();
+                ctx.beginPath();
+                //alert("Nr of quad curves " +  fragments.length);
+                for(var f=0;f<fragments.length; f++){
+                    var fragment = fragments[f];
+                    ctx.moveTo(fragment[0][0], fragment[0][1]);
+                    ctx.bezierCurveTo(fragment[1][0], fragment[1][1], fragment[2][0], fragment[2][1], fragment[3][0], fragment[3][1]);
+                }
+                ctx.stroke();
+                ctx.restore();
+            }
+            
+            
+            /**Generic paint curve method*/
+            function paint_graph(ctx, points){
+                ctx.save();
+                
+                //ctx.strokeStyle = color;
+                //                alert(ctx.strokeStyle);
+                ctx.beginPath();
+                ctx.moveTo(points[0][0], points[0][1]);
+                for(var i=1;i<points.length; i++){
+                    ctx.lineTo(points[i][0], points[i][1]);
+                }
+                ctx.stroke();
+                
+                ctx.restore();
+            }        
+
+            
+            function paint_point(ctx, color,  point){
+                //return;
+                ctx.save();
+                switch(color){
+                    case 'red':
+                        ctx.strokeStyle = "rgb(200, 0,0)";
+                        break;
+                        
+                    case 'black':
+                        ctx.strokeStyle = "rgb(0, 0,0)";
+                        break;
+                        
+                    case 'green':
+                        ctx.strokeStyle = "rgb(0, 200,0)";
+                        break;
+                }                
+                ctx.strokeRect(point[0]- 2 , point[1] - 2, 4, 4);
+                ctx.restore();
+            }
+            
+            /**
+             *http://www.w3.org/Graphics/SVG/IG/resources/svgprimer.html#path_Q
+             *http://math.stackexchange.com/questions/92246/aproximate-n-grade-bezier-through-cubic-and-or-quadratic-bezier-curves
+             *@see http://stackoverflow.com/questions/1257168/how-do-i-create-a-bezier-curve-to-represent-a-smoothed-polyline
+             *@see http://www.codeproject.com/KB/graphics/BezierSpline.aspx Draw a Smooth Curve through a Set of 2D Points with Bezier Primitives
+             *"Paul de Casteljau, a brilliant engineer at Citroen"
+             *@see http://stackoverflow.com/questions/8369488/splitting-a-bezier-curve
+             *@see http://devmag.org.za/2011/04/05/bzier-curves-a-tutorial/
+             *@see http://devmag.org.za/2011/06/23/bzier-path-algorithms/
+             *@see http://drdobbs.com/cpp/184403417 (Forward Difference Calculation of Bezier Curves)
+             *@see http://www.timotheegroleau.com/Flash/articles/cubic_bezier_in_flash.htm
+             *@see http://www.algorithmist.net/bezier3.html
+             *@see http://www.caffeineowl.com/graphics/2d/vectorial/bezierintro.html
+             **/
+//            var s_alex = [[100, 100], [100, 50], [50, 50], [50, 150],  [150, 150],  [150, 50], [200, 50], [200, 300], [250, 300], [250, 200], [300, 200]]; //only 3 points
+//            
+//            var s0_0 = [[30, 50], [100, 50], [100, 150], [50, 150]]; //parellel (same direction)
+//            var s0_1 = [[50, 50], [100, 50], [100, 150], [150, 150]]; //parallel (oposite direction)
+//            var s0_2 = [[50, 50], [100, 50], [150, 50], [200, 50]]; //colinear
+//            var s0_3 = [[50, 100], [50, 80], [100, 80], [120, 80]]; //orthogonal
+//            
+//            var s1_1 = [[50, 50], [130, 50], [150, 50], [150, 100], [200, 100]];
+//            var s1_2 = [[50, 50], [100, 50], [100, 100], [150, 100], [200, 100]]; //TODO: looking strange
+//            var s1_3 = [[50, 50], [100, 50], [150, 50], [150, 100], [150, 150]];
+//            var s1_4 = [[50, 50], [100, 50], [100, 100], [150, 100], [150, 150]];
+//            
+//            var s2_1 = [[50, 50], [50, 30], [125, 30], [125, 150], [200, 150], [200, 130]];
+//            var s2_2 = [[100, 50], [80, 50], [80, 100], [180, 100], [180, 150], [160, 150]];
+//            var s2_3 = [[50, 50], [50, 30], [150, 30], [150, 130], [100, 130], [100, 110]];
+//            var s2_4 = [[100, 100], [80, 100], [80, 50], [200, 50], [200, 150], [150, 150]];
+//            var s2_5 = [[100, 100], [100, 80], [50, 80], [50, 180], [150, 180], [150, 160]];
+//            var s2_6 = [[100, 50], [80, 50], [80, 150], [180, 150], [180, 130], [160, 130]];
+            
+            var alex1 = [[50, 50], [100, 50], [100, 100]];
+            
+            var solutions = [];
+//            solutions.push(s_alex);
+//            solutions.push(s0_0, s0_1, s0_2, s0_3);
+//            solutions.push(s1_1, s1_2, s1_3, s1_4);
+//            solutions.push(s2_1, s2_2, s2_3, s2_4, s2_5, s2_6);
+            solutions.push(alex1);
+            
+            
+            
+            /**Convers a set of vector like points to Points*/
+            function p2P(v){
+                var r = [];
+                
+                for(var i=0;i<v.length;i++){
+                    r.push(new Point(v[i][0], v[i][1]));
+                }
+                
+                return r;
+            }
+            
+
+            
+            
+            /**Add middle points and use them as CP...where possible :p*/
+            function paintQuadMidpoint(ctx, poly){
+                ctx.save();
+                //ctx.strokeStyle = "rgb(0,200,0)";
+                
+                //ctx.moveTo(poly[0][0], poly[0][1]);
+                
+                var points = [];
+                
+                points.push(poly[0]);
+		
+                //add controll points in the middle of each segment (except first and last)
+                for(var i=1; i < poly.length-2; i++){
+                    points.push(poly[i]);
+                    var cp = [ (poly[i][0] + poly[i+1][0]) / 2, (poly[i][1] + poly[i+1][1]) / 2];
+//                    paint_point(ctx, 'black', cp);
+                    points.push(cp);
+                }
+                points.push(poly[poly.length-2]);		
+                points.push(poly[poly.length-1]);
+                
+                
+                
+                
+                //draw  
+                ctx.beginPath();
+                
+                //move into position
+                ctx.moveTo(points[0][0], points[0][1]);
+
+                
+                //start drawing cubic curves by grouping 3 points together
+                for(var i=2; i < points.length; i=i+2){
+                    //ctx.moveTo(points[i][0], points[i][1]);
+                    ctx.quadraticCurveTo( points[i-1][0], points[i-1][1], points[i][0], points[i][1] );
+                }
+
+                ctx.stroke();
+                ctx.restore();
+            }
+            
+            
+            /**Add middle points and use them as CP (quad and cubic)...where possible :p*/
+            function paintMixedMidpoint(ctx, poly){
+                ctx.save();
+                //ctx.strokeStyle = "rgb(0,200,0)";
+                
+                //ctx.moveTo(poly[0][0], poly[0][1]);
+                
+                var points = [];
+                
+                points.push(poly[0]);
+		
+                //add controll points in the middle of each segment (except first and last)
+                for(var i=1; i < poly.length-2; i++){
+                    points.push(poly[i]);
+                    var cp = [ (poly[i][0] + poly[i+1][0]) / 2, (poly[i][1] + poly[i+1][1]) / 2];
+//                    paint_point(ctx, 'black', cp);
+                    points.push(cp);
+                }
+                points.push(poly[poly.length-2]);		
+                points.push(poly[poly.length-1]);
+                
+                
+                
+                
+                //draw  
+                ctx.beginPath();
+                
+                //move into position
+                ctx.moveTo(points[0][0], points[0][1]);
+
+                
+                //start drawing cubic curves by grouping 3 points together
+                for(var i=2; i < points.length; i=i+2){
+                    //ctx.moveTo(points[i][0], points[i][1]);
+                    ctx.quadraticCurveTo( points[i-1][0], points[i-1][1], points[i][0], points[i][1] );
+                }
+
+                ctx.stroke();
+                ctx.restore();
+            }
+            
+            
+            function paintOrganic2(ctx, poly){
+                
+                var derivatives = [];
+                
+                var a = 0.7;
+                
+                derivatives.push( divide(minus(poly[1], poly[0]), a) );
+                for(i=1; i<poly.length; i++){
+                    derivatives.push( divide( minus(poly[i], poly[i-1]), a ) );
+                }
+                
+                ctx.save();
+                ctx.strokeStyle = "rgb(0,200,0)";
+                
+                for(i=0; i<poly.length-1; i++){
+                    var start = poly[i];
+                    var end = poly[i+1];
+                    var cp1 = plus ( start , divide(derivatives[i],3) );
+                    var cp2 = minus( end ,  divide(derivatives[i+1],3) );
+                    ctx.beginPath();
+                    ctx.moveTo(start[0], start[1]);
+                    ctx.bezierCurveTo(cp1[0], cp1[1], cp2[0], cp2[1], end[0], end[1]);    
+                    ctx.stroke();
+                }
+                ctx.restore();
+            }
+            
+            function mirrorAWithRespectToB(a, b){
+                return [2 * b[0] - a[0], 2 * b[1] - a[1] ];
+            }
+            
+            
+            function paintOrganic3(ctx, poly){
+                ctx.save();
+                ctx.beginPath();
+                
+                //move into position
+                ctx.moveTo(poly[0][0], poly[0][1]);
+                
+                if(poly.length == 3){
+                    ctx.quadraticCurveTo( poly[1][0], poly[1][1], poly[2][0], poly[2][1] );
+                }
+                else if(poly.length == 4){
+                    ctx.bezierCurveTo( poly[1][0], poly[1][1], poly[2][0], poly[2][1], poly[3][0], poly[3][1] );
+                }
+                else if(poly.length == 5){
+                    ctx.bezierCurveTo( poly[1][0], poly[1][1], poly[2][0], poly[2][1], poly[3][0], poly[3][1] );
+                    var B = mirrorAWithRespectToB(poly[1], poly[2]);
+                    var W1 = mirrorAWithRespectToB(poly[2], poly[3]);
+                    var W2 = mirrorAWithRespectToB(B, W1);
+                    paint_point(ctx, 'green', B);
+                    paint_point(ctx, 'green', W1);
+                    paint_point(ctx, 'green', W2);
+                    ctx.bezierCurveTo( W1[0], W1[1], W2[0], W2[1], poly[4][0], poly[4][1]);                                        
+                }
+                else if(poly.length == 6){
+                    //                    ctx.bezierCurveTo( poly[1][0], poly[1][1], poly[2][0], poly[2][1], poly[3][0], poly[3][1] );
+                    //                    var B = mirrorAWithRespectToB(poly[1], poly[2]);
+                    //                    var W1 = mirrorAWithRespectToB(poly[2], poly[3]);
+                    //                    var W2 = mirrorAWithRespectToB(B, W1);
+                    //                    paint_point(ctx, 'green', B);
+                    //                    paint_point(ctx, 'green', W1);
+                    //                    paint_point(ctx, 'green', W2);
+                    //                    ctx.bezierCurveTo( W1[0], W1[1], W2[0], W2[1], poly[4][0], poly[4][1]);                                        
+                    //                    
+                    //                    var B_ = mirrorAWithRespectToB(W1, W2);
+                    //                    var W1_ = mirrorAWithRespectToB(W2, poly[4]);
+                    //                    var W2_ = mirrorAWithRespectToB(B_, W1_);
+                    //                    ctx.bezierCurveTo( W1_[0], W1_[1], W2_[0], W2_[1], poly[5][0], poly[5][1]);        
+                }
+                
+                ctx.stroke();
+                ctx.restore();  
+            }
+            
+            
+            function plus(p1, p2){
+                return [p1[0] + p2[0], p1[1] + p2[1]];
+            }
+            
+            function minus(p1, p2){
+                return [p1[0] - p2[0], p1[1] - p2[1]];
+            }
+            
+            function divide(p, nr){
+                if(nr == 0) { throw "Division by zero not allowed (yet :)"}
+                return [p[0]/nr, p[1]/nr];
+            }
+            
+            function multiply(p, nr){
+                return [p[0]*nr, p[1]*nr];
+            }
+            
+            
+            function init(){
+                var ctx = document.getElementById("pinza").getContext("2d");
+               
+                paint_solutions(ctx);
+            }
+            
+            function paint_solutions(ctx){
+                for(var s=0; s < solutions.length; s++){
+                    //alert(solutions[s]);
+                    var i = s % 4; 
+                    var j = parseInt(s / 4);
+                    
+                    ctx.save();                    
+                    
+                    ctx.translate(i * 300, j * 300 );
+                    ctx.strokeRect(0, 0, 300, 300);
+                    
+                    var bezSolution =  bezierPoints(solutions[s], 0.02);
+                    var nurbsSolution =  nurbsPoints(solutions[s]);
+                    var points = p2P(solutions[s]);
+                    Log.info(points);
+                    var n = new NURBS(points);
+                    
+                    //support (transparent black)
+                    ctx.strokeStyle = "rgba(0,0,0, .75)";
+                    paint_graph(ctx, solutions[s]);
+                    
+                    //bezier (red)
+                    ctx.strokeStyle = "rgb(250,0,0)";
+                    paint_graph(ctx, bezSolution);
+                    
+//                    //nurbs (green)
+//                    ctx.strokeStyle = "rgb(0,255,0)";
+//                    nurbsPaint(ctx, nurbsSolution);
+//                    
+//                    //midpoints (blue)
+//                    ctx.strokeStyle = "rgb(0,0,250)";
+//                    paintQuadMidpoint(ctx, solutions[s]);
+                    
+//                    ctx.strokeStyle = "rgb(0,150,150)";
+//                    n.paint(ctx);
+                    
+                    ctx.restore();
+                }
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <div>                        
+            <div>-- Support points and lines</div>
+            <div style="color: red;">-- Bezier solution</div>
+            <div style="color: green;">-- NURB solution</div>
+            <div style="color: blue;">-- Midpoint (quad only) solutions</div>
+        </div>
+        <canvas id="pinza" width="1200" height="1200"></canvas>
+    </body>
+</html>

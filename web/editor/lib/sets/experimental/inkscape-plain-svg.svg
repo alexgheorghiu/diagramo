@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="300.09"
+   height="300.35999"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.1 "
+   sodipodi:docname="inkscape-plain-svg.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.96933594"
+     inkscape:cx="375"
+     inkscape:cy="263.63893"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1537"
+     inkscape:window-height="878"
+     inkscape:window-x="55"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-752.00218)">
+    <path
+       style="fill:#edd400;stroke:#000000;stroke-width:0.72769266px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 68.243177,825.21811 c 91.945193,-12.92078 120.121953,-136.04827 152.747663,-0.76004 32.62571,135.2882 16.31286,161.8899 -2.22448,178.61083 -18.53734,16.7211 -65.99292,31.1619 -73.40786,28.8818 -7.41493,-2.2801 -74.890843,-38.76233 -77.856823,-49.40303 -2.96597,-10.6406 0.7415,-157.32956 0.7415,-157.32956 z"
+       id="path2985"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:29.10770607px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="102.12301"
+       y="887.9032"
+       id="text2987"
+       sodipodi:linespacing="125%"
+       transform="scale(0.98771959,1.0124331)"><tspan
+         sodipodi:role="line"
+         id="tspan2989"
+         x="102.12301"
+         y="887.9032">Nice</tspan></text>
+  </g>
+</svg>

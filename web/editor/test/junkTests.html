@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <link type="text/css" href="../assets/css/style.css" rel="stylesheet"/>
+        <script type="text/javascript" src="./testunits/junkyard.js"></script>
+        <script type="text/javascript" src="../lib/util.js"></script>
+        <script type="text/javascript" src="../lib/primitives.js"></script>
+        <script type="text/javascript" src="../lib/style.js"></script>
+
+    </head>
+    <body>
+        <script type="text/javascript">
+            var utilForward = new Test('forwardPath',
+            function () {
+                var a = 1;
+                var b = 2;
+                return a == b;
+            });
+	
+
+            
+            var t = new Test('Util.js');
+            
+            t.addTest(new Test('forwardPath',
+            function () {
+                try{
+                    var path = [new Point(10, 10), new Point(20, 10), new Point(10, 10)];
+                    if(!Util.forwardPath(path)){ //should be false
+                        return true;
+                    }
+                } catch(ex){
+                    alert(ex);
+                }
+                
+                return false;
+            }));
+            
+            t.addTest(new Test('forwardPath2',
+            function () {
+                try{
+                    var path = [new Point(10, 10), new Point(20, 10), new Point(30, 10)];
+                    if(Util.forwardPath(path)){ //should be true
+                        return true;
+                    }
+                } catch(ex){
+                    alert(ex);
+                }
+                
+                return false;
+            }));
+            
+            t.addTest(new Test('forwardPath3',
+            function () {
+                try{
+                    var path = [new Point(10, 10), new Point(20, 10), new Point(20, 20)];
+                    if(Util.forwardPath(path)){ //should be true
+                        return true;
+                    }
+                } catch(ex){
+                    alert(ex);
+                }
+                
+                return false;
+            }));
+            
+            t.addTest(new Test('forwardPath4',
+            function () {
+                try{
+                    var path = [new Point(230,236),new Point(230,206),new Point(175,206),new Point(175,219),new Point(479,219),new Point(479,253)];
+                    if(Util.forwardPath(path)){ //should be true
+                        return true;
+                    }
+                } catch(ex){
+                    alert(ex);
+                }
+                
+                return false;
+            }));
+            
+            var r = t.runTest();
+            document.write(r['message']);
+        </script>
+    </body>
+</html>

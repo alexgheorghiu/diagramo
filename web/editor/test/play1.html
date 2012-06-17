@@ -1,0 +1,51 @@
+<html>
+<body>
+<script type="text/javascript">
+	function expose(o){
+		if(typeof o != 'object'){
+			document.write('not an object but a '  + (typeof o));
+			for(prop in o){
+				document.write('<br/>' + prop+ '--' + o[prop]);
+			}
+		}
+		else{
+			document.write('is an object ' + (typeof o));
+			for(prop in o){
+				document.write('<br/>' + prop );
+			}
+		}
+	}
+	
+	function Animal(name){
+		//this.name = name;
+		
+		this.getName = function(){
+			return this.name;
+		}
+		
+		this.toString = function(){
+			return this.name;
+		}
+		
+		this.valueOf = function(){
+			return Boolean(this.name);
+		}
+		
+	}
+	/*
+	var a = new Animal('dog');
+	a.name = 'zozo';
+	expose(a);
+	document.write("Does Animal has name property: " + a.hasOwnProperty('name'));
+	document.write("Is Animal's name property enumerable: " + a.propertyIsEnumerable('name'));
+	document.write("Animal's name property type: " + (typeof a.name ));
+	
+	for(var p in a.name){
+		document.write("p : " + p);
+	}
+	*/
+	var v = "Ana are mere";
+	expose(v);
+</script>
+</body>
+</html>

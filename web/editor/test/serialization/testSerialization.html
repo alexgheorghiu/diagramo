@@ -1,0 +1,48 @@
+<!--
+Test to see if "constructor" is of any help in serialization
+@see http://stackoverflow.com/questions/185429/how-to-use-json-to-create-object-that-inherits-from-object-type
+@see http://www.hunlock.com/blogs/Mastering_JSON_%28_JavaScript_Object_Notation_%29
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link rel="stylesheet" type="text/javascript" href="../../assets/javascript/json2.js"/>
+    </head>
+    <body>
+        <div>Test serialization</div>
+        <script type="text/javascript">
+            function Animal(name) {
+                this.name = name;
+            }
+            
+            Animal.prototype = {
+                constructor : Animal,
+                getName : function () {
+                    return this.name;
+                }
+            }
+            
+            var a = new Animal("dog");
+            try {
+                var s = JSON.stringify(a);
+                alert(s);
+                var a2 = eval('(' + s + ')');
+                if(a2 instanceof Animal){
+                    alert("It's an animal");
+                }
+                else{
+                    alert('Not an animal');
+                }
+                
+                if(Animal.prototype.isPrototypeOf(a2)){
+                    alert("Is proto");
+                }
+                //alert(a2.getName());
+            } catch (ex){
+                alert("Error: " + ex)
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,11 @@
+
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <path d="M226,129 L276,129 Q284,130.25,286,139 M286,139 L286,167 Q284,175,276,177 M276,177 L226,177 Q218,175,216,167 M216,167 L216,139 Q218,129,226,129"  
+    style="stroke:#000000;fill:#ff6600;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;"  />
+
+    <path d="M50,50
+             L100,50
+             M110,110
+             L100,0"
+          style="stroke:#660000; fill:none;"/>    
+</svg>

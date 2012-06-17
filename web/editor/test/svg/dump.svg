@@ -1,0 +1,22 @@
+
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" version="1.1"> 
+    <polygon points="200.61597251012185,104.35871517299597 562.543444355529,274.6775489042995 477.38402748987767,455.64128482700374 115.45655564446999,285.32245109569953 "  style="stroke:#000000;fill:#ffffff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;"  />
+    <g transform="rotate (0.4398417578343869, 236.54258, 204.1549)">
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <image x="181.79258000000033" y="129.15490000000048" width="109.49999999999929" height="149.99999999999903" xlink:href="http://diagramo.test/test/image/NancySinatra2.jpg" />
+        </svg>
+    </g>
+    <text y="243.1942"  transform="rotate(25.201138893218186 463.54563 ,250.1942)"  font-family="tahoma"  font-size="14"  fill=" #006633"  text-anchor="middle" >
+        <tspan x="463.54563" dy="14">Hilary Erhard Duff</tspan>
+    </text>
+    <text y="268.48335"  transform="rotate(25.201023010330317 437.99782 ,304.48335)"  font-family="tahoma"  font-size="12"  fill=" #000"  text-anchor="middle" >
+        <tspan x="437.99782" dy="12">After working in local </tspan>
+        <tspan x="437.99782" dy="15">theater plays and </tspan>
+        <tspan x="437.99782" dy="15">television commercials in </tspan>
+        <tspan x="437.99782" dy="15">her childhood, Duff </tspan>
+        <tspan x="437.99782" dy="15">gained fame playing....</tspan>
+    </text>
+    <text y="275.66123"  transform="rotate(25.201076377525506 227.22827 ,282.66123)"  font-family="tahoma"  font-size="14"  fill=" #000"  text-anchor="middle" >
+        <tspan x="227.22827" dy="14">born September 28, 1987</tspan>
+    </text>
+</svg>

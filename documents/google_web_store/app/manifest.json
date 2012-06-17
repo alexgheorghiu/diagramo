@@ -1,0 +1,20 @@
+{
+  "name": "Diagramo - diagrams in HTML5",
+  "description": "Make diagrams in your browser, with HTML5. ",
+  "version": "1.1",
+  "app": {
+    "urls": [
+      "*://diagramo.com/"
+    ],
+    "launch": {
+      "web_url": "http://diagramo.com/demo/common/controller.php?action=loginExe&password=admin&email=admin@example.com"
+    }
+  },
+  "icons": {
+    "128": "diagramo_128.png"
+  },
+  "permissions": [
+    "unlimitedStorage",
+    "notifications"
+  ]
+}

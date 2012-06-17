@@ -1,0 +1,6 @@
+Changes in php.ini for php5.4.0
+-------------------------------
+- rename php.ini-developmentdevelopment to php.ini
+- short_open_tag = On
+- extension=php_sqlite3.dll
+- extension_dir = "ext"

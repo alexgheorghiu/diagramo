@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="CONTENT-TYPE"
+ content="text/html; charset=windows-1252">
+  <title>architecture</title>
+  <meta name="GENERATOR" content="OpenOffice.org 3.2  (Win32)">
+  <meta name="CREATED" content="0;0">
+  <meta name="CHANGED" content="20110402;16120200">
+</head>
+<body dir="LTR" lang="en-US">
+<h1><br>
+</h1>
+<h1>Diagramo architecture explained</h1>
+<p><br>
+Diagramo is made out of :</p>
+<ol>
+  <li>JavaScript engine: made out of Math(geometric) library and UI
+library</li>
+  <li>PHP engine</li>
+  <li>mySQL
+and file system part<br>
+  </li>
+</ol>
+<p><img style="width: 500px; height: 386px;" alt="Diagramo architecture"
+ src="architecture.png"><br>
+</p>
+<h2 class="western">JavaScript engine </h2>
+<p><a href="http://en.wikipedia.org/wiki/JavaScript">JavaScript</a>
+is the main programming language used in Diagramo. Combined with
+HTML5' canvas specification creates the core of the math
+library.<br>
+There are 2 sections to the JavaScript Engine:</p>
+<ol>
+  <li>
+    <p style="margin-bottom: 0in;">Math library </p>
+  </li>
+  <li>
+    <p>UI library </p>
+  </li>
+</ol>
+<p><b>Math Library</b> - is a set of objects and functions that lay
+the foundation for any figure in the application. It contains:<br>
+</p>
+<ul>
+  <li>primitives.js - contains definitions for Point, Line, Polygon,
+Arc, QuadCurve, CubicCurve, etc<br>
+  </li>
+  <li>matrix.js - contains operations you need for matrixes<br>
+  </li>
+  <li>text.js - contains the Text class needed to draw a text on canvas<br>
+  </li>
+  <li>util.js - a collection of functions needed by other modules
+(including primitives)</li>
+</ul>
+<br>
+</body>
+</html>

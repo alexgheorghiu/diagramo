@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_svg "http://www.w3.org/2000/svg">
+	<!ENTITY ns_xlink "http://www.w3.org/1999/xlink">
+]>
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" version="1.1">
+	<rect x="0" y="0" height="200" width="300" style="stroke:#000000; fill: #FFFFFF"/>
+
+	<path d="M100,100 C200,200 100,50 300,100" style="stroke:#FFAAFF;fill:none;stroke-width:3;"  />
+	
+	<!--@see http://www.w3.org/TR/SVG/coords.html#TransformAttribute-->
+	<rect x="1" y="1" height="398" width="398"
+          style="stroke:#ff0000; fill: #ccccff" 
+	  >
+	</rect>
+
+</svg>

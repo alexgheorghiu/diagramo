@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            var dump = null;
+           
+            function filter_gray(ctx){
+                // @see http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#images
+                var input = ctx.getImageData(0, 0, 300, 300);
+                var output = ctx.createImageData(300, 300);
+                var inputData = input.data;
+                var outputData = output.data;
+
+                var h = input.height;
+                var w = input.width;
+                for(var i = 0; i < h; i++){
+                    for(var j = 0; j < w; j++){
+                        var pos = (i *4) * w + (j * 4);
+                        /*
+                        for(var c = 0; c < 4; c++){
+                            outputData[pos + c] = inputData[pos + c];
+                        }
+                         */
+                        var red = inputData[pos];
+                        var green = inputData[pos+1];
+                        var blue = inputData[pos+2];
+                        var alpha = inputData[pos+3];
+                        var avg = (red + green + blue) / 3;
+
+                        outputData[pos] = avg;
+                        outputData[pos+1] = avg;
+                        outputData[pos+2] = avg;
+                        outputData[pos+3] = avg;
+                    }
+                }
+                
+                ctx.putImageData(output, 0, 0);
+            }
+            
+            function thumb(ctx){
+                //TODO: this is not working
+                //var tempImageData = ctx.getImageData(0, 0, 300, 300);
+                //var img = new Image(tempImageData);
+                //                var c = document.getElementById("c");
+                //                var imgData = c.toDataURL();
+                //                alert(imgData);
+                //                
+                var imgData = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAAEsCAYAAAB5fY51AAABdElEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD+Bn+3AAEkkD9cAAAAAElFTkSuQmCC";
+                var img = new Image();
+                img.src = imgData;
+                alert("Img " + img.width + " x " + img.height); 
+
+                
+                ctx.drawImage(img, 0, 0, img.width, img.height, 0, 0, img.width/3, img.height/3);
+            }
+            
+            function _log(msg){
+                dump.value = dump.value + msg;
+            }
+            
+            var source = null;
+            var destination = null;
+            var sourceCtx = null;
+            var destinationCtx = null;
+            
+            var girl = new Image();
+            //girl.src = './test.png';
+            girl.src = './test2.jpg';
+          
+            
+            function process(){                                
+//                dump = document.getElementById('log');
+//                dump.value = '';
+                
+                source = document.getElementById('source');
+                sourceCtx = source.getContext('2d');
+
+                destination = document.getElementById('destination');
+                destinationCtx = destination.getContext('2d');
+
+                //paint some stuff in the source canvas
+                sourceCtx.strokeStyle = "orange";
+                sourceCtx.moveTo(0, 0);
+                sourceCtx.lineTo(300, 300);
+                sourceCtx.stroke();
+                sourceCtx.drawImage(girl, 0, 0);
+                    
+                //get source as encoded data
+                var imgData = source.toDataURL();
+//                log(imgData);
+                    
+                //recreate a new image from encoded data
+                var tempImg = new Image();
+                tempImg.src = imgData;
+//                tempImg.src = 'data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw==';
+                    
+                //display new image in destionation canvas
+                try{
+                    destinationCtx.drawImage(tempImg, 0, 0, tempImg.width, tempImg.height, 0, 0, tempImg.width/2, tempImg.height/2);
+                } catch(e){
+                    alert("Error: " + e);
+                }
+                //alert(imgData);
+                
+                //var eImg = document.getElementById('eimg');
+                
+                var eImg2 = document.getElementById("eimg2");
+                eImg2.src = imgData;
+            }
+
+        </script>
+    </head>
+    <body>
+        <canvas style="border: 1px solid gray;" id="source" width="400" height="400"></canvas>
+        <canvas style="border: 1px solid gray;" id="destination" width="150" height="150"></canvas>
+        <img id="eimg" src="data:image/gif;base64,R0lGODlhCwALAIAAAAAA3pn/ZiH5BAEAAAEALAAAAAALAAsAAAIUhA+hkcuO4lmNVindo7qyrIXiGBYAOw=="/>
+        <img id="eimg2" src="#"/>
+<!--        <p>
+            <textarea id="log" cols="200" rows="10" style="white-space: nowrap;">
+            </textarea>
+        </p>-->
+        <input type="button" value="Do it" onclick="process()"/>
+    </body>
+</html>

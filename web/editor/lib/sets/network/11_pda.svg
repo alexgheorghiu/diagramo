@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="svg3621" sodipodi:docname="pda.svg" inkscape:version="0.47 r22583" inkscape:export-filename="/home/nathan/Pictures/Icons/PNG/pda.png" inkscape:export-xdpi="90" inkscape:export-ydpi="90" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:cc="http://creativecommons.org/ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="36.667px"
+	 height="58.543px" viewBox="0 0 36.667 58.543" enable-background="new 0 0 36.667 58.543" xml:space="preserve">
+<defs>
+	
+	
+		<inkscape:perspective  id="perspective3629" inkscape:vp_y="0 : 1000 : 0" inkscape:vp_x="0 : 32 : 1" sodipodi:type="inkscape:persp3d" inkscape:vp_z="64 : 32 : 1" inkscape:persp3d-origin="32 : 21.333333 : 1">
+		</inkscape:perspective>
+	
+		<inkscape:perspective  id="perspective4157" inkscape:vp_y="0 : 1000 : 0" inkscape:vp_x="0 : 0.5 : 1" sodipodi:type="inkscape:persp3d" inkscape:vp_z="1 : 0.5 : 1" inkscape:persp3d-origin="0.5 : 0.33333333 : 1">
+		</inkscape:perspective>
+	
+		<inkscape:perspective  id="perspective4229" inkscape:vp_y="0 : 1000 : 0" inkscape:vp_x="0 : 0.5 : 1" sodipodi:type="inkscape:persp3d" inkscape:vp_z="1 : 0.5 : 1" inkscape:persp3d-origin="0.5 : 0.33333333 : 1">
+		</inkscape:perspective>
+</defs>
+<sodipodi:namedview  id="base" inkscape:grid-bbox="true" inkscape:window-x="0" inkscape:current-layer="layer1" inkscape:window-width="1280" inkscape:window-y="24" inkscape:document-units="px" inkscape:pageopacity="0.0" inkscape:pageshadow="2" inkscape:window-height="674" bordercolor="#666666" borderopacity="1.0" inkscape:cy="32.281262" inkscape:cx="26.144627" inkscape:zoom="5.5" showgrid="true" pagecolor="#ffffff" inkscape:window-maximized="1">
+	</sodipodi:namedview>
+<g>
+	
+		<linearGradient id="rect4201_1_" gradientUnits="userSpaceOnUse" x1="253.9609" y1="-327.9941" x2="277.9609" y2="-286.4487" gradientTransform="matrix(1 0 0 -1 -247.5996 -280.8398)">
+		<stop  offset="0" style="stop-color:#000000;stop-opacity:0.64"/>
+		<stop  offset="1" style="stop-color:#999999;stop-opacity:0.55"/>
+	</linearGradient>
+	<rect id="rect4201" x="3.392" y="2.493" fill="url(#rect4201_1_)" width="30.546" height="46.728"/>
+	<g id="g4195" transform="matrix(1.2913081,0,0,1.2913081,-6.8513535,-5.6843746)">
+		<path id="path3631" fill="#6A6A6A" stroke="#000000" stroke-width="0.5808" stroke-linejoin="round" d="M6.08,5.176v39.469
+			c0,0,5.073,5.096,13.438,5.093c8.828-0.002,13.656-3.999,13.656-3.999V5.176H6.08z M8.08,7.239h22.907v32.844H8.08V7.239z"/>
+		
+			<path id="path4145" sodipodi:ry="2.4545455" sodipodi:cx="27.90909" sodipodi:type="arc" sodipodi:rx="2.4545455" sodipodi:cy="46.636364" fill="#6A6A6A" stroke="#000000" stroke-width="0.5808" stroke-linejoin="round" d="
+			M22.253,44.77c0,1.355-1.098,2.455-2.454,2.455s-2.454-1.1-2.454-2.455c0-1.355,1.099-2.455,2.454-2.455
+			S22.253,43.414,22.253,44.77L22.253,44.77z"/>
+		
+			<rect id="rect4147" x="9.208" y="41.952" fill="#6A6A6A" stroke="#000000" stroke-width="0.5808" stroke-linejoin="round" width="6.318" height="2.999"/>
+		
+			<rect id="rect4147-8" x="24.048" y="41.952" fill="#6A6A6A" stroke="#000000" stroke-width="0.5808" stroke-linejoin="round" width="6.319" height="2.999"/>
+	</g>
+	<path id="path4219" sodipodi:nodetypes="cccsccssc" fill="#32B71D" d="M5.914,49.402H7.05l0.205,1.068c0,0,2.492,0.67,3.409,0
+		c0.302-0.221,0.341-1.068,0.341-1.068h1c0,0,0.059,1.441-0.464,1.73c-0.657,0.363-3.763,0.566-4.991,0
+		C5.992,50.875,5.914,49.402,5.914,49.402z"/>
+	<path id="path4219-3" sodipodi:nodetypes="cccsccssc" fill="#B71D1D" d="M25.14,49.383h1.137l0.205,1.068c0,0,2.49,0.67,3.408,0
+		c0.303-0.221,0.342-1.068,0.342-1.068h1c0,0,0.059,1.441-0.465,1.73c-0.656,0.365-3.762,0.566-4.99,0
+		C25.218,50.857,25.14,49.383,25.14,49.383z"/>
+</g>
+</svg>

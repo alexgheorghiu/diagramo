@@ -1,0 +1,28 @@
+
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <rect id="" x="0" y="0" height="200" width="300" style="stroke:#000000; fill: #FFFFFF"/>
+
+    <circle cx="100" cy="100" r="3" style="stroke: #FF0000; fill: yellow;"/>
+	<!--@see http://www.w3.org/TR/SVG/coords.html#TransformAttribute-->
+    <g transform="rotate(45 125 125)" >
+        <svg x="100" y="100"> <!--A whole new/full SVG-->
+            <rect x="0" y="0" height="100" width="100" style="stroke:#ff0000; fill: #ccccff" />
+            <text x="25"  y="25" style="font-family: Arial;  font-size: 34; stroke: #000000; fill: none; " >
+                Ana are mere
+            </text>
+            <text x="25"  y="34" style="font-family: Arial;  font-size: 34; stroke: #000000; fill: none; " >
+                Si  Ada are pere
+            </text>
+            
+        </svg>
+    </g>
+    
+    <svg x="100" y="100">
+        <rect x="0" y="0" height="100" width="100" style="stroke:#ff0000; fill: #ccccff" />
+        <text y="22">
+                <tspan x="10">You can also set the x attribute to fix the x-coordinate of the text lines.</tspan>
+                <tspan x="10" dy="22">This is useful if you want to display a list of lines below each other, all left adjusted.</tspan>
+                <tspan x="10" dy="22">Here is an example that sets x to 10 on three lines.</tspan>
+            </text>
+    </svg>
+</svg>

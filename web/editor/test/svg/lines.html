@@ -1,0 +1,25 @@
+<!--
+Test the tutorial at https://developer.mozilla.org/en/Canvas_tutorial/Applying_styles_and_colors#A_lineWidth_example
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+            function draw() {
+                var ctx = document.getElementById('canvas').getContext('2d');
+                for (var i = 0; i < 10; i++){
+                    ctx.lineWidth = 1+i;
+                    ctx.beginPath();
+                    ctx.moveTo(5+i*14,5);
+                    ctx.lineTo(5+i*14,140);
+                    ctx.stroke();
+                }
+            }
+        </script>
+    </head>
+    <body onload="draw()">
+        <canvas width="800" height="600" id="canvas"></canvas>
+    </body>
+</html>

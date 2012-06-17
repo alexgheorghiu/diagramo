@@ -1,0 +1,24 @@
+
+<svg width="800" height="600" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <polygon points="367,213 437,213 437,258 367,258 "  style="stroke:#000000;fill:#00ccff;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;"  />
+    <text y="212"  transform="rotate(0 402 ,233)" font-family="Arial" font-size="12" style="stroke:none; fill:#000000;text-anchor: middle" >
+        <tspan x="402" dy="12">Text</tspan>
+        <tspan x="402" dy="15">pe 3</tspan>
+        <tspan x="402" dy="15">linii</tspan>
+    </text>
+    <circle cx="402" cy="233" r="3" style="stroke: #FF0000; fill: yellow;"  transform="rotate(0 402 ,233)" />
+    <circle cx="402" cy="212" r="3" style="stroke: #FF0000; fill: green;"  transform="rotate(0 402 ,233)"  />
+    <path d="M295,246 C295,234.954305003384 312.908610006768,226 335,226 C357.091389993232,226 375,234.954305003384 375,246 C375,257.045694996616 357.091389993232,266 335,266 C312.908610006768,266 295,257.045694996616 295,246"  style="stroke:#000000;fill:none;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;"   />
+    <text y="238"  transform="rotate(0 335 ,244)" font-family="Arial" font-size="12" style="stroke:none; fill:#000000;text-anchor: middle" >
+        <tspan x="335" dy="12">Text</tspan>
+    </text>
+    <circle cx="335" cy="244" r="3" style="stroke: #FF0000; fill: yellow;"  transform="rotate(0 335 ,244)" />
+    <circle cx="335" cy="238" r="3" style="stroke: #FF0000; fill: green;"  transform="rotate(0 335 ,244)"  />
+    <polygon points="415.50252531695,212.99997476504757 465.0000252349551,163.5025253169493 514.497474683054,213.00002523495402 464.99997476504836,262.4974746830527 "  style="stroke:#000000;fill:none;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;"  />
+    <text y="198.375"  transform="rotate(314.99999999999994 465 ,213)" font-family="Arial" font-size="13" style="stroke:none; fill:#000000;text-anchor: middle" >
+        <tspan x="465" dy="130">Text</tspan>
+        <tspan x="465" dy="133.25">pe >  &lt;2 linii</tspan>
+    </text>
+    <circle cx="465" cy="213" r="3" style="stroke: #FF0000; fill: yellow;"  transform="rotate(314.99999999999994 465 ,213)" />
+    <circle cx="465" cy="198.375" r="3" style="stroke: #FF0000; fill: green;"  transform="rotate(314.99999999999994 465 ,213)"  />
+</svg>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+Test to see if possible to paint an SVG inside a canvas >:)
+by Alex
+Working in: Chrome and IE9, Firefox 4.0+
+Not Working in: FF 3.6.x and Opera
+-->
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            function init(){
+                var canvas = document.getElementById("c");
+                var ctx = canvas.getContext("2d");
+                ctx.fillRect(2, 2, 100, 100);
+                //ctx.fill();
+                
+                var img = new Image();
+                
+                img.onload = function(){
+                    ctx.drawImage(img,10,10);
+                }
+                
+                //img.src = "http://diagramo.test/test/svg/arcs.jpg";
+                img.src = "http://diagramo.test/test/svg/example1.svg";
+                
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <canvas id="c" width="400" height="400"></canvas>
+    </body>
+</html>

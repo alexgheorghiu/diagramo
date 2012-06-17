@@ -1,0 +1,50 @@
+body{
+    position: relative;
+}
+
+#content{
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+#main {
+    border: 1px dotted black;
+    min-height: 400px;
+}
+
+#logo {
+    /*border-bottom: 1px solid gray;*/
+    margin-bottom: 20px;
+}
+
+#breadcrumb {
+    /*border-bottom: 1px solid #6B7533;*/
+    background-color: white;
+}
+
+#navigator {
+    margin-top: 5px;
+    text-align: right;
+}
+
+.step {    
+    font-family: Gill, Helvetica, sans-serif;
+    font-size: 18px;
+    color: gray;
+}
+
+.stepselected{
+    font-family: Gill, Helvetica, sans-serif;
+    font-size: 20px;
+    color: orange;
+}
+
+.required {
+    color: red;
+}
+
+.error {
+    color : red;
+}

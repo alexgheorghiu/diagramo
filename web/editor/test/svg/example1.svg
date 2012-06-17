@@ -1,0 +1,12 @@
+<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg" version="1.1">
+	<rect x="0" y="0" height="200" width="300" style="stroke:#000000; fill: #FFFFFF"/>
+
+	<path d="M100,100 C200,200 100,50 300,100" style="stroke:#FFAAFF;fill:none;stroke-width:3;"  />
+	
+	<!--@see http://www.w3.org/TR/SVG/coords.html#TransformAttribute-->
+	<rect x="50" y="50" height="50" width="50"
+          style="stroke:#ff0000; fill: #ccccff" 
+	  >
+	</rect>
+
+</svg>

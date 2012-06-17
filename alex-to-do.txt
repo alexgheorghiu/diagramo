@@ -1,0 +1,39 @@
+This is Alex's current mental stack
+
+
+Todo:
+-----
+
+- if serial is wrong the message is still ok (it should be an error message)
+- discriminator lamp installer vs all-in-one
+- all-in-one for Linux?
+- on installer check support for HTML5 of browser
+- remove last selection when render
+
+Todo:
++ (done, review and testing needed) license back
++ add a readme inside zip
++ protect installer too (only steps after step2)
++ save, save as, load and edit diagram
++ manage users
++ gave up to VERSION, WEBADRESS
+x rebuild installer
+x public view diagram
+x on "my diagrams" logout link is broken
+x fix my settings
+x hide "forgot password"
+x images (svg in network package) not loaded
+x background of diagrams should be white (not transparent)
+x write specific php.ini settings
+x plug to dcentral (add version)
+x update build script
+
+
+
+Later:
+SVG background of canvas
+#1 - when save canvases with SVG it got errors
+	Security error
+	[Break On This Error] 	
+
+	var dataURL = canvas.toDataURL();

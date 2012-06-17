@@ -1,0 +1,51 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="../lib/primitives.js"></script>
+        <script type="text/javascript" src="../lib/style.js"></script>
+        <script type="text/javascript" src="../lib/matrix.js"></script>
+        <script type="text/javascript">
+            function toPoints(v){
+                var points = [];
+            
+                for(var i=0; i<v.length; i++){
+                    points.push(new Point(v[i][0], v[i][1]));
+                }
+                
+                return points;
+            }
+            var s2_1 = [[50, 50], [50, 30], [125, 30], [125, 150], [200, 150], [200, 130]];
+            var _s2_1 = toPoints(s2_1);
+            
+            function init(){
+                var ctx = document.getElementById('a').getContext('2d');
+                var l = new Line(new Point(40, 80), new Point(130, 190));
+                l.style.strokeStyle = 'rgba(255,0,0,0.5)';
+                if(!ctx){
+                    alert('No context');
+                }
+                else{
+                    l.paint(ctx);
+                }
+                
+                var n = new NURBS(_s2_1);
+                n.paint(ctx);
+            }
+            
+            window.addEventListener("load", function(evt){
+                alert('Wow' + _s2_1);
+                init();
+            }, false);
+            
+        </script>
+    </head>
+    <body>        
+        <canvas style="border: 1px solid gray;" id="a" width="800" height="600"></canvas>            
+    </body>
+</html>

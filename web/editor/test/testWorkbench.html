@@ -1,0 +1,343 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <!--[if IE]><script type="text/javascript" src="excanvas.js"></script><![endif]-->
+        <style>
+            .r{background: red;}
+            .g{background: greenyellow;}
+        </style>
+        <script type="text/javascript">
+            /*
+             *
+             *     NOTES
+             *
+             *
+             *ccx.clearRect (30, 25,  90, 60); !!!!!!!!!!!!!!! clearRect not working properly on explorerCanvas
+             *TODO: 1. font metrics? http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#text-0
+             **/
+
+            function log(msg){
+                var l = document.getElementById('log');
+                l.value = l.value + msg  + "\n";
+            }
+
+            function clearLog(){
+                var l = document.getElementById('log');
+                l.value = "";
+            }
+            
+            function init(){
+                
+                clearLog();
+                
+                var mainCanvas = document.getElementById("mainCanvas");
+                var cacheCanvas = document.getElementById("cacheCanvas");
+                var ctx = mainCanvas.getContext("2d");
+                var ccx = cacheCanvas.getContext("2d");          
+                
+                var t;
+                
+                t = testDrawing(ctx);
+                log('Drawings ' + t + ' ms')
+
+                t = testTextBold(ctx);
+                log('Text bold ' + t + ' ms')
+
+                
+                t = testTextItalic(ctx);
+                log('Text italic ' + t + ' ms')
+
+                
+                t = testTextManyLines(ctx);
+                log('Text many lines ' + t + ' ms')
+
+                t = testTextRotated(ctx);
+                log('Text rotated ' + t + ' ms')
+
+                
+                t = testTextAlignLeft(ctx);
+                log('Text align left ' + t + ' ms')
+
+                
+                t = testTextAlignCenter(ctx);
+                log('Text align center ' + t + ' ms')
+
+                
+                t = testTextAlignRight(ctx);
+                log('Text align right ' + t + ' ms')
+
+                t = testColorText(ctx);;
+                log('Text color ' + t + ' ms')
+
+                t = testTextMeasure(ctx);;
+                log('Text metrics ' + t + ' ms')
+                
+                t = testIntercanvasTransfer(mainCanvas, ccx)
+                log('Inter canvas transfer ' + t + ' ms')
+
+            }
+
+            function testDrawing(ctx){
+                var d1 = new Date();
+
+                ctx.fillRect(10, 10, 50, 50); //black
+                ctx.strokeRect(60, 70, 90, 80); //black
+            
+
+                ctx.beginPath();
+                ctx.moveTo(0,0);
+                ctx.lineTo(300,300);
+
+                ctx.moveTo(300,0);
+                ctx.lineTo(0,300);
+                ctx.closePath();
+                ctx.stroke();
+
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+
+            function testTextBold(ctx){
+                var d1 = new Date();
+                ctx.font = "bold 15px monospace sans-serif";
+                ctx.strokeText("Bold text", 50, 50);
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+        
+            function testTextItalic(ctx){
+                var d1 = new Date();
+                ctx.font = "italic 15px sans-serif";
+                ctx.strokeText("Italic text", 50, 100);
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+        
+            function testTextManyLines(ctx){
+                var d1 = new Date();
+                ctx.font = "12px sans-serif";
+                ctx.strokeText("This test has many\nLines of text", 50, 150);
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+
+            function testTextRotated(ctx){
+                var d1 = new Date();
+
+                ctx.save();
+                ctx.font = "bold 18px 'Arial'";
+
+                ctx.translate(240, 110);
+                ctx.rotate(Math.PI/3);
+                ctx.fillText("Sample String", 0, 0);
+                ctx.rotate(Math.PI/2);
+                ctx.fillText("Sample String", 0, 0);
+                ctx.rotate(Math.PI/4);
+                ctx.fillText("Sample String", 0, 0);
+                ctx.rotate(Math.PI/2);
+                ctx.fillText("Sample String", 0, 0);
+                
+                ctx.restore();
+
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+
+            
+
+            function testTextAlignLeft(ctx){
+                var d1 = new Date();
+                ctx.textAlign = "left";
+                ctx.strokeText("This is a left aligned text", 50, 170);
+
+                ctx.beginPath();
+                ctx.moveTo(50, 170 - 10);
+                ctx.lineTo(50, 170 + 10);
+                ctx.closePath();
+                ctx.stroke();
+
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+            
+            function testTextAlignCenter(ctx){
+                var d1 = new Date();
+                ctx.textAlign = "center";
+                ctx.strokeText("This is a center aligned text", 50, 190);
+
+                ctx.beginPath();
+                ctx.moveTo(50, 190 - 10);
+                ctx.lineTo(50, 190 + 10);
+                ctx.closePath();
+                ctx.stroke();
+                
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+            
+            function testTextAlignRight(ctx){
+                var d1 = new Date();
+                ctx.textAlign = "right";
+                ctx.strokeText("This is a right aligned text", 50, 200);
+
+                ctx.beginPath();
+                ctx.moveTo(50, 200 - 10);
+                ctx.lineTo(50, 200 + 10);
+                ctx.closePath();
+                ctx.stroke();
+                
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+
+            function testColorText(ctx){
+                var d1 = new Date();
+                ctx.font = "20px sans-serif";
+                ctx.textAlign = "center";
+                
+                ctx.fillStyle = 'rgba(0,250,0,0.90)';
+                ctx.fillText("This is a colored text", 50, 210);
+                
+                ctx.strokeStyle = 'rgba(250,0,0,0.90)';
+                ctx.strokeText("This is a colored text", 50, 210);
+                
+                var d2 = new Date();
+
+                
+                return d2.getTime() - d1.getTime();
+            }
+
+            /**
+             *@see http://www.8bitrocket.com/newsdisplay.aspx?newspage=41036
+             *@see http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html#text-0
+             **/
+            function testTextMeasure(ctx){
+                var d1 = new Date();
+                var str = 'Ann has a lot of apples';
+                var metrics = ctx.measureText(str);
+                log("\tText length: " + metrics.width);
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+
+            /**
+             *@param {Canvas} canvasSource - the canvas we will get data from
+             *@param {Context} ctxDestination - the context into which we will import data
+             **/
+            function testIntercanvasTransfer(canvasSource, ctxDestination){
+                var d1 = new Date();
+                ctxDestination.drawImage(canvasSource, 0, 0, 200, 200, 0, 0, 200, 200);
+                var d2 = new Date();
+                return d2.getTime() - d1.getTime();
+            }
+        
+        </script>
+    </head>
+    <body onload="init();">
+    <canvas id="mainCanvas" style="border: 1px solid gray;" width="400" height="400"></canvas>
+    <canvas id="cacheCanvas" style="border: 1px solid gray; /*visibility: hidden;*/" width="400" height="400"></canvas><br/>
+    <textarea id="log" name="log" rows="10" cols="40"></textarea>
+
+    <table border="1">
+        <tr>
+            <td>&nbsp;</td>
+            <td>FF 3.6.3</td>
+            <td>IE 7</td>
+            <td>Chrome 5.0.375.70</td>
+            <td>Safari 4.0.3</td>
+            <td>Opera 10.54</td>
+        </tr>
+        <tr>
+            <td>Drawing</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+        <tr>
+            <td>Text bold</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+        <tr>
+            <td>Text italic</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+        <tr>
+            <td>Text many lines</td>
+            <td class="r">not working</td>
+            <td class="g">ok</td>
+            <td class="r">not working</td>
+            <td class="r">not working</td>
+            <td class="r">not working</td>
+        </tr>
+        <tr>
+            <td>Text rotated</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+        <tr>
+            <td>Text align left</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+        <tr>
+            <td>Text align center</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+        <tr>
+            <td>Text align right</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+        <tr>
+            <td>Text color</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+        <tr>
+            <td>Text measure</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+        <tr>
+            <td>Inter Canvas transfer</td>
+            <td class="g">ok</td>
+            <td class="r">not working</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+            <td class="g">ok</td>
+        </tr>
+    </table>
+</body>
+</html>
