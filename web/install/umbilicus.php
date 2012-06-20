@@ -1,4 +1,4 @@
 <?php
 define(DIAGRAMO, 'http://diagramo.test');
-define(VERSION, '2.3beta3');
+define(VERSION, '2.3beta4');
 ?>
