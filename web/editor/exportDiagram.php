@@ -85,13 +85,13 @@ if(strpos($currentHost, ':')){
                     </table>
                 </div>
                 
-                <?if(!$l->checkLicense() ){ ?>    
+                <?if(false && !$l->checkLicense() ){ ?>    
                     <div>
                         This feature (export as PNG) is disable in free version. 
                         <p/>
                         Please <a href="./license.php"><img style="vertical-align: middle;" src="assets/images/upgrade-button.png" /></a> to be enable these feature.
                     </div>            
-                <?} else if($l->host != $currentHost) {?>
+                <?} else if(false && $l->host != $currentHost) {?>
                     <div style="background-color: yellow; font-size: 30px;">
                         License host (<?=$l->host?>) is wrong. It should be: <?=$currentHost?> <p/> 
                         Please <a href="./license.php"><img style="vertical-align: middle;" src="assets/images/upgrade-button.png" /></a> to be enable these feature.

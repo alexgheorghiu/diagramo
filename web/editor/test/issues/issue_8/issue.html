@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+	<head>
+		<script type="text/javascript">
+			
+			var backgroundImage = null;
+			
+			/**Adds a background to a canvas*/
+			function addBackground(canvasElement){				
+				//create new buffer canvas
+				var bufferCanvas = document.createElement('canvas');
+				
+				bufferCanvas.setAttribute('id', 'buffer');
+				bufferCanvas.setAttribute('width', canvasElement.width);
+				bufferCanvas.setAttribute('height', canvasElement.height);
+				bufferCanvas.style.border = '1px solid gray';
+				//bufferCanvas.style.display = 'none';
+				
+				canvasElement.parentNode.appendChild(bufferCanvas);
+				var bufferContext = bufferCanvas.getContext('2d');
+				
+				//add tile to the background
+				var tile = new Image();
+				tile.src = './gridTile2.png';
+				
+				//load image
+				tile.onload = function (e){
+					//console.info("Loaded. Width " + this.width + " Height: " + this.height);
+					var columns = Math.ceil(bufferCanvas.width / this.width);
+					//console.info("Columns: " + columns );
+					
+					var rows = Math.ceil(bufferCanvas.height / this.height);
+					//console.info("Rows: " + rows );
+					
+					for(var i=0;i<rows; i++){
+						for(var j=0; j<columns; j++){
+							bufferContext.drawImage(this, i * this.width, j * this.height);
+						}
+					}
+					
+					
+					//store the whole image of the background
+					var imgData = bufferCanvas.toDataURL();
+				
+					//paint image
+					var backgroundImage = new Image();
+					backgroundImage.src = imgData;
+					
+					backgroundImage.onload = function(e){
+						canvasElement.getContext('2d').drawImage(backgroundImage,0,0);				
+					}
+				} //end onload
+				
+			}//end function
+			
+			
+			function init(){
+				var eQuilt = document.getElementById('quilt');
+				//var ctx = eQuilt.getContext('2d');
+				
+				addBackground(eQuilt);
+				/*
+				ctx.beginPath();
+				ctx.moveTo(0,0);
+				ctx.lineTo(100, 100);
+				ctx.stroke();
+				
+				ctx.fillStyle = "#FF00FF";
+				ctx.fillRect(0, 0, 100, 100);
+				*/
+				
+				/*
+				var imgData = eQuilt.toDataURL();
+				
+				
+				var eTemp = document.getElementById('temp');
+				var ctxTemp = eTemp.getContext('2d');
+				
+				var img  = new Image();
+				img.src = imgData;
+				
+				ctxTemp.drawImage(img, 0,0 );
+				//ctxTemp.drawImage(eQuilt, 0,0 );
+				
+				var tile = new Image();
+				tile.src = './gridTile2.png';
+				tile.onload = function (e){
+					console.info("Loaded. Width " + this.width + " Height: " + this.height);
+					var columns = Math.ceil(eQuilt.width / this.width);
+					console.info("Columns: " + columns );
+					
+					var rows = Math.ceil(eQuilt.height / this.height);
+					console.info("Rows: " + rows );
+					
+					for(var i=0;i<rows; i++){
+						for(var j=0; j<columns; j++){
+							ctx.drawImage(this, i * this.width, j * this.height);
+						}
+					}
+				}
+				*/
+				
+			}
+			
+			window.addEventListener('load', init);
+		</script>
+	</head>
+	<body>
+		<canvas style="border: 1px solid red;" width="300" height="300" id="quilt"></canvas>		
+	</body>
+</html>

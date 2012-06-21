@@ -374,13 +374,21 @@ function createFigure(fFunction){
 
 }
 
+
 /**Activate snapToGrip  option*/
-function snapToGrid(){
-    if(gridVisible == false && snapTo == false){
-        showGrid();
-    }
-    snapTo =! snapTo;
-    document.getElementById("snapCheckbox").checked=snapTo;
+function snapToGrid(){	
+	Log.info("snapToGrid called;");
+	snapTo =! snapTo;
+	
+	if(snapTo){
+		if(!gridVisible){
+			gridVisible = true;
+			document.getElementById("gridCheckbox").checked = true;
+			
+			//trigger a repaint;
+			draw();
+		}
+	}
 }
 
 
@@ -389,18 +397,19 @@ function snapToGrid(){
  *will be disabled
  **/
 function showGrid(){
-    var canvas = getCanvas();
+	
+	/**If grid was visible and snap to was check we need to take measures*/
+	if(gridVisible){ 
+		if(snapTo){
+			snapTo = false;
+			document.getElementById("snapCheckbox").checked = false;        
+		}
+    }
+	
     gridVisible = !gridVisible;
-
-    if(gridVisible){
-        canvas.style.backgroundImage="url(assets/images/gridTile2.png)";
-    }
-    else {
-        canvas.style.backgroundImage = "";
-        document.getElementById("snapCheckbox").checked = false;
-        snapTo = false;
-    }
-    document.getElementById("gridCheckbox").checked = gridVisible;
+    
+	//trigger a repaint;
+	draw();
 }
 
 
@@ -2227,18 +2236,71 @@ function getCanvasXY(ev){
 }
 
 
+var backgroundImageData = null;
+			
+/**Adds a background to a canvas*/
+function addBackground(canvasElement){
+	Log.info("addBackground: called");
+	
+	var ctx = canvasElement.getContext('2d');
+	
+	if(backgroundImageData == null){
+				
+		var columns = Math.floor(canvasElement.width / GRIDWIDTH) + 1;
+		//console.info("Columns: " + columns );
+
+		var rows = Math.floor(canvasElement.height / GRIDWIDTH) + 1;
+		//console.info("Rows: " + rows );
+
+		for(var i=0;i<rows; i++){
+			for(var j=0; j<columns; j++){
+				ctx.beginPath();
+				ctx.strokeStyle = '#C0C0C0';
+				
+				//big cross
+				ctx.moveTo(j * GRIDWIDTH - 2, i * GRIDWIDTH);
+				ctx.lineTo(j * GRIDWIDTH + 2, i * GRIDWIDTH);
+				
+				ctx.moveTo(j * GRIDWIDTH, i * GRIDWIDTH - 2);
+				ctx.lineTo(j * GRIDWIDTH, i * GRIDWIDTH + 2);
+				
+				
+				//small dot
+				ctx.moveTo(j * GRIDWIDTH + GRIDWIDTH/2 - 1, i * GRIDWIDTH +  GRIDWIDTH/2);
+				ctx.lineTo(j * GRIDWIDTH + GRIDWIDTH/2 + 1, i * GRIDWIDTH +  GRIDWIDTH/2);
+				
+				ctx.stroke();
+			}
+		}
+		
+		backgroundImageData = canvasElement.toDataURL();
+	}
+	
+	var backgroundImage = new Image();
+	backgroundImage.src = backgroundImageData;
+	
+//	backgroundImage.onload = function(e){
+//		ctx.drawImage(this, 0, 0);		
+//	} //end onload
+	ctx.drawImage(backgroundImage, 0, 0);		
+
+}//end function
+			
+			
 
 /**Cleans up the canvas*/
 function reset(){
     var canvas = getCanvas();
-    var ctx = getContext();
-    ctx.beginPath();
-    ctx.clearRect(0,0,canvas.width,canvas.height);   
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.closePath();
-    ctx.stroke();
-//canvas.width=canvas.width;
+	
+	//clean canvas
+	var ctx = getContext();
+	ctx.clearRect(0,0,canvas.width,canvas.height);   
+	ctx.fillStyle = '#FFFFFF';
+	ctx.fillRect(0,0,canvas.width,canvas.height);	
+	
+	if(gridVisible){ //paint grid
+		addBackground(canvas);
+	}
 }
 
 

@@ -271,30 +271,13 @@ $page = 'editor';
 
                 //Canvas properties (width and height)
                 if(canvasProps == null){//only create a new one if we have not already loaded one
-                       canvasProps = new CanvasProps(CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT);
+					canvasProps = new CanvasProps(CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT);
                 }
                 //lets make sure that our canvas is set to the correct values
                 canvasProps.setWidth(canvasProps.getWidth());
                 canvasProps.setHeight(canvasProps.getHeight());
 
 
-                //Grid
-                grid = document.getElementById("grid");
-                if(document.getElementById("gridCheckbox").checked){
-                    showGrid();
-                }
-                else{
-                    //TODO: redundant?
-                    document.getElementById("gridCheckbox").checked = false;
-                }
-
-                if(document.getElementById("snapCheckbox").checked){
-                    snapToGrid();
-                }
-                else{
-                    //TODO: redundant?
-                    document.getElementById("snapCheckbox").checked = false;
-                }
 
 
                 //Browser support and warnings
