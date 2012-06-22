@@ -107,7 +107,36 @@ $page = 'editor';
         
         <script type="text/javascript">
             
+			/**
+			 *Returns the canvas data but without the selections and grid.
+			 *@return {DOMString} - the result of a toDataURL() call on the temporary canvas
+			 *@author Alex
+			 **/
+			function renderedCanvas(){
+				var canvas = getCanvas();
+				
+				//render the canvas without the selection and stuff
+				var tempCanvas = document.getElementById('tempCanvas');
+				if(tempCanvas == null){
+					tempCanvas = document.createElement('canvas');
+					tempCanvas.setAttribute('id', 'tempCanvas');					
+					tempCanvas.style.display = 'none';
+					
+					//it seems that there is no need to actually add it to the dom tree to be able to render (tested: IE9, FF9, Chrome 19)
+					//canvas.parentNode.appendChild(tempCanvas);
+				}
+				
+				//adjust temp canvas size to main canvas (as it migh have been changed)
+				tempCanvas.setAttribute('width', canvas.width);
+				tempCanvas.setAttribute('height', canvas.height);
+				reset(tempCanvas);
+				STACK.paint(tempCanvas.getContext('2d'), true);				
+				//end render
+				
+				return tempCanvas.toDataURL();
+			}
 
+			
              /** Save current diagram
              *See:
              *http://www.itnewb.com/v/Introduction-to-JSON-and-PHP/page3
@@ -117,8 +146,8 @@ $page = 'editor';
                 //alert("save triggered!");
                 Log.info('Save pressed');
 
-                var canvas = getCanvas();
-                var dataURL = canvas.toDataURL();
+				var dataURL = renderedCanvas();
+				
 //                Log.info(dataURL);
 //                return false;
                 
@@ -183,8 +212,7 @@ $page = 'editor';
              *for saving
              **/
             function saveAs(){
-                var canvas = getCanvas();
-                var dataURL = canvas.toDataURL();
+				var dataURL = renderedCanvas();
                 
 //                var $diagram = {c:canvas.save(), s:STACK, m:CONNECTOR_MANAGER};
                 var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER};

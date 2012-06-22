@@ -2288,19 +2288,16 @@ function addBackground(canvasElement){
 			
 			
 
-/**Cleans up the canvas*/
-function reset(){
-    var canvas = getCanvas();
-	
-	//clean canvas
-	var ctx = getContext();
+/**Cleans up the canvas. It also add a white background to avoid "transparent"
+ *background issue in PNG
+ *@param {HTMLCanvasElement} canvas - the canvas to reset
+ *@author Alex
+ **/
+function reset(canvas){
+	var ctx = canvas.getContext('2d');
 	ctx.clearRect(0,0,canvas.width,canvas.height);   
 	ctx.fillStyle = '#FFFFFF';
-	ctx.fillRect(0,0,canvas.width,canvas.height);	
-	
-	if(gridVisible){ //paint grid
-		addBackground(canvas);
-	}
+	ctx.fillRect(0,0,canvas.width,canvas.height);			
 }
 
 
@@ -2311,7 +2308,13 @@ function draw(){
 
     //    Log.group("A draw started");
     //alert('Paint 1')
-    reset();    
+    reset(getCanvas());    
+	
+	//if grid visible paint it
+	if(gridVisible){ //paint grid
+		addBackground(getCanvas());
+	}
+	
     //alert('Paint 2')
     STACK.paint(ctx);
     

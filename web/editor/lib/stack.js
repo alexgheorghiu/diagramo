@@ -607,8 +607,9 @@ Stack.prototype = {
 
     /**Paints all {Figure}s from back to top (Z order)
      *@param  {Context} context - the 2D context
+     *@param  {boolean} ignoreSelection - if ignoreSelection is set to true selections will not be painted
      **/
-    paint:function(context){
+    paint:function(context, ignoreSelection){
 //        Log.group("STACK: paint");
         /*The ideea is to paint from bottom to top
          * 1. figures (first)
@@ -672,17 +673,23 @@ Stack.prototype = {
             var f = this.figureGetById(selectedFigureId);
             HandleManager.shapeSet(f);
             //alert('Paint handles');
-            HandleManager.paint(context);
+			if(!ignoreSelection){
+				HandleManager.paint(context);
+			}
         }
         else if(state == STATE_CONNECTOR_SELECTED){ //CONNECTOR
             var c = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
             HandleManager.shapeSet(c);
-            HandleManager.paint(context);
+			if(!ignoreSelection){
+				HandleManager.paint(context);
+			}
         }
         else if(state == STATE_GROUP_SELECTED){ //GROUP 
             var g = this.groupGetById(selectedGroupId);
             HandleManager.shapeSet(g);
-            HandleManager.paint(context);
+			if(!ignoreSelection){
+				HandleManager.paint(context);
+			}
         }
         else if(state == STATE_SELECTING_MULTIPLE){ //SELECTION
             /* If shift is pressed, then leave the selected figure 
