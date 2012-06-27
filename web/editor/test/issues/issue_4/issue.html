@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+	<head>
+		<script type="text/javascript">
+			
+			
+			
+			/**
+			 *@see https://developer.mozilla.org/en/Canvas_tutorial/Applying_styles_and_colors
+			 **/
+			
+			function init(){
+				var eQuilt = document.getElementById('quilt');
+				var ctx = eQuilt.getContext('2d');
+				
+				var lingrad = ctx.createLinearGradient(0,0,100,0);  
+				lingrad.addColorStop(0, '#ffffff');  
+				lingrad.addColorStop(0.5, '#00FF00');  
+				lingrad.addColorStop(0.5, '#0000FF');  
+				lingrad.addColorStop(1, '#ffffff'); 
+				
+//				var lingrad2 = ctx.createLinearGradient(0,50,0,95);  
+//				lingrad2.addColorStop(0.5, '#000');  
+//				lingrad2.addColorStop(1, 'rgba(0,0,0,0)');  
+  
+//				ctx.fillStyle = lingrad;  
+//				ctx.strokeStyle = lingrad2;  
+
+				ctx.lineWidth = 1;
+				ctx.strokeStyle = lingrad;  
+				//ctx.strokeStyle = lingrad2;  
+  
+//				ctx.moveTo(0, 10);
+//				ctx.lineTo(100, 10);
+//				
+//				ctx.stroke();
+				
+//				ctx.fillRect(10,10,130,130);  
+//				ctx.strokeRect(50,50,50,50);	
+
+				ctx.lineWidth = 10;
+				var myPattern = generateDottedPattern(ctx.lineWidth);
+				var ptrn = ctx.createPattern(myPattern, 'repeat');
+				ctx.fillStyle = ptrn;
+				ctx.strokeStyle = ptrn;
+				ctx.fillRect(100, 100, 100, 100);
+				
+				
+				ctx.moveTo(10, 10);
+				ctx.lineTo(100, 10);
+				
+				ctx.moveTo(10, 10);
+				ctx.lineTo(100, 100);
+				
+				
+				ctx.moveTo(10, 10);
+				ctx.lineTo(10, 100);
+				
+				ctx.stroke();
+				
+			}
+			
+			/**Generates a dotted pattern.
+			 *Due to the way patterns fill/stroke we need to know the line width to
+			 *have a nice looking dotted line*/
+			function generateDottedPattern(lineWidth){
+				var tempCanvas = document.createElement('canvas');
+				tempCanvas.setAttribute('width', lineWidth);
+				tempCanvas.setAttribute('height', lineWidth);
+				tempCanvas.setAttribute('id', 'tempCanvas');
+				tempCanvas.style.border = '1px solid gray';
+				document.body.appendChild(tempCanvas);
+				
+				var tempContext = tempCanvas.getContext('2d');
+				
+				tempContext.strokeStyle = '#000000';
+				tempContext.fillStyle = '#000000';
+				
+//				tempContext.lineTo(2, 0);
+//				tempContext.stroke();
+
+//				tempContext.save();
+//				tempContext.translate(lineWidth / 2, lineWidth / 2);
+//				tempContext.rotate(Math.PI / 4);
+//				tempContext.fillRect(0, 0, lineWidth, lineWidth);
+//				tempContext.translate(-lineWidth / 2, -lineWidth / 2);
+//				tempContext.restore();
+				tempContext.arc(lineWidth/2, lineWidth/2, lineWidth / 2, 0, 2 * Math.PI);
+				tempContext.stroke();
+				
+				return tempCanvas;
+			}
+			
+			window.addEventListener('load', init);
+		</script>
+	</head>
+	<body>
+		<canvas style="border: 1px solid red;" width="300" height="300" id="quilt"></canvas>		
+	</body>
+</html>
