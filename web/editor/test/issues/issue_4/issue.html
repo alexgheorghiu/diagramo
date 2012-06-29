@@ -43,24 +43,33 @@
 //				ctx.strokeRect(50,50,50,50);	
 
 				ctx.lineWidth = 10;
-				var myPattern = generateDottedPattern(ctx.lineWidth);
+				//var myPattern = generateDottedPattern(ctx.lineWidth);
+				var myPattern = generateLinePattern(0,0, 20, 20, 5);
 				var ptrn = ctx.createPattern(myPattern, 'repeat');
-				ctx.fillStyle = ptrn;
+				
 				ctx.strokeStyle = ptrn;
-				ctx.fillRect(100, 100, 100, 100);
+				
+//				ctx.fillStyle = ptrn;
+//				ctx.fillRect(100, 100, 100, 100);
+				
+
+				var t1 = (new Date()).getMilliseconds();
+//				ctx.moveTo(0, 10);
+//				ctx.lineTo(100, 10);
+				
+				ctx.save();
+				ctx.translate(10, 10);
+				ctx.moveTo(0, 00);
+				ctx.lineTo(90, 90);
 				
 				
-				ctx.moveTo(10, 10);
-				ctx.lineTo(100, 10);
-				
-				ctx.moveTo(10, 10);
-				ctx.lineTo(100, 100);
-				
-				
-				ctx.moveTo(10, 10);
-				ctx.lineTo(10, 100);
+//				ctx.moveTo(10, 10);
+//				ctx.lineTo(10, 100);
 				
 				ctx.stroke();
+				ctx.restore();
+				var t2 = (new Date()).getMilliseconds();
+				console.info("Took " + (t2 - t1) + " ms");
 				
 			}
 			
@@ -90,6 +99,32 @@
 //				tempContext.translate(-lineWidth / 2, -lineWidth / 2);
 //				tempContext.restore();
 				tempContext.arc(lineWidth/2, lineWidth/2, lineWidth / 2, 0, 2 * Math.PI);
+				tempContext.stroke();
+				
+				return tempCanvas;
+			}
+			
+			function generateLinePattern(x1, y1, x2, y2, lineWidth ){
+				var width = Math.abs(x2 - x1);
+				var height = Math.abs(y2 - y1);
+				
+				var tempCanvas = document.createElement('canvas');
+				tempCanvas.setAttribute('width', width+4);
+				tempCanvas.setAttribute('height', height+4);
+				//tempCanvas.setAttribute('id', 'tempCanvas');
+				tempCanvas.style.border = '1px solid gray';
+				document.body.appendChild(tempCanvas)
+				
+				var tempContext = tempCanvas.getContext('2d');
+				
+				tempContext.lineWidth = lineWidth;
+				tempContext.strokeStyle = '#000000';
+				tempContext.fillStyle = '#0000FF';
+				tempContext.lineCap = 'square';
+				
+				tempContext.moveTo(0, 0);
+				tempContext.lineTo(width, height);
+				
 				tempContext.stroke();
 				
 				return tempCanvas;

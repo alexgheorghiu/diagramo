@@ -387,7 +387,7 @@ Line.prototype = {
 
     /**we need to create a new array each time, or we will affect the actual shape*/
     getPoints:function(){
-        points=[];
+        points = [];
         points.push(this.startPoint);
         points.push(this.endPoint);
         return points;
@@ -475,8 +475,9 @@ Polyline.prototype = {
             }
             }
     },
+	
     getPoints:function(){
-        var p=[];
+        var p = [];
         for (var i=0; i<this.points.length; i++){
             p.push(this.points[i]);
         }
@@ -669,9 +670,15 @@ Polygon.prototype = {
             }
     },
 
+
     getPoints:function(){
-        return this.points;
+		var p = [];
+        for (var i=0; i<this.points.length; i++){
+            p.push(this.points[i]);
+        }
+        return p;
     },
+
 
     /**
      *@return {Array<Number>} - returns [minX, minY, maxX, maxY] - bounds, where
@@ -855,8 +862,9 @@ QuadCurve.prototype = {
         this.endPoint.transform(matrix);
     },
 
+	//TODO: should this return a number of points along the line?
     getPoints:function(){
-        //should this return a number of points along the line?
+        
         return [this.startPoint,this.controlPoint,this.endPoint];
     },
 
@@ -893,7 +901,7 @@ QuadCurve.prototype = {
      *TODO: algorithm not clear and maybe we can find the math formula to determine if we have an intersection
      *@see <a href="http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic">http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic</a>
      */
-    near:function(x,y,radius){
+    near:function(x, y, radius){
         with(this){
             var polls=100;
             if(!Util.isPointInside(new Point(x,y), [startPoint,controlPoint,endPoint]) && !startPoint.near(x,y,radius) && ! endPoint.near(x,y,radius)){
@@ -1195,6 +1203,7 @@ CubicCurve.prototype = {
         return ret;
     },
 
+
     equals:function(anotherCubicCurve){
         if(!anotherCubicCurve instanceof CubicCurve){
             return false;
@@ -1277,6 +1286,7 @@ CubicCurve.prototype = {
        return poly.near(x, y, radius);
     },
 
+	//TODO: should this return a number of points along the line?
     getPoints:function(){
         return [this.startPoint,this.controlPoint1,this.controlPoint2,this.endPoint];
     },
@@ -1824,6 +1834,7 @@ Ellipse.prototype = {
 
     },
 
+
     getPoints:function(){
         var points = [];
         var curves = [this.topLeftCurve, this.topRightCurve,this.bottomRightCurve,this.bottomLeftCurve];
@@ -1886,6 +1897,7 @@ function DashedArc(x, y, radius, startAngle, endAngle, direction, styleFlag, das
     /**Object type used for JSON deserialization*/
     this.oType = 'DashedArc'; 
 }
+
 
 /**Creates a new {Ellipse} out of JSON parsed object
  *@param {JSONObject} o - the JSON parsed object
