@@ -1,5 +1,9 @@
-/*A pseudo JS to draw a pattern (dashed, dotted, etc) along a set of point*/
-function draw(points = [p1, p2,p3] /*the points*/, pt = [10,2,2 4,7] /*the pattern 10 dotts, 2 spaces, 2 dots, 7 spaces, etc*/){
+/*
+* A pseudo JS to draw a pattern (dashed, dotted, etc) along a set of point
+* points = [p1, p2,p3]
+* pt = [10,2,2 4,7] /*the pattern 10 dotts, 2 spaces, 2 dots, 7 spaces, etc
+*/
+function draw(ctx, points, pt){
 	
 	/**Computes distance between 2 points*/
 	function d(p1, p2){
@@ -8,7 +12,11 @@ function draw(points = [p1, p2,p3] /*the points*/, pt = [10,2,2 4,7] /*the patte
 	
 	/**Find the location of a point located on segment [p1,p2] at a certain distance from p1*/
 	function point_on_segment(p1, p2, distance_from_p1){
+		var d = d(p1, p2);
+		var Xm = p1[0] * distance_from_p1 / d;
+		var Ym = p1[1] * distance_from_p1 / d;
 		
+		return [Xm, Ym];
 	}
 	
 	current_point = points[0];
