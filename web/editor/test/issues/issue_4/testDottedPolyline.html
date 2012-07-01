@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<script type="text/javascript" src="../../../lib/primitives.js?<?=time()?>"></script>
+        <script type="text/javascript" src="../../../lib/ImageFrame.js?<?=time()?>"></script>
+        <script type="text/javascript" src="../../../lib/matrix.js?<?=time()?>"></script>
+        <script type="text/javascript" src="../../../lib/util.js?<?=time()?>"></script>
+        <script type="text/javascript" src="../../../lib/style.js?<?=time()?>"></script>
+        <script type="text/javascript" src="../../../lib/log.js?<?=time()?>"></script>
+		<script type="text/javascript">
+			function init(){
+				var eQuilt = document.getElementById('quilt');
+				var ctx = eQuilt.getContext('2d');
+				
+				var dottedPolygon = new DottedPolygon([5,2, 5, 2, 5, 6]);
+				dottedPolygon.points = [new Point(10,10), new Point(40, 10), new Point(70, 40), new Point(100, 200)];
+				dottedPolygon.style.lineWidth = 6;
+				dottedPolygon.style.strokeStyle = "#000000";
+				dottedPolygon.paint(ctx);
+			}
+			
+			window.addEventListener('load', init);
+		</script>
+	</head>
+	<body>
+		<canvas style="border: 1px solid red;" width="300" height="300" id="quilt"></canvas>	
+	</body>
+</html>

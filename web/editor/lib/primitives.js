@@ -659,15 +659,15 @@ Polygon.prototype = {
             closePath();
 
             //first fill
-            if(this.style.fillStyle!=null && this.style.fillStyle!=""){
+            if(this.style.fillStyle != null && this.style.fillStyle != ""){
                 fill();
             }
 
             //then stroke
-            if(this.style.strokeStyle!=null && this.style.strokeStyle!=""){
+            if(this.style.strokeStyle != null && this.style.strokeStyle != ""){
                 stroke();
             }
-            }
+		}
     },
 
 
@@ -717,6 +717,8 @@ Polygon.prototype = {
             return false;
             }
     },
+	
+	
     equals:function(anotherPolygon){
         if(!anotherPolygon instanceof Polygon){
             return false;
@@ -789,6 +791,193 @@ Polygon.prototype = {
         +  this.style.toSVG()
         +  ' />';
         return result;
+    }
+}
+
+
+/**
+  * Creates an instance of a DottedPolygon.
+  * DottedPolygon is a poligon with all edges dotted or with a certain pattern.
+  * As for now (Summer 2012) context does not support lines with a pattern
+  * this had to be created
+  *
+  * @constructor
+  * @this {DottedPolygon}
+  * @param {Array} pattern - an array of dots and spaces Ex: [10,2,2 4,7] means 10 dotts, 2 spaces, 2 dots and 7 spaces.
+  * @author Alex Gheorghiu <alex@scriptoid.com>
+  **/
+function DottedPolygon(pattern){
+    /**An {Array} of {@link Point}s*/
+    this.points = []
+    
+    /**The {@link Style} of the polygon*/
+    this.style = new Style();
+	
+	/**An {Array} of {Integer}s*/
+	this.pattern = pattern;
+    
+    /**Serialization type*/
+    this.oType = 'DottedPolygon'; //object type used for JSON deserialization
+}
+
+
+
+
+/**Creates a {Polygon} out of JSON parsed object
+ *@param {JSONObject} o - the JSON parsed object
+ *@return {Polygon} a newly constructed Polygon
+ *@author Alex Gheorghiu <alex@scriptoid.com>
+ **/
+DottedPolygon.load = function(o){
+    var newPolygon = new DottedPolygon();
+    newPolygon.points = Point.loadArray(o.points);
+    newPolygon.style = Style.load(o.style);
+    newPolygon.pattern = o.pattern;
+    return newPolygon;
+}
+
+
+DottedPolygon.prototype = {
+    contructor : DottedPolygon,
+    
+    addPoint:function(point){
+        this.points.push(point);
+    },
+
+
+    getPosition:function(){
+        return [this.points[0].x,[this.points[0].y]];
+    },
+
+
+    paint:function(context){
+		context.beginPath();
+
+		if(this.style != null){
+			this.style.setupContext(context);
+		}
+
+		/*
+		* PAINT IT
+		*
+		*/
+		//context.fillRect(10, 10, 100, 100);
+		Util.decorate(context, this.points, this.pattern);
+
+		context.closePath();
+
+		//first fill
+		if(this.style.fillStyle != null && this.style.fillStyle != ""){
+			context.fill();
+		}
+
+		//then stroke
+		if(this.style.strokeStyle != null && this.style.strokeStyle != ""){
+			context.stroke();
+		}
+    },
+
+
+    getPoints:function(){
+		var p = [];
+        for (var i=0; i<this.points.length; i++){
+            p.push(this.points[i]);
+        }
+        return p;
+    },
+
+
+    /**
+     *@return {Array<Number>} - returns [minX, minY, maxX, maxY] - bounds, where
+     *  all points are in the bounds.*/
+    getBounds:function(){
+        return Util.getBounds(this.getPoints());
+    },
+
+
+    near:function(x,y,radius){
+        with(this){
+            var i=0;
+            for(i=0; i< points.length-1; i++){
+                var l=new Line(points[i],points[i+1]);
+                if(l.near(x,y,radius)){
+                    return true;
+                }
+            }
+            l=new Line(points[i],points[0]);
+            if(l.near(x,y,radius)){
+                return true;
+            }
+            return false;
+            }
+    },
+	
+	
+    equals:function(anotherPolygon){
+        if(!anotherPolygon instanceof DottedPolygon){
+            return false;
+        }
+        with(this){
+            if(anotherPolygon.points.length == points.length){
+                for(var i=0; i<points.length; i++){
+                    if(!points[i].equals(anotherPolygon.points[i])){
+                        return false;
+                    }
+                }
+            }
+            //TODO: test for all DottedPolygon's pattern
+            }
+        return true;
+    },
+
+
+    clone:function(){
+        var ret = new DottedPolygon();
+        with(this){
+            for(var i=0; i<points.length; i++){
+                ret.addPoint(points[i].clone());
+            }
+            }
+        ret.style=this.style.clone();
+        return ret;
+    },
+
+
+    contains:function(x, y){
+        var inPath = false;
+        var p = new Point(x,y);
+        if(!p){
+            alert('DottedPolygon: P is null');
+        }
+        
+        return Util.isPointInside(p, this.points);
+    },
+
+    transform:function(matrix){
+        with(this){
+            if(style!=null){
+                style.transform(matrix);
+            }
+            for(var i=0; i < points.length; i++){
+                points[i].transform(matrix);
+            }
+		}
+    },
+
+    toString:function(){
+        var result = 'dottedpolygon(';
+        with(this){
+            for(var i=0; i < points.length; i++){
+                result += points[i].toString() + ' ';
+            }
+            }
+        result += ')';
+        return result;
+    },
+
+    /**Render the SVG fragment for this primitive*/
+    toSVG:function(){
+        throw "No implemented. To add an implementation see the similar function from Polygon"
     }
 }
 

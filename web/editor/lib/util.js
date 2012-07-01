@@ -76,7 +76,211 @@ var Util = {
     distance: function(p1, p2){
         return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
     },
+	
+	
+	/**Find the location of a point located on segment [p1,p2] at a certain distance from p1
+	 *@param {Point} p1 - first {Point}
+	 *@param {Point} p2 - second {Point}
+	 *@param {Number} distance_from_p1 - the distance from P1 toward P2 where searched point should be
+	 *@return {Point} - the distance between those 2 points. It is always positive.
+	 *@author Alex Gheorghiu <alex@scriptoid.com>
+	 **/
+	point_on_segment : function (p1, p2, distance_from_p1){
+		var d = Util.distance(p1, p2);
+		var Xm = p1.x  + distance_from_p1 / d * (p2.x - p1.x);
+		var Ym = p1.y  + distance_from_p1 / d * (p2.y - p1.y);
+
+		return new Point(Xm, Ym);
+	},	
+	
+	
+	/*
+	* Creates a set of dashes/dots/etc along a set of point
+	* points = [p1, p2,p3]
+	* pt = [10,2,2 4,7] /*the pattern 10 dotts, 2 spaces, 2 dots, 7 spaces, etc
+	* 
+	* @param {Context} ctx - Canvas' 2D context
+	* @param {Array} points - an {Array} of {Point}s
+	* @param {Array} pt - an {Array} of {Integer}s that define the pattern 
+	* 
+	* TODO: as the line width can change a lot (ex: = 20) we might end up having dots with height=20 and width=1 :D
+	* A solution might be to scale whole pattern by line width (ex: if lineWidth = 2 then all variables in patter got multiplied by 2)
+	* @author Alex Gheorghiu <alex@scriptoid.com>
+	*/
+	decorate : function(ctx, points, pt){
+		
+		/*Algorithm:
+		 *We begin with first segment and start applying the pattern as many time
+		 *as we can on it.  If we complete the segment then we move to next segment
+		 *but we have to keep the rest of the pattern (that were not painted yet) and
+		 *apply on the next segment (or segments). And so on.
+		 **/
+		
+		function info(msg){
+//			console.info(msg);
+		}
+
+		function group(name){
+//			console.group(name);
+		}
+
+		function groupEnd(){
+//			console.groupEnd();
+		}
+			
+		var t0 = (new Date).getMilliseconds();
+		
+
+
+
+		/**
+		 *@param {Point} p - the {Point}
+		 **/
+		function lineTo(p){
+			ctx.lineTo(p.x, p.y);
+		}
+
+		/**
+		 *@param {Point} p - the {Point}
+		 **/
+		function moveTo(p){
+			ctx.moveTo(p.x, p.y);
+		}
+
+		var current_point = points[0];
+		//path = 0
+		i = 0 //current point/segment
+		pt_i = 0 //index position in pattern
+		pt_left = pt[0] // spaces or dotts left to paint from current index position in pattern
+		
+		info("current_point" + current_point);
+		
+		//position at the begining
+		moveTo(current_point);
+
+
+
+		while (i < points.length - 1) {
+			//inside [Pi, Pi+1] segment
+			segment_path = 0 //how much of current segment was painted
+
+			group("Paint segment " + i);
+			info("i = " + i + " current_point = " + current_point + " pt_i = " + pt_i + " pt_left = " + pt_left + " segment_path = " + segment_path );
+
+			if(pt_left < 0){
+				break;
+			}
+
+
+			//paint previous/left part of pattern
+			if ( pt_left > 0 ){
+				group("Paint rest of pattern");
+				info("Pattern left,  pt_left : " + pt_left + " pt_i : " + pt_i);
+
+				//are we about to cross to another segment?
+				if ( pt_left > Util.distance(current_point, points[i+1]) ) { //we exceed current segment
+					info("We exceed current segment");
+
+					//paint what is left and move to next segment
+					if ( pt_i % 2 == 0 ) { //dots
+						lineTo(points[i+1]) 					
+					}
+					else{ //spaces
+						moveTo(points[i+1])
+					}
+
+					//store what was left unpainted
+					segment_path += Util.distance(current_point,  points[i+1]);
+					pt_left = pt_left - Util.distance(current_point, points[i+1])	
+					current_point = points[i+1]
+					i++; //move to next segment
+					groupEnd(); //end inner group
+					groupEnd(); //end outer group
+					continue;
+				}			
+				else{ //still inside segment
+					info("Painting from rest path pt_i = " + pt_i + " current_segment = " + segment_path);
+					var newP = Util.point_on_segment(current_point, points[i+1], pt_left) //translate on current_point with pt_left from Pi to Pi+1
+					info("\t newP = " + newP);
+					if ( pt_i % 2 == 0 ) { //dots
+						lineTo(newP) 					
+					}
+					else{ //spaces
+						moveTo(newP)
+					}
+
+					segment_path += Util.distance(current_point,  newP);	
+					current_point = newP
+					pt_left = 0
+					pt_i = (pt_i + 1) % pt.length;
+				}
+				groupEnd();
+			}
+
+
+
+			/*We should have:
+				pt_i >= 0
+				pt_left = 0;
+			*/
+			group('No rest left, normal paint');
+			info("We should have (pt_i >= 0) and (pt_left = 0) AND WE HAVE " + "pt_i = " + pt_i + " pt_left = " + pt_left);
+
+
+			//nothing left from previous segment
+			while(segment_path < Util.distance(points[i], points[i+1])){
+				info("Distance between " + i + " and " + (i + 1) + " = " + Util.distance(points[i], points[i+1]));
+
+
+				info("...painting path pt_i = " + pt_i + " dot/space length = " + pt[pt_i] + " current_segment = " + segment_path);
+				if(segment_path + pt[pt_i] <= Util.distance(points[i], points[i+1])){ //still inside segment
+					group("Still inside segment");
+					var newP = Util.point_on_segment(current_point, points[i+1], pt[pt_i]) //translate on current segment with pt[pt_i] from Pi to Pi+1
+					info("\t newP = " + newP);
+					if(pt_i % 2 == 0) {
+						lineTo(newP);
+					}
+					else{
+						moveTo(newP);
+					}
+					pt_left = 0
+					segment_path += pt[pt_i];
+					current_point = newP;
+					pt_i = (pt_i + 1) % pt.length;
+					groupEnd();
+				}
+				else{ //segment exceeded
+					group("Exceed segment");
+					if(pt_i % 2 == 0) {
+						lineTo(points[i+1]);
+					}
+					else{
+						moveTo(points[i+1]);
+					}
+					pt_left = pt[pt_i] - Util.distance(current_point, points[i+1]);
+					segment_path += Util.distance(current_point,  points[i+1]);
+					current_point = points[i+1];
+					info("...pt_left = " + pt_left + " current_segment = " + segment_path + " current_point = " + current_point);
+					//move to next segment							
+					groupEnd(); //end inner group							
+					break;
+				}
+
+
+			}
+			groupEnd();
+
+
+			++i;
+
+			groupEnd();
+		}
+
+		var t1 = (new Date).getMilliseconds();
+		console.info("Took " + (t1 - t0) + " ms");
+	},
     
+	
     /**Trim a number to a fixed number or decimals
      *@param {Numeric} number - the number to be trimmed
      *@param {Integer} decimals - the number of decimals to keep
@@ -201,11 +405,11 @@ var Util = {
         // check for two vertical lines
         if (l1.startPoint.x == l1.endPoint.x && l2.startPoint.x == l2.endPoint.x) {
             return l1.startPoint.x == l2.startPoint.x ? // if 'infinite 'lines do coincide,
-                // then check segment bounds for overlapping
-                l1.contains(l2.startPoint.x, l2.startPoint.y) ||
+			// then check segment bounds for overlapping
+			l1.contains(l2.startPoint.x, l2.startPoint.y) ||
                 l1.contains(l2.endPoint.x, l2.endPoint.y) :
                 // lines are paralel
-                false;
+			false;
         }
         // if one line is vertical, and another line is not vertical
         else if (l1.startPoint.x == l1.endPoint.x || l2.startPoint.x == l2.endPoint.x) {
@@ -236,10 +440,10 @@ var Util = {
             if(a1 == a2) { //paralel lines
                 return b1 == b2 ?
                     // for coincide lines, check for segment bounds overlapping
-                    l1.contains(l2.startPoint.x, l2.startPoint.y) || l1.contains(l2.endPoint.x, l2.endPoint.y) 
-                    :
+				l1.contains(l2.startPoint.x, l2.startPoint.y) || l1.contains(l2.endPoint.x, l2.endPoint.y) 
+				:
                     // not coincide paralel lines have no chance to intersect
-                    false;
+				false;
             } else { //usual case - non paralel, the 'infinite' lines intersects...we only need to know if inside the segment
 
                 /*
@@ -328,7 +532,7 @@ var Util = {
             angle=0;//we are at center point;
         }
         if(round){
-           angle = Math.round(angle / round) * round
+			angle = Math.round(angle / round) * round
         }
         return angle;
     },
@@ -349,7 +553,7 @@ var Util = {
         var angle = a2 - a1;
         
         if(round){
-           angle = Math.round(angle / round) * round
+			angle = Math.round(angle / round) * round
         }
         
         return angle;
@@ -398,7 +602,7 @@ var Util = {
     },
     
 
-     /**
+	/**
      * Calculates the number of times the line from (x0,y0) to (x1,y1)
      * crosses the ray extending to the right from (px,py).
      * If the point lies on the line, then no crossings are recorded.
@@ -465,11 +669,11 @@ var Util = {
             return 0;
         }
         return (Util.pointCrossingsForCubic(px, py,
-                                       x0, y0, xc0, yc0,
-                                       xc0m, yc0m, xmid, ymid, level+1) +
-                Util.pointCrossingsForCubic(px, py,
-                                       xmid, ymid, xmc1, ymc1,
-                                       xc1, yc1, x1, y1, level+1));
+		x0, y0, xc0, yc0,
+		xc0m, yc0m, xmid, ymid, level+1) +
+			Util.pointCrossingsForCubic(px, py,
+		xmid, ymid, xmc1, ymc1,
+		xc1, yc1, x1, y1, level+1));
     },
 
 
@@ -495,7 +699,7 @@ var Util = {
     },
 
 
-     /**Returns the max of a vector
+	/**Returns the max of a vector
      *@param {Array} v - vector of {Number}s
      *@return {Number} - the maximum number from the vector or NaN if vector is empty
      *@author alex@scriptoid.com
@@ -666,7 +870,7 @@ function signum(x){
  * @author Zack Newsham <zack_newsham@yahoo.co.uk>
  * */
 function isNumeric(input){
-   return (input - 0) == input && (input.length > 0 || input != "");
+	return (input - 0) == input && (input.length > 0 || input != "");
 }
 
 /**Repeats a string for several time and return the concatenated result

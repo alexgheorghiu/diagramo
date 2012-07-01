@@ -4,6 +4,18 @@
 			/*
 			TODO: dot patterns = 1  crash the algorithm
 			*/
+			
+			function info(msg){
+				//console.info(msg);
+			}
+			
+			function group(name){
+				//console.group(name);
+			}
+			
+			function groupEnd(){
+				//console.groupEnd();
+			}
 		
 			/*
 			* A pseudo JS to draw a pattern (dashed, dotted, etc) along a set of point
@@ -12,9 +24,10 @@
 			*/
 			function draw(ctx, points, pt){
 				
+				var t0 = (new Date).getMilliseconds();
 				/**Computes distance between 2 points*/
 				function distance(p1, p2){
-					//console.info("p1 = " + p1 + " p2 = " + p2);
+					//info("p1 = " + p1 + " p2 = " + p2);
 					return Math.sqrt(Math.pow(p1[0] - p2[0] , 2) + Math.pow(p1[1] - p2[1], 2) );		
 				}
 				
@@ -43,15 +56,14 @@
 				
 				moveTo(current_point);
 				
-				outer_loop:
-				var counter = 0;
+				
 				
 				while (i < points.length - 1) {
 					//inside [Pi, Pi+1] segment
 					segment_path = 0
 					
-					console.group("Paint segment " + i);
-					console.info("i = " + i + " current_point = " + current_point + " pt_i = " + pt_i + " pt_left = " + pt_left + " segment_path = " + segment_path );
+					group("Paint segment " + i);
+					info("i = " + i + " current_point = " + current_point + " pt_i = " + pt_i + " pt_left = " + pt_left + " segment_path = " + segment_path );
 					
 					if(pt_left < 0){
 						break;
@@ -60,12 +72,12 @@
 					
 					//paint previous/left part of pattern
 					if ( pt_left > 0 ){
-						console.group("Paint rest of pattern");
-						console.info("Pattern left,  pt_left : " + pt_left + " pt_i : " + pt_i);
+						group("Paint rest of pattern");
+						info("Pattern left,  pt_left : " + pt_left + " pt_i : " + pt_i);
 						
 						//are we about to cross to another segment?
 						if ( pt_left > distance(current_point, points[i+1]) ) { //we exceed current segment
-							console.info("We exceed current segment");
+							info("We exceed current segment");
 							
 							//paint what is left and move to next segment
 							if ( pt_i % 2 == 0 ) { //dots?
@@ -79,14 +91,14 @@
 							segment_path += distance(current_point,  points[i+1]);
 							pt_left = pt_left - distance(current_point, points[i+1])	
 							current_point = points[i+1]
-							i++;
-							console.groupEnd();
+							i++; //move to next segment
+							groupEnd();
 							continue;
 						}			
 						else{ //still inside segment
-							console.info("Painting from rest path pt_i = " + pt_i + " current_segment = " + segment_path);
+							info("Painting from rest path pt_i = " + pt_i + " current_segment = " + segment_path);
 							newP = point_on_segment(current_point, points[i+1], pt_left) //translate on current_point with pt_left from Pi to Pi+1
-							console.info("\t newP = " + newP);
+							info("\t newP = " + newP);
 							if ( pt_i % 2 == 0 ) { //dots?
 								lineTo(newP) 					
 							}
@@ -99,7 +111,7 @@
 							pt_left = 0
 							pt_i = (pt_i + 1) % pt.length;
 						}
-						console.groupEnd();
+						groupEnd();
 					}
 					
 					
@@ -108,22 +120,20 @@
 						pt_i >= 0
 						pt_left = 0;
 					*/
-					console.info("We should have (pt_i >= 0) and (pt_left = 0) AND WE HAVE " + "pt_i = " + pt_i + " pt_left = " + pt_left);
+					group('No rest left, normal paint');
+					info("We should have (pt_i >= 0) and (pt_left = 0) AND WE HAVE " + "pt_i = " + pt_i + " pt_left = " + pt_left);
 					
 					
 					//nothing left from previous segment
 					while(segment_path < distance(points[i], points[i+1])){
-						console.info("Distance between " + i + " and " + (i + 1) + " = " + distance(points[i], points[i+1]));
-						if (++counter > 2000){
-							ctx.stroke();
-							return;
-						}
-							
-						console.info("...painting path pt_i = " + pt_i + " dot/space length = " + pt[pt_i] + " current_segment = " + segment_path);
-						if(segment_path + pt[pt_i] <= distance(points[i], points[i+1])){
-							console.info("Still inside segment");
+						info("Distance between " + i + " and " + (i + 1) + " = " + distance(points[i], points[i+1]));
+						
+
+						info("...painting path pt_i = " + pt_i + " dot/space length = " + pt[pt_i] + " current_segment = " + segment_path);
+						if(segment_path + pt[pt_i] <= distance(points[i], points[i+1])){ //still inside segment
+							group("Still inside segment");
 							newP = point_on_segment(current_point, points[i+1], pt[pt_i]) //translate on current segment with pt[pt_i] from Pi to Pi+1
-							console.info("\t newP = " + newP);
+							info("\t newP = " + newP);
 							if(pt_i % 2 == 0) {
 								lineTo(newP);
 							}
@@ -134,9 +144,10 @@
 							segment_path += pt[pt_i];
 							current_point = newP;
 							pt_i = (pt_i + 1) % pt.length;
+							groupEnd();
 						}
-						else{ //
-							console.info("Exceed segment");
+						else{ //segment exceeded
+							group("Exceed segment");
 							if(pt_i % 2 == 0) {
 								lineTo(points[i+1]);
 							}
@@ -146,18 +157,25 @@
 							pt_left = distance(current_point, points[i+1])
 							segment_path += distance(current_point,  points[i+1]);
 							current_point = points[i+1];
-							console.info("...pt_left = " + pt_left + " current_segment = " + segment_path + " current_point = " + current_point);
+							info("...pt_left = " + pt_left + " current_segment = " + segment_path + " current_point = " + current_point);
+							//move to next segment							
+							groupEnd(); //end inner group							
+							break;
+							
 						}
 						
 						
 					}
+					groupEnd();
 					
 					
 					++i;
 					
-					console.groupEnd();
+					groupEnd();
 				}
 				
+				var t1 = (new Date).getMilliseconds();
+				console.info("Took " + (t1 - t0) + " ms");
 				ctx.stroke();
 			}
 			
@@ -165,8 +183,10 @@
 				var eQuilt = document.getElementById('quilt');
 				var ctx = eQuilt.getContext('2d');
 				
-				var points = [[10,10],[40, 10],[40, 40],[100, 40], [120, 60]];
-				var pattern = [1,2];
+				var points = [[10,10],[40, 10],[40, 40],[100, 40], [120, 60], [150, 10], [200, 250]];
+				//var pattern = [5,3,1,3];
+				var pattern = [40,2, 40,2];
+				var pattern = [3, 3];
 				draw(ctx, points, pattern);
 			}
 		
