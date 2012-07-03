@@ -3,9 +3,9 @@ figureSets["experimental"] = {
     description : 'An experimental set of figures. Use it on your own risk',
     figures : [
         {figureFunction: "SimpleImage", image: "image_32.gif"},
-        {figureFunction: "ImageFrame", image: "page.png"},
+        {figureFunction: "ImageFrame", image: "image_frame.png"},
         {figureFunction: "Settings", image: "page.png"},
-        {figureFunction: "Tango", image: "page.png"},
+        {figureFunction: "Tango", image: "tango.png"},
         {figureFunction: "Organic", image: "page.png"},
         {figureFunction: "Inkscape", image: "page.png"},
         {figureFunction: "Airport", image: "page.png"},
@@ -155,7 +155,7 @@ function figure_ImageFrame(x, y)
 //    img.src = '/test/image/duff.jpg';
 //    img.src = '/test/image/NancySinatra2.jpg';
 //    img.src = '/test/svg/arcs.svg';
-    var url = "/test/image/NancySinatra2.jpg";
+    var url = "/editor/test/image/NancySinatra2.jpg";
     /*
      *http://diagramo.test/test/image/duff.jpg
      *http://diagramo.test/test/image/NancySinatra2.jpg
@@ -228,7 +228,9 @@ function figure_Settings(x, y)
 //    img.src = '/assets/images/logo.gif';
 //    img.src = '/test/svg/arcs.svg';
 //    var url = "/assets/images/logo.gif";
-    var url = figureSetsURL + "/experimental/preferences-system-symbolic-plain.svg";
+    //var url = figureSetsURL + "/experimental/preferences-system-symbolic-plain.svg";
+    var url = "/editor/lib/sets/experimental/preferences-system-symbolic-plain.svg";
+	//var url = "/editor/test/image/NancySinatra2.jpg";
     
     var ifig = new ImageFrame(url, x, y, true);
     ifig.debug = true;
@@ -253,7 +255,8 @@ function figure_Tango(x, y)
 //    img.src = '/assets/images/logo.gif';
 //    img.src = '/test/svg/arcs.svg';
 //    var url = "/assets/images/logo.gif";
-    var url = figureSetsURL + "/experimental/tango.svg";
+    //var url = figureSetsURL + "/experimental/tango.svg";
+    var url = "/editor/lib/sets/experimental/tango.svg";
     
     var ifig = new ImageFrame(url, x, y, true, 200, 200);
     ifig.debug = true;
@@ -279,7 +282,8 @@ function figure_Organic(x, y)
 //    img.src = '/assets/images/logo.gif';
 //    img.src = '/test/svg/arcs.svg';
 //    var url = "/assets/images/logo.gif";
-    var url = figureSetsURL + "/experimental/organic.svg";
+    //var url = figureSetsURL + "/experimental/organic.svg";
+	var url = "/editor/lib/sets/experimental/organic.svg";
     
     var ifig = new ImageFrame(url, x, y, true, 200, 200);
     ifig.debug = true;
