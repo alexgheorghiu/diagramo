@@ -658,12 +658,12 @@ Polygon.prototype = {
             }
             closePath();
 
-            //first fill
+            //fill current path
             if(this.style.fillStyle != null && this.style.fillStyle != ""){
                 fill();
             }
 
-            //then stroke
+            //stroke current path 
             if(this.style.strokeStyle != null && this.style.strokeStyle != ""){
                 stroke();
             }
@@ -829,10 +829,9 @@ function DottedPolygon(pattern){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 DottedPolygon.load = function(o){
-    var newPolygon = new DottedPolygon();
+    var newPolygon = new DottedPolygon(o.pattern);
     newPolygon.points = Point.loadArray(o.points);
     newPolygon.style = Style.load(o.style);
-    newPolygon.pattern = o.pattern;
     return newPolygon;
 }
 
@@ -851,30 +850,37 @@ DottedPolygon.prototype = {
 
 
     paint:function(context){
-		context.beginPath();
-
+		
+				
 		if(this.style != null){
 			this.style.setupContext(context);
 		}
 
-		/*
-		* PAINT IT
-		*
-		*/
-		//context.fillRect(10, 10, 100, 100);
-		Util.decorate(context, this.points, this.pattern);
-
-		context.closePath();
-
+		//simply ignore anything that don't have at least 2 points
+		if(this.points.length < 2){
+			return;
+		}
+	   
+		var clonnedPoints = Point.cloneArray(this.points);		
+		
 		//first fill
-		if(this.style.fillStyle != null && this.style.fillStyle != ""){
+		if(this.style.fillStyle != null && this.style.fillStyle != ""){			
+			context.beginPath();
+			context.moveTo(clonnedPoints[0].x, clonnedPoints[0].y);
+			for(i=1;i<clonnedPoints.length; i++){
+				context.lineTo(clonnedPoints[i].x, clonnedPoints[i].y);
+			}
 			context.fill();
 		}
 
 		//then stroke
-		if(this.style.strokeStyle != null && this.style.strokeStyle != ""){
+		if(this.style.strokeStyle != null && this.style.strokeStyle != ""){	
+			context.beginPath(); //begin a new path
+			Util.decorate(context, clonnedPoints, this.pattern);
 			context.stroke();
 		}
+		
+		//context.restore();
     },
 
 
@@ -954,30 +960,28 @@ DottedPolygon.prototype = {
     },
 
     transform:function(matrix){
-        with(this){
-            if(style!=null){
-                style.transform(matrix);
-            }
-            for(var i=0; i < points.length; i++){
-                points[i].transform(matrix);
-            }
+		if(this.style != null){
+			this.style.transform(matrix);
+		}
+		for(var i=0; i < this.points.length; i++){
+			this.points[i].transform(matrix);
 		}
     },
 
     toString:function(){
         var result = 'dottedpolygon(';
-        with(this){
-            for(var i=0; i < points.length; i++){
-                result += points[i].toString() + ' ';
-            }
-            }
+		for(var i=0; i < this.points.length; i++){
+			result += this.points[i].toString() + ' ';
+		}
         result += ')';
         return result;
     },
 
     /**Render the SVG fragment for this primitive*/
-    toSVG:function(){
-        throw "No implemented. To add an implementation see the similar function from Polygon"
+    toSVG:function(){        
+        var result = "\n" + repeat("\t", INDENTATION) + '<text x="20" y="40">DottedPolygon:toSVG() - no implemented</text>';
+        
+        return result;
     }
 }
 
@@ -2590,6 +2594,9 @@ Figure.load = function(o){
         }
         else if(o.primitives[i].oType == 'Polygon'){
             newFigure.primitives.push(Polygon.load(o.primitives[i]))
+        }
+        else if(o.primitives[i].oType == 'DottedPolygon'){
+            newFigure.primitives.push(DottedPolygon.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'QuadCurve'){
             newFigure.primitives.push(QuadCurve.load(o.primitives[i]))

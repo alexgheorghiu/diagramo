@@ -95,19 +95,19 @@ var Util = {
 	
 	
 	/*
-	* Creates a set of dashes/dots/etc along a set of point
+	* Creates a set of dashes/dots/etc along a set of points
 	* points = [p1, p2,p3]
 	* pt = [10,2,2 4,7] /*the pattern 10 dotts, 2 spaces, 2 dots, 7 spaces, etc
 	* 
 	* @param {Context} ctx - Canvas' 2D context
 	* @param {Array} points - an {Array} of {Point}s
-	* @param {Array} pt - an {Array} of {Integer}s that define the pattern 
+	* @param {Array} pattern - an {Array} of {Integer}s that define the pattern. 
+	* Pattern is increased/decreased to accomodate the lineWidth
+	* Ex: Scale whole pattern by line width (ex: if lineWidth = 2 then all variables in patter got multiplied by 2)
 	* 
-	* TODO: as the line width can change a lot (ex: = 20) we might end up having dots with height=20 and width=1 :D
-	* A solution might be to scale whole pattern by line width (ex: if lineWidth = 2 then all variables in patter got multiplied by 2)
 	* @author Alex Gheorghiu <alex@scriptoid.com>
 	*/
-	decorate : function(ctx, points, pt){
+	decorate : function(ctx, points, pattern){
 		
 		/*Algorithm:
 		 *We begin with first segment and start applying the pattern as many time
@@ -130,7 +130,12 @@ var Util = {
 			
 		var t0 = (new Date).getMilliseconds();
 		
-
+		/**Scale the pattern up/down to fit the lineWidth*/
+		var pt = [];
+		
+		for(var i=0; i<pattern.length; i++){
+			pt[i] = pattern[i] * ctx.lineWidth;
+		}
 
 
 		/**

@@ -14,9 +14,9 @@
 				var eQuilt = document.getElementById('quilt');
 				var ctx = eQuilt.getContext('2d');
 				
-				var dottedPolygon = new DottedPolygon([5,2, 5, 2, 5, 6]);
+				var dottedPolygon = new DottedPolygon([5,2, 1, 2, 5, 6]);
 				dottedPolygon.points = [new Point(10,10), new Point(40, 10), new Point(70, 40), new Point(100, 200)];
-				dottedPolygon.style.lineWidth = 6;
+				dottedPolygon.style.lineWidth = 4;
 				dottedPolygon.style.strokeStyle = "#000000";
 				dottedPolygon.paint(ctx);
 			}
