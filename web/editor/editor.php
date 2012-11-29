@@ -32,7 +32,7 @@ $page = 'editor';
     <!--Copyright 2010 Scriptoid s.r.l-->
     <head>
         <title>HTML5 diagram editor</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=9" />
+        <meta http-equiv="X-UA-Compatible" content="IE=9" />        
         <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
         
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
@@ -328,6 +328,56 @@ $page = 'editor';
                 
                 // close layer when click-out
                 
+                
+                
+                window.addEventListener("mousedown", documentOnMouseDown, false);
+                window.addEventListener("mousemove", documentOnMouseMove, false);
+                window.addEventListener("mouseup", documentOnMouseUp, false);
+            }     
+            
+            
+            function documentOnMouseDown(evt){
+                //Log.info("documentOnMouseDown");
+                //evt.preventDefault();
+            }
+            
+            var draggingFigure = null;
+            function documentOnMouseMove(evt){
+                //Log.info("documentOnMouseMove");
+                
+                switch(state){
+                    case STATE_FIGURE_CREATE:
+                        //Log.info("documentOnMouseMove: trying to draw the D'n'D figure");
+                        
+                        if(!draggingFigure){
+                            draggingFigure = document.createElement('img');                                                        
+                            body.appendChild(draggingFigure);
+                        }
+                        
+                        draggingFigure.setAttribute('id', 'draggingThumb');
+                        draggingFigure.setAttribute('src', selectedFigureThumb);
+                        draggingFigure.style.position = 'absolute';
+                        draggingFigure.style.width = '100px';
+                        draggingFigure.style.height = '100px';
+                        draggingFigure.style.left = (evt.pageX - 50) + 'px';
+                        draggingFigure.style.top = (evt.pageY - 50) + 'px';
+                        draggingFigure.style.backgroundColor  = 'red';
+                        break;
+                        
+                    case STATE_NONE:
+                        //document.removeChild(document.getElementById('draggingThumb'));
+                        break;
+                }
+            }
+            
+            function documentOnMouseUp(evt){
+                //Log.info("documentOnMouseUp");
+                
+//                switch(state){
+//                    case STATE_FIGURE_CREATE:
+//                        state = STATE_NONE;
+//                        break;
+//                }
             }
         </script>
 
@@ -449,7 +499,18 @@ $page = 'editor';
                             if(counter % 3 == 0){
                                 document.write('<tr>');
                             }
-                            document.write('<td align="center"><a href="javascript:createFigure(figure_'+figure.figureFunction+');"><img src="lib/sets/'+setName+'/'+figure.image+'" border="0" alt="'+ figure.figureFunction + '" /></a></td>');
+                            
+                            var figureFunctionName = 'figure_' + figure.figureFunction;
+                            var figureThumbURL = 'lib/sets/' + setName + '/' + figure.image;
+                            
+                            document.write('<td align="center">');
+                            //document.write('<a href="javascript:createFigure(' + figureFunctionName + "," + "'" + figureThumbURL + "'" + ');">');
+                            
+                            //TODO: how to prevent default behaviour?
+                            document.write('<img onmousedown="javascript:createFigure(' + figureFunctionName + "," + "'" + figureThumbURL + "'" + ');" src="' + figureThumbURL + '" border="0" alt="'+ figure.figureFunction + '" />');
+                            //document.write('</a>');
+                            document.write('</td>');
+                            
                             counter ++;
                             if(counter % 3 == 0){
                                 document.write('</tr>');
