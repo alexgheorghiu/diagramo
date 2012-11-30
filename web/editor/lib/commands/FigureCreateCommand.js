@@ -28,6 +28,7 @@ FigureCreateCommand.prototype = {
     execute : function(){
         if(this.firstExecute){
             //create figure
+            //Log.info("FigureCreateCommand> execute> factoryFunction=" + this.factoryFunction);
             var createdFigure = this.factoryFunction(this.x, this.y);
               
             //move it into position

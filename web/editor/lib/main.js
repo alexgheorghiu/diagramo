@@ -367,7 +367,7 @@ function setUpEditPanel(shape){
  * @param  {String} thumbURL - the URL to the thumb of the image
  **/
 function createFigure(fFunction, thumbURL){
-    Log.info('createFigure (' + fFunction.name + ',' + thumbURL + ')');
+    //Log.info('createFigure (' + fFunction + ',' + thumbURL + ')');
     
     createFigureFunction = fFunction;
     
@@ -817,7 +817,7 @@ function onMouseDown(ev){
 //
 //            mousePressed = false;
 //            redraw = true;
-            throw Exception("onMouseDown+STATE_FIGURE_CREATE : this should not happen");  
+            throw "canvas> onMouseDown> STATE_FIGURE_CREATE> : this should not happen";  
             break;
 
 
@@ -1192,6 +1192,8 @@ function onMouseDown(ev){
  *@param {Event} ev - the event generated when key is up
  **/
 function onMouseUp(ev){
+    Log.info("main.js>onMouseUp()");
+    
     var coords = getCanvasXY(ev);
     x = coords[0];
     y = coords[1];
@@ -1210,8 +1212,11 @@ function onMouseUp(ev){
                 HandleManager.clear();
             }
             break;
-            
+        
+        /* treated on the dragging figure
         case STATE_FIGURE_CREATE:
+            Log.info("onMouseUp() + STATE_FIGURE_CREATE");
+            
             snapMonitor = [0,0];
             
             //treat new figure
@@ -1235,7 +1240,8 @@ function onMouseUp(ev){
                 Log.info("onMouseUp() + STATE_FIGURE_CREATE--> but no 'createFigureFunction'");
             }
             break;
-            
+        */
+       
         case STATE_FIGURE_SELECTED:
             /*Description:
              * This means that we have a figure selected and just released the mouse:

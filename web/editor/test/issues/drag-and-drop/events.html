@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script>
+            function init(){
+                console.info(name + "Page loaded");
+                
+                var container = document.getElementById('container');
+                container.addEventListener("click", containerOnClick, true);
+                
+                var minime = document.getElementById('minime');
+                minime.addEventListener("click", minimeOnClick, true);
+                //minime.addEventListener("mouseout", minimeBlur, false);
+            }
+            
+            function containerOnClick(evt){
+                console.info("containerOnClick");
+            }
+            
+            function minimeOnClick(evt){
+                console.info("minimeOnClick");
+                //evt.stopPropagation();
+            }
+            
+            function stopHere(evt){
+                
+            }
+            
+            function pageUnload(evt){
+                return confirm("Are you sure?")
+            }
+            
+            function minimeBlur(evt){
+                console.info("Minime is blurred....and confused");
+            }
+            
+            window.addEventListener("load", init, false);
+            window.addEventListener("unload", pageUnload, false);
+        </script>
+    </head>
+    <body>
+        <div id="container" style="background-color: #50B1D2;">
+            Before
+            <div id="minime" style="background-color: #F2683E">
+                I'm MiniMe
+            </div>
+            After
+            <p/>
+            <a href="http://scriptoid.com" onclick="preventDefault();">Scriptoid</a>
+        </div>
+    </body>
+</html>

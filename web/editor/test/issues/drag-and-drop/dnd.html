@@ -40,7 +40,7 @@
             
             function mousedown(evt){
                 //console.info("mouse down");     
-                evt.preventDefault();
+                //evt.preventDefault();
             }
             
             function mouseup(){
@@ -125,6 +125,7 @@
             <img src="./rectangle.png"/>
         </div>
         
-        <img src="./rectangle.png" />
+        <img src="./rectangle.png" onclick="return false;"/>
+        <div onclick="return false;" style="background-image: url('./rectangle.png'); display: inline-block; width: 100px; height: 100px; cursor: pointer;"></div>
     </body>
 </html>
