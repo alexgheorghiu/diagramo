@@ -32,7 +32,8 @@ $page = 'editor';
     <!--Copyright 2010 Scriptoid s.r.l-->
     <head>
         <title>HTML5 diagram editor</title>
-        <meta http-equiv="X-UA-Compatible" content="IE=9" />        
+        <meta http-equiv="X-UA-Compatible" content="IE=9" />     
+        <meta charset="UTF-8">
         <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
         
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
@@ -372,6 +373,11 @@ $page = 'editor';
                         
                         draggingFigure.addEventListener('mouseup', function (ev){
                             var coords = getCanvasXY(ev);
+                            
+                            if(coords == null){
+                                return;
+                            }
+                            
                             x = coords[0];
                             y = coords[1];
                             switch(state){                                
@@ -422,14 +428,24 @@ $page = 'editor';
                 }
             }
             
+            
             function documentOnMouseUp(evt){
                 Log.info("documentOnMouseUp");
                 
-//                switch(state){
-//                    case STATE_FIGURE_CREATE:
-//                        state = STATE_NONE;
-//                        break;
-//                }
+                switch(state){
+                    case STATE_FIGURE_CREATE:
+                        var eClicked = document.elementFromPoint(evt.clientX, evt.clientY);
+                        if(eClicked.id != 'a'){
+                            if(draggingFigure){
+                                //draggingFigure.style.display  = 'none';
+                                draggingFigure.parentNode.removeChild(draggingFigure);
+                                state = STATE_NONE;
+                                draggingFigure = null;
+                                //evt.stopPropagation();
+                            }
+                        }
+                        break;
+                }
             }
         </script>
 
@@ -543,8 +559,22 @@ $page = 'editor';
                     /**Builds the figure panel*/
                     function buildPanel(){
                         //var first = true;
-                        for(var setName in figureSets){
+                        var firstPanel = true;
+                        for(var setName in figureSets){                            
                             var set = figureSets[setName];
+                            
+                            var eSetDiv = document.createElement('div');
+                            eSetDiv.setAttribute('id', setName);
+                            eSetDiv.style.border = '1px solid green';
+                            if(firstPanel) {
+                                firstPanel = false;
+                            }
+                            else{
+                                eSetDiv.style.display = 'none';
+                            }
+                            document.getElementById('figures').appendChild(eSetDiv);
+                            
+                            
                             for(var figure in set['figures']){
                                 figure = set['figures'][figure];
                                 
@@ -565,12 +595,22 @@ $page = 'editor';
                                     };
                                 } (figureFunctionName, figureThumbURL)
                                 , false);
+
+                                //in case use drops the figure
+                                eFigure.addEventListener('mouseup', function (){
+                                    createFigureFunction = null;    
+                                    selectedFigureThumb = null;
+                                    state = STATE_NONE;
+                                }
+                                , false);
+                                
+                                
                                 
                                 
                                 
                                 eFigure.style.cursor = 'pointer';
                                 
-                                document.getElementById('figures').appendChild(eFigure);
+                                eSetDiv.appendChild(eFigure);
                             }
                         }
                     }

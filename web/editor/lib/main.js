@@ -372,6 +372,7 @@ function createFigure(fFunction, thumbURL){
     createFigureFunction = fFunction;
     
     selectedFigureThumb = thumbURL;
+    
 
     selectedFigureId = -1;
     selectedConnectorId = -1;
