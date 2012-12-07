@@ -6,3 +6,10 @@ hh:mm
 #1  1:30 7Dec
 
 Pack 1: 14,5h
+
+
+Packages
+--------
+package 1: Task 1 (10days)
+package 2:  Task: 3,5, 8, 0
+package 3:  task 2 and 4
