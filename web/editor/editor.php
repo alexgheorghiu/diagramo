@@ -553,8 +553,8 @@ $page = 'editor';
                             document.write('<option value="' + setName + '">' + set['name'] + '</option>');
                         }
                     </script>
-
                 </select>
+                
                 <script>
                     /**Builds the figure panel*/
                     function buildPanel(){
@@ -563,9 +563,10 @@ $page = 'editor';
                         for(var setName in figureSets){                            
                             var set = figureSets[setName];
                             
+                            //creates the div that will hold the figures
                             var eSetDiv = document.createElement('div');
                             eSetDiv.setAttribute('id', setName);
-                            eSetDiv.style.border = '1px solid green';
+                            //eSetDiv.style.border = '1px solid green';
                             if(firstPanel) {
                                 firstPanel = false;
                             }
@@ -574,12 +575,11 @@ $page = 'editor';
                             }
                             document.getElementById('figures').appendChild(eSetDiv);
                             
-                            
+                            //add figures to the div
                             for(var figure in set['figures']){
                                 figure = set['figures'][figure];
                                 
-                                var figureFunctionName = 'figure_' + figure.figureFunction;
-                                
+                                var figureFunctionName = 'figure_' + figure.figureFunction;                                
                                 var figureThumbURL = 'lib/sets/' + setName + '/' + figure.image;
                                 
                                 var eFigure = document.createElement('img');
@@ -602,13 +602,12 @@ $page = 'editor';
                                     selectedFigureThumb = null;
                                     state = STATE_NONE;
                                 }
-                                , false);
-                                
-                                
-                                
+                                , false);                                                                                                
                                 
                                 
                                 eFigure.style.cursor = 'pointer';
+                                eFigure.style.marginRight = '5px';
+                                eFigure.style.marginTop = '2px';
                                 
                                 eSetDiv.appendChild(eFigure);
                             }

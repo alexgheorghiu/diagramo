@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8"/>
+		<script type="text/javascript">
+			var name = "alex";
+			function hello(){
+				alert(this.name);
+			}
+			
+			function test(){
+				alert(' ' + arguments.callee);
+			}
+		</script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			var  o = {};
+			o.name = "Nia";
+			//hello();
+			//hello.call(o);
+			test('nice');
+		</script>
+	</body>
+</html>
