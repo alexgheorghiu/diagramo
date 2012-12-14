@@ -443,6 +443,21 @@ function onClick(ev){
 }
 
 
+
+function onDoubleClick(ev){
+    var coords = getCanvasXY(ev);
+    var HTMLCanvas = getCanvas();
+    var x = coords[0];
+    var y = coords[1];
+    lastClick = [x,y];
+//    Log.info("onMouseDown at (" + x + "," + y + ")");
+    //alert('lastClick: ' + lastClick + ' state: ' + state);
+
+    //mousePressed = true;
+    alert("Double click triggered");
+}
+
+
 /**Receives the ASCII character code but not the keyboard code
  *@param {Event} ev - the event generated when kay is pressed
  *@see <a href="http://www.quirksmode.org/js/keys.html">http://www.quirksmode.org/js/keys.html</a>

@@ -673,6 +673,7 @@ $page = 'editor';
                             onmousemove="onMouseMove(event)"
                             onmousedown="onMouseDown(event)"
                             onmouseup="onMouseUp(event)"
+                            ondblclick="onDoubleClick(event)"
                             
                             ontouchstart="touchStart(event);"
                             ontouchmove="touchMove(event);"
