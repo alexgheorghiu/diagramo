@@ -7,6 +7,8 @@
  *  All primitives should have the following methods implemented:
  *  Like a Shape interface:
  *  -paint:void
+ *		As each primitive can be painted by itself, inside paint() we need to open a new path so
+ *		the last style  (from last primitive in Figure) will not override previous
  *  -tranform(matrix):void
  *  -contains(x, y):boolean
  *  -equals(object):boolean
@@ -250,7 +252,9 @@ Line.prototype = {
 
     },
 
-    paint:function(context){        
+    paint:function(context){
+		context.beginPath();
+		
         if(this.style != null){
             this.style.setupContext(context);
         }
@@ -264,12 +268,12 @@ Line.prototype = {
             var lineLength=Math.sqrt(Math.pow(this.startPoint.x-this.endPoint.x,2)+Math.pow(this.startPoint.y-this.endPoint.y,2));
 
             //get the angle
-            var angle=Util.getAngle(this.startPoint,this.endPoint);
+            var angle = Util.getAngle(this.startPoint,this.endPoint);
 
             //draw a dotted line
             var move=false;
             for(var i=0; i<lineLength; i+=(this.style.dashLength)){
-                var p=this.startPoint.clone();
+                var p = this.startPoint.clone();
 
                 //translate to origin of start
                 p.transform(Matrix.translationMatrix(-this.startPoint.x,-this.startPoint.y))
@@ -284,11 +288,11 @@ Line.prototype = {
                 p.transform(Matrix.translationMatrix(this.startPoint.x,this.startPoint.y))
 
                 if (move==false){
-                    context.lineTo(p.x,p.y);
+                    context.lineTo(p.x, p.y);
                     move=true;
                 }
                 else{
-                    context.moveTo(p.x,p.y);
+                    context.moveTo(p.x, p.y);
                     move=false;
                 }
             }
@@ -850,7 +854,6 @@ DottedPolygon.prototype = {
 
 
     paint:function(context){
-		
 				
 		if(this.style != null){
 			this.style.setupContext(context);
@@ -1069,6 +1072,8 @@ QuadCurve.prototype = {
 
 
     paint:function(context){
+		context.beginPath();
+		
         with(context){
             if(this.style!=null){
                 this.style.setupContext(context);
@@ -1355,6 +1360,8 @@ CubicCurve.prototype = {
     
     
     paint:function(context){
+		context.beginPath();
+		
 //        Log.group("CubicCurve:paint() ");
         if(this.style != null){
             this.style.setupContext(context);
@@ -1693,6 +1700,8 @@ Arc.prototype = {
 
 
     paint:function(context){
+		context.beginPath();
+		
         with(this){
             if(style!=null){
                 style.setupContext(context);
@@ -1723,7 +1732,7 @@ Arc.prototype = {
                 context.stroke();
             }
 
-            }
+		}
     },
 
     clone:function(){
@@ -1939,8 +1948,8 @@ Ellipse.prototype = {
                     stroke();
                 }
 
-                }
-            }
+			}
+		}
     },
 
     contains:function(x,y){
@@ -2349,6 +2358,7 @@ Path.prototype = {
     },
 
     paint:function(context){
+		context.beginPath();
         context.save();
 
         if(this.style != null){
@@ -2362,7 +2372,7 @@ Path.prototype = {
         //not allowing multiple colours in a single path will clean this code up hugely.
         //
         if(this.style.fillStyle != null && this.style.fillStyle != "" ){
-            context.beginPath();
+            
             context.moveTo(this.primitives[0].startPoint.x,this.primitives[0].startPoint.y);
             for(var i = 0; i<this.primitives.length; i++ ){
                 var primitive  = this.primitives[i];
@@ -2827,8 +2837,9 @@ Figure.prototype = {
             this.style.setupContext(context);
         }
         for(var i = 0; i<this.primitives.length; i++ ){
+			context.save();
             var primitive  = this.primitives[i];
-            context.save();
+            
 
             var oldStyle = null;
             if(primitive.style){ //save primitive's style
@@ -2836,66 +2847,67 @@ Figure.prototype = {
             }
 
             if(primitive.style == null){ //if primitive does not have a style use Figure's one
-                primitive.style = this.style;
+                primitive.style = this.style.clone();
             }
             else{ //if primitive has a style merge it
                 primitive.style.merge(this.style);
             }
 
-            context.beginPath();
+            
             primitive.paint(context);
             primitive.style = oldStyle;
-            if(this.style.image != null){ //TODO: should a figure has a Style cann't just delegate all to primitives?
-                //clip required for background images, there were two methods, this was the second I tried
-                //neither work in IE
-                context.clip();
-                context.save();
-                if(this.rotationCoords.length != 0){
-                    var angle=Util.getAngle(this.rotationCoords[0], this.rotationCoords[1]);
-                    if(IE && angle==0){
-                        angle=0.00000001;//stupid excanves, without this it puts all images down and right of the correct location
-                    //and by an amount relative to the distane from the top left corner
-                    }
-
-                    //if we perform a rotation on the actual rotationCoords[0] (centerPoint), when we try to translate it back,
-                    //rotationCoords[0] will = 0,0, so we create a clone that does not get changed
-                    var rotPoint = this.rotationCoords[0].clone();
-
-                    //move to origin, make a rotation, move back in place
-                    this.transform(Matrix.translationMatrix(-rotPoint.x, -rotPoint.y))
-                    this.transform(Matrix.rotationMatrix(-angle));
-                    this.transform(Matrix.translationMatrix(rotPoint.x, rotPoint.y))
-
-                    //TODO: these are not used...so why the whole acrobatics ?
-                    //this was the second method that is also not supported by IE, get the image, place it in
-                    //the correct place, then shrink it, so its still an 'image mask' but it is only a small image
-                    //context.scale below is also part of this
-                    //var shrinkBounds = this.getBounds();
-
-                    //move back to origin, 'undo' the rotation, move back in place
-                    this.transform(Matrix.translationMatrix(-rotPoint.x, -rotPoint.y))
-                    this.transform(Matrix.rotationMatrix(angle));
-                    this.transform(Matrix.translationMatrix(rotPoint.x, rotPoint.y))
-
-                    //rotate current canvas to prepare it to draw the image (you can not roate the image...:D)
-                    context.translate(rotPoint.x,rotPoint.y);
-                    context.rotate(angle);
-                    //context.scale(0.01,0.01)//1/getCanvas().width*shrinkBounds[0]+(shrinkBounds[2]-shrinkBounds[0])/2,1/getCanvas().width*shrinkBounds[1]+(shrinkBounds[3]-shrinkBounds[1])/2)
-                    context.translate(-rotPoint.x,-rotPoint.y);
-                }
-                //draw image
-                /*context.fill();
-                context.beginPath();
-                context.globalCompositeOperation = "source-atop"
-                 clip works best,but this works too, neither will work in IE*/
-                //context.fill();
-                context.drawImage(this.style.image,this.rotationCoords[0].x-this.style.image.width/2,this.rotationCoords[0].y-this.style.image.height/2,this.style.image.width,this.style.image.height)
-
-                context.restore();
-            }
-            else if (this.style.image!=null){
-                context.fill();
-            }
+			
+//            if(this.style.image != null){ //TODO: should a figure has a Style cann't just delegate all to primitives?
+//                //clip required for background images, there were two methods, this was the second I tried
+//                //neither work in IE
+//                context.clip();
+//                context.save();
+//                if(this.rotationCoords.length != 0){
+//                    var angle=Util.getAngle(this.rotationCoords[0], this.rotationCoords[1]);
+//                    if(IE && angle==0){
+//                        angle=0.00000001;//stupid excanves, without this it puts all images down and right of the correct location
+//                    //and by an amount relative to the distane from the top left corner
+//                    }
+//
+//                    //if we perform a rotation on the actual rotationCoords[0] (centerPoint), when we try to translate it back,
+//                    //rotationCoords[0] will = 0,0, so we create a clone that does not get changed
+//                    var rotPoint = this.rotationCoords[0].clone();
+//
+//                    //move to origin, make a rotation, move back in place
+//                    this.transform(Matrix.translationMatrix(-rotPoint.x, -rotPoint.y))
+//                    this.transform(Matrix.rotationMatrix(-angle));
+//                    this.transform(Matrix.translationMatrix(rotPoint.x, rotPoint.y))
+//
+//                    //TODO: these are not used...so why the whole acrobatics ?
+//                    //this was the second method that is also not supported by IE, get the image, place it in
+//                    //the correct place, then shrink it, so its still an 'image mask' but it is only a small image
+//                    //context.scale below is also part of this
+//                    //var shrinkBounds = this.getBounds();
+//
+//                    //move back to origin, 'undo' the rotation, move back in place
+//                    this.transform(Matrix.translationMatrix(-rotPoint.x, -rotPoint.y))
+//                    this.transform(Matrix.rotationMatrix(angle));
+//                    this.transform(Matrix.translationMatrix(rotPoint.x, rotPoint.y))
+//
+//                    //rotate current canvas to prepare it to draw the image (you can not roate the image...:D)
+//                    context.translate(rotPoint.x,rotPoint.y);
+//                    context.rotate(angle);
+//                    //context.scale(0.01,0.01)//1/getCanvas().width*shrinkBounds[0]+(shrinkBounds[2]-shrinkBounds[0])/2,1/getCanvas().width*shrinkBounds[1]+(shrinkBounds[3]-shrinkBounds[1])/2)
+//                    context.translate(-rotPoint.x,-rotPoint.y);
+//                }
+//                //draw image
+//                /*context.fill();
+//                context.beginPath();
+//                context.globalCompositeOperation = "source-atop"
+//                 clip works best,but this works too, neither will work in IE*/
+//                //context.fill();
+//                context.drawImage(this.style.image,this.rotationCoords[0].x-this.style.image.width/2,this.rotationCoords[0].y-this.style.image.height/2,this.style.image.width,this.style.image.height)
+//
+//                context.restore();
+//            }
+//            else if (this.style.image!=null){
+//                context.fill();
+//            }
 
             context.restore();
         }
@@ -3167,6 +3179,8 @@ NURBS.prototype = {
     
     /**Paint the NURBS*/
     paint : function(context){
+		context.beginPath();
+		
         if(this.style != null){
             this.style.setupContext(context);
         }
