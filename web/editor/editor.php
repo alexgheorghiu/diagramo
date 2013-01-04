@@ -32,6 +32,7 @@ $page = 'editor';
     <!--Copyright 2010 Scriptoid s.r.l-->
     <head>
         <title>HTML5 diagram editor</title>
+        <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
         <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
         
