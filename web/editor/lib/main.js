@@ -41,9 +41,6 @@ var FIGURE_ESCAPE_DISTANCE = 30; /**the distance by which the connectors will es
  *variable so upon click on canvas this function will create the object*/
 var createFigureFunction = null;
 
-/**A variable that will tell us if we are in IE*/
-var IE = false;
-
 /**A variable that tells us if CTRL is pressed*/
 var CNTRL_PRESSED = false;
 

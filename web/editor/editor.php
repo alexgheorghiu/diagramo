@@ -354,12 +354,6 @@ $page = 'editor';
             }            
             
         </script>
-
-        <!--[if IE]>
-        <script type="text/javascript">
-            var IE=true;
-        </script>
-        <![endif]-->
     </head>
     <body onload="init();" id="body">
         
