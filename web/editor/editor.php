@@ -107,34 +107,34 @@ $page = 'editor';
         
         <script type="text/javascript">
             
-			/**
-			 *Returns the canvas data but without the selections and grid.
-			 *@return {DOMString} - the result of a toDataURL() call on the temporary canvas
-			 *@author Alex
-			 **/
-			function renderedCanvas(){
-				var canvas = getCanvas();
-				
-				//render the canvas without the selection and stuff
-				var tempCanvas = document.getElementById('tempCanvas');
-				if(tempCanvas == null){
-					tempCanvas = document.createElement('canvas');
-					tempCanvas.setAttribute('id', 'tempCanvas');					
-					tempCanvas.style.display = 'none';
-					
-					//it seems that there is no need to actually add it to the dom tree to be able to render (tested: IE9, FF9, Chrome 19)
-					//canvas.parentNode.appendChild(tempCanvas);
-				}
-				
-				//adjust temp canvas size to main canvas (as it migh have been changed)
-				tempCanvas.setAttribute('width', canvas.width);
-				tempCanvas.setAttribute('height', canvas.height);
-				reset(tempCanvas);
-				STACK.paint(tempCanvas.getContext('2d'), true);				
-				//end render
-				
-				return tempCanvas.toDataURL();
-			}
+            /**
+             *Returns the canvas data but without the selections and grid.
+             *@return {DOMString} - the result of a toDataURL() call on the temporary canvas
+             *@author Alex
+             **/
+            function renderedCanvas(){
+                    var canvas = getCanvas();
+
+                    //render the canvas without the selection and stuff
+                    var tempCanvas = document.getElementById('tempCanvas');
+                    if(tempCanvas == null){
+                            tempCanvas = document.createElement('canvas');
+                            tempCanvas.setAttribute('id', 'tempCanvas');					
+                            tempCanvas.style.display = 'none';
+
+                            //it seems that there is no need to actually add it to the dom tree to be able to render (tested: IE9, FF9, Chrome 19)
+                            //canvas.parentNode.appendChild(tempCanvas);
+                    }
+
+                    //adjust temp canvas size to main canvas (as it migh have been changed)
+                    tempCanvas.setAttribute('width', canvas.width);
+                    tempCanvas.setAttribute('height', canvas.height);
+                    reset(tempCanvas);
+                    STACK.paint(tempCanvas.getContext('2d'), true);				
+                    //end render
+
+                    return tempCanvas.toDataURL();
+            }
 
 			
              /** Save current diagram
@@ -212,7 +212,7 @@ $page = 'editor';
              *for saving
              **/
             function saveAs(){
-				var dataURL = renderedCanvas();
+                var dataURL = renderedCanvas();
                 
 //                var $diagram = {c:canvas.save(), s:STACK, m:CONNECTOR_MANAGER};
                 var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER};
@@ -299,7 +299,7 @@ $page = 'editor';
 
                 //Canvas properties (width and height)
                 if(canvasProps == null){//only create a new one if we have not already loaded one
-					canvasProps = new CanvasProps(CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT);
+                    canvasProps = new CanvasProps(CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT);
                 }
                 //lets make sure that our canvas is set to the correct values
                 canvasProps.setWidth(canvasProps.getWidth());
@@ -320,15 +320,39 @@ $page = 'editor';
                 <? if( isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId']) ){?>
                 load(<?=$_REQUEST['diagramId']?>);
                 <? }?>
-                    
-                //add event handlers for document
-                document.onkeypress = onKeyPress;                
-                document.onkeydown = onKeyDown;
-                document.onkeyup = onKeyUp;
-                
+                                                    
                 // close layer when click-out
                 
+                addListeners();
             }
+            
+            
+            /**Add listeners to elements on the page*/
+            function addListeners(){
+                var canvas = getCanvas();
+                
+                //add event handlers for Document
+                document.addEventListener("keypress", onKeyPress, false);
+                document.addEventListener("keydown", onKeyDown, false);
+                document.addEventListener("keyup", onKeyUp, false);
+                
+                //add event handlers for Canvas
+                canvas.addEventListener("mousemove", onMouseMove, false);
+                canvas.addEventListener("mousedown", onMouseDown, false);
+                canvas.addEventListener("mouseup", onMouseUp, false);
+             
+             
+                if(false){
+                    //add listeners for iPad/iPhone
+                    //As this was only an experiment (for now) it is not well supported nor optimized
+                    ontouchstart="touchStart(event);"
+                    ontouchmove="touchMove(event);"
+                    ontouchend="touchEnd(event);"
+                    ontouchcancel="touchCancel(event);"
+                }
+                
+            }            
+            
         </script>
 
         <!--[if IE]>
@@ -336,9 +360,6 @@ $page = 'editor';
             var IE=true;
         </script>
         <![endif]-->
-
-
-
     </head>
     <body onload="init();" id="body">
         
@@ -471,25 +492,7 @@ $page = 'editor';
             <!--THE canvas-->
             <div style="width: 100%">
                 <div  id="container">
-                    <canvas id="a" width="800" height="600" 
-                            onmousemove="onMouseMove(event)"
-                            onmousedown="onMouseDown(event)"
-                            onmouseup="onMouseUp(event)"
-                            
-                            ontouchstart="touchStart(event);"
-                            ontouchmove="touchMove(event);"
-                            ontouchend="touchEnd(event);"
-                            ontouchcancel="touchCancel(event);"
-                    >
-                        
-                    </canvas>
-                    <script type="text/javascript">
-                        //$("#a").ontouchstart(onTouchStart);
-                        //$("#a").mousemove(onMouseMove);
-                        //$("#a").mousedown(onMouseDown);
-                        //$("#a").mouseup(onMouseUp);
-                        //$("#a").click(onClick);
-                    </script>
+                    <canvas id="a" width="800" height="600"></canvas>
                 </div>
             </div>
             
