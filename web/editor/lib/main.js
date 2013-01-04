@@ -87,12 +87,14 @@ function toSVG(){
 }
             
 
-/**Supposelly stop any selection from happening
- *@deprecated
- *TODO: as with IE9 we have proper DOM event support....maybe we should use that
- *and get rid of window.event
- **/
+/**
+ *Supposelly stop any selection from happening
+ */
 function stopselection(ev){
+    
+    /**TODO: as with IE9 we have proper DOM event support....maybe we should use that
+     *and get rid of window.event
+     **/
     if(!ev){
         ev = window.event;
     }
