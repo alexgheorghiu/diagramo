@@ -1,46 +1,52 @@
 /**
- *This functions detects if a browser supports <canvas> tag and if
- *it does it tests to see if beasic drawring features are supported
- *@return {Number}  0 - means no support at all, 1-means simulated support IE 2-means full support
- *@author Augustin <cdaugustin@yahoo.com>
+ *This functions detects if a browser supports
+ *  - <canvas> tag (tests to see if baasic drawing features are supported)
+ *  - standard new event system (older then IE9 browsers will basically fail this test)
+ *@return {Boolean}  false - means no support, true - means supported
  *@author Alex <alex@scriptoid.com>
- *
- *TODO: some functions might be present but empty....
+ *@author Augustin <cdaugustin@yahoo.com>
  **/
 function isBrowserReady()
 {
+    var ready = true;
+    
+    ready &= checkHTML5();
+    
+    ready &= checkEventSystem();
 
-    var canvas = document.createElement("canvas");
-    var retVal = 0; //0 - means no support at all, 1-means simulated support IE 2-means full support
-    var retTxtDebug = "";
-    var ctx = "";
+    return ready;
+}
+
+
+/**Checks if we have all HTML5 features we need
+ *@return true - if all if fine, false - otherwise
+ *@author Alex <alex@scriptoid.com>
+ **/
+function checkHTML5(){
+    var html5ready = true;
+    
+    var canvas;
+    var ctx;
+    var retTxtDebug = '';
     try {
-        ctx = canvas.getContext("2d");
-
-        retTxtDebug = "We have support for canvas\n";
-        retVal = 2;
-    //weve got no context maybe IE ?
-
-    } catch(errx){
-        try{
-            G_vmlCanvasManager.initElement(canvas);
-            ctx = canvas.getContext('2d');
-
-            if (ctx){
-                retTxtDebug = "IE with excanvas\n";
-                retVal = 1;
-            }else{
-                //no canvas or excanvas
-                retTxtDebug = "no html5 or excanvas working\n";
-            }
-        }catch(err){
-            retTxtDebug = "no html5 or excanvas working -- possible not an IE browser too\n";
+        canvas = document.createElement("canvas");  
+        if( !("getContext" in canvas) ){
+            html5ready = false;
+            retTxtDebug = "No  HTML5 ( canvas.getContext() function missing) support\n";
         }
+        else{
+            ctx = canvas.getContext("2d");
+            retTxtDebug = "We have support for canvas\n";
+        }        
+    } catch(ex){
+        html5ready = false;
+        retTxtDebug = "No  HTML5 (<canvas> tag) support\n";
     }
 
-    if (retVal > 0){
-        //we have basic canvas lets see if we have working functions
-
+    //check if we have all needed functions
+    if (html5ready){
+        
+        //basic canvas functions
         var functionUsed = ["fill", "arc", "beginPath", "moveTo", "lineTo",
             "stroke", "bezierCurveTo", "quadraticCurveTo", "closePath", "save",
             "restore", "translate", "rotate", "drawImage", "strokeText",
@@ -48,15 +54,36 @@ function isBrowserReady()
 
         for (var idx in functionUsed){
             if (typeof( ctx[functionUsed[idx]]) != "function"){
-                retTxtDebug = retTxtDebug + functionUsed[idx] + " function missing\n";
-                retVal = 0;
+                retTxtDebug = retTxtDebug + functionUsed[idx] + " function missing\n"; //collect all missing functions
+                html5ready = false;
             }
         }
     }
+    
+    return html5ready;
+}
 
-    //alert('Debug: ' + retTxtDebug + ' retVal = ' + retVal);
 
-    return retVal;
+/**Checks if event system fits our needs
+* @return true - if all if fine, false - otherwise
+* @author Alex <alex@scriptoid.com>
+ **/
+function checkEventSystem(){
+    var eventready = true;
+    
+    var retTxtDebug = '';
+    
+    //basic DOM Level 2 event handlers
+    var functionUsed = ["addEventListener", "removeEventListener"];
+    
+    for (var idx in functionUsed){
+        if ( !(functionUsed[idx] in window) || typeof( window[functionUsed[idx]]) != "function"){
+            retTxtDebug = retTxtDebug + functionUsed[idx] + " function missing\n"; //collect all missing functions
+            eventready = false;
+        }
+    }
+        
+    return eventready;
 }
 
 /**
@@ -65,16 +92,16 @@ function isBrowserReady()
  **/
 function modal(){
     var msg = "<div style=\"background-color: #EDEDED; border:1px dotted gray; padding: 5px;\" >\
-                            <h1>Browser problem</h1>\
-                            <div>Your browser does not fully support HTML5</div>\
-                            <div>Please use one of the following browsers for best experience</div>\
-                            <ul> \
-                                <li> <a href=\"http://www.mozilla.com/firefox/\" target=\"_blank\">Firefox</a></li> \
-                                <li> <a href=\"www.google.com/chrome/\" target=\"_blank\">Chrome</a></li> \
-                                <li> <a href=\"http://www.opera.com\" target=\"_blank\">Opera</a></li> \
-                                <li> <a href=\"http://www.apple.com/safari\" target=\"_blank\">Safari</a></li> \
-                            </ul> \
-                           Press <span style=\"color:red;\">Escape</span> to close this message</div>";
+                    <h1>Browser problem</h1>\
+                    <div>Your browser does not fully support HTML5</div>\
+                    <div>Please use one of the following browsers for best experience</div>\
+                    <ul> \
+                        <li> <a href=\"http://www.mozilla.com/firefox/\" target=\"_blank\">Firefox</a></li> \
+                        <li> <a href=\"www.google.com/chrome/\" target=\"_blank\">Chrome</a></li> \
+                        <li> <a href=\"http://www.opera.com\" target=\"_blank\">Opera</a></li> \
+                        <li> <a href=\"http://www.apple.com/safari\" target=\"_blank\">Safari</a></li> \
+                    </ul> \
+                   Press <span style=\"color:red;\">Escape</span> to close this message</div>";
     $.modal(msg, {
         closeHTML:'Close'
     });

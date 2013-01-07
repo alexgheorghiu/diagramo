@@ -59,7 +59,6 @@ var connector = null;
  **/
 var connectorType = '';
 
-document.onselectstart = stopselection;
 
 
 /**Used to generate nice formatted SVG files */
@@ -87,25 +86,21 @@ function toSVG(){
 }
             
 
-/**Supposelly stop any selection from happening
- *@deprecated
- *TODO: as with IE9 we have proper DOM event support....maybe we should use that
- *and get rid of window.event
- **/
+/**
+ *Supposelly stop any selection from happening
+ */
 function stopselection(ev){
-    if(!ev){
-        ev = window.event;
-    }
-    //If we are selecting text within anything with the className text, we allow it
-    //This gives us the option of using textareas, inputs and any other item we
-    //want to allow text selection in.
-    if((IE && ev.srcElement.className == "text")  /*IE code*/
-        || (!IE && ev.target.className == "text") /*Non IE code*/){
+    
+    /*If we are selecting text within anything with the className text, we allow it
+    * This gives us the option of using textareas, inputs and any other item we
+    * want to allow text selection in.
+    **/
+    if(ev.target.className == "text"){
         return true;
     }
     return false;
-
 }
+
 var STACK  = new Stack();
 
 
@@ -148,8 +143,8 @@ selectionArea.points.push(new Point(0,0));
 selectionArea.points.push(new Point(0,0));
 selectionArea.points.push(new Point(0,0));
 selectionArea.points.push(new Point(0,0));
-    selectionArea.style.strokeStyle = 'grey';
-    selectionArea.style.lineWidth = '1';
+selectionArea.style.strokeStyle = 'grey';
+selectionArea.style.lineWidth = '1';
 
 /**Toggle grid visible or not*/
 var gridVisible = false;
@@ -386,13 +381,13 @@ function snapToGrid(){
 	snapTo =! snapTo;
 	
 	if(snapTo){
-		if(!gridVisible){
-			gridVisible = true;
-			document.getElementById("gridCheckbox").checked = true;
-			
-			//trigger a repaint;
-			draw();
-		}
+            if(!gridVisible){
+                gridVisible = true;
+                document.getElementById("gridCheckbox").checked = true;
+
+                //trigger a repaint;
+                draw();
+            }
 	}
 }
 
@@ -405,10 +400,10 @@ function showGrid(){
 	
 	/**If grid was visible and snap to was check we need to take measures*/
 	if(gridVisible){ 
-		if(snapTo){
-			snapTo = false;
-			document.getElementById("snapCheckbox").checked = false;        
-		}
+            if(snapTo){
+                snapTo = false;
+                document.getElementById("snapCheckbox").checked = false;        
+            }
     }
 	
     gridVisible = !gridVisible;
@@ -460,23 +455,12 @@ function onDoubleClick(ev){
  *@see <a href="http://www.quirksmode.org/js/keys.html">http://www.quirksmode.org/js/keys.html</a>
  **/
 function onKeyPress(ev){
-    if(!ev){ //get event for IE
-        ev = window.event;
-    }
+
 
     //ignore texts
-    if((IE && ev.srcElement.className == "text") //IE code. In IE the ev has srcElement member
-        || (!IE && ev.target.className == "text")/*non IE code. In normal JS the ev has the target member*/){
-        return;
+    if(ev.target.className == "text"){
+        return true;
     }
-
-    //switch(ev.charCode){
-    //    case KEY.NUMPAD4: //Numpad 4
-    //        if(CNTRL_PRESSED){ //clone a figure
-    //            action('duplicate');
-    //        }
-    //        break;
-    //}
 
 
     draw();
@@ -494,19 +478,14 @@ function onKeyDown(ev){
     
     //Log.info("main.js->onKeyDown()->function call. Event = " + ev.type + " IE = " + IE ); //Janis: comout because messes log on SHIFT
     
-    //1 - OLD IE browsers
-    if(typeof ev == 'undefined' || ev == null){
-        ev = window.event;
-    }
     
-    //2 - avoid text elements (if you are on a text area and you press the arrow you do not want the figures to move on canvas)
-    if((IE && ev.srcElement.className == "text")  /*IE code*/
-        || (!IE && ev.target.className == "text") /*Non IE code*/){
+    //1 - avoid text elements (if you are on a text area and you press the arrow you do not want the figures to move on canvas)
+    if( ev.target.className == "text"){
         return true;
     }
     
     
-    //3 - "enhance" event TODO: I'm not sure this is really necessary
+    //2 - "enhance" event TODO: I'm not sure this is really necessary
     ev.KEY = ev.keyCode;
         
     
@@ -724,10 +703,7 @@ function onKeyDown(ev){
  *Treats the key up event
  *@param {Event} ev - the event generated when key is up
  **/
-function onKeyUp(ev){
-    if(!ev){ //IE special code
-        ev = window.event;
-    }
+function onKeyUp(ev){    
     switch(ev.keyCode){
         case KEY.SHIFT: //Shift
             SHIFT_PRESSED = false;

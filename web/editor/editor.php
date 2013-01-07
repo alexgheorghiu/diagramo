@@ -32,6 +32,7 @@ $page = 'editor';
     <!--Copyright 2010 Scriptoid s.r.l-->
     <head>
         <title>HTML5 diagram editor</title>
+        <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=9" />     
         <meta charset="UTF-8">
         <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
@@ -114,27 +115,27 @@ $page = 'editor';
              *@author Alex
              **/
             function renderedCanvas(){
-                    var canvas = getCanvas();
+                var canvas = getCanvas();
 
-                    //render the canvas without the selection and stuff
-                    var tempCanvas = document.getElementById('tempCanvas');
-                    if(tempCanvas == null){
-                            tempCanvas = document.createElement('canvas');
-                            tempCanvas.setAttribute('id', 'tempCanvas');					
-                            tempCanvas.style.display = 'none';
+                //render the canvas without the selection and stuff
+                var tempCanvas = document.getElementById('tempCanvas');
+                if(tempCanvas == null){
+                        tempCanvas = document.createElement('canvas');
+                        tempCanvas.setAttribute('id', 'tempCanvas');					
+                        tempCanvas.style.display = 'none';
 
-                            //it seems that there is no need to actually add it to the dom tree to be able to render (tested: IE9, FF9, Chrome 19)
-                            //canvas.parentNode.appendChild(tempCanvas);
-                    }
+                        //it seems that there is no need to actually add it to the dom tree to be able to render (tested: IE9, FF9, Chrome 19)
+                        //canvas.parentNode.appendChild(tempCanvas);
+                }
 
-                    //adjust temp canvas size to main canvas (as it migh have been changed)
-                    tempCanvas.setAttribute('width', canvas.width);
-                    tempCanvas.setAttribute('height', canvas.height);
-                    reset(tempCanvas);
-                    STACK.paint(tempCanvas.getContext('2d'), true);				
-                    //end render
+                //adjust temp canvas size to main canvas (as it migh have been changed)
+                tempCanvas.setAttribute('width', canvas.width);
+                tempCanvas.setAttribute('height', canvas.height);
+                reset(tempCanvas);
+                STACK.paint(tempCanvas.getContext('2d'), true);				
+                //end render
 
-                    return tempCanvas.toDataURL();
+                return tempCanvas.toDataURL();
             }
 
 			
@@ -452,6 +453,7 @@ $page = 'editor';
                 document.addEventListener("keypress", onKeyPress, false);
                 document.addEventListener("keydown", onKeyDown, false);
                 document.addEventListener("keyup", onKeyUp, false);
+                document.addEventListener("selectstart", stopselection, false);                
                 
                 //add event handlers for Canvas
                 canvas.addEventListener("mousemove", onMouseMove, false);
@@ -683,7 +685,9 @@ $page = 'editor';
             <!--THE canvas-->
             <div style="width: 100%">
                 <div  id="container">
-                    <canvas id="a" width="800" height="600"></canvas>                            
+                    <canvas id="a" width="800" height="600">
+                        Your browser does not support HTML5. Please upgrade your browser to any modern version.
+                    </canvas>
                 </div>
             </div>
             

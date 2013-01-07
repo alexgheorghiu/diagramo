@@ -80,17 +80,11 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
         -->    
 
         <script type="text/javascript">
-            switch(isBrowserReady()){
-                case 0: //not supported at all
-                    document.write('<span style="background-color: red;" >');
-                    document.write("No support for HTML5. More <a href=\"http://<?=$WEBADDRESS?>/htm5-support.php\">here</a></a>");
-                    document.write("</span>");
-                    break;
-                case 1: //IE - partially supported
-                    document.write('<span style="background-color: yellow;" >');
-                    document.write("Poor HTML5 support. More <a href=\"http://<?=$WEBADDRESS?>/htm5-support.php\">here</a></a>");
-                    document.write("</span>");
-                    break;
+            //check if browser is ready
+            if(!isBrowserReady()){                
+                document.write('<span style="background-color: red;" >');
+                document.write("No support for HTML5. More <a href=\"http://<?=$WEBADDRESS?>/htm5-support.php\">here</a></a>");
+                document.write("</span>");                
             }
         </script>   
         
