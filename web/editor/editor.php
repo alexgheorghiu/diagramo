@@ -137,6 +137,12 @@ $page = 'editor';
                 return tempCanvas.toDataURL();
             }
 
+
+            /*Returns a text containing all the URL in a diagram */
+            function linkMap(){
+                //TODO: implement it
+                throw "editor.php->linkMap()->Please sir a minute of your attention";
+            }
 			
              /** Save current diagram
              *See:
@@ -157,15 +163,18 @@ $page = 'editor';
                 var serializedDiagram = JSON.stringify(diagram);
                 //Log.info('JSON stringify : ' + serializedDiagram);
                 
-                var svgDiagram = toSVG();
+                /*var svgDiagram = toSVG();*/
 
 //                alert(serializedDiagram);
 //                alert(svgDiagram);
                 //Log.info('SVG : ' + svgDiagram);
+                
+                //TODO: save the image map for HTML
+                var lMap = linkMap();
 
                 //see: http://api.jquery.com/jQuery.post/
                 $.post("./common/controller.php",
-                    {action: 'save', diagram: serializedDiagram, png:dataURL, svg: svgDiagram, diagramId: '<?=isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : ''?>'},
+                    {action: 'save', diagram: serializedDiagram, png:dataURL, linkMap: lMap, /*svg: svgDiagram,*/ diagramId: '<?=isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : ''?>'},
                     function(data){
                         if(data == 'firstSave'){
                             Log.info('firstSave!');
