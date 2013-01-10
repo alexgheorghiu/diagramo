@@ -2575,6 +2575,10 @@ function Figure(name) {
      * An {Array} or {@link Point}s
      **/
     this.rotationCoords = [];
+    
+    
+    /**A {String} that point to a location*/
+    this.url = '';
 
     /**Object type used for JSON deserialization*/
     this.oType = 'Figure'; 
@@ -2641,6 +2645,7 @@ Figure.load = function(o){
     newFigure.properties = BuilderProperty.loadArray(o.properties);
     newFigure.style = Style.load(o.style);
     newFigure.rotationCoords = Point.loadArray(o.rotationCoords);
+    newFigure.url = o.url;
 
 
     return newFigure ;
@@ -2767,6 +2772,7 @@ Figure.prototype = {
         ret.style = this.style.clone();
         ret.rotationCoords[0]=this.rotationCoords[0].clone();
         ret.rotationCoords[1]=this.rotationCoords[1].clone();
+        ret.url = this.url;
         
         //get all conection points and add them to the figure
         var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(this.id);
@@ -2953,6 +2959,11 @@ Figure.prototype = {
         if(!this.style.equals(anotherFigure.style)){
             return false;
         }
+        
+        //test url
+        if(!this.url == anotherFigure.url){
+            return false;
+        }
 
         return true;
     },
@@ -2994,6 +3005,9 @@ Figure.prototype = {
             }
 
             tempSVG += this.primitives[i].toSVG();
+            
+            //URL not exported
+            throw Exception("Figure->toSVG->URL not exported");
 
             //restore primitives style
             primitive.style = oldStyle;

@@ -162,6 +162,12 @@ BuilderProperty.TYPE_IMAGE_UPLOAD = "ImageUpload";
 /**Connector's end property type*/
 BuilderProperty.TYPE_CONNECTOR_END= 'ConnectorEnd';
 
+
+/**URL attached to a figure*/
+BuilderProperty.TYPE_URL= 'URL';
+
+
+
 //BuilderProperty.IMAGE_FILL = [{Text: 'No Scaling', Value: CanvasImage.FIXED_NONE},{Text: 'Fit to Area', Value: CanvasImage.FIXED_BOTH},{Text: 'Fit to Width',Value: CanvasImage.FIXED_WIDTH},{Text: 'Fit to Height',Value: CanvasImage.FIXED_HEIGHT},{Text: ' Auto Fit',Value: CanvasImage.FIXED_AUTO}]
 
 /**Line widths*/
@@ -262,6 +268,9 @@ BuilderProperty.prototype = {
         }
         else if(this.type == BuilderProperty.TYPE_LINE_WIDTH){
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.LINE_WIDTHS);
+        }
+        else if(this.type == BuilderProperty.TYPE_URL){
+            this.generateSingleTextCode(DOMObject,figureId);
         }
     },
 

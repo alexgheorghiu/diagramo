@@ -54,7 +54,10 @@ function figure_Rectangle(x, y)
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));//f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
+    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
+    
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
     var r = new Polygon();
 //    var r = new Polyline();
