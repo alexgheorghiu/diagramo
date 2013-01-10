@@ -83,6 +83,7 @@ function firstName($email){
                     <tr style="background-color:#EBEBEB;" >
                         <td align="center" ><span class="formLabel">Thumb</span></td>
                         <td align="left" ><span class="formLabel">Name</span></td>
+                        <td align="left" ><span class="formLabel">View</span></td>
                         <td align="left" ><span class="formLabel">Last Edit</span></td>                        
                         <td><span class="formLabel">Public</span></td>
                         <td><span class="formLabel">Settings</span></td>
@@ -103,6 +104,12 @@ function firstName($email){
                                 </a>
                             </td>
                             <td style="border-bottom: 1px solid white;" align="left" ><a href="./editor.php?diagramId=<?=$myDiagram->id ?>"><span class="formLabel"><?=$myDiagram->title ?></span></a></td>
+                            <td align="center">
+                                <a href="./viewDiagram.php?diagramId=<?=$myDiagram->id ?>">
+                                    as PNG
+                                </a>
+                            </td>
+                            
                             <td style="border-bottom: 1px solid white;" align="left" ><span class="formLabel"><?=strtolower(date('F', strtotime($myDiagram->lastUpdate))) . date(',d Y', strtotime($myDiagram->lastUpdate)) ?></span></td>                            
                             <td style="border-bottom: 1px solid white;" align="center" ><span class="formLabel"><?=$myDiagram->public ? 'public' : 'private' ?></span></td>
                             <td style="border-bottom: 1px solid white;" align="center"><a href="./editDiagram.php?diagramId=<?=$myDiagram->id ?>"><img style="vertical-align:middle; margin-right: 3px;" src="./assets/images/editdiagram.png" border="0" width="22" height="22"/></a></td>
