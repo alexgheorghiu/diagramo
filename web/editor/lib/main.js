@@ -68,8 +68,13 @@ var INDENTATION = 0;
  *each one to convert to SVG (and use the proper indentation)
  *Note: Placed out of editor.php so we can safelly add '<?...' string
  *@author Alex
+ *@deprecated
  **/
 function toSVG(){
+    return '';
+    
+    /* Note: Support for SVG is suspended 
+     * 
     var canvas = getCanvas();
     //@see http://www.w3schools.com/svg/svg_example.asp
     var v2 = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
@@ -83,6 +88,7 @@ function toSVG(){
     v2 += "\n" + '</svg>';
     
     return v2;
+    */
 }
             
 

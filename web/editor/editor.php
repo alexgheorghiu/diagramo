@@ -33,8 +33,7 @@ $page = 'editor';
     <head>
         <title>HTML5 diagram editor</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=9" />     
-        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=9" />             
         <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
         
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
@@ -141,8 +140,25 @@ $page = 'editor';
 
             /*Returns a text containing all the URL in a diagram */
             function linkMap(){
-                //TODO: implement it
-                throw "editor.php->linkMap()->Please sir a minute of your attention";
+                var csvBounds = '';
+                var first = true;
+                for(f in STACK.figures){
+                    var figure = STACK.figures[f];
+                    if(figure.url != ''){
+                        var bounds = figure.getBounds();
+                        if(first){
+                            first = false;                                                        
+                        }
+                        else{
+                            csvBounds += "\n";
+                        }
+                        
+                        csvBounds += bounds[0] + ',' + bounds[1] + ',' + bounds[2] + ',' + bounds[3] + ',' + figure.url;
+                    }
+                }
+                Log.info("editor.php->linkMap()->csv bounds: " + csvBounds);
+                
+                return csvBounds;
             }
 			
              /** Save current diagram
@@ -154,7 +170,7 @@ $page = 'editor';
                 //alert("save triggered!");
                 Log.info('Save pressed');
 
-				var dataURL = renderedCanvas();
+                var dataURL = renderedCanvas();
 				
 //                Log.info(dataURL);
 //                return false;
@@ -164,18 +180,18 @@ $page = 'editor';
                 var serializedDiagram = JSON.stringify(diagram);
                 //Log.info('JSON stringify : ' + serializedDiagram);
                 
-                /*var svgDiagram = toSVG();*/
+                var svgDiagram = toSVG();
 
 //                alert(serializedDiagram);
 //                alert(svgDiagram);
                 //Log.info('SVG : ' + svgDiagram);
                 
-                //TODO: save the image map for HTML
+                //save the URLs of figures as a CSV 
                 var lMap = linkMap();
 
                 //see: http://api.jquery.com/jQuery.post/
                 $.post("./common/controller.php",
-                    {action: 'save', diagram: serializedDiagram, png:dataURL, linkMap: lMap, /*svg: svgDiagram,*/ diagramId: '<?=isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : ''?>'},
+                    {action: 'save', diagram: serializedDiagram, png:dataURL, linkMap: lMap, svg: svgDiagram, diagramId: '<?=isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : ''?>'},
                     function(data){
                         if(data == 'firstSave'){
                             Log.info('firstSave!');
@@ -230,10 +246,13 @@ $page = 'editor';
                 $serializedDiagram = JSON.stringify($diagram);
                 var svgDiagram = toSVG();
 
+                //save the URLs of figures as a CSV 
+                var lMap = linkMap();
+                
                 //alert($serializedDiagram);
 
                 //see: http://api.jquery.com/jQuery.post/
-                $.post("./common/controller.php", {action: 'saveAs', diagram: $serializedDiagram, png:dataURL, svg: svgDiagram},
+                $.post("./common/controller.php", {action: 'saveAs', diagram: $serializedDiagram, png:dataURL, linkMap: lMap, svg: svgDiagram},
                     function(data){
                         if(data == 'noaccount'){
                             Log.info('You must have an account to use that feature');

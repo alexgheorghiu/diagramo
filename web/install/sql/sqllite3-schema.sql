@@ -44,7 +44,7 @@ CREATE  TABLE IF NOT EXISTS `user` (
 -- create table --
 CREATE  TABLE IF NOT EXISTS `diagramdata` (  
     `diagramId` INT UNSIGNED NOT NULL,
-    `type` VARCHAR(10) NOT NULL, -- only 'dia', 'svg', 'jpg', 'png'
+    `type` VARCHAR(10) NOT NULL, -- only 'dia', 'svg', 'jpg', 'png', 'csv'
     `fileName` VARCHAR(255),
     `fileSize` INT UNSIGNED COMMENT 'The size of diagram in bytes',
     `lastUpdate` DATETIME NOT NULL,  

@@ -413,37 +413,51 @@ function save() {
         //end update Dia file
         
         
-//        //2 - update the SVG file
-//        $svgData = $delegate->diagramdataGetByDiagramIdAndType($currentDiagramId, Diagramdata::TYPE_SVG);
-//
-//        $fh = fopen(getStorageFolder() . '/' . $currentDiagramId . '.svg', 'w');
-//        $svgSize = fwrite($fh, $_POST['svg']);
-//        fclose($fh);
-//
-//        $svgData->fileSize = $svgSize;
-//        $svgData->lastUpdate = $nowIsNow;
-//        $delegate->diagramdataUpdate($svgData);
-//        //end update the SVG file
-//        //update the Diagram
-//        $diagram = $delegate->diagramGetById($currentDiagramId);
-//        $diagram->size = $diaSize;
-//        $diagram->lastUpdate = $nowIsNow;
-        
-        
-        //3 - update the PNG file
-        $svgData = $delegate->diagramdataGetByDiagramIdAndType($currentDiagramId, Diagramdata::TYPE_PNG);
+        /*SVG support discontinued
+        //2 - update the SVG file
+        $svgData = $delegate->diagramdataGetByDiagramIdAndType($currentDiagramId, Diagramdata::TYPE_SVG);
 
-        $fh = fopen(getStorageFolder() . '/' . $currentDiagramId . '.png', 'wb');
-//        $fh = fopen(getStorageFolder() . '/' . $currentDiagramId . '.svg', 'w');
-        $data = substr($_POST['png'], strpos($_POST['png'], ','));
-        $imgData = base64_decode($data);
-        $svgSize = fwrite($fh, $imgData);
+        $fh = fopen(getStorageFolder() . '/' . $currentDiagramId . '.svg', 'w');
+        $svgSize = fwrite($fh, $_POST['svg']);
         fclose($fh);
 
         $svgData->fileSize = $svgSize;
         $svgData->lastUpdate = $nowIsNow;
         $delegate->diagramdataUpdate($svgData);
         //end update the SVG file
+        //update the Diagram
+        $diagram = $delegate->diagramGetById($currentDiagramId);
+        $diagram->size = $diaSize;
+        $diagram->lastUpdate = $nowIsNow;
+        */
+        
+        //3 - update the PNG file
+        $pngData = $delegate->diagramdataGetByDiagramIdAndType($currentDiagramId, Diagramdata::TYPE_PNG);
+
+        $fh = fopen(getStorageFolder() . '/' . $currentDiagramId . '.png', 'wb');
+        $data = substr($_POST['png'], strpos($_POST['png'], ','));
+        $imgData = base64_decode($data);
+        $pngSize = fwrite($fh, $imgData);
+        fclose($fh);
+
+        $pngData->fileSize = $pngSize;
+        $pngData->lastUpdate = $nowIsNow;
+        $delegate->diagramdataUpdate($pngData);
+        //end update the SVG file
+        
+        
+        //update the link map 
+        $csvData = $delegate->diagramdataGetByDiagramIdAndType($currentDiagramId, Diagramdata::TYPE_CSV);
+        $fh = fopen(getStorageFolder() . '/' . $currentDiagramId . '.csv', 'w');
+        $data = $_POST['linkMap'];
+        $csvSize = fwrite($fh, $data);
+        fclose($fh);
+
+        $csvData->fileSize = $csvSize;
+        $csvData->lastUpdate = $nowIsNow;
+        $delegate->diagramdataUpdate($csvData);
+        //end update the link map
+        
         
         
         //update the Diagram
@@ -461,6 +475,7 @@ function save() {
         $_SESSION['tempDiagram'] = $_POST['diagram'];
         $_SESSION['tempSVG'] = $_POST['svg'];
         $_SESSION['tempPNG'] = $_POST['png'];
+        $_SESSION['tempLinkMap'] = $_POST['linkMap'];
         print "firstSave";
         exit();
     }
@@ -478,12 +493,14 @@ function saveAs() {
         $_SESSION['tempDiagram'] = $_POST['diagram'];
         $_SESSION['tempSVG'] = $_POST['svg'];
         $_SESSION['tempPNG'] = $_POST['png'];
+        $_SESSION['tempLinkMap'] = $_POST['linkMap'];
         print "noaccount";
         exit();
     } else { //user is logged
         $_SESSION['tempDiagram'] = $_POST['diagram'];
         $_SESSION['tempSVG'] = $_POST['svg'];
         $_SESSION['tempPNG'] = $_POST['png'];
+        $_SESSION['tempLinkMap'] = $_POST['linkMap'];
         print "step1Ok";
         exit();
     }
@@ -627,15 +644,32 @@ function firstSaveExe() {
     $diagramdata->lastUpdate = $nowIsNow;
 
     $delegate->diagramdataCreate($diagramdata);
-    //end Dia file
+    //end PNG file
+    
+    
+    //create CSV file
+    $diagramdata = new Diagramdata();
+    $diagramdata->diagramId = $diagramId;
+    $diagramdata->type = Diagramdata::TYPE_CSV;
+    $diagramdata->fileName = $diagramId . '.csv';
+
+    $fh = fopen(getStorageFolder() . '/' . $diagramId . '.csv', 'w');
+    $size = fwrite($fh, $_SESSION['tempLinkMap']);
+    fclose($fh);
+
+    $diagramdata->fileSize = $size;
+    $diagramdata->lastUpdate = $nowIsNow;
+
+    $delegate->diagramdataCreate($diagramdata);
+    //end CSV file
     
     
     //clean temporary diagram
     unset($_SESSION['tempDiagram']);
     unset($_SESSION['tempSVG']);
     unset($_SESSION['tempPNG']);
+    unset($_SESSION['tempLinkMap']);
 
-    //attach it to an user
 
 
     redirect("../editor.php?diagramId=" . $diagramId);
