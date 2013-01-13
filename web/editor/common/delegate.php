@@ -102,6 +102,7 @@ class Diagramdata {
 	const TYPE_SVG = 'svg';
 	const TYPE_JPG = 'jpg';
 	const TYPE_PNG = 'png';
+	const TYPE_CSV = 'csv';
 
 	public $diagramId;
 	public $type;
