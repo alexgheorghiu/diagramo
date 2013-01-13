@@ -8,7 +8,7 @@ if (!isset($_SESSION)) {
 }
 
 if(!is_numeric ($_REQUEST['diagramId'])){
-    echo 'No hash';
+    echo 'No diagram Id';
     exit();
 }
 
@@ -41,14 +41,17 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
         <link rel="stylesheet" media="screen" type="text/css" href="http://<?=$WEBADDRESS?>/assets/css/style.css" />
     </head>
     <body>
-        <div id="content" style="margin-left:  30px;">
+        <div id="content" style="margin-left: 30px;">
             <h1><?=$diagram->title?></h1>
             <div><?=$diagram->description?></div>
             <div>Public </div>
             <p/>
             <div id="container">
-                <img src="<?=$WEBADDRESS?>/editor/png.php?diagramId=<?=$diagram->id?>" width="800" height="600" border="1"/>            
-            </div>            
+                <img usemap="#linkLayer" src="<?=$WEBADDRESS?>/editor/png.php?diagramId=<?=$diagram->id?>" width="800" height="600" border="1"/>            
+            </div>
+            <map name="linkLayer" id="linkLayer">
+                <area shape="rect" coords="100,100,200,200" href="http://scriptoid.com" alt="Scriptoid">
+            </map>
         </div>
     </body>
 </html>
