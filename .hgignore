@@ -9,6 +9,7 @@ web/editor/data/diagrams/*.dia
 web/editor/data/diagrams/*.jpg
 web/editor/data/diagrams/*.png
 web/editor/data/diagrams/*.svg
+web/editor/data/diagrams/*.csv
 web/editor/data/*.db
 
 documents/mailserver/*.html
