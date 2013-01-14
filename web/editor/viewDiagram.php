@@ -19,8 +19,8 @@ $diagramdata = $delegate->diagramdataGetByDiagramIdAndType($_REQUEST['diagramId'
 
 $links = array();
 if($diagramdata->fileSize > 0){ 
-    $data = fread($fh, $diagramdata->fileSize);
     $fh = fopen(getStorageFolder() . '/' . $diagramdata->diagramId . '.csv', 'r');
+    $data = fread($fh, $diagramdata->fileSize);    
     fclose($fh);
     
     $csvLines = explode("\n", $data);
