@@ -36,7 +36,10 @@ function figure_Page(x,y)
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
 //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
-
+    
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     f.addPrimitive(r);
 
     var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentShortSize/2 + 2, y + figure_defaultFigureSegmentSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -85,7 +88,10 @@ function figure_PageUpperCornerFolded(x,y)
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
 //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
-
+    
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     f.addPrimitive(r);
 
     var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentShortSize/2 + 2, y + figure_defaultFigureSegmentSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -136,7 +142,10 @@ function figure_PageLowerCornerFolded(x,y)
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
 //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
-
+    
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     f.addPrimitive(r);
 
     var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentShortSize / 2 + 2, y + figure_defaultFigureSegmentSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -175,7 +184,9 @@ function figure_SemiCircleUp(x,y)
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
 //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.2.valign', Text.VALIGNMENTS);
 
-
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     var c = new Arc(x, y, figure_defaultFigureRadiusSize, 180, 360, false, 0);
     var l = new Line(new Point(x - figure_defaultFigureRadiusSize, y), new Point(x + figure_defaultFigureRadiusSize, y) );
     f.addPrimitive(c);
@@ -212,6 +223,8 @@ function figure_SemiCircleDown(x,y)
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
  //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.2.valign', Text.VALIGNMENTS);
 
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
     var c = new Arc(x, y, figure_defaultFigureRadiusSize, 0, 180, false, 0);
     var l = new Line(new Point(x - figure_defaultFigureRadiusSize, y), new Point(x + figure_defaultFigureRadiusSize, y) );
@@ -253,7 +266,9 @@ function figure_Triangle(x,y)
     e.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
 //
     //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
-
+    e.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    e.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2, y + figure_defaultFigureSegmentSize/2 + 7, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
     t2.style.fillStyle = figure_defaultFillTextStyle;
 

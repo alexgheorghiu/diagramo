@@ -71,7 +71,9 @@ function figure_State(x,y)
     f.style.lineWidth = 2;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
-
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     var p = new Path();
     var hShrinker = 10;
     var vShrinker = 6;
