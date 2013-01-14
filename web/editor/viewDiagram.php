@@ -15,16 +15,24 @@ if(!is_numeric ($_REQUEST['diagramId'])){
 $delegate = new Delegate();
 $diagram = $delegate->diagramGetById($_REQUEST['diagramId']);
 $diagramdata = $delegate->diagramdataGetByDiagramIdAndType($_REQUEST['diagramId'], Diagramdata::TYPE_CSV);
-$fh = fopen(getStorageFolder() . '/' . $diagramdata->diagramId . '.csv', 'r');
-$data = fread($fh, $diagramdata->fileSize);
-fclose($fh);
 
-$csvLines = explode("\n", $data);
+
 $links = array();
-foreach($csvLines as $csvLine){
+if($diagramdata->fileSize > 0){ 
+    $data = fread($fh, $diagramdata->fileSize);
+    $fh = fopen(getStorageFolder() . '/' . $diagramdata->diagramId . '.csv', 'r');
+    fclose($fh);
+    
+    $csvLines = explode("\n", $data);
+    
+    foreach($csvLines as $csvLine){
     $shards = explode(',', $csvLine);
-    $links[] = $shards;
+        $links[] = $shards;
+    }
 }
+
+
+
 
 //check if diagram is public
 if(!is_object($diagram)){
