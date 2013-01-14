@@ -130,6 +130,9 @@ function figure_Square(x,y)
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));//f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS));
+    
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
     f.addPrimitive(r);
 
@@ -176,7 +179,9 @@ function figure_Circle(x,y)
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));//f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
 
-
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     var c = new Arc(x, y, figure_defaultFigureRadiusSize, 0, 360, false, 0);
 
     f.addPrimitive(c);
@@ -217,6 +222,9 @@ function figure_Diamond(x,y)
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH))
     //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
+    
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
     f.addPrimitive(r);
 
@@ -237,13 +245,8 @@ function figure_Diamond(x,y)
 
 function figure_Parallelogram(x,y)
 {
-
-    var r = new Polygon();
-    r.addPoint(new Point(x + 10, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize + 10, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize + figure_defaultFigureParalelsOffsetSize, y + figure_defaultFigureSegmentShortSize));
-    r.addPoint(new Point(x + figure_defaultFigureParalelsOffsetSize, y + figure_defaultFigureSegmentShortSize));
-    var f=new Figure("Diamond");
+    
+    var f = new Figure("Diamond");
     f.style.fillStyle = figure_defaultFillStyle;
     f.style.strokeStyle = figure_defaultStrokeStyle;
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
@@ -258,7 +261,16 @@ function figure_Parallelogram(x,y)
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
-
+    
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
+    var r = new Polygon();
+    r.addPoint(new Point(x + 10, y));
+    r.addPoint(new Point(x + figure_defaultFigureSegmentSize + 10, y));
+    r.addPoint(new Point(x + figure_defaultFigureSegmentSize + figure_defaultFigureParalelsOffsetSize, y + figure_defaultFigureSegmentShortSize));
+    r.addPoint(new Point(x + figure_defaultFigureParalelsOffsetSize, y + figure_defaultFigureSegmentShortSize));
+    
     f.addPrimitive(r);
 
     var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2 + figure_defaultFigureParalelsOffsetSize/2 + 5, y + figure_defaultFigureSegmentShortSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -299,6 +311,8 @@ function figure_Ellipse(x,y)
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
 
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
     var c = new Ellipse(new Point(x, y), figure_defaultFigureSegmentShortSize, figure_defaultFigureSegmentShortSize/2);
 
@@ -339,8 +353,11 @@ function figure_RightTriangle(x,y)
     e.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     e.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     e.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));//f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
+    
+    e.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    e.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
-    var t2=new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentShortSize/2, y + figure_defaultFigureSegmentSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
+    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentShortSize/2, y + figure_defaultFigureSegmentSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
     t2.style.fillStyle = figure_defaultFillTextStyle;
 
     e.addPrimitive(t);
@@ -384,6 +401,9 @@ function figure_Pentagon(x,y)
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
 
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     f.addPrimitive(r);
 
     var t2 = new Text(figure_defaultFigureTextStr, x, y, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -426,7 +446,10 @@ function figure_Hexagon(x,y)
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
-
+    
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     f.addPrimitive(r);
 
     var t2 = new Text(figure_defaultFigureTextStr, x, y - 2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -460,7 +483,7 @@ function figure_Octogon(x,y)
     r.addPoint(new Point(x - a, y + a + l));
     r.addPoint(new Point(x - a, y + a));
 
-    var f=new Figure("Octogon");
+    var f = new Figure("Octogon");
     f.style.fillStyle = figure_defaultFillStyle;
     f.style.strokeStyle = figure_defaultStrokeStyle;
 
@@ -475,6 +498,9 @@ function figure_Octogon(x,y)
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS);
+    
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
     f.addPrimitive(r);
 
@@ -516,7 +542,8 @@ function figure_Text(x,y)
     f.properties.push(new BuilderProperty('Text Color', 'primitives.0.style.fillStyle', BuilderProperty.TYPE_COLOR));
     //f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.0.valign', Text.VALIGNMENTS);
 
-
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
 
     var t2 = new Text(figure_defaultFigureTextStr, x, y + figure_defaultFigureRadiusSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -538,7 +565,7 @@ function figure_Text(x,y)
 
 function figure_RoundedRectangle(x,y)
 {
-    var f=new Figure("RoundedRectangle");
+    var f = new Figure("RoundedRectangle");
     f.style.fillStyle = figure_defaultFillStyle;
     f.style.strokeStyle = figure_defaultStrokeStyle;
     f.style.lineWidth = 2;
@@ -554,6 +581,9 @@ function figure_RoundedRectangle(x,y)
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
 
+    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+    
     var p = new Path();
     var hShrinker = 10;
     var vShrinker = 6;
