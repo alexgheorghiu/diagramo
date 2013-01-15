@@ -674,6 +674,7 @@ function onKeyDown(ev){
             if(CNTRL_PRESSED){
                 //Log.info("CTRL-S pressed  ");
                 save();
+                ev.preventDefault();
             }
             break;
     }
