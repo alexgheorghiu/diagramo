@@ -140,6 +140,9 @@ var STATE_SELECTING_MULTIPLE = 'selecting_multiple';
 /**we have a group selected (either temporary or permanent)*/
 var STATE_GROUP_SELECTED = 'group_selected';
 
+/**we have a container selected*/
+var STATE_CONTAINER_SELECTED = 'container_selected';
+
 /**Keeps current state*/
 var state = STATE_NONE;
 
@@ -2383,6 +2386,18 @@ function action(action){
                 
             }
             redraw = true;
+            break;
+            
+        case 'container':
+            Log.info("main.js->action()->container. Nr of actions in the STACK: " + History.COMMANDS.length);
+            
+            //creates a container
+            var cmdContainerCreate = new ContainerCreateCommand(100, 100);
+            cmdContainerCreate.execute();
+            History.addUndo(cmdContainerCreate);
+            
+            redraw = true;
+            
             break;
         
         case 'ungroup':

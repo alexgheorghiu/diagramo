@@ -47,6 +47,7 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/util.js?<?=time()?>"></script>
         <script type="text/javascript" src="./lib/key.js?<?=time()?>"></script>
         <script type="text/javascript" src="./lib/groups.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./lib/containers.js?<?=time()?>"></script>
         <script type="text/javascript" src="./lib/stack.js?<?=time()?>"></script>
         <script type="text/javascript" src="./lib/connections.js?<?=time()?>"></script>
         <script type="text/javascript" src="./lib/connectionManagers.js?<?=time()?>"></script>
@@ -81,6 +82,8 @@ $page = 'editor';
         
         <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js?<?=time()?>"></script>
         <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js?<?=time()?>"></script>                        
+        
+        <script type="text/javascript" src="./lib/commands/ContainerCreateCommand.js?<?=time()?>"></script>                        
         
         <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js?<?=time()?>"></script>
         
@@ -527,6 +530,8 @@ $page = 'editor';
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
             <a href="javascript:action('connector-organic');" title="Organic connector (Experimental)"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
+            
+            <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/icon_container.gif" border="0" alt="Container"/></a>
             
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>            
                         
