@@ -41,7 +41,7 @@ if(!is_object($diagram)){
 }
 
 if(!$diagram->public){
-    print "Diagram is not public";
+    print "Diagram is not public. A Diagram must be public to be publicly visible.";
     exit();
 }
 //end check

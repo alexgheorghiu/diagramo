@@ -32,6 +32,7 @@ function Connector(startPoint,endPoint,type, id){
     /**The text that will appear in the middle of the connector*/
     this.middleText = new Text("", (startPoint.x + endPoint.x)/2+10, (startPoint.y +  endPoint.y) / 2 - 13, 'Arial',10);
     this.middleText.style.strokeStyle = "#000000";
+    this.middleText.style.fillStyle = "#000000";
     this.middleText.bgStyle = "#ffffff";
 
     /**An {Array} of {BuilderProperties} to store exposed properties of the connector*/
