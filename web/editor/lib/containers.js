@@ -3,17 +3,59 @@
  * 
  * @constructor
  * @this {Container}
+ * @param {Number} id the id of the Container
  * @param {Point} topLeft top left {Point}
  * @param {Point} bottomRight bottom right {Point}
  * @author Alex
  */
-function Container(topLeft, bottomRight) {
+function Container(id, topLeft, bottomRight) {
+    /**Group's id*/
+    if(id){
+        this.id = id;
+    }
+    else{
+        this.id = STACK.generateId();
+    }
+    
     /**The {@link Style} of the polygon*/
     this.style = new Style();
     this.style.strokeStyle = "#000000";
+    this.style.fillStyle = "#F9F8F6";
     
     this.topLeft = topLeft.clone();
-    this.bottomRight = bottomRight.clone();
+    this.bottomRight = bottomRight.clone();        
+    
+    /**An {Array} of primitives that make the figure*/
+    this.primitives = [];
+    
+    /**An {Array} of primitives*/
+    this.properties = [];
+    
+    //SHAPE
+    var polygon = new Polygon();        
+    polygon.addPoint(new Point(this.topLeft.x, this.topLeft.y));
+    polygon.addPoint(new Point(this.bottomRight.x, this.topLeft.y));
+    polygon.addPoint(new Point(this.bottomRight.x, this.bottomRight.y));
+    polygon.addPoint(new Point(this.topLeft.x, this.bottomRight.y));
+    this.primitives.push(polygon);    
+    
+    this.properties.push(new BuilderProperty('Stroke Style', 'primitives.0.style.strokeStyle', BuilderProperty.TYPE_COLOR));
+    this.properties.push(new BuilderProperty('Fill Style', 'primitives.0.style.fillStyle', BuilderProperty.TYPE_COLOR));
+    this.properties.push(new BuilderProperty('Line Width', 'primitives.0.style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
+    
+    
+    //TITLE
+    var title = new Text("Container", (this.topLeft.x + this.bottomRight.x)/2, this.topLeft.y, Text.FONTS[0], Text.DEFAULT_SIZE, false);
+    title.style.fillStyle = '#000000';
+    this.primitives.push(title);
+    
+    this.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    this.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
+    this.properties.push(new BuilderProperty('Text Size', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
+    this.properties.push(new BuilderProperty('Font', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
+    this.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    this.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
+    
 
     /**Serialization type*/
     this.oType = 'Container';
@@ -27,32 +69,36 @@ Container.prototype = {
      * @param {Context2D} context - the context where to paint the container
      */
     paint: function(context) {
-        context.beginPath();
-
-        if (this.style != null) {
+        if(this.style){
             this.style.setupContext(context);
         }
+        for(var i = 0; i<this.primitives.length; i++ ){
+			context.save();
+            var primitive  = this.primitives[i];
+            
 
-        context.moveTo(this.topLeft.x, this.topLeft.y);
-        context.lineTo(this.bottomRight.x, this.topLeft.y);
-        context.lineTo(this.bottomRight.x, this.bottomRight.y);
-        context.lineTo(this.topLeft.x, this.bottomRight.y);
+            var oldStyle = null;
+            if(primitive.style){ //save primitive's style
+                oldStyle = primitive.style.clone();
+            }
 
-        closePath();
+            if(primitive.style == null){ //if primitive does not have a style use Figure's one
+                primitive.style = this.style.clone();
+            }
+            else{ //if primitive has a style merge it
+                primitive.style.merge(this.style);
+            }
 
-        //fill current path
-        if (this.style.fillStyle != null && this.style.fillStyle != "") {
-            fill();
-        }
+            
+            primitive.paint(context);
+            primitive.style = oldStyle;		
 
-        //stroke current path 
-        if (this.style.strokeStyle != null && this.style.strokeStyle != "") {
-            stroke();
+            context.restore();
         }
     },
         
     transform: function(matrix) {
-        throw "Not implemented";
+        throw "container:transform() Not implemented";
     },
         
         
@@ -61,38 +107,43 @@ Container.prototype = {
      *@param {Number} y - the y coordinate of the point
      **/
     contains: function(x, y) {
-        throw "Not implemented";
+        var topRight = new Point(this.bottomRight.x, this.topLeft.y);
+        var bottomLeft = new Point(this.topLeft.x, this.bottomRight.y);
+        return Util.isPointInside(new Point(x,y),[this.topLeft, topRight, this.bottomRight, bottomLeft]);
     },
         
         
     /***/
     equals: function(c) {
-        throw "Not implemented";
+        throw "container:equals() Not implemented";
     },
         
         
     toString: function() {
-        throw "Not implemented";
+        return "Container " + this.id + " topLeft: " + this.topLeft + " bottomRight:" + this.bottomRight;
     },
         
         
     clone: function() {
-        throw "Not implemented";
+        throw "container:clone() Not implemented";
     },
         
-        
+    /**
+     * @return {Array<Number>} - returns [minX, minY, maxX, maxY] - bounds, where
+     *  all points are in the bounds.
+     */    
     getBounds: function() {
-        throw "Not implemented";
+        return Util.getBounds([this.bottomRight, this.topLeft]);
     },
         
         
     near: function() {
-        throw "Not implemented";
+        throw "container:near() Not implemented";
     },
         
         
     getPoints: function() {
-        throw "Not implemented";
+        throw "container:getPoints() Not implemented";
     }
 
 }

@@ -10,7 +10,7 @@ var debugSolutions = false;
 /**Set it on true if you want visual debug clues.
  * Note: See to set the Connector's visualDebug (Connector.visualDebug) to false too
  **/
-var visualDebug = false; 
+var visualDebug = true; 
 
 /**Activate or deactivate the undo feature
  *@deprecated
@@ -178,6 +178,9 @@ var selectedGroupId = -1;
 
 /**Current selecte connector (-1 if none selected)*/
 var selectedConnectorId = -1;
+
+/**Current selectet container (-1 if none selected)*/
+var selectedContainerId = -1;
 
 /**Currently selected ConnectionPoint (if -1 none is selected)*/
 var selectedConnectionPointId = -1;
@@ -351,6 +354,9 @@ function setUpEditPanel(shape){
         switch(shape.oType){
             case 'Group':
                 //do nothing. We do not want to offer this to groups
+                break;
+            case 'Container':
+                Builder.contructPropertiesPanel(propertiesPanel, shape);                
                 break;
             case 'CanvasProps':
                 Builder.constructCanvasPropertiesPanel(propertiesPanel, shape);
@@ -773,7 +779,7 @@ function onMouseDown(ev){
                 setUpEditPanel(con);
                 Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONNECTOR_SELECTED');
                 redraw = true;
-            } else {                   
+            } else {                                
                 //find figure at (x,y)
                 var fId = STACK.figureGetByXY(x, y);
                 if(fId != -1){ //Selected a figure
@@ -796,14 +802,25 @@ function onMouseDown(ev){
 //                        }
                         Log.info('onMouseDown() + STATE_NONE + lonely figure => change to STATE_FIGURE_SELECTED');
                     }
-                    
+
                     redraw = true;
                 }
                 else{
-                    //DO NOTHING aka "Dolce far niente"
-                    //                    state = STATE_NONE;
-                    //                    setUpEditPanel(canvasProps);
-                    //                    Log.info('onMouseDown() + STATE_NONE  - no change');
+                    //find container's id
+                    var contId = STACK.containerGetByXY(x, y);
+                    if(contId != -1){                    
+                        var container = STACK.containerGetById(contId);
+                        setUpEditPanel(container);
+                        state = STATE_CONTAINER_SELECTED;
+                        selectedContainerId = contId;
+                        Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
+                    }
+                    else{
+                        //DO NOTHING aka "Dolce far niente"
+                        //                    state = STATE_NONE;
+                        //                    setUpEditPanel(canvasProps);
+                        //                    Log.info('onMouseDown() + STATE_NONE  - no change');
+                    }
                 }
             }
             
@@ -870,11 +887,22 @@ function onMouseDown(ev){
                     if(fId == -1){ //Clicked outside of anything
                         if (!SHIFT_PRESSED){ //if Shift isn`t pressed
                             selectedFigureId = -1;
-                            state = STATE_NONE;
                             
-                            setUpEditPanel(canvasProps);
+                            //find container's id
+                            var contId = STACK.containerGetByXY(x, y);
+                            if(contId != -1){                    
+                                var container = STACK.containerGetById(contId);
+                                setUpEditPanel(container);
+                                state = STATE_CONTAINER_SELECTED;
+                                selectedContainerId = contId;
+                                Log.info('onMouseDown() + STATE_FIGURE_SELECTED  - change to STATE_CONTAINER_SELECTED');
+                            }
+                            else{
+                                state = STATE_NONE;
+                                setUpEditPanel(canvasProps);
+                                Log.info('onMouseDown() + STATE_FIGURE_SELECTED  - change to STATE_NONE');
+                            }
                             redraw = true;
-                            Log.info('onMouseDown() + STATE_FIGURE_SELECTED  - change to STATE_NONE');
                         }
                     }
                     else{ //We are sure we clicked a figure
@@ -1174,6 +1202,65 @@ function onMouseDown(ev){
                 }                                                    
             }                        
             break; //end case STATE_CONNECTOR_SELECTED 
+            
+            
+            
+        case STATE_CONTAINER_SELECTED:
+            //find Connector at (x,y)
+            var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
+            if(cId != -1){ //Clicked a Connector
+                selectedConnectorId = cId;
+                state = STATE_CONNECTOR_SELECTED;
+                var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
+                setUpEditPanel(con);
+                Log.info('onMouseDown() + STATE_CONTAINER_SELECTED  - change to STATE_CONNECTOR_SELECTED');
+                redraw = true;
+            } else {                                
+                //find figure at (x,y)
+                var fId = STACK.figureGetByXY(x, y);
+                if(fId != -1){ //Selected a figure
+                    if(STACK.figureGetById(fId).groupId != -1){ //if the figure belongs to a group then select that group
+                        selectedGroupId = STACK.figureGetById(fId).groupId;
+                        var grp = STACK.groupGetById(selectedGroupId);
+                        state = STATE_GROUP_SELECTED;
+//                        if(doUndo){
+//                            currentMoveUndo = new MatrixCommand(selectedGroupId, History.OBJECT_GROUP, History.MATRIX, Matrix.translationMatrix(grp.getBounds()[0],grp.getBounds()[1]), null);
+//                        }
+                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + group selected  =>  change to STATE_GROUP_SELECTED');
+                    }
+                    else{ //ok, we will select lonely figure
+                        selectedFigureId = fId;
+                        var f = STACK.figureGetById(fId);
+                        setUpEditPanel(f);
+                        state = STATE_FIGURE_SELECTED;
+//                        if(doUndo){
+//                            currentMoveUndo = new MatrixCommand(fId, History.OBJECT_FIGURE, History.MATRIX, Matrix.translationMatrix(f.getBounds()[0],f.getBounds()[1]), null);
+//                        }
+                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + lonely figure => change to STATE_FIGURE_SELECTED');
+                    }
+
+                    redraw = true;
+                }
+                else{
+                    //find container's id
+                    var contId = STACK.containerGetByXY(x, y);
+                    if(contId != -1 && contId != selectedContainerId){                    
+                        var container = STACK.containerGetById(contId);
+                        setUpEditPanel(container);
+                        state = STATE_CONTAINER_SELECTED;
+                        selectedContainerId = contId;
+                        Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
+                    }
+                    else{
+                        //DO NOTHING aka "Dolce far niente"
+                        state = STATE_NONE;
+                        selectedContainerId = -1;
+                        setUpEditPanel(canvasProps);
+                        Log.info('onMouseDown() + STATE_NONE  - no change');
+                    }
+                }
+            }    
+            break; //end STATE_CONTAINER_SELECTED
 
             
         default:
@@ -2230,7 +2317,7 @@ function getCanvasXY(ev){
     var position = null;
     var canvasBounds = getCanvasBounds();
 //    Log.group("main.js->getCanvasXY()");
-    Log.info("Canvas bounds: [" + canvasBounds + ']');
+    Log.debug("Canvas bounds: [" + canvasBounds + ']');
     
     var tempPageX = null;
     var tempPageY = null;
@@ -2244,7 +2331,7 @@ function getCanvasXY(ev){
     else{ //normal Desktop
         tempPageX = ev.pageX; //Retrieves the x-coordinate of the mouse pointer relative to the top-left corner of the document.
         tempPageY = ev.pageY; //Retrieves the y-coordinate of the mouse pointer relative to the top-left corner of the document.          
-        Log.info("ev.pageX:" + ev.pageX + " ev.pageY:" + ev.pageY);
+        Log.debug("ev.pageX:" + ev.pageX + " ev.pageY:" + ev.pageY);
     }
     
     if(canvasBounds[0] <= tempPageX && tempPageX <= canvasBounds[2]
@@ -2392,7 +2479,7 @@ function action(action){
             Log.info("main.js->action()->container. Nr of actions in the STACK: " + History.COMMANDS.length);
             
             //creates a container
-            var cmdContainerCreate = new ContainerCreateCommand(100, 100);
+            var cmdContainerCreate = new ContainerCreateCommand(300, 300);
             cmdContainerCreate.execute();
             History.addUndo(cmdContainerCreate);
             

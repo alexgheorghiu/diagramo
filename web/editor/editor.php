@@ -531,7 +531,9 @@ $page = 'editor';
             
             <a href="javascript:action('connector-organic');" title="Organic connector (Experimental)"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
             
-            <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/icon_container.gif" border="0" alt="Container"/></a>
+            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            
+            <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
             
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>            
                         

@@ -16,6 +16,8 @@ function Stack(){
     /**Keeps all the groups in the canvas*/
     this.groups = [];
     
+    this.containers = [];
+    
     /**Keeps current generated Id. Not for direct access*/
     this.currentId = 0;
     
@@ -213,6 +215,11 @@ Stack.prototype = {
     figureAdd:function(figure){
         this.figures.push(figure);
         this.idToIndex[figure.id] = this.figures.length-1;
+    },
+    
+    
+    containerAdd : function(container){
+        this.containers.push(container);
     },
 
     /*code taken from ConnectionPoint.removeConnector
@@ -454,6 +461,40 @@ Stack.prototype = {
     
     
     /**
+     *Returns the Container's id if there is a container for the given coordinates
+     *It will return the first container we found from top to bottom (Z-order)
+     *@param {Number} x - the value on Ox axis
+     *@param {Number} y - the value on Ox axis
+     *@return {Number} - the id of the {Container} or -1 if none found
+     *@author Alex Gheorghiu <alex@scriptoid.com>
+     **/
+    containerGetByXY:function(x,y){
+        var id = -1;
+        for(var i= this.containers.length-1; i>=0; i--){
+            if(this.containers[i].contains(x, y)){
+                id = this.containers[i].id;
+                break;
+            } //end if
+        }//end for
+        
+        return id;
+    },
+    
+    
+    /**Returns a container by id
+     *@param {Number} id - the id of the container
+     *@return {Container} - the container object or null if no container with that id found
+     **/
+    containerGetById:function(id){
+        for(var i=0; i<this.containers.length; i++){
+            if(this.containers[i].id == id){
+                return this.containers[i];
+            }
+        }
+        return null;
+    },    
+    
+    /**
      *Returns an Array of Figure's id if there are figures for the given coordinates
      *@param {Number} x - the value on Ox axis
      *@param {Number} y - the value on Ox axis
@@ -640,6 +681,16 @@ Stack.prototype = {
                 
             context.restore();
         }
+        
+        //paint containers
+        for(var i=0; i<this.containers.length; i++){
+            context.save();
+            
+            this.containers[i].paint(context);
+            
+            context.restore();
+        }
+        //end paint containers
         
         
         //paint figures
