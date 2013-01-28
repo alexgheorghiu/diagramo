@@ -260,6 +260,12 @@ function updateShape(shapeId, property, newValue){
     if(!obj){
         obj = CONNECTOR_MANAGER.connectorGetById(shapeId);
     }
+    
+    
+    //container?
+    if(!obj){
+        obj = STACK.containerGetById(shapeId);
+    }
 
     var objSave = obj; //keep a reference to initial shape
 

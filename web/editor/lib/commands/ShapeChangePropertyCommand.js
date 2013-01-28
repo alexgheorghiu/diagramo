@@ -35,17 +35,35 @@ ShapeChangePropertyCommand.prototype = {
     /**This method should be called every time the Command should be undone*/
     undo : function(){
         this._setValue(this.figureId, this.property, this.previousValue);
-        setUpEditPanel(STACK.figureGetById(this.figureId)); 
+        
+        var shape = this.__getShape(this.figureId);
+        
+        setUpEditPanel(shape); 
+        
+    },
+    
+    
+    /**As 
+     *@param id {Numeric} the id of the shape (Figure, Connector, Container)
+     **/
+    __getShape : function(id){
+        var shape = STACK.figureGetById(id);
+        if(shape == null){
+            shape = CONNECTOR_MANAGER.connectorGetById(id);
+        }
+        
+        if(shape == null){
+            shape = STACK.containerGetById(id);
+        }
+        
+        return shape;
     },
     
     
     /**Get */
     _getValue : function(figureId, property){
         //gel old value
-        var shape = STACK.figureGetById(figureId);
-        if(shape == null){
-            shape = CONNECTOR_MANAGER.connectorGetById(figureId);
-        }
+        var shape = this.__getShape(this.figureId);
 
         var propertyObject = shape;
         var propertyAccessors = property.split(".");
@@ -66,11 +84,7 @@ ShapeChangePropertyCommand.prototype = {
     /**Set */
     _setValue : function(figureId, property, value){
         //gel old value
-        var shape = STACK.figureGetById(figureId);
-        
-        if(shape == null){
-            shape = CONNECTOR_MANAGER.connectorGetById(figureId);
-        }
+        var shape = this.__getShape(this.figureId);
 
         var propertyObject = shape;
         var propertyAccessors = property.split(".");

@@ -476,7 +476,12 @@ BuilderProperty.prototype = {
                 obj = canvas;
             }
         }
-        //Log.info("Unsplit property: " + this.property);
+        
+        //Is it a Container?
+        if(obj == null){
+            obj = STACK.containerGetById(figureId);
+        }
+        Log.info("Unsplit property: " + this.property);
         
         var propertyAccessors = this.property.split(".");
 //        Log.info("BuilderProperty::getValue() : propertyAccessors : " + propertyAccessors );
