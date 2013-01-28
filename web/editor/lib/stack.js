@@ -735,6 +735,13 @@ Stack.prototype = {
 				HandleManager.paint(context);
 			}
         }
+        else if(state == STATE_CONTAINER_SELECTED){ //CONTAINER
+            var cont = STACK.containerGetById(selectedContainerId);
+            HandleManager.shapeSet(cont);
+            if(!ignoreSelection){
+                HandleManager.paint(context);
+            }
+        }
         else if(state == STATE_GROUP_SELECTED){ //GROUP 
             var g = this.groupGetById(selectedGroupId);
             HandleManager.shapeSet(g);

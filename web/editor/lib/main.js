@@ -1664,6 +1664,73 @@ function onMouseMove(ev){
             }
             
             break;
+            
+            
+       case STATE_CONTAINER_SELECTED:
+           //throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";           
+           
+           //BRUTE COPY FROM FIGURE
+           if(mousePressed){ // mouse is (at least was) pressed
+                if(lastMove != null){ //we are in dragging mode
+                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then 
+                     *as we move the mouse....it can move faster/slower than the figure and we 
+                     *will lose the Handle selection.
+                     **/
+                    var handle = HandleManager.handleGetSelected();
+                    
+                    if(handle != null){ //We are over a Handle of selected Figure               
+                        canvas.style.cursor = handle.getCursor();
+                        handle.action(lastMove,x,y);
+                        redraw = true;
+                        Log.info('onMouseMove() - STATE_CONTAINER_SELECTED + drag - mouse cursor = ' + canvas.style.cursor);
+                    }
+                    else{ /*no handle is selected*/
+//                        if (!SHIFT_PRESSED){//just translate the figure                            
+                            canvas.style.cursor = 'move';
+                            var translateMatrix = generateMoveMatrix(STACK.containerGetById(selectedContainerId), x, y);
+                            Log.info("onMouseMove() + STATE_CONTAINER_SELECTED : translation matrix" + translateMatrix);
+                            var cmdTranslateContainer = new ContainerTranslateCommand(selectedContainerId, translateMatrix);
+                            History.addUndo(cmdTranslateContainer);
+                            cmdTranslateContainer.execute();
+                            redraw = true;
+                            Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + drag - move selected container");
+//                        }else{ //we are entering a figures selection sesssion
+//                            state = STATE_SELECTING_MULTIPLE;
+//                            selectionArea.points[0] = new Point(x,y);
+//                            selectionArea.points[1] = new Point(x,y);
+//                            selectionArea.points[2] = new Point(x,y);
+//                            selectionArea.points[3] = new Point(x,y);//the selectionArea has no size until we start dragging the mouse
+//                            redraw = true;
+//                            Log.info('onMouseMove() - STATE_CONTAINER_SELECTED + mousePressed + SHIFT => STATE_SELECTING_MULTIPLE');
+//                        }
+                    }
+                }
+            }
+            else{ //no mouse press (only change cursor)
+                var handle = HandleManager.handleGet(x,y); //TODO: we should be able to replace it with .getSelectedHandle()
+                    
+                if(handle != null){ //We are over a Handle of selected Figure               
+                    canvas.style.cursor = handle.getCursor();
+                    Log.info('onMouseMove() - STATE_CONTAINER_SELECTED + over a Handler = change cursor to: ' + canvas.style.cursor);
+                }
+                else{
+                    throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";
+                    
+                    /*move figure only if no handle is selected*/
+                    var tmpFigId = STACK.figureGetByXY(x, y); //pick first figure from (x, y)
+                    if(tmpFigId != -1){
+                        canvas.style.cursor = 'move';                            
+                        Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over a figure = change cursor");
+                    }
+                    else{
+                        canvas.style.cursor = 'default';                            
+                        Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over nothin = change cursor to default");
+                    }
+                }
+            }
+            //END BRUTE COPY FROM FIGURE
+            
+           break;
 
 
         case STATE_GROUP_SELECTED:

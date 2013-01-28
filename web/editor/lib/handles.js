@@ -695,9 +695,9 @@ HandleManager.shapeSet = function(shape){
         handle.x = bounds[0]+(bounds[2]-bounds[0])/2;
         //JS: because handleOffset is 0, we still need to see rotation handle
         if (HandleManager.handleOffset!=0){
-          handle.y = bounds[1] - HandleManager.handleOffset * 1.5;
+            handle.y = bounds[1] - HandleManager.handleOffset * 1.5;
         }else{
-          handle.y = bounds[1] - 15;
+            handle.y = bounds[1] - 15;
         }
         HandleManager.handles.push(handle);
 
@@ -717,6 +717,22 @@ HandleManager.shapeSet = function(shape){
         for(var i=0; i<HandleManager.handles.length; i++){
             HandleManager.handles[i].transform(Matrix.rotationMatrix(angle));
         }
+    } else if(shape instanceof Container){
+        var bounds = HandleManager.shape.getBounds();
+        
+        HandleManager.selectRect = new Polygon();
+        HandleManager.selectRect.points = [];
+        HandleManager.selectRect.addPoint(new Point(bounds[0] - HandleManager.handleOffset, bounds[1] - HandleManager.handleOffset)); //top left
+        HandleManager.selectRect.addPoint(new Point(bounds[2]+ HandleManager.handleOffset, bounds[1] - HandleManager.handleOffset)); //top right
+        HandleManager.selectRect.addPoint(new Point(bounds[2] + HandleManager.handleOffset, bounds[3] + HandleManager.handleOffset)); //bottom right
+        HandleManager.selectRect.addPoint(new Point(bounds[0] - HandleManager.handleOffset, bounds[3] + HandleManager.handleOffset)); //bottom left
+
+        bounds = HandleManager.selectRect.getBounds();
+        
+        handle = new Handle("n"); //N
+        handle.x = bounds[0]+(bounds[2]-bounds[0])/2;
+        handle.y = bounds[1];
+        HandleManager.handles.push(handle);
     }
 }
 

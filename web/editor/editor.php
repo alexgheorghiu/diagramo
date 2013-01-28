@@ -84,6 +84,7 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js?<?=time()?>"></script>                        
         
         <script type="text/javascript" src="./lib/commands/ContainerCreateCommand.js?<?=time()?>"></script>                        
+        <script type="text/javascript" src="./lib/commands/ContainerTranslateCommand.js?<?=time()?>"></script>                        
         
         <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js?<?=time()?>"></script>
         
