@@ -1678,7 +1678,7 @@ function onMouseMove(ev){
                      **/
                     var handle = HandleManager.handleGetSelected();
                     
-                    if(handle != null){ //We are over a Handle of selected Figure               
+                    if(handle != null){ //We are over a Handle of selected Container               
                         canvas.style.cursor = handle.getCursor();
                         handle.action(lastMove,x,y);
                         redraw = true;
@@ -1714,17 +1714,17 @@ function onMouseMove(ev){
                     Log.info('onMouseMove() - STATE_CONTAINER_SELECTED + over a Handler = change cursor to: ' + canvas.style.cursor);
                 }
                 else{
-                    throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";
+//                    throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";
                     
                     /*move figure only if no handle is selected*/
-                    var tmpFigId = STACK.figureGetByXY(x, y); //pick first figure from (x, y)
-                    if(tmpFigId != -1){
+                    var tmpContId = STACK.containerGetByXY(x, y); //pick first figure from (x, y)
+                    if(tmpContId != -1){
                         canvas.style.cursor = 'move';                            
-                        Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over a figure = change cursor");
+                        Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over a container = change cursor");
                     }
                     else{
                         canvas.style.cursor = 'default';                            
-                        Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over nothin = change cursor to default");
+                        Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over nothing = change cursor to default");
                     }
                 }
             }

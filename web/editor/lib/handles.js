@@ -399,6 +399,10 @@ Handle.prototype = {
         else if(HandleManager.shape instanceof Group){
             this.actionGroup(lastMove, newX, newY);
         }
+        else if(HandleManager.shape instanceof Container){
+            throw "handles.js->Handler->action() not implemented for Container";
+            this.actionGroup(lastMove, newX, newY);
+        }
     },
 
 
@@ -494,7 +498,7 @@ Handle.prototype = {
                 return 'ew-resize';
             }
         } //end if Connector
-        else{
+        else if(HandleManager.shape instanceof Figure ){
             if(this.visible == false){
                 return "";
             }
@@ -536,7 +540,50 @@ Handle.prototype = {
                     return Handle.types[k]+"-resize";
                 }
             }
-        } //end if Figure
+            //end if Figure
+        } else if(HandleManager.shape instanceof Container){
+            if(this.visible == false){
+                return "";
+            }
+            if(this.type == 'r'){
+                return 'move';
+            }
+        
+            var figureBounds = HandleManager.shape.getBounds(); //get figure's bounds
+            var figureCenter = new Point(figureBounds[0] + ((figureBounds[2]-figureBounds[0])/2),
+                (figureBounds[1] + ((figureBounds[3] - figureBounds[1])/2)) ); //get figure's center
+
+            //find north
+            var closestToNorthIndex = -1; //keeps the index of closest handle to North
+            var minAngleToNorth = 2 * Math.PI; //keeps the smallest (angular) distante to North
+            var myIndex = -1;
+
+            for(var i=0; i<HandleManager.handles.length-1; i++){
+                var handleCenter = new Point(HandleManager.handles[i].x, HandleManager.handles[i].y);
+                var angle = Util.getAngle(figureCenter,handleCenter); //get the angle between those 2 points 0=n
+
+                if(angle <= Math.PI){ //quadrant I or II
+                    if(angle < minAngleToNorth){
+                        minAngleToNorth = angle;
+                        closestToNorthIndex = i;
+                    }
+                }
+                else{ //quadrant III or IV
+                    if(2 * Math.PI - angle < minAngleToNorth){
+                        minAngleToNorth = 2 * Math.PI - angle
+                        closestToNorthIndex = i;
+                    }
+                }
+            }
+
+            //alert("closest to North is : " + closestToNorthIndex);
+            for(var k=0; k<8; k++){ //there will always be 8 resize handlers
+                //we do not use modulo 9 as we want to ignore the "rotate" handle
+                if(HandleManager.handles[(closestToNorthIndex + k) % 8] == this){
+                    return Handle.types[k]+"-resize";
+                }
+            }
+        }
 
         return "";
     }
@@ -729,10 +776,57 @@ HandleManager.shapeSet = function(shape){
 
         bounds = HandleManager.selectRect.getBounds();
         
+        //update current handles
+        var handle = new Handle("nw"); //NW
+        handle.x = bounds[0];
+        handle.y = bounds[1];
+        HandleManager.handles.push(handle);
+
         handle = new Handle("n"); //N
         handle.x = bounds[0]+(bounds[2]-bounds[0])/2;
         handle.y = bounds[1];
         HandleManager.handles.push(handle);
+
+        handle = new Handle("ne"); //NE
+        handle.x = bounds[2];
+        handle.y = bounds[1];
+        HandleManager.handles.push(handle);
+
+        handle = new Handle("e"); //E
+        handle.x = bounds[2];
+        handle.y = bounds[1]+(bounds[3]-bounds[1])/2;
+        HandleManager.handles.push(handle);
+
+        handle = new Handle("se"); //SE
+        handle.x = bounds[2];
+        handle.y = bounds[3];
+        HandleManager.handles.push(handle);
+
+        handle = new Handle("s"); //S
+        handle.x = bounds[0]+(bounds[2]-bounds[0])/2;
+        handle.y = bounds[3];
+        HandleManager.handles.push(handle);
+
+        handle = new Handle("sw"); //SW
+        handle.x = bounds[0];
+        handle.y = bounds[3];
+        HandleManager.handles.push(handle);
+
+        handle = new Handle("w"); //W
+        handle.x = bounds[0];
+        handle.y = bounds[1]+(bounds[3]-bounds[1])/2;
+        HandleManager.handles.push(handle);
+
+
+//        handle = new Handle("r"); //Rotation
+//        handle.x = bounds[0]+(bounds[2]-bounds[0])/2;
+//        //JS: because handleOffset is 0, we still need to see rotation handle
+//        if (HandleManager.handleOffset!=0){
+//            handle.y = bounds[1] - HandleManager.handleOffset * 1.5;
+//        }else{
+//            handle.y = bounds[1] - 15;
+//        }
+//        HandleManager.handles.push(handle);
     }
 }
 

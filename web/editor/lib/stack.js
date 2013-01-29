@@ -465,6 +465,26 @@ Stack.prototype = {
      *It will return the first container we found from top to bottom (Z-order)
      *@param {Number} x - the value on Ox axis
      *@param {Number} y - the value on Ox axis
+     *@return {Number} - the id of the container or -1 if none found
+     *@author Alex Gheorghiu <alex@scriptoid.com>
+     **/
+    containerGetByXY:function(x,y){
+        var id = -1;
+        for(var i= this.containers.length-1; i>=0; i--){
+            if(this.containers[i].contains(x, y)){
+                id = this.containers[i].id;
+                break;
+            } //end if
+        }//end for
+        return id;
+    },
+    
+    
+    /**
+     *Returns the Container's id if there is a container for the given coordinates
+     *It will return the first container we found from top to bottom (Z-order)
+     *@param {Number} x - the value on Ox axis
+     *@param {Number} y - the value on Ox axis
      *@return {Number} - the id of the {Container} or -1 if none found
      *@author Alex Gheorghiu <alex@scriptoid.com>
      **/
