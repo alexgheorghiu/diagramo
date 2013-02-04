@@ -1773,7 +1773,7 @@ Arc.prototype = {
     near:function(thex,they,theradius){
         with(this){
             for(var i=0; i<curves.length; i++){
-                if(curves[i].near(thex,they,radius)){
+                if(curves[i].near(thex,they,theradius)){
                     return true;
                 }
             }
