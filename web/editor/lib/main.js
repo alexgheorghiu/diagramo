@@ -1287,8 +1287,8 @@ function onMouseUp(ev){
     Log.info("main.js>onMouseUp()");
     
     var coords = getCanvasXY(ev);
-    x = coords[0];
-    y = coords[1];
+    var x = coords[0];
+    var y = coords[1];
 
     lastClick = [];
     mousePressed = true;
