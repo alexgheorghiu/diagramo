@@ -41,8 +41,8 @@ ContainerTranslateCommand.prototype = {
     
     /**This method should be called every time the Command should be undone*/
     undo : function(){        
-        var fig = STACK.containerGetById(this.containerId);
-        fig.transform(this.reverseMatrix);
+        var container = STACK.containerGetById(this.containerId);
+        container.transform(this.reverseMatrix);
     }
 }
 

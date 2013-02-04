@@ -10,7 +10,7 @@ var debugSolutions = false;
 /**Set it on true if you want visual debug clues.
  * Note: See to set the Connector's visualDebug (Connector.visualDebug) to false too
  **/
-var visualDebug = true; 
+var visualDebug = false; 
 
 /**Activate or deactivate the undo feature
  *@deprecated

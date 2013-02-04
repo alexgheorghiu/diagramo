@@ -689,6 +689,7 @@ Stack.prototype = {
             context.fillText("state: " + state, 0, 10 * pos++);
             context.fillText("selectedFigureId: : " + selectedFigureId, 0, 10 * pos++);
             context.fillText("selectedGroupId: : " + selectedGroupId, 0, 10 * pos++);
+            context.fillText("selectedContainerId: : " + selectedContainerId, 0, 10 * pos++);
             if(selectedGroupId != -1){
                 var logGroup = this.groupGetById(selectedGroupId);
                 context.fillText("permanent: : " + logGroup.permanent, 0, 10 * pos++);

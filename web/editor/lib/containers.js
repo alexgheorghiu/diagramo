@@ -31,7 +31,7 @@ function Container(id, topLeft, bottomRight) {
     /**An {Array} of primitives*/
     this.properties = [];
     
-    //SHAPE
+    //SHAPE - or decoration of the container
     var polygon = new Polygon();        
     polygon.addPoint(new Point(this.topLeft.x, this.topLeft.y));
     polygon.addPoint(new Point(this.bottomRight.x, this.topLeft.y));
@@ -73,7 +73,7 @@ Container.prototype = {
             this.style.setupContext(context);
         }
         for(var i = 0; i<this.primitives.length; i++ ){
-			context.save();
+            context.save();
             var primitive  = this.primitives[i];
             
 
@@ -98,7 +98,17 @@ Container.prototype = {
     },
         
     transform: function(matrix) {
-        throw "container:transform() Not implemented";
+        //throw "container:transform() Not implemented";
+        if(this.style != null){
+            this.style.transform(matrix);
+        }
+        
+        this.bottomRight.transform(matrix);
+        this.topLeft.transform(matrix);
+        
+        for(var i = 0; i<this.primitives.length; i++ ){
+            this.primitives[i].transform(matrix);
+        }
     },
         
         

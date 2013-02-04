@@ -1695,7 +1695,7 @@ Arc.prototype = {
             for(var i=0; i<curves.length; i++){
                 curves[i].transform(matrix);
             }
-            }
+        }
     },
 
 
