@@ -814,6 +814,7 @@ function onMouseDown(ev){
                 else{
                     //find container's id
                     var contId = STACK.containerGetByXY(x, y);
+                    throw "main.js->onMouseDown + STATE_NONE: We should detect clicks on edge no inside container";
                     if(contId != -1){                    
                         var container = STACK.containerGetById(contId);
                         setUpEditPanel(container);
@@ -1561,6 +1562,10 @@ function onMouseMove(ev){
                     canvas.style.cursor = 'move';
                     Log.debug('onMouseMove() - STATE_NONE - mouse cursor = move (over connector)');
                 }
+                else if(STACK.containerIsOnEdge(x,y)){
+                    canvas.style.cursor = 'move';
+                    Log.debug("onMouseMove() - STATE_NONE - mouse cursor = move (over container's edge)");
+                }
                 else{ //default cursor
                     canvas.style.cursor = 'default';
                     Log.debug('onMouseMove() - STATE_NONE - mouse cursor = default');
@@ -1717,10 +1722,9 @@ function onMouseMove(ev){
 //                    throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";
                     
                     /*move figure only if no handle is selected*/
-                    var tmpContId = STACK.containerGetByXY(x, y); //pick first figure from (x, y)
-                    if(tmpContId != -1){
+                    if(STACK.containerIsOnEdge(x, y)){//pick first container from (x, y)
                         canvas.style.cursor = 'move';                            
-                        Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over a container = change cursor");
+                        Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over a container's edge = change cursor");
                     }
                     else{
                         canvas.style.cursor = 'default';                            

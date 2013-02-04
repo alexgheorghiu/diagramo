@@ -146,6 +146,17 @@ Container.prototype = {
         return Util.getBounds([this.bottomRight, this.topLeft]);
     },
         
+    /**Detects if */
+    onEdge : function(theX, theY){
+        var topRight = new Point(this.bottomRight.x, this.topLeft.y);
+        var bottomLeft = new Point(this.topLeft.x, this.bottomRight.y);
+        
+        var edge = new Polygon();
+        edge.points = [this.topLeft, topRight, this.bottomRight, bottomLeft];
+        
+        return edge.near(theX, theY, 3);
+    },
+        
         
     near: function() {
         throw "container:near() Not implemented";

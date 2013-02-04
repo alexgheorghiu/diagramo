@@ -664,6 +664,42 @@ Stack.prototype = {
         }
         return found;
     },
+        
+        
+    /**Test if an (x,y) is over a container
+     *@param {Number} x - the x coordinates
+     *@param {Number} y - the y coordinates
+     *@return {Boolean} - true if over a container, false otherwise
+     **/
+    containerIsOver:function(x, y){
+        var found = false;
+        for(var i=0; i< this.containers.length; i++){
+            var container = this.containers[i];
+            if(container.contains(x, y)){
+                found = true;
+                break;
+            }
+        }
+        return found;
+    },
+        
+        
+    /**Test if an (x,y) is over a Container's edge (rigt on its edge)
+     *@param {Number} x - the x coordinates
+     *@param {Number} y - the y coordinates
+     *@return {Boolean} - true if over a container, false otherwise
+     **/
+    containerIsOnEdge:function(x, y){
+        var found = false;
+        for(var i=0; i< this.containers.length; i++){
+            var container = this.containers[i];
+            if(container.onEdge(x, y)){
+                found = true;
+                break;
+            }
+        }
+        return found;
+    },
 
 
     /**Paints all {Figure}s from back to top (Z order)
