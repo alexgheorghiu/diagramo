@@ -105,4 +105,5 @@ function draw(ctx, points, pt){
 		
 		i++;
 	}
+}
 	
