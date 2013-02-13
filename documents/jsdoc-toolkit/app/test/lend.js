@@ -12,22 +12,23 @@ var Person = Class.create(
         }
     }
  );
-
-/** @lends Person.prototype */
-{
-	/** like say but more musical */
-	sing: function(song) {
-	}
-}
-
-/** @lends Person */
-{
-	getCount: function() {
-	}
-}
-
-/** @lends Unknown.prototype */
-{
-	notok: function() {
-	}
-}
+     
+//Commented as it triggered Netbeans errors (see @http://netbeans.org/bugzilla/show_bug.cgi?id=226037)
+///** @lends Person.prototype */
+//{
+//	/** like say but more musical */
+//	sing: function(song) {
+//	}
+//}
+//
+///** @lends Person */
+//{
+//	getCount: function() {
+//	}
+//}
+//
+///** @lends Unknown.prototype */
+//{
+//	notok: function() {
+//	}
+//}
