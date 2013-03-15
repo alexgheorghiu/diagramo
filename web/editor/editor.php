@@ -38,7 +38,13 @@ $page = 'editor';
         
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/minimap.css" />
-        <? require_once("./lib/sets/figures.php");?>
+        
+        <script type="text/javascript" src="./assets/javascript/json2.js"></script>
+        <script type="text/javascript" src="./assets/javascript/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
+        <script type="text/javascript" src="./assets/javascript/jquery.simplemodal-1.3.5.min.js"></script>
+        
+        <? require_once("./lib/sets/figures.php");?>        
         <script type="text/javascript" src="./lib/canvasprops.js?<?=time()?>"></script>
         <script type="text/javascript" src="./lib/style.js?<?=time()?>"></script>
         <script type="text/javascript" src="./lib/primitives.js?<?=time()?>"></script>
@@ -89,10 +95,7 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/commands/CanvasResizeCommand.js?<?=time()?>"></script>
         
         
-        <script type="text/javascript" src="./assets/javascript/json2.js"></script>
-        <script type="text/javascript" src="./assets/javascript/jquery-1.4.2.min.js"></script>
-        <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
-        <script type="text/javascript" src="./assets/javascript/jquery.simplemodal-1.3.5.min.js"></script>
+        
 
         
         <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
@@ -113,7 +116,7 @@ $page = 'editor';
             
             
 
-            <a style="text-decoration: none;" href="#" onclick="return save('<?=isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : ''?>');" title="Save diagram (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>
+            <a style="text-decoration: none;" href="#" onclick="return save();" title="Save diagram (Ctrl-S)"><img src="assets/images/icon_save.jpg" border="0" width="16" height="16"/></a>
             
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             

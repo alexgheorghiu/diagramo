@@ -2358,11 +2358,16 @@ function linkMap(){
 
 
 /** Save current diagram
+ * Save can be triggered in 3 cases:
+ *  1 - from menu
+ *  2 - from quilc toolbar
+ *  3 - from shortcut Ctrl-S (onKeyDown)
  *See:
  *http://www.itnewb.com/v/Introduction-to-JSON-and-PHP/page3
  *http://www.onegeek.com.au/articles/programming/javascript-serialization.php
  **/
-function save(diagramId){
+function save(){
+    
     //alert("save triggered! diagramId = " + diagramId  );
     Log.info('Save pressed');
 
@@ -2387,13 +2392,13 @@ function save(diagramId){
 
     //see: http://api.jquery.com/jQuery.post/
     $.post("./common/controller.php",
-        {action: 'save', diagram: serializedDiagram, png:dataURL, linkMap: lMap, svg: svgDiagram, diagramId: diagramId},
+        {action: 'save', diagram: serializedDiagram, png:dataURL, linkMap: lMap, svg: svgDiagram, diagramId: currentDiagramId},
         function(data){
-            if(data == 'firstSave'){
+            if(data === 'firstSave'){
                 Log.info('firstSave!');
                 window.location = './saveDiagram.php';                            
             }
-            else if(data == 'saved'){
+            else if(data === 'saved'){
                 //Log.info('saved!');
                 alert('saved!');
             }
@@ -2543,6 +2548,7 @@ window.onresize = function(){
     minimap.initMinimap()
 };
 
+var currentDiagramId = null;
 
 /**Initialize the page
 * @param {Integer} diagramId (optional) the diagram Id to load
@@ -2575,7 +2581,8 @@ function init(diagramId){
 
    //loads diagram ONLY if the parameter is numeric
    if(isNumeric(diagramId)){
-       load(diagramId);
+       currentDiagramId = diagramId;
+       load(diagramId);       
    }
 
 
