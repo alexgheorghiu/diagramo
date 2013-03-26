@@ -11,3 +11,10 @@ You can find Diagramo sources on either [Bitbucket](https://bitbucket.org/script
 or mirrored on [GitHub](https://github.com/alexgheorghiu/diagramo.git "Diagramo on Git").
 
 
+Things to do when developing Diagramo
+=====================================
+
+Disable cache
+-------------
+    Firefox: http://superuser.com/questions/23134/how-to-turn-off-the-firefox-cache
+    Chrome: http://stackoverflow.com/questions/5690269/disabling-chrome-cache-for-website-development see @Mason answer

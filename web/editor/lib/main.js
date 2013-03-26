@@ -60,6 +60,9 @@ var connector = null;
 var connectorType = '';
 
 
+/**It contains all the figure sets. Each figure set upon loading it will add a new
+ * entry to this array*/
+var figureSets = [];
 
 /**Used to generate nice formatted SVG files */
 var INDENTATION = 0;

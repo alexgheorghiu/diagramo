@@ -23,6 +23,9 @@ if(isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId'])){
 }
 //end diagram guardian
 
+//get the address where the app reside
+$WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
+
 $page = 'editor';
 ?>
 
@@ -34,7 +37,7 @@ $page = 'editor';
         <title>HTML5 diagram editor</title>
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
+        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js"></script>    
         
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/minimap.css" />
@@ -44,59 +47,75 @@ $page = 'editor';
         <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
         <script type="text/javascript" src="./assets/javascript/jquery.simplemodal-1.3.5.min.js"></script>
         
-        <? require_once("./lib/sets/figures.php");?>        
-        <script type="text/javascript" src="./lib/canvasprops.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/style.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/primitives.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/ImageFrame.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/matrix.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/util.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/key.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/groups.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/stack.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/connections.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/connectionManagers.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/handles.js?<?=time()?>"></script>
+        
+        <script type="text/javascript">
+            /*Option 1:
+             *We can use window.location like this:
+             * url = window.location.protocol + window.location.hostname + ":" + window.location.port + ....
+             * @see http://www.w3schools.com/jsref/obj_location.asp
+             * 
+             * Option 2:
+             * Use http://code.google.com/p/js-uri/
+             **/
+            var figureSetsURL = '<?=$WEBADDRESS?>' + '/editor/lib/sets';
+        </script>
+        
+        <script type="text/javascript" src="./lib/canvasprops.js"></script>
+        <script type="text/javascript" src="./lib/style.js"></script>
+        <script type="text/javascript" src="./lib/primitives.js"></script>
+        <script type="text/javascript" src="./lib/ImageFrame.js"></script>
+        <script type="text/javascript" src="./lib/matrix.js"></script>
+        <script type="text/javascript" src="./lib/util.js"></script>
+        <script type="text/javascript" src="./lib/key.js"></script>
+        <script type="text/javascript" src="./lib/groups.js"></script>
+        <script type="text/javascript" src="./lib/stack.js"></script>
+        <script type="text/javascript" src="./lib/connections.js"></script>
+        <script type="text/javascript" src="./lib/connectionManagers.js"></script>
+        <script type="text/javascript" src="./lib/handles.js"></script>
         
         
-        <script type="text/javascript" src="./lib/builder.js?<?=time()?>"></script>        
-        <script type="text/javascript" src="./lib/text.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/log.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/text.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/browserReady.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/main.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/minimap.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./lib/builder.js"></script>        
+        <script type="text/javascript" src="./lib/text.js"></script>
+        <script type="text/javascript" src="./lib/log.js"></script>
+        <script type="text/javascript" src="./lib/text.js"></script>
+        <script type="text/javascript" src="./lib/browserReady.js"></script>
+        <script type="text/javascript" src="./lib/main.js"></script>
+        
+        <script type="text/javascript" src="./lib/sets/basic/basic.js"></script>
+        <script type="text/javascript" src="./lib/sets/experimental/experimental.js"></script>
+        <script type="text/javascript" src="./lib/sets/network/network.js"></script>
+        <script type="text/javascript" src="./lib/sets/secondary/secondary.js"></script>
+        <script type="text/javascript" src="./lib/sets/statemachine/statemachine.js"></script>
+        
+        <script type="text/javascript" src="./lib/minimap.js"></script>
 
-        <script type="text/javascript" src="./lib/commands/History.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./lib/commands/History.js"></script>
         
-        <script type="text/javascript" src="./lib/commands/FigureCreateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureCloneCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureTranslateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureRotateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureScaleCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureZOrderCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureDeleteCommand.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./lib/commands/FigureCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureCloneCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureTranslateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureRotateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureScaleCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureZOrderCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureDeleteCommand.js"></script>
         
-        <script type="text/javascript" src="./lib/commands/GroupRotateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupScaleCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupCreateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupCloneCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupDestroyCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupDeleteCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupTranslateCommand.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./lib/commands/GroupRotateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupScaleCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupCloneCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupDestroyCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupDeleteCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupTranslateCommand.js"></script>
         
-        <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js?<?=time()?>"></script>                        
+        <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js"></script>                        
         
-        <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js"></script>
         
-        <script type="text/javascript" src="./lib/commands/ShapeChangePropertyCommand.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./lib/commands/ShapeChangePropertyCommand.js"></script>
         
-        <script type="text/javascript" src="./lib/commands/CanvasResizeCommand.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./lib/commands/CanvasResizeCommand.js"></script>
         
-        
-        
-
         
         <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />
@@ -196,7 +215,7 @@ $page = 'editor';
         
         <div id="editor">
             <div id="figures">
-                <select style="width: 120px;" onchange="setFigureSet(this.options[this.selectedIndex].value)">
+                <select style="width: 120px;" onchange="setFigureSet(this.options[this.selectedIndex].value);">
                     <script>
                         for(var setName in figureSets){
                             var set = figureSets[setName];
@@ -214,26 +233,22 @@ $page = 'editor';
                         var set = figureSets[setName];
                         for(var figure in set['figures']){
                             figure = set['figures'][figure];
-                            if(counter % 3 == 0){
+                            if(counter % 3 === 0){
                                 document.write('<tr>');
                             }
                             document.write('<td align="center"><a href="javascript:createFigure(figure_'+figure.figureFunction+');"><img src="lib/sets/'+setName+'/'+figure.image+'" border="0" alt="'+ figure.figureFunction + '" /></a></td>');
                             counter ++;
-                            if(counter % 3 == 0){
+                            if(counter % 3 === 0){
                                 document.write('</tr>');
                             }
                         }
-                        if(counter % 3 != 0){
+                        if(counter % 3 !== 0){
                             document.write('</tr>');
                         }
                         document.write('</table></div>');
                         first = false;
                     }
-                </script>
-                
-                <div style="display:none;" id="more">
-                    More sets of figures <a href="http://diagramo.com/figures.php" target="_new">here</a>
-                </div>
+                </script>                
             </div>
             
             <!--THE canvas-->
@@ -261,22 +276,18 @@ $page = 'editor';
 
 
         <script type="text/javascript">
-
             function loadFill(check){
-                if(check.checked == true){
-                    if($('#colorpickerHolder3').css('display')=='none'){
+                if(check.checked === true){
+                    if($('#colorpickerHolder3').css('display') === 'none'){
                         $('#colorSelector3').click();
                     }
                 }
                 else{
-                    if($('#colorpickerHolder3').css('display')=='block'){
+                    if($('#colorpickerHolder3').css('display') === 'block'){
                         $('#colorSelector3').click();
                     }
                 }
             }
-            
-            
-
         </script>
         <br/>
          <? //require_once dirname(__FILE__) . '/common/analytics.php';?>
