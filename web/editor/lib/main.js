@@ -2317,7 +2317,7 @@ function renderedCanvas(){
 
    //render the canvas without the selection and stuff
    var tempCanvas = document.getElementById('tempCanvas');
-   if(tempCanvas == null){
+   if(tempCanvas === null){
            tempCanvas = document.createElement('canvas');
            tempCanvas.setAttribute('id', 'tempCanvas');					
            tempCanvas.style.display = 'none';
