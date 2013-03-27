@@ -24,10 +24,13 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
         <echo>| list - prints this help                           |</echo>
         <echo>| prepare - prepare folder structure                |</echo>
         <echo>| build - build application                         |</echo>
+        <echo>| build-all-in-one - build specific for all-in-one  |</echo>
         <echo>| obfuscate - obfuscate some parts of it            |</echo>
         <echo>| js.obfuscate - obfuscate JavaScript               |</echo>
         <echo>| php.obfuscate - obfuscate PHP                     |</echo>
-        <echo>| dist - creates ZIP distribution file              |</echo>
+        <echo>| release-lamp - release LAMP version               |</echo>
+        <echo>| release-all-in-one - release all-in-one version   |</echo>
+        <echo>| release - creates ZIP distribution file           |</echo>
         <echo>| clean - clean project                             |</echo>
         <echo>+---------------------------------------------------+</echo>
     </target>
@@ -154,14 +157,14 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
     </target>
 
 
-    <target name="dist" depends="obfuscate">
-        <echo>+------------------SCRIPT DIST-----------------------------+</echo>
+    <target name="release-lamp" depends="obfuscate">
+        <echo>+------------------SCRIPT LAMP-----------------------------+</echo>
         <zip destfile="${script.release.file}" basedir="${build.dir}" />
     </target>
 	
 	
     <target name="build-all-in-one" depends="obfuscate">
-        <echo>+------------------SCRIPT BUILD-----------------------------+</echo>
+        <echo>+------------------BUILD ALL IN ONE-----------------------------+</echo>
         <copy todir="${build-all-in-one.dir}">
             <fileset dir="${build.dir}">
             </fileset>
@@ -178,9 +181,13 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
         </copy>
     </target>
 	
-    <target name="dist-all-in-one" depends="build-all-in-one">
-        <echo>+------------------SCRIPT DIST-----------------------------+</echo>
+    <target name="release-all-in-one" depends="build-all-in-one">
+        <echo>+------------------RELEASE ALL IN ONE-----------------------------+</echo>
         <zip destfile="${all-in-one.release.file}" basedir="${build-all-in-one.dir}" />
+    </target>
+    
+    <target name="release" depends="release-lamp, release-all-in-one">
+        <echo>+------------------RELEASE-----------------------------+</echo>
     </target>
 
 
