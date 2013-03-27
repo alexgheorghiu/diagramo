@@ -2581,11 +2581,29 @@ function save(){
     
     //alert("save triggered! diagramId = " + diagramId  );
     Log.info('Save pressed');
-
-    var dataURL = renderedCanvas();
+    
+    var dataURL = null;
+    try{
+        dataURL = renderedCanvas();
+    } 
+    catch(e){                
+        if(e.name === 'SecurityError' && e.code === 18){
+            /*This is usually happening as we load an image from another host than the one Diagramo is hosted*/
+            alert("A figure contains an image loaded from another host. \
+                \n\nHint: \
+                \nPlease make sure that the browser's URL (current location) is the same as the one saved in the DB.");
+        }
+    }
 
 //                Log.info(dataURL);
 //                return false;
+    if(dataURL == null){
+        Log.info('save(). Could not save. dataURL is null');
+        alert("Could not save. \
+            \n\nHint: \
+            \nCanvas's toDataURL() did not functioned properly ");
+        return;
+    }
 
     var diagram = { c: canvasProps, s:STACK, m:CONNECTOR_MANAGER };
     //Log.info('stringify ...');
