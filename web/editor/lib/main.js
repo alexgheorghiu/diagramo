@@ -60,6 +60,9 @@ var connector = null;
 var connectorType = '';
 
 
+/**It contains all the figure sets. Each figure set upon loading it will add a new
+ * entry to this array*/
+var figureSets = [];
 
 /**Used to generate nice formatted SVG files */
 var INDENTATION = 0;
@@ -2512,7 +2515,297 @@ function draw(){
 }
 
 
+/**
+*Returns the canvas data but without the selections and grid.
+*@return {DOMString} - the result of a toDataURL() call on the temporary canvas
+*@author Alex
+**/
+function renderedCanvas(){
+   var canvas = getCanvas();
 
+   //render the canvas without the selection and stuff
+   var tempCanvas = document.getElementById('tempCanvas');
+   if(tempCanvas === null){
+           tempCanvas = document.createElement('canvas');
+           tempCanvas.setAttribute('id', 'tempCanvas');					
+           tempCanvas.style.display = 'none';
+
+           //it seems that there is no need to actually add it to the dom tree to be able to render (tested: IE9, FF9, Chrome 19)
+           //canvas.parentNode.appendChild(tempCanvas);
+   }
+
+   //adjust temp canvas size to main canvas (as it migh have been changed)
+   tempCanvas.setAttribute('width', canvas.width);
+   tempCanvas.setAttribute('height', canvas.height);
+   reset(tempCanvas);
+   STACK.paint(tempCanvas.getContext('2d'), true);				
+   //end render
+
+   return tempCanvas.toDataURL();
+}
+
+/*Returns a text containing all the URL in a diagram */
+function linkMap(){
+    var csvBounds = '';
+    var first = true;
+    for(f in STACK.figures){
+        var figure = STACK.figures[f];
+        if(figure.url != ''){
+            var bounds = figure.getBounds();
+            if(first){
+                first = false;                                                        
+            }
+            else{
+                csvBounds += "\n";
+            }
+
+            csvBounds += bounds[0] + ',' + bounds[1] + ',' + bounds[2] + ',' + bounds[3] + ',' + figure.url;
+        }
+    }
+    Log.info("editor.php->linkMap()->csv bounds: " + csvBounds);
+
+    return csvBounds;
+}
+
+
+/** Save current diagram
+ * Save can be triggered in 3 cases:
+ *  1 - from menu
+ *  2 - from quilc toolbar
+ *  3 - from shortcut Ctrl-S (onKeyDown)
+ *See:
+ *http://www.itnewb.com/renderedCanvasv/Introduction-to-JSON-and-PHP/page3
+ *http://www.onegeek.com.au/articles/programming/javascript-serialization.php
+ **/
+function save(){
+    
+    //alert("save triggered! diagramId = " + diagramId  );
+    Log.info('Save pressed');
+
+    var dataURL = renderedCanvas();
+
+//                Log.info(dataURL);
+//                return false;
+
+    var diagram = { c: canvasProps, s:STACK, m:CONNECTOR_MANAGER };
+    //Log.info('stringify ...');
+    var serializedDiagram = JSON.stringify(diagram);
+    //Log.info('JSON stringify : ' + serializedDiagram);
+
+    var svgDiagram = toSVG();
+
+//                alert(serializedDiagram);
+//                alert(svgDiagram);
+    //Log.info('SVG : ' + svgDiagram);
+
+    //save the URLs of figures as a CSV 
+    var lMap = linkMap();
+
+    //see: http://api.jquery.com/jQuery.post/
+    $.post("./common/controller.php",
+        {action: 'save', diagram: serializedDiagram, png:dataURL, linkMap: lMap, svg: svgDiagram, diagramId: currentDiagramId},
+        function(data){
+            if(data === 'firstSave'){
+                Log.info('firstSave!');
+                window.location = './saveDiagram.php';                            
+            }
+            else if(data === 'saved'){
+                //Log.info('saved!');
+                alert('saved!');
+            }
+            else{
+                alert('Unknown: ' + data );
+            }
+        }
+    );
+
+
+}
+
+/**Exports current canvas as SVG*/
+function exportCanvas(){
+    //export canvas as SVG
+    var v = '<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg" version="1.1">\
+            <rect x="0" y="0" height="200" width="300" style="stroke:#000000; fill: #FFFFFF"/>\
+                    <path d="M100,100 C200,200 100,50 300,100" style="stroke:#FFAAFF;fill:none;stroke-width:3;"  />\
+                    <rect x="50" y="50" height="50" width="50"\
+                      style="stroke:#ff0000; fill: #ccccdf" />\
+            </svg>';
+
+
+
+    //get svg
+    var canvas = getCanvas();
+
+    var v2 = '<svg width="' + canvas.width +'" height="' + canvas.height + '" xmlns="http://www.w3.org/2000/svg" version="1.1">';
+    v2 += STACK.toSVG();
+    v2 += CONNECTOR_MANAGER.toSVG();
+    v2 += '</svg>';
+    alert(v2);
+
+    //save SVG into session
+    //see: http://api.jquery.com/jQuery.post/
+    $.post("../common/controller.php", {action: 'saveSvg', svg: escape(v2)},
+        function(data){
+            if(data == 'svg_ok'){
+                //alert('SVG was save into session');
+            }
+            else if(data == 'svg_failed'){
+                Log.info('SVG was NOT save into session');
+            }
+        }
+    );
+
+    //open a new window that will display the SVG
+    window.open('./svg.php', 'SVG', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
+}
+            
+
+/**Loads a saved diagram
+ *@param {Number} diagramId - the id of the diagram you want to load
+ **/
+function load(diagramId){
+    //alert("load diagram [" + diagramId + ']');
+
+    $.post("./common/controller.php", {action: 'load', diagramId: diagramId},
+        function(data){
+//                        alert(data);
+            var obj  = eval('(' + data + ')');
+            STACK = Stack.load(obj['s']);
+            canvasProps = CanvasProps.load(obj['c']);
+            canvasProps.sync();
+            setUpEditPanel(canvasProps);
+
+            CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
+            draw();
+
+            //alert("loaded");
+        }
+    );
+
+}
+
+/**Saves a diagram. Actually send the serialized version of diagram
+*for saving
+**/
+function saveAs(){
+   var dataURL = renderedCanvas();
+
+//                var $diagram = {c:canvas.save(), s:STACK, m:CONNECTOR_MANAGER};
+   var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER};
+   $serializedDiagram = JSON.stringify($diagram);
+   var svgDiagram = toSVG();
+
+   //save the URLs of figures as a CSV 
+   var lMap = linkMap();
+
+   //alert($serializedDiagram);
+
+   //see: http://api.jquery.com/jQuery.post/
+   $.post("./common/controller.php", {action: 'saveAs', diagram: $serializedDiagram, png:dataURL, linkMap: lMap, svg: svgDiagram},
+       function(data){
+           if(data == 'noaccount'){
+               Log.info('You must have an account to use that feature');
+               //window.location = '../register.php';
+           }
+           else if(data == 'step1Ok'){
+               Log.info('Save as...');
+               window.location = './saveDiagram.php';
+           }
+       }
+   );
+}
+
+
+/**Add listeners to elements on the page*/
+function addListeners(){
+    var canvas = getCanvas();
+
+    //add event handlers for Document
+    document.addEventListener("keypress", onKeyPress, false);
+    document.addEventListener("keydown", onKeyDown, false);
+    document.addEventListener("keyup", onKeyUp, false);
+    document.addEventListener("selectstart", stopselection, false);                
+
+    //add event handlers for Canvas
+    canvas.addEventListener("mousemove", onMouseMove, false);
+    canvas.addEventListener("mousedown", onMouseDown, false);
+    canvas.addEventListener("mouseup", onMouseUp, false);
+
+
+    if(false){
+        //add listeners for iPad/iPhone
+        //As this was only an experiment (for now) it is not well supported nor optimized
+        ontouchstart="touchStart(event);"
+        ontouchmove="touchMove(event);"
+        ontouchend="touchEnd(event);"
+        ontouchcancel="touchCancel(event);"
+    }
+
+}
+
+/**Minimap section*/
+var minimap; //stores a refence to minimap object (see minimap.js)
+
+//TODO: remove reference to JQuery and add a normal listener (for "onmouseup" event)
+$(document).mouseup(
+    function(){
+        minimap.selected = false;
+    }
+);
+
+//TODO: convert to a normal listener (for "onresize" event)
+window.onresize = function(){
+    minimap.initMinimap()
+};
+
+var currentDiagramId = null;
+
+/**Initialize the page
+* @param {Integer} diagramId (optional) the diagram Id to load
+* */
+function init(diagramId){
+   var canvas = getCanvas();
+
+   minimap = new Minimap(canvas, document.getElementById("minimap"), 115);
+   minimap.updateMinimap();
+
+
+   //Canvas properties (width and height)
+   if(canvasProps == null){//only create a new one if we have not already loaded one
+       canvasProps = new CanvasProps(CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT);
+   }
+   //lets make sure that our canvas is set to the correct values
+   canvasProps.setWidth(canvasProps.getWidth());
+   canvasProps.setHeight(canvasProps.getHeight());
+
+
+
+
+   //Browser support and warnings
+   if(isBrowserReady() == 0){ //no support at all
+       modal();
+   }
+
+   //Edit panel
+   setUpEditPanel(canvasProps);
+
+   //loads diagram ONLY if the parameter is numeric
+   if(isNumeric(diagramId)){
+       currentDiagramId = diagramId;
+       load(diagramId);       
+   }
+
+
+
+   // close layer when click-out
+
+   addListeners();
+   
+    window.addEventListener("mousedown", documentOnMouseDown, false);
+    window.addEventListener("mousemove", documentOnMouseMove, false);
+    window.addEventListener("mouseup", documentOnMouseUp, false);
+}
 
 /**
  *Dispatch actions. Detect the action needed and trigger it.
@@ -2891,6 +3184,140 @@ var lastMousePosition = null;
 //}
 
 
+function documentOnMouseDown(evt){
+    //Log.info("documentOnMouseDown");
+    //evt.preventDefault();
+}
+
+var draggingFigure = null;
+function documentOnMouseMove(evt){
+    //Log.info("documentOnMouseMove");
+
+    switch(state){
+        case STATE_FIGURE_CREATE:
+            //Log.info("documentOnMouseMove: trying to draw the D'n'D figure");
+
+            if(!draggingFigure){
+                draggingFigure = document.createElement('img');
+                draggingFigure.setAttribute('id', 'draggingThumb');
+                draggingFigure.style.position = 'absolute';
+                body.appendChild(draggingFigure);
+            }
+
+
+            //Log.info("editor.php>documentOnMouseMove>STATE_FIGURE_CREATE: selectedFigureThumb=" + selectedFigureThumb);
+            draggingFigure.setAttribute('src', selectedFigureThumb);                        
+            draggingFigure.style.width = '100px';
+            draggingFigure.style.height = '100px';
+            draggingFigure.style.left = (evt.pageX - 50) + 'px';
+            draggingFigure.style.top = (evt.pageY - 50) + 'px';
+            //draggingFigure.style.backgroundColor  = 'red';
+            draggingFigure.style.display  = 'block';
+
+            draggingFigure.addEventListener('mousedown', function (event){
+                //Log.info("documentOnMouseMove: How stupid. Mouse down on dragging figure");
+            }, false);
+
+            draggingFigure.addEventListener('mouseup', function (ev){
+                var coords = getCanvasXY(ev);
+
+                if(coords == null){
+                    return;
+                }
+
+                x = coords[0];
+                y = coords[1];
+                switch(state){                                
+                    case STATE_FIGURE_CREATE:
+                        Log.info("draggingFigure>onMouseUp() + STATE_FIGURE_CREATE");
+
+                        snapMonitor = [0,0];
+
+                        //treat new figure
+                        //do we need to create a figure on the canvas?
+                        if(window.createFigureFunction){
+                            //Log.info("draggingFigure>onMouseUp() + STATE_FIGURE_CREATE--> new state STATE_FIGURE_SELECTED + createFigureFunction = " + window.createFigureFunction);
+
+                            var cmdCreateFig = new FigureCreateCommand(window.createFigureFunction, x, y);
+                            cmdCreateFig.execute();
+                            History.addUndo(cmdCreateFig);
+
+                            //HTMLCanvas.style.cursor = 'default';
+
+                            selectedConnectorId = -1;
+                            createFigureFunction = null;
+                            mousePressed = false;
+                            redraw = true;
+
+                            draw();
+
+                            //TODO: a way around to hide this dragging DIV
+                            document.getElementById('draggingThumb').style.display  = 'none';
+
+                            //TODO: the horror 
+                            //body.removeChild(document.getElementById('draggingThumb'));
+
+                        }
+                        else{
+                            Log.info("draggingFigure>onMouseUp() + STATE_FIGURE_CREATE--> but no 'createFigureFunction'");
+                        }
+                        break;
+                }
+
+                //stop canvas from gettting this event
+                evt.stopPropagation();
+            }, false);
+            break;
+
+        case STATE_NONE:
+            //document.removeChild(document.getElementById('draggingThumb'));
+            break;
+    }
+}
+
+
+function documentOnMouseUp(evt){
+    Log.info("documentOnMouseUp");
+
+    switch(state){
+        case STATE_FIGURE_CREATE:
+            var eClicked = document.elementFromPoint(evt.clientX, evt.clientY);
+            if(eClicked.id != 'a'){
+                if(draggingFigure){
+                    //draggingFigure.style.display  = 'none';
+                    draggingFigure.parentNode.removeChild(draggingFigure);
+                    state = STATE_NONE;
+                    draggingFigure = null;
+                    //evt.stopPropagation();
+                }
+            }
+            break;
+    }
+}
+            
+            
+/*Returns a text containing all the URL in a diagram */
+function linkMap(){
+    var csvBounds = '';
+    var first = true;
+    for(f in STACK.figures){
+        var figure = STACK.figures[f];
+        if(figure.url != ''){
+            var bounds = figure.getBounds();
+            if(first){
+                first = false;                                                        
+            }
+            else{
+                csvBounds += "\n";
+            }
+
+            csvBounds += bounds[0] + ',' + bounds[1] + ',' + bounds[2] + ',' + bounds[3] + ',' + figure.url;
+        }
+    }
+    Log.info("editor.php->linkMap()->csv bounds: " + csvBounds);
+
+    return csvBounds;
+}            
 /*======================APPLE=====================================*/
 /**Triggered when an touch is initiated (iPad/iPhone).
  *Simply forward to onMouseDown

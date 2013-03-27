@@ -1,6 +1,6 @@
 <?php
 
-/* * As the embedded web server of php 5.4.3 does not properly set contect type 
+/* * As the embedded web server of php 5.4.3 does not properly set corect type 
  * for SVG we will dump the file directly + headers */
 
 $set = $_REQUEST['set'];

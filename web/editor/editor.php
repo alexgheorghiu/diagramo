@@ -23,6 +23,9 @@ if(isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId'])){
 }
 //end diagram guardian
 
+//get the address where the app reside
+$WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
+
 $page = 'editor';
 ?>
 
@@ -33,71 +36,86 @@ $page = 'editor';
     <head>
         <title>HTML5 diagram editor</title>
         <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=9" />             
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
+        <meta http-equiv="X-UA-Compatible" content="IE=9" />
+        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js"></script>    
         
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/style.css" />
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/minimap.css" />
-        <? require_once("./lib/sets/figures.php");?>
-        <script type="text/javascript" src="./lib/canvasprops.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/style.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/primitives.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/ImageFrame.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/matrix.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/util.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/key.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/groups.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/containers.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/stack.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/connections.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/connectionManagers.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/handles.js?<?=time()?>"></script>
-        
-        
-        <script type="text/javascript" src="./lib/builder.js?<?=time()?>"></script>        
-        <script type="text/javascript" src="./lib/text.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/log.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/text.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/browserReady.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/main.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/minimap.js?<?=time()?>"></script>
-
-        <script type="text/javascript" src="./lib/commands/History.js?<?=time()?>"></script>
-        
-        <script type="text/javascript" src="./lib/commands/FigureCreateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureCloneCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureTranslateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureRotateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureScaleCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureZOrderCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/FigureDeleteCommand.js?<?=time()?>"></script>
-        
-        <script type="text/javascript" src="./lib/commands/GroupRotateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupScaleCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupCreateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupCloneCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupDestroyCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupDeleteCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/GroupTranslateCommand.js?<?=time()?>"></script>
-        
-        <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js?<?=time()?>"></script>                        
-        
-        <script type="text/javascript" src="./lib/commands/ContainerCreateCommand.js?<?=time()?>"></script>                        
-        <script type="text/javascript" src="./lib/commands/ContainerTranslateCommand.js?<?=time()?>"></script>                        
-        
-        <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js?<?=time()?>"></script>
-        
-        <script type="text/javascript" src="./lib/commands/ShapeChangePropertyCommand.js?<?=time()?>"></script>
-        
-        <script type="text/javascript" src="./lib/commands/CanvasResizeCommand.js?<?=time()?>"></script>
-        
         
         <script type="text/javascript" src="./assets/javascript/json2.js"></script>
         <script type="text/javascript" src="./assets/javascript/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
         <script type="text/javascript" src="./assets/javascript/jquery.simplemodal-1.3.5.min.js"></script>
+        
+        
+        <script type="text/javascript">
+            /*Option 1:
+             *We can use window.location like this:
+             * url = window.location.protocol + window.location.hostname + ":" + window.location.port + ....
+             * @see http://www.w3schools.com/jsref/obj_location.asp
+             * 
+             * Option 2:
+             * Use http://code.google.com/p/js-uri/
+             **/
+            var figureSetsURL = '<?=$WEBADDRESS?>' + '/editor/lib/sets';
+        </script>
+        
+        <script type="text/javascript" src="./lib/canvasprops.js"></script>
+        <script type="text/javascript" src="./lib/style.js"></script>
+        <script type="text/javascript" src="./lib/primitives.js"></script>
+        <script type="text/javascript" src="./lib/ImageFrame.js"></script>
+        <script type="text/javascript" src="./lib/matrix.js"></script>
+        <script type="text/javascript" src="./lib/util.js"></script>
+        <script type="text/javascript" src="./lib/key.js"></script>
+        <script type="text/javascript" src="./lib/groups.js"></script>
+        <script type="text/javascript" src="./lib/stack.js"></script>
+        <script type="text/javascript" src="./lib/connections.js"></script>
+        <script type="text/javascript" src="./lib/connectionManagers.js"></script>
+        <script type="text/javascript" src="./lib/handles.js"></script>
+        
+        
+        <script type="text/javascript" src="./lib/builder.js"></script>        
+        <script type="text/javascript" src="./lib/text.js"></script>
+        <script type="text/javascript" src="./lib/log.js"></script>
+        <script type="text/javascript" src="./lib/text.js"></script>
+        <script type="text/javascript" src="./lib/browserReady.js"></script>
+        <script type="text/javascript" src="./lib/main.js"></script>
+        
+        <script type="text/javascript" src="./lib/sets/basic/basic.js"></script>
+        <script type="text/javascript" src="./lib/sets/experimental/experimental.js"></script>
+        <script type="text/javascript" src="./lib/sets/network/network.js"></script>
+        <script type="text/javascript" src="./lib/sets/secondary/secondary.js"></script>
+        <script type="text/javascript" src="./lib/sets/statemachine/statemachine.js"></script>
+        
+        <script type="text/javascript" src="./lib/minimap.js"></script>
 
+        <script type="text/javascript" src="./lib/commands/History.js"></script>
+        
+        <script type="text/javascript" src="./lib/commands/FigureCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureCloneCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureTranslateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureRotateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureScaleCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureZOrderCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/FigureDeleteCommand.js"></script>
+        
+        <script type="text/javascript" src="./lib/commands/GroupRotateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupScaleCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupCloneCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupDestroyCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupDeleteCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/GroupTranslateCommand.js"></script>
+        
+        <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js"></script>                        
+        
+        <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js"></script>
+        
+        <script type="text/javascript" src="./lib/commands/ShapeChangePropertyCommand.js"></script>
+        
+        <script type="text/javascript" src="./lib/commands/CanvasResizeCommand.js"></script>
+        
         
         <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />
@@ -106,407 +124,9 @@ $page = 'editor';
         <!--[if IE]>
         <script src="./assets/javascript/excanvas.js"></script>
         <![endif]-->
-
-
-
-        
-        <script type="text/javascript">
-            
-            /**
-             *Returns the canvas data but without the selections and grid.
-             *@return {DOMString} - the result of a toDataURL() call on the temporary canvas
-             *@author Alex
-             **/
-            function renderedCanvas(){
-                var canvas = getCanvas();
-
-                //render the canvas without the selection and stuff
-                var tempCanvas = document.getElementById('tempCanvas');
-                if(tempCanvas == null){
-                        tempCanvas = document.createElement('canvas');
-                        tempCanvas.setAttribute('id', 'tempCanvas');					
-                        tempCanvas.style.display = 'none';
-
-                        //it seems that there is no need to actually add it to the dom tree to be able to render (tested: IE9, FF9, Chrome 19)
-                        //canvas.parentNode.appendChild(tempCanvas);
-                }
-
-                //adjust temp canvas size to main canvas (as it migh have been changed)
-                tempCanvas.setAttribute('width', canvas.width);
-                tempCanvas.setAttribute('height', canvas.height);
-                reset(tempCanvas);
-                STACK.paint(tempCanvas.getContext('2d'), true);				
-                //end render
-
-                return tempCanvas.toDataURL();
-            }
-
-
-            /*Returns a text containing all the URL in a diagram */
-            function linkMap(){
-                var csvBounds = '';
-                var first = true;
-                for(f in STACK.figures){
-                    var figure = STACK.figures[f];
-                    if(figure.url != ''){
-                        var bounds = figure.getBounds();
-                        if(first){
-                            first = false;                                                        
-                        }
-                        else{
-                            csvBounds += "\n";
-                        }
-                        
-                        csvBounds += bounds[0] + ',' + bounds[1] + ',' + bounds[2] + ',' + bounds[3] + ',' + figure.url;
-                    }
-                }
-                Log.info("editor.php->linkMap()->csv bounds: " + csvBounds);
-                
-                return csvBounds;
-            }
-			
-             /** Save current diagram
-             *See:
-             *http://www.itnewb.com/v/Introduction-to-JSON-and-PHP/page3
-             *http://www.onegeek.com.au/articles/programming/javascript-serialization.php
-             **/
-            function save(){
-                //alert("save triggered!");
-                Log.info('Save pressed');
-
-                var dataURL = renderedCanvas();
-				
-//                Log.info(dataURL);
-//                return false;
-                
-                var diagram = { c: canvasProps, s:STACK, m:CONNECTOR_MANAGER };
-                //Log.info('stringify ...');
-                var serializedDiagram = JSON.stringify(diagram);
-                //Log.info('JSON stringify : ' + serializedDiagram);
-                
-                var svgDiagram = toSVG();
-
-//                alert(serializedDiagram);
-//                alert(svgDiagram);
-                //Log.info('SVG : ' + svgDiagram);
-                
-                //save the URLs of figures as a CSV 
-                var lMap = linkMap();
-
-                //see: http://api.jquery.com/jQuery.post/
-                $.post("./common/controller.php",
-                    {action: 'save', diagram: serializedDiagram, png:dataURL, linkMap: lMap, svg: svgDiagram, diagramId: '<?=isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId'] : ''?>'},
-                    function(data){
-                        if(data == 'firstSave'){
-                            Log.info('firstSave!');
-                            window.location = './saveDiagram.php';                            
-                        }
-                        else if(data == 'saved'){
-                            //Log.info('saved!');
-                            alert('saved!');
-                        }
-                        else{
-                            alert('Unknown: ' + data );
-                        }
-                    }
-                );
-
-
-            }
-
-            /**Loads a saved diagram
-             *@param {Number} diagramId - the id of the diagram you want to load
-             **/
-            function load(diagramId){
-                //alert("load diagram [" + diagramId + ']');
-
-                $.post("./common/controller.php", {action: 'load', diagramId: diagramId},
-                    function(data){
-//                        alert(data);
-                        var obj  = eval('(' + data + ')');
-                        STACK = Stack.load(obj['s']);
-                        canvasProps = CanvasProps.load(obj['c']);
-                        canvasProps.sync();
-                        setUpEditPanel(canvasProps);
-
-                        CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
-                        draw();
-
-                        //alert("loaded");
-                    }
-                );
-
-            }
-
-
-            /**Saves a diagram. Actually send the serialized version of diagram
-             *for saving
-             **/
-            function saveAs(){
-                var dataURL = renderedCanvas();
-                
-//                var $diagram = {c:canvas.save(), s:STACK, m:CONNECTOR_MANAGER};
-                var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER};
-                $serializedDiagram = JSON.stringify($diagram);
-                var svgDiagram = toSVG();
-
-                //save the URLs of figures as a CSV 
-                var lMap = linkMap();
-                
-                //alert($serializedDiagram);
-
-                //see: http://api.jquery.com/jQuery.post/
-                $.post("./common/controller.php", {action: 'saveAs', diagram: $serializedDiagram, png:dataURL, linkMap: lMap, svg: svgDiagram},
-                    function(data){
-                        if(data == 'noaccount'){
-                            Log.info('You must have an account to use that feature');
-                            //window.location = '../register.php';
-                        }
-                        else if(data == 'step1Ok'){
-                            Log.info('Save as...');
-                            window.location = './saveDiagram.php';
-                        }
-                    }
-                );
-            }
-
-
-            /**Exports current canvas as SVG*/
-            function exportCanvas(){
-                //export canvas as SVG
-		var v = '<svg width="300" height="200" xmlns="http://www.w3.org/2000/svg" version="1.1">\
-			<rect x="0" y="0" height="200" width="300" style="stroke:#000000; fill: #FFFFFF"/>\
-				<path d="M100,100 C200,200 100,50 300,100" style="stroke:#FFAAFF;fill:none;stroke-width:3;"  />\
-				<rect x="50" y="50" height="50" width="50"\
-				  style="stroke:#ff0000; fill: #ccccdf" />\
-			</svg>';
-
-
-
-                //get svg
-                var canvas = getCanvas();
-
-                var v2 = '<svg width="' + canvas.width +'" height="' + canvas.height + '" xmlns="http://www.w3.org/2000/svg" version="1.1">';
-                v2 += STACK.toSVG();
-                v2 += CONNECTOR_MANAGER.toSVG();
-                v2 += '</svg>';
-                alert(v2);
-
-                //save SVG into session
-                //see: http://api.jquery.com/jQuery.post/
-                $.post("../common/controller.php", {action: 'saveSvg', svg: escape(v2)},
-                    function(data){
-                        if(data == 'svg_ok'){
-                            //alert('SVG was save into session');
-                        }
-                        else if(data == 'svg_failed'){
-                            Log.info('SVG was NOT save into session');
-                        }
-                    }
-                );
-
-                //open a new window that will display the SVG
-                window.open('./svg.php', 'SVG', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
-            }
-
-            /**Minimap section*/
-            var minimap; //stores a refence to minimap object (see minimap.js)
-            
-            $(document).mouseup(
-                function(){
-                    minimap.selected = false;
-                }
-            );
-            
-            window.onresize = function(){
-                minimap.initMinimap()
-            };
-            
-            
-            /**Initialize the page*/
-            function init(){
-                var canvas = getCanvas();
-                
-                minimap = new Minimap(canvas, document.getElementById("minimap"), 115);
-                minimap.updateMinimap();
-
-
-                //Canvas properties (width and height)
-                if(canvasProps == null){//only create a new one if we have not already loaded one
-                    canvasProps = new CanvasProps(CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT);
-                }
-                //lets make sure that our canvas is set to the correct values
-                canvasProps.setWidth(canvasProps.getWidth());
-                canvasProps.setHeight(canvasProps.getHeight());
-
-
-
-
-                //Browser support and warnings
-                if(isBrowserReady() == 0){ //no support at all
-                    modal();
-                }
-                
-                //Edit panel
-                setUpEditPanel(canvasProps);
-
-                //Load current diagram
-                <? if( isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId']) ){?>
-                load(<?=$_REQUEST['diagramId']?>);
-                <? }?>
-                                                    
-                // close layer when click-out
-                
-                addListeners();
-                
-                window.addEventListener("mousedown", documentOnMouseDown, false);
-                window.addEventListener("mousemove", documentOnMouseMove, false);
-                window.addEventListener("mouseup", documentOnMouseUp, false);
-            }     
-            
-            
-            function documentOnMouseDown(evt){
-                //Log.info("documentOnMouseDown");
-                //evt.preventDefault();
-            }
-            
-            var draggingFigure = null;
-            function documentOnMouseMove(evt){
-                //Log.info("documentOnMouseMove");
-                
-                switch(state){
-                    case STATE_FIGURE_CREATE:
-                        //Log.info("documentOnMouseMove: trying to draw the D'n'D figure");
-                        
-                        if(!draggingFigure){
-                            draggingFigure = document.createElement('img');
-                            draggingFigure.setAttribute('id', 'draggingThumb');
-                            draggingFigure.style.position = 'absolute';
-                            body.appendChild(draggingFigure);
-                        }
-                        
-                        
-                        //Log.info("editor.php>documentOnMouseMove>STATE_FIGURE_CREATE: selectedFigureThumb=" + selectedFigureThumb);
-                        draggingFigure.setAttribute('src', selectedFigureThumb);                        
-                        draggingFigure.style.width = '100px';
-                        draggingFigure.style.height = '100px';
-                        draggingFigure.style.left = (evt.pageX - 50) + 'px';
-                        draggingFigure.style.top = (evt.pageY - 50) + 'px';
-                        //draggingFigure.style.backgroundColor  = 'red';
-                        draggingFigure.style.display  = 'block';
-
-                        draggingFigure.addEventListener('mousedown', function (event){
-                            //Log.info("documentOnMouseMove: How stupid. Mouse down on dragging figure");
-                        }, false);
-                        
-                        draggingFigure.addEventListener('mouseup', function (ev){
-                            var coords = getCanvasXY(ev);
-                            
-                            if(coords == null){
-                                return;
-                            }
-                            
-                            x = coords[0];
-                            y = coords[1];
-                            switch(state){                                
-                                case STATE_FIGURE_CREATE:
-                                    Log.info("draggingFigure>onMouseUp() + STATE_FIGURE_CREATE");
-
-                                    snapMonitor = [0,0];
-
-                                    //treat new figure
-                                    //do we need to create a figure on the canvas?
-                                    if(window.createFigureFunction){
-                                        //Log.info("draggingFigure>onMouseUp() + STATE_FIGURE_CREATE--> new state STATE_FIGURE_SELECTED + createFigureFunction = " + window.createFigureFunction);
-
-                                        var cmdCreateFig = new FigureCreateCommand(window.createFigureFunction, x, y);
-                                        cmdCreateFig.execute();
-                                        History.addUndo(cmdCreateFig);
-
-                                        //HTMLCanvas.style.cursor = 'default';
-
-                                        selectedConnectorId = -1;
-                                        createFigureFunction = null;
-                                        mousePressed = false;
-                                        redraw = true;
-                                        
-                                        draw();
-                                        
-                                        //TODO: a way around to hide this dragging DIV
-                                        document.getElementById('draggingThumb').style.display  = 'none';
-                                        
-                                        //TODO: the horror 
-                                        //body.removeChild(document.getElementById('draggingThumb'));
-                                        
-                                    }
-                                    else{
-                                        Log.info("draggingFigure>onMouseUp() + STATE_FIGURE_CREATE--> but no 'createFigureFunction'");
-                                    }
-                                    break;
-                            }
-                            
-                            //stop canvas from gettting this event
-                            evt.stopPropagation();
-                        }, false);
-                        break;
-                        
-                    case STATE_NONE:
-                        //document.removeChild(document.getElementById('draggingThumb'));
-                        break;
-                }
-            }
-            
-            
-            function documentOnMouseUp(evt){
-                Log.info("documentOnMouseUp");
-                
-                switch(state){
-                    case STATE_FIGURE_CREATE:
-                        var eClicked = document.elementFromPoint(evt.clientX, evt.clientY);
-                        if(eClicked.id != 'a'){
-                            if(draggingFigure){
-                                //draggingFigure.style.display  = 'none';
-                                draggingFigure.parentNode.removeChild(draggingFigure);
-                                state = STATE_NONE;
-                                draggingFigure = null;
-                                //evt.stopPropagation();
-                            }
-                        }
-                        break;
-                }
-            }
-            
-            
-            /**Add listeners to elements on the page*/
-            function addListeners(){
-                var canvas = getCanvas();
-                
-                //add event handlers for Document
-                document.addEventListener("keypress", onKeyPress, false);
-                document.addEventListener("keydown", onKeyDown, false);
-                document.addEventListener("keyup", onKeyUp, false);
-                document.addEventListener("selectstart", stopselection, false);                
-                
-                //add event handlers for Canvas
-                canvas.addEventListener("mousemove", onMouseMove, false);
-                canvas.addEventListener("mousedown", onMouseDown, false);
-                canvas.addEventListener("mouseup", onMouseUp, false);
-                canvas.addEventListener("dblclick", onDoubleClick, false);
-             
-                if(false){
-                    //add listeners for iPad/iPhone
-                    //As this was only an experiment (for now) it is not well supported nor optimized
-                    ontouchstart="touchStart(event);"
-                    ontouchmove="touchMove(event);"
-                    ontouchend="touchEnd(event);"
-                    ontouchcancel="touchCancel(event);"
-                }
-                
-            }            
-            
-        </script>
+       
     </head>
-    <body onload="init();" id="body">
+    <body onload="init('<?= isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId']) ? $_REQUEST['diagramId']:''?>');" id="body">
         
         <? require_once dirname(__FILE__) . '/header.php'; ?>
 
@@ -598,7 +218,7 @@ $page = 'editor';
         
         <div id="editor">
             <div id="figures">
-                <select style="width: 120px;" onchange="setFigureSet(this.options[this.selectedIndex].value)">
+                <select style="width: 120px;" onchange="setFigureSet(this.options[this.selectedIndex].value);">
                     <script>
                         for(var setName in figureSets){
                             var set = figureSets[setName];
@@ -743,22 +363,18 @@ $page = 'editor';
 
 
         <script type="text/javascript">
-
             function loadFill(check){
-                if(check.checked == true){
-                    if($('#colorpickerHolder3').css('display')=='none'){
+                if(check.checked === true){
+                    if($('#colorpickerHolder3').css('display') === 'none'){
                         $('#colorSelector3').click();
                     }
                 }
                 else{
-                    if($('#colorpickerHolder3').css('display')=='block'){
+                    if($('#colorpickerHolder3').css('display') === 'block'){
                         $('#colorSelector3').click();
                     }
                 }
             }
-            
-            
-
         </script>
         <br/>
          <? //require_once dirname(__FILE__) . '/common/analytics.php';?>

@@ -42,7 +42,7 @@ var Log  = {
     * @param {String} message - the message to be logged
     **/
     debug: function (message){
-        if(typeof console != 'undefined'){
+        if(typeof console !== 'undefined'){
             if(this.level >= LOG_LEVEL_DEBUG){
                 //TODO: in IE is log
                 //in FF is debug
@@ -57,7 +57,7 @@ var Log  = {
     * @param {String} message - the message to be logged
     **/
     info : function (message){
-        if(typeof console != 'undefined'){
+        if(typeof console !== 'undefined'){
             if(this.level >= LOG_LEVEL_INFO){
                 console.info(message);
             }
@@ -69,7 +69,7 @@ var Log  = {
     * @param {String} message - the message to be logged
     **/
     error : function (message){
-        if(typeof console != 'undefined'){
+        if(typeof console !== 'undefined'){
             if(this.level >= LOG_LEVEL_ERROR){
                 console.error(message);
             }
@@ -82,11 +82,11 @@ var Log  = {
      *@see <a href="http://getfirebug.com/logging">http://getfirebug.com/logging</a>
      **/
     group : function(title){
-        if(typeof console != 'undefined'){
+        if(typeof console !== 'undefined'){
             if(this.level >= LOG_LEVEL_ERROR){
                 /**If we do not test for group() function you will get an error in Opera
                  *as Opera has it's own console...which does not have a group() function*/
-                if(typeof console.group == 'function'){
+                if(typeof console.group === 'function'){
                     console.group(title);
                 }
             }
@@ -95,11 +95,11 @@ var Log  = {
 
     /**Ends current message grouping*/
     groupEnd : function(){
-        if(typeof console != 'undefined'){
+        if(typeof console !== 'undefined'){
             if(this.level >= LOG_LEVEL_ERROR){
                 /**If we do not test for groupEnd() function you will get an error in Opera
                  *as Opera has it's own console...which does not have a group() function*/
-                if(typeof console.groupEnd == 'function'){
+                if(typeof console.groupEnd === 'function'){
                     console.groupEnd();
                 }
             }
