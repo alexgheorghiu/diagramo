@@ -6,6 +6,7 @@
  * It does not paint itself and it does not change the Z-Order of member figures
  * 
  * @constructor
+ * @param {Numeric} id -  the id of group
  * @this {Group}
  * @author Alex, Zack Newsham zack_newsham@yahoo.co.uk
  */
