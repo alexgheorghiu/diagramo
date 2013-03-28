@@ -17,6 +17,10 @@ function ConnectorManager(){
     /**An {Array} of {Glue}s. Keeps all Glues from canvas*/
     this.glues = [];
 
+    /**An currentCloud - {Array} of 2 {ConnectionPoint} ids.
+     * Cloud highlights 2 {ConnectionPoint}s whose are able to connect. */
+    this.currentCloud = null;
+
     /** Tells in what mode are we:
      * 0 = disabled
      * 1 = choosing first location (creation)
@@ -26,6 +30,10 @@ function ConnectorManager(){
     this.connectionMode = ConnectorManager.MODE_DISABLED;
 }
 
+// defines current cloud's paint details
+ConnectorManager.CLOUD_RADIUS = 15;
+ConnectorManager.CLOUD_LINEWIDTH = 4;
+ConnectorManager.CLOUD_STROKE_STYLE = "rgba(255, 153, 0, 0.8)"; //orange
 
 /**Creates a {ConnectorManager} out of JSON parsed object
  *@param {JSONObject} o - the JSON parsed object
@@ -932,8 +940,44 @@ ConnectorManager.prototype = {
 
         return id;
     },
-    
-    
+
+    /** Returns closest connection point id based on an x, y, radius and the ConnectionPoint.RADIUS
+     * It will pick the first one that matches the criteria
+     *@param {Number} x - the x coordinates of the point
+     *@param {Number} y - the y coordinates of the point
+     *@param {Number} radius - max distance from (x,y) point
+     *@param {Boolean} type - the type of connector to select. Can be 'connector'(ConnectionPoint.TYPE_CONNECTOR)
+     *  or 'figure' (ConnectionPoint.TYPE_FIGURE)
+     *@param {ConnectionPoint} ignoreConPoint - the ConnectionPoint to ignore in search
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     */
+    connectionPointGetByXYRadius: function(x,y, radius, type, ignoreConPoint) {
+        var curId = -1,
+            closestId = -1,
+            curX,
+            curY,
+            minDistance = -1,
+            curDistance;
+
+        for (curX = x - radius; curX <= x + radius; curX++) {
+            for (curY = y - radius; curY <= y + radius; curY++) {
+                if ( !(curX === x && curY === y) && !(ignoreConPoint.contains(curX,curY)) ) {
+                    curId = this.connectionPointGetByXY(curX, curY, type);
+                    if (curId !== -1) {
+                        curDistance = Math.sqrt( Math.pow(curX - x, 2) + Math.pow(curY - y, 2) );
+                        if (minDistance === -1 || curDistance < minDistance) {
+                            minDistance = curDistance;
+                            closestId = curId;
+                        }
+                    }
+                }
+            }
+        }
+
+        return closestId;
+    },
+
+
     /**Reset color to all connection points
      *@author Alex Gheorghiu <alex@scriptoid.com>
      **/
@@ -1286,5 +1330,44 @@ ConnectorManager.prototype = {
             }
         }
         return collectedGlues;
+    },
+
+    /**
+     *Paints the Cloud into a Context
+     *@param {Context} context - the 2D context
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    connectionCloudPaint: function(context) {
+        if (this.currentCloud != null) {
+            var conPoint1 = this.connectionPointGetById(this.currentCloud[0]),
+                conPoint2 = this.connectionPointGetById(this.currentCloud[1]),
+                centerX = (conPoint2.point.x + conPoint1.point.x) / 2,
+                centerY = (conPoint2.point.y + conPoint1.point.y) / 2,
+                xPos,
+                yPos,
+                i,
+                startAngle = 0,
+                endAngle = 2 * Math.PI,
+                angleStep = 0.01,
+                rotationAngle = Math.atan( (conPoint2.point.y - conPoint1.point.y) / (conPoint2.point.x - conPoint1.point.x));
+
+            context.save();
+            context.beginPath();
+            for (i = startAngle; i < endAngle; i += angleStep ) {
+                xPos = centerX - (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.cos(rotationAngle);
+                yPos = centerY + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.cos(rotationAngle);
+
+                if (i == 0) {
+                    context.moveTo(xPos, yPos);
+                } else {
+                    context.lineTo(xPos, yPos);
+                }
+            }
+            context.lineWidth = ConnectorManager.CLOUD_LINEWIDTH;
+            context.strokeStyle = ConnectorManager.CLOUD_STROKE_STYLE;
+            context.stroke();
+            context.closePath();
+            context.restore();
+        }
     }
 }
