@@ -107,9 +107,12 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/commands/GroupDeleteCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/GroupTranslateCommand.js"></script>
         
-        <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js"></script>                        
+        <script type="text/javascript" src="./lib/containers.js"></script>
+        <script type="text/javascript" src="./lib/commands/ContainerCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/ContainerTranslateCommand.js"></script>
         
+        <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js"></script>                                
         <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js"></script>
         
         <script type="text/javascript" src="./lib/commands/ShapeChangePropertyCommand.js"></script>
