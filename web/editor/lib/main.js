@@ -1160,7 +1160,9 @@ function onMouseDown(ev){
             var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(selectedConnectorId);
             var start = cps[0];
             var end = cps[1];
-            
+            var figureConnectionPointId;
+            var figureConnectionPoint;
+
             //did we click any of the connection points?
             if(start.point.near(x, y, 3)){
                 Log.info("Picked the start point");
@@ -1171,6 +1173,13 @@ function onMouseDown(ev){
                 //this acts like clone of the connector
                 var undoCmd = new ConnectorAlterCommand(selectedConnectorId); 
                 History.addUndo(undoCmd);
+
+                // check if current cloud for connection point
+                figureConnectionPointId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, end);
+                if (figureConnectionPointId !== -1) {
+                    figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(figureConnectionPointId);
+                    CONNECTOR_MANAGER.currentCloud = [selectedConnectionPointId, figureConnectionPointId];
+                }
             }
             else if(end.point.near(x, y, 3)){
                 Log.info("Picked the end point");
@@ -1181,6 +1190,13 @@ function onMouseDown(ev){
                 //this acts like clone of the connector
                 var undoCmd = new ConnectorAlterCommand(selectedConnectorId); 
                 History.addUndo(undoCmd);
+
+                // check if current cloud for connection point
+                figureConnectionPointId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, start);
+                if (figureConnectionPointId !== -1) {
+                    figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(figureConnectionPointId);
+                    CONNECTOR_MANAGER.currentCloud = [selectedConnectionPointId, figureConnectionPointId];
+                }
             }
             else{ //no connection point selected
                 
