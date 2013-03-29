@@ -1332,36 +1332,50 @@ ConnectorManager.prototype = {
         return collectedGlues;
     },
 
+
     /**
      *Paints the Cloud into a Context
      *@param {Context} context - the 2D context
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     *@author Alex <alex@scriptoid.com>
+     *TODO: maybe use drawArc or something less computer intensive and with native support
      **/
     connectionCloudPaint: function(context) {
-        if (this.currentCloud != null) {
-            var conPoint1 = this.connectionPointGetById(this.currentCloud[0]),
-                conPoint2 = this.connectionPointGetById(this.currentCloud[1]),
-                centerX = (conPoint2.point.x + conPoint1.point.x) / 2,
-                centerY = (conPoint2.point.y + conPoint1.point.y) / 2,
-                xPos,
-                yPos,
-                i,
-                startAngle = 0,
-                endAngle = 2 * Math.PI,
-                angleStep = 0.01,
+        var conPoint1;
+        var conPoint2;
+        var centerX;
+        var centerY;
+        var xPos;
+        var yPos;
+        var i;
+        var startAngle;
+        var endAngle;
+        var angleStep;
+        var rotationAngle;
+        
+        if (this.currentCloud != null) { //draw only if we have a cloud
+            
+            /*We will construct the ellipse starting from 0 to 2PI*/
+            conPoint1 = this.connectionPointGetById(this.currentCloud[0]),
+            conPoint2 = this.connectionPointGetById(this.currentCloud[1]),
+            centerX = (conPoint2.point.x + conPoint1.point.x) / 2, //x coordinates of the ellipse
+            centerY = (conPoint2.point.y + conPoint1.point.y) / 2, //y coordinates of the ellipse
+            startAngle = 0,
+            endAngle = 2 * Math.PI,
+            angleStep = 0.01,
+            
+            //TODO: where does this formula comes from (a link to formula will be nice)?
+            rotationAngle = Math.atan( (conPoint2.point.y - conPoint1.point.y) / (conPoint2.point.x - conPoint1.point.x));
 
-                // getting rotation angle for a cloud through the tg of it
-                rotationAngle = Math.atan( (conPoint2.point.y - conPoint1.point.y) / (conPoint2.point.x - conPoint1.point.x));
-
-            // painting cloud with oval shape by little lines with const angle step
-            // FIXME: maybe it need become a primitive? But first we need to decide it's form.
             context.save();
             context.beginPath();
             for (i = startAngle; i < endAngle; i += angleStep ) {
+                
+                //TODO: where does this formula comes from (a link to formula will be nice)?
                 xPos = centerX - (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.cos(rotationAngle);
                 yPos = centerY + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.cos(rotationAngle);
 
-                if (i == 0) {
+                if (i === 0) {
                     context.moveTo(xPos, yPos);
                 } else {
                     context.lineTo(xPos, yPos);
