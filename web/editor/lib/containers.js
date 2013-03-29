@@ -49,10 +49,10 @@ function Container(id, topLeft, bottomRight) {
     //CONTAINER
     var actualContainer = new Polygon();
     actualContainer.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize));
-    header.addPoint(new Point(this.bottomRight.x, this.topLeft.y + headerSize));
-    header.addPoint(new Point(this.bottomRight.x, this.bottomRight.y));
-    header.addPoint(new Point(this.topLeft.x, this.bottomRight.y)); 
-    header.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize)); 
+    actualContainer.addPoint(new Point(this.bottomRight.x, this.topLeft.y + headerSize));
+    actualContainer.addPoint(new Point(this.bottomRight.x, this.bottomRight.y));
+    actualContainer.addPoint(new Point(this.topLeft.x, this.bottomRight.y)); 
+    actualContainer.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize)); 
     this.primitives.push(actualContainer);    
     
     this.properties.push(new BuilderProperty('Stroke Style', 'primitives.1.style.strokeStyle', BuilderProperty.TYPE_COLOR));
@@ -63,7 +63,8 @@ function Container(id, topLeft, bottomRight) {
     
     
     //TITLE
-    var title = new Text("Container", (this.topLeft.x + this.bottomRight.x)/2, this.topLeft.y, Text.FONTS[0], Text.DEFAULT_SIZE, false);
+    var title = new Text("Container", (this.topLeft.x + this.bottomRight.x)/2, this.topLeft.y + Text.DEFAULT_SIZE /*@see https://bitbucket.org/scriptoid/diagramo/issue/31/text-vertical-aligment*/, Text.FONTS[0], Text.DEFAULT_SIZE, false);
+//    title.debug = true;
     title.style.fillStyle = '#000000';
     this.primitives.push(title);
     

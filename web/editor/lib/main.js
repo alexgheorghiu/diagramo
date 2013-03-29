@@ -10,7 +10,7 @@ var debugSolutions = false;
 /**Set it on true if you want visual debug clues.
  * Note: See to set the Connector's visualDebug (Connector.visualDebug) to false too
  **/
-var visualDebug = false; 
+var visualDebug = true; 
 
 /**Activate or deactivate the undo feature
  *@deprecated
@@ -770,9 +770,12 @@ function onMouseDown(ev){
             
             /*Description:
              * We are in None state when no action was done....yet.  Here is what can happen:
-             * - if we clicked a Connector than that Connector should be selected  (Connectors are more important than Figures :p)
+             * - if we clicked a Connector than that Connector should be selected  
+             *  (Connectors are more important than Figures :p)
              * - if we clicked a Figure:
              *      - does current figure belong to a group? If yes, select that group
+             * - if we clicked a container (Figures more important than container)
+             *      - select the container
              * - if we did not clicked anything....
              *      - we will stay in STATE_NONE
              *      - allow to edit canvas
@@ -817,7 +820,7 @@ function onMouseDown(ev){
                 else{
                     //find container's id
                     var contId = STACK.containerGetByXY(x, y);
-                    throw "main.js->onMouseDown + STATE_NONE: We should detect clicks on edge no inside container";
+//                    throw "main.js->onMouseDown + STATE_NONE: We should detect clicks on edge no inside container";
                     if(contId != -1){                    
                         var container = STACK.containerGetById(contId);
                         setUpEditPanel(container);
@@ -1254,7 +1257,7 @@ function onMouseDown(ev){
                 else{
                     //find container's id
                     var contId = STACK.containerGetByXY(x, y);
-                    if(contId != -1 && contId != selectedContainerId){                    
+                    if(contId != -1 && contId != selectedContainerId){                   
                         var container = STACK.containerGetById(contId);
                         setUpEditPanel(container);
                         state = STATE_CONTAINER_SELECTED;
@@ -1263,10 +1266,25 @@ function onMouseDown(ev){
                     }
                     else{
                         //DO NOTHING aka "Dolce far niente"
-                        state = STATE_NONE;
-                        selectedContainerId = -1;
-                        setUpEditPanel(canvasProps);
-                        Log.info('onMouseDown() + STATE_NONE  - no change');
+
+                        
+                        //see if handler selected
+                        if(HandleManager.handleGet(x,y) != null){
+                            Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");
+                            HandleManager.handleSelectXY(x,y);
+
+//                            //TODO: just copy/paste code ....this acts like clone of the connector
+//                            var undoCmd = new ContainerAlterCommand(selectedContainerId); 
+//                            History.addUndo(undoCmd);
+                        }
+                        else{
+                            //did we select another connector?
+                            //                        state = STATE_NONE;
+//                            selectedContainerId = -1;
+//                            setUpEditPanel(canvasProps);
+//                            Log.info('onMouseDown() + STATE_NONE  - no change');
+
+                        }  
                     }
                 }
             }    

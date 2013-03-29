@@ -98,6 +98,22 @@ Handle.prototype = {
             History.addUndo(cmdScale);                
         }
     },
+            
+            
+    actionContainer : function(lastMove, newX, newY){
+        var m = this.actionShape(lastMove, newX, newY);
+        if(m[0] == 'rotate'){
+            //simply ingnore rotate
+            throw "Handles.js -> actionContainer -> rotate should be disabled for Container"
+//            var cmdRotate = new ContainerRotateCommand(HandleManager.shape.id, m[1], m[2]);
+//            cmdRotate.execute();
+//            History.addUndo(cmdRotate);
+        } else if(m[0] == 'scale'){
+            var cmdScale = new ContainerScaleCommand(HandleManager.shape.id, m[1], m[2]);
+            cmdScale.execute();
+            History.addUndo(cmdScale);                
+        }
+    },
 
 
     actionGroup : function(lastMove, newX, newY){
@@ -400,8 +416,7 @@ Handle.prototype = {
             this.actionGroup(lastMove, newX, newY);
         }
         else if(HandleManager.shape instanceof Container){
-            throw "handles.js->Handler->action() not implemented for Container";
-            this.actionGroup(lastMove, newX, newY);
+            this.actionContainer(lastMove, newX, newY);
         }
     },
 
