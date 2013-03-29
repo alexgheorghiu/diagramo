@@ -1349,8 +1349,12 @@ ConnectorManager.prototype = {
                 startAngle = 0,
                 endAngle = 2 * Math.PI,
                 angleStep = 0.01,
+
+                // getting rotation angle for a cloud through the tg of it
                 rotationAngle = Math.atan( (conPoint2.point.y - conPoint1.point.y) / (conPoint2.point.x - conPoint1.point.x));
 
+            // painting cloud with oval shape by little lines with const angle step
+            // FIXME: maybe it need become a primitive? But first we need to decide it's form.
             context.save();
             context.beginPath();
             for (i = startAngle; i < endAngle; i += angleStep ) {
