@@ -31,6 +31,18 @@ function Container(id, topLeft, bottomRight) {
     /**An {Array} of primitives*/
     this.properties = [];
     
+    
+    /**We keep the figure position by having different points
+     *[central point of the figure, the middle of upper edge]
+     * An {Array} or {@link Point}s
+     **/
+    //TODO: These coordinates are no necessary as we already have topLeft and bottomRight
+    //but this will request changes to code for Container to work
+    this.rotationCoords = [
+        new Point( (this.topLeft.x + this.bottomRight.x) / 2, (this.topLeft.y + this.bottomRight.y)/2),
+        new Point( (this.topLeft.x + this.bottomRight.x) / 2, this.topLeft.y)
+    ];    
+    
     //SHAPE - or decoration of the container
     var headerSize = 20;
     
@@ -127,6 +139,12 @@ Container.prototype = {
         
         for(var i = 0; i<this.primitives.length; i++ ){
             this.primitives[i].transform(matrix);
+        }
+        
+        //some figures dont have rotation coords, i.e. those that arent "real" figures, such as the highlight rectangle
+        if(this.rotationCoords.length != 0){
+            this.rotationCoords[0].transform(matrix);
+            this.rotationCoords[1].transform(matrix);
         }
     },
         

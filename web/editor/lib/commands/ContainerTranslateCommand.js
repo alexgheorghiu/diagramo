@@ -44,5 +44,5 @@ ContainerTranslateCommand.prototype = {
         var container = STACK.containerGetById(this.containerId);
         container.transform(this.reverseMatrix);
     }
-}
+};
 
