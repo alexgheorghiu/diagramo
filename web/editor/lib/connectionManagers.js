@@ -26,6 +26,10 @@ function ConnectorManager(){
     this.connectionMode = ConnectorManager.MODE_DISABLED;
 }
 
+// defines current cloud's paint details
+ConnectorManager.CLOUD_RADIUS = 15;
+ConnectorManager.CLOUD_LINEWIDTH = 4;
+ConnectorManager.CLOUD_STROKE_STYLE = "rgba(255, 153, 0, 0.8)"; //orange
 
 /**Creates a {ConnectorManager} out of JSON parsed object
  *@param {JSONObject} o - the JSON parsed object
@@ -932,8 +936,44 @@ ConnectorManager.prototype = {
 
         return id;
     },
-    
-    
+
+    /** Returns closest connection point id based on an x, y, radius and the ConnectionPoint.RADIUS
+     * It will pick the first one that matches the criteria
+     *@param {Number} x - the x coordinates of the point
+     *@param {Number} y - the y coordinates of the point
+     *@param {Number} radius - max distance from (x,y) point
+     *@param {Boolean} type - the type of connector to select. Can be 'connector'(ConnectionPoint.TYPE_CONNECTOR)
+     *  or 'figure' (ConnectionPoint.TYPE_FIGURE)
+     *@param {ConnectionPoint} ignoreConPoint - the ConnectionPoint to ignore in search
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     */
+    connectionPointGetByXYRadius: function(x,y, radius, type, ignoreConPoint) {
+        var curId = -1,
+            closestId = -1,
+            curX,
+            curY,
+            minDistance = -1,
+            curDistance;
+
+        for (curX = x - radius; curX <= x + radius; curX++) {
+            for (curY = y - radius; curY <= y + radius; curY++) {
+                if ( !ignoreConPoint.contains(curX,curY) ) {
+                    curId = this.connectionPointGetByXY(curX, curY, type);
+                    if (curId !== -1) {
+                        curDistance = Math.sqrt( Math.pow(curX - x, 2) + Math.pow(curY - y, 2) );
+                        if (minDistance === -1 || curDistance < minDistance) {
+                            minDistance = curDistance;
+                            closestId = curId;
+                        }
+                    }
+                }
+            }
+        }
+
+        return closestId;
+    },
+
+
     /**Reset color to all connection points
      *@author Alex Gheorghiu <alex@scriptoid.com>
      **/
@@ -1286,5 +1326,68 @@ ConnectorManager.prototype = {
             }
         }
         return collectedGlues;
+    },
+
+
+    /**
+     *Paints the Cloud into a Context
+     *@param {Context} context - the 2D context
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     *@author Alex <alex@scriptoid.com>
+     *TODO: maybe use drawArc or something less computer intensive and with native support
+     **/
+    connectionCloudPaint: function(context) {
+        if (visualMagnet) {
+            var conPoint1;
+            var conPoint2;
+            var centerX;
+            var centerY;
+            var xPos;
+            var yPos;
+            var i;
+            var startAngle;
+            var endAngle;
+            var angleStep;
+            var rotationAngle;
+
+            if (currentCloud.length) { //draw only if we have a cloud
+
+                conPoint1 = this.connectionPointGetById(currentCloud[0]),
+                    conPoint2 = this.connectionPointGetById(currentCloud[1]),
+                    centerX = (conPoint2.point.x + conPoint1.point.x) / 2, //x coordinates of the ellipse
+                    centerY = (conPoint2.point.y + conPoint1.point.y) / 2, //y coordinates of the ellipse
+                    startAngle = 0,
+                    endAngle = 2 * Math.PI,
+                    angleStep = 0.01,
+
+                    /*
+                     *   Using formula from http://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Application:_finding_the_angle_of_a_right_triangle
+                     *   2. Finding angle from arctan, where opposite is (conPoint2.point.y - conPoint1.point.y)
+                     *   and adjacent is (conPoint2.point.x - conPoint1.point.x)
+                     */
+                    rotationAngle = Math.atan( (conPoint2.point.y - conPoint1.point.y) / (conPoint2.point.x - conPoint1.point.x));
+
+                context.save();
+                context.beginPath();
+                /*We will construct the ellipse starting from 0 to 2PI*/
+                for (i = startAngle; i < endAngle; i += angleStep ) {
+
+                    // Using formulas from http://www.scienceprimer.com/draw-oval-html5-canvas
+                    xPos = centerX - (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.cos(rotationAngle);
+                    yPos = centerY + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.cos(rotationAngle);
+
+                    if (i === 0) {
+                        context.moveTo(xPos, yPos);
+                    } else {
+                        context.lineTo(xPos, yPos);
+                    }
+                }
+                context.lineWidth = ConnectorManager.CLOUD_LINEWIDTH;
+                context.strokeStyle = ConnectorManager.CLOUD_STROKE_STYLE;
+                context.stroke();
+                context.closePath();
+                context.restore();
+            }
+        }
     }
 }
