@@ -17,10 +17,6 @@ function ConnectorManager(){
     /**An {Array} of {Glue}s. Keeps all Glues from canvas*/
     this.glues = [];
 
-    /**An currentCloud - {Array} of 2 {ConnectionPoint} ids.
-     * Cloud highlights 2 {ConnectionPoint}s whose are able to connect. */
-    this.currentCloud = null;
-
     /** Tells in what mode are we:
      * 0 = disabled
      * 1 = choosing first location (creation)
@@ -961,7 +957,7 @@ ConnectorManager.prototype = {
 
         for (curX = x - radius; curX <= x + radius; curX++) {
             for (curY = y - radius; curY <= y + radius; curY++) {
-                if ( !(curX === x && curY === y) && !(ignoreConPoint.contains(curX,curY)) ) {
+                if ( !ignoreConPoint.contains(curX,curY) ) {
                     curId = this.connectionPointGetByXY(curX, curY, type);
                     if (curId !== -1) {
                         curDistance = Math.sqrt( Math.pow(curX - x, 2) + Math.pow(curY - y, 2) );
@@ -1353,25 +1349,29 @@ ConnectorManager.prototype = {
         var angleStep;
         var rotationAngle;
         
-        if (this.currentCloud != null) { //draw only if we have a cloud
-            
-            /*We will construct the ellipse starting from 0 to 2PI*/
-            conPoint1 = this.connectionPointGetById(this.currentCloud[0]),
-            conPoint2 = this.connectionPointGetById(this.currentCloud[1]),
+        if (currentCloud.length) { //draw only if we have a cloud
+
+            conPoint1 = this.connectionPointGetById(currentCloud[0]),
+            conPoint2 = this.connectionPointGetById(currentCloud[1]),
             centerX = (conPoint2.point.x + conPoint1.point.x) / 2, //x coordinates of the ellipse
             centerY = (conPoint2.point.y + conPoint1.point.y) / 2, //y coordinates of the ellipse
             startAngle = 0,
             endAngle = 2 * Math.PI,
             angleStep = 0.01,
             
-            //TODO: where does this formula comes from (a link to formula will be nice)?
+            /*
+             *   Using formula from http://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Application:_finding_the_angle_of_a_right_triangle
+             *   2. Finding angle from arctan, where opposite is (conPoint2.point.y - conPoint1.point.y)
+             *   and adjacent is (conPoint2.point.x - conPoint1.point.x)
+            */
             rotationAngle = Math.atan( (conPoint2.point.y - conPoint1.point.y) / (conPoint2.point.x - conPoint1.point.x));
 
             context.save();
             context.beginPath();
+            /*We will construct the ellipse starting from 0 to 2PI*/
             for (i = startAngle; i < endAngle; i += angleStep ) {
                 
-                //TODO: where does this formula comes from (a link to formula will be nice)?
+                // Using formulas from http://www.scienceprimer.com/draw-oval-html5-canvas
                 xPos = centerX - (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.cos(rotationAngle);
                 yPos = centerY + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.cos(rotationAngle);
 

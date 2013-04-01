@@ -22,6 +22,9 @@ var currentMoveUndo = null;
 
 var CONNECTOR_MANAGER = new ConnectorManager();
 
+/**An currentCloud - {Array} of 2 {ConnectionPoint} ids.
+ * Cloud highlights 2 {ConnectionPoint}s whose are able to connect. */
+var currentCloud = [];
 
 /**The width of grid cell. 
  *Must be an odd number.
@@ -1178,7 +1181,7 @@ function onMouseDown(ev){
                 figureConnectionPointId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, end);
                 if (figureConnectionPointId !== -1) {
                     figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(figureConnectionPointId);
-                    CONNECTOR_MANAGER.currentCloud = [selectedConnectionPointId, figureConnectionPointId];
+                    currentCloud = [selectedConnectionPointId, figureConnectionPointId];
                 }
             }
             else if(end.point.near(x, y, 3)){
@@ -1195,7 +1198,7 @@ function onMouseDown(ev){
                 figureConnectionPointId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, start);
                 if (figureConnectionPointId !== -1) {
                     figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(figureConnectionPointId);
-                    CONNECTOR_MANAGER.currentCloud = [selectedConnectionPointId, figureConnectionPointId];
+                    currentCloud = [selectedConnectionPointId, figureConnectionPointId];
                 }
             }
             else{ //no connection point selected
@@ -1471,7 +1474,7 @@ function onMouseUp(ev){
             CONNECTOR_MANAGER.connectionPointsResetColor();
 
             //reset current connection cloud
-            CONNECTOR_MANAGER.currentCloud = null;
+            currentCloud = [];
 
             //select the current connector
             state = STATE_CONNECTOR_SELECTED;
@@ -1492,7 +1495,7 @@ function onMouseUp(ev){
             CONNECTOR_MANAGER.connectionPointsResetColor();
 
             //reset current connection cloud
-            CONNECTOR_MANAGER.currentCloud = null;
+            currentCloud = [];
 
             state = STATE_CONNECTOR_SELECTED; //back to selected connector
             selectedConnectionPointId = -1; //but deselect the connection point
@@ -2095,7 +2098,7 @@ function connectorPickSecond(x, y, ev){
     secConPoint.point = con.turningPoints[con.turningPoints.length-1].clone();
 
     // before defining of {ConnectionPoint}'s position we reset currentCloud
-    CONNECTOR_MANAGER.currentCloud = null;
+    currentCloud = [];
         
     //GLUES MANAGEMENT
     //remove all previous glues to {Connector}'s second {ConnectionPoint}
@@ -2110,7 +2113,7 @@ function connectorPickSecond(x, y, ev){
         fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
         if(fCpId !== -1){
             fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
-            CONNECTOR_MANAGER.currentCloud = [fCp.id, secConPoint.id];
+            currentCloud = [fCp.id, secConPoint.id];
         }
     }
     
@@ -2163,7 +2166,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
     var rEndFigure = null;
 
     // before solution we reset currentCloud
-    CONNECTOR_MANAGER.currentCloud = null;
+    currentCloud = [];
     
     if(cps[0].id == connectionPointId){ //FIRST POINT
         var figCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP at (x,y)
@@ -2214,7 +2217,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
             fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, secondConPoint);
             if(fCpId !== -1){
                 fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
-                CONNECTOR_MANAGER.currentCloud = [fCp.id, firstConPoint.id];
+                currentCloud = [fCp.id, firstConPoint.id];
             }
         }
     }     
@@ -2268,7 +2271,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
             fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
             if(fCpId !== -1){
                 fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
-                CONNECTOR_MANAGER.currentCloud = [fCp.id, secondConPoint.id];
+                currentCloud = [fCp.id, secondConPoint.id];
             }
         }
     } else{
@@ -2566,6 +2569,7 @@ function draw(){
 *Returns the canvas data but without the selections and grid.
 *@return {DOMString} - the result of a toDataURL() call on the temporary canvas
 *@author Alex
+*@author Artyom
 **/
 function renderedCanvas(){
    var canvas = getCanvas();
@@ -2585,7 +2589,7 @@ function renderedCanvas(){
    tempCanvas.setAttribute('width', canvas.width);
    tempCanvas.setAttribute('height', canvas.height);
    reset(tempCanvas);
-   STACK.paint(tempCanvas.getContext('2d'), true);				
+   STACK.paint(tempCanvas.getContext('2d'), true);
    //end render
 
    return tempCanvas.toDataURL();
