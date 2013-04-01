@@ -26,6 +26,10 @@ var CONNECTOR_MANAGER = new ConnectorManager();
  * Cloud highlights 2 {ConnectionPoint}s whose are able to connect. */
 var currentCloud = [];
 
+// disables rendering of currentCloud
+// TODO: remove it after further details will be decided
+var visualMagnet = false;
+
 /**The width of grid cell. 
  *Must be an odd number.
  *Must coincide with the size of the image used as canvas tile 

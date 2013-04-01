@@ -1337,55 +1337,57 @@ ConnectorManager.prototype = {
      *TODO: maybe use drawArc or something less computer intensive and with native support
      **/
     connectionCloudPaint: function(context) {
-        var conPoint1;
-        var conPoint2;
-        var centerX;
-        var centerY;
-        var xPos;
-        var yPos;
-        var i;
-        var startAngle;
-        var endAngle;
-        var angleStep;
-        var rotationAngle;
-        
-        if (currentCloud.length) { //draw only if we have a cloud
+        if (visualMagnet) {
+            var conPoint1;
+            var conPoint2;
+            var centerX;
+            var centerY;
+            var xPos;
+            var yPos;
+            var i;
+            var startAngle;
+            var endAngle;
+            var angleStep;
+            var rotationAngle;
 
-            conPoint1 = this.connectionPointGetById(currentCloud[0]),
-            conPoint2 = this.connectionPointGetById(currentCloud[1]),
-            centerX = (conPoint2.point.x + conPoint1.point.x) / 2, //x coordinates of the ellipse
-            centerY = (conPoint2.point.y + conPoint1.point.y) / 2, //y coordinates of the ellipse
-            startAngle = 0,
-            endAngle = 2 * Math.PI,
-            angleStep = 0.01,
-            
-            /*
-             *   Using formula from http://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Application:_finding_the_angle_of_a_right_triangle
-             *   2. Finding angle from arctan, where opposite is (conPoint2.point.y - conPoint1.point.y)
-             *   and adjacent is (conPoint2.point.x - conPoint1.point.x)
-            */
-            rotationAngle = Math.atan( (conPoint2.point.y - conPoint1.point.y) / (conPoint2.point.x - conPoint1.point.x));
+            if (currentCloud.length) { //draw only if we have a cloud
 
-            context.save();
-            context.beginPath();
-            /*We will construct the ellipse starting from 0 to 2PI*/
-            for (i = startAngle; i < endAngle; i += angleStep ) {
-                
-                // Using formulas from http://www.scienceprimer.com/draw-oval-html5-canvas
-                xPos = centerX - (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.cos(rotationAngle);
-                yPos = centerY + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.cos(rotationAngle);
+                conPoint1 = this.connectionPointGetById(currentCloud[0]),
+                    conPoint2 = this.connectionPointGetById(currentCloud[1]),
+                    centerX = (conPoint2.point.x + conPoint1.point.x) / 2, //x coordinates of the ellipse
+                    centerY = (conPoint2.point.y + conPoint1.point.y) / 2, //y coordinates of the ellipse
+                    startAngle = 0,
+                    endAngle = 2 * Math.PI,
+                    angleStep = 0.01,
 
-                if (i === 0) {
-                    context.moveTo(xPos, yPos);
-                } else {
-                    context.lineTo(xPos, yPos);
+                    /*
+                     *   Using formula from http://en.wikipedia.org/wiki/Inverse_trigonometric_functions#Application:_finding_the_angle_of_a_right_triangle
+                     *   2. Finding angle from arctan, where opposite is (conPoint2.point.y - conPoint1.point.y)
+                     *   and adjacent is (conPoint2.point.x - conPoint1.point.x)
+                     */
+                    rotationAngle = Math.atan( (conPoint2.point.y - conPoint1.point.y) / (conPoint2.point.x - conPoint1.point.x));
+
+                context.save();
+                context.beginPath();
+                /*We will construct the ellipse starting from 0 to 2PI*/
+                for (i = startAngle; i < endAngle; i += angleStep ) {
+
+                    // Using formulas from http://www.scienceprimer.com/draw-oval-html5-canvas
+                    xPos = centerX - (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.cos(rotationAngle);
+                    yPos = centerY + (ConnectorManager.CLOUD_RADIUS * Math.cos(i)) * Math.sin(rotationAngle) + (ConnectorManager.CLOUD_RADIUS / 2 * Math.sin(i)) * Math.cos(rotationAngle);
+
+                    if (i === 0) {
+                        context.moveTo(xPos, yPos);
+                    } else {
+                        context.lineTo(xPos, yPos);
+                    }
                 }
+                context.lineWidth = ConnectorManager.CLOUD_LINEWIDTH;
+                context.strokeStyle = ConnectorManager.CLOUD_STROKE_STYLE;
+                context.stroke();
+                context.closePath();
+                context.restore();
             }
-            context.lineWidth = ConnectorManager.CLOUD_LINEWIDTH;
-            context.strokeStyle = ConnectorManager.CLOUD_STROKE_STYLE;
-            context.stroke();
-            context.closePath();
-            context.restore();
         }
     }
 }
