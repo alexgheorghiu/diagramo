@@ -32,48 +32,29 @@ function Container(id, topLeft, bottomRight) {
     this.properties = [];
     
     //SHAPE - or decoration of the container
-    var headerSize = 20;
-    
-    //HEADER
-    var header = new Polygon();            
-    header.addPoint(new Point(this.topLeft.x, this.topLeft.y));
-    header.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize));
-    header.addPoint(new Point(this.bottomRight.x, this.topLeft.y + headerSize));
-    header.addPoint(new Point(this.bottomRight.x, this.topLeft.y));
-    this.primitives.push(header);    
+    var polygon = new Polygon();        
+    polygon.addPoint(new Point(this.topLeft.x, this.topLeft.y));
+    polygon.addPoint(new Point(this.bottomRight.x, this.topLeft.y));
+    polygon.addPoint(new Point(this.bottomRight.x, this.bottomRight.y));
+    polygon.addPoint(new Point(this.topLeft.x, this.bottomRight.y));
+    this.primitives.push(polygon);    
     
     this.properties.push(new BuilderProperty('Stroke Style', 'primitives.0.style.strokeStyle', BuilderProperty.TYPE_COLOR));
     this.properties.push(new BuilderProperty('Fill Style', 'primitives.0.style.fillStyle', BuilderProperty.TYPE_COLOR));
     this.properties.push(new BuilderProperty('Line Width', 'primitives.0.style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
-    //CONTAINER
-    var actualContainer = new Polygon();
-    actualContainer.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize));
-    actualContainer.addPoint(new Point(this.bottomRight.x, this.topLeft.y + headerSize));
-    actualContainer.addPoint(new Point(this.bottomRight.x, this.bottomRight.y));
-    actualContainer.addPoint(new Point(this.topLeft.x, this.bottomRight.y)); 
-    actualContainer.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize)); 
-    this.primitives.push(actualContainer);    
-    
-    this.properties.push(new BuilderProperty('Stroke Style', 'primitives.1.style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    this.properties.push(new BuilderProperty('Fill Style', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
-    this.properties.push(new BuilderProperty('Line Width', 'primitives.1.style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
-    
-    
-    
     
     //TITLE
-    var title = new Text("Container", (this.topLeft.x + this.bottomRight.x)/2, this.topLeft.y + Text.DEFAULT_SIZE /*@see https://bitbucket.org/scriptoid/diagramo/issue/31/text-vertical-aligment*/, Text.FONTS[0], Text.DEFAULT_SIZE, false);
-//    title.debug = true;
+    var title = new Text("Container", (this.topLeft.x + this.bottomRight.x)/2, this.topLeft.y, Text.FONTS[0], Text.DEFAULT_SIZE, false);
     title.style.fillStyle = '#000000';
     this.primitives.push(title);
     
     this.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
-    this.properties.push(new BuilderProperty('Text', 'primitives.2.str', BuilderProperty.TYPE_TEXT));
-    this.properties.push(new BuilderProperty('Text Size', 'primitives.2.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
-    this.properties.push(new BuilderProperty('Font', 'primitives.2.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
-    this.properties.push(new BuilderProperty('Alignment', 'primitives.2.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
-    this.properties.push(new BuilderProperty('Text Color', 'primitives.2.style.fillStyle', BuilderProperty.TYPE_COLOR));
+    this.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
+    this.properties.push(new BuilderProperty('Text Size', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
+    this.properties.push(new BuilderProperty('Font', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
+    this.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    this.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
 
     /**Serialization type*/
