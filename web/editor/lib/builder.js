@@ -481,7 +481,7 @@ BuilderProperty.prototype = {
         if(obj == null){
             obj = STACK.containerGetById(figureId);
         }
-        Log.info("Unsplit property: " + this.property);
+        Log.debug("Unsplit property: " + this.property);
         
         var propertyAccessors = this.property.split(".");
 //        Log.info("BuilderProperty::getValue() : propertyAccessors : " + propertyAccessors );

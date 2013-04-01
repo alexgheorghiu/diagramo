@@ -829,7 +829,7 @@ function onMouseDown(ev){
                 }
                 else{
                     //find container's id
-                    var contId = STACK.containerGetByXY(x, y);
+                    var contId = STACK.containerGetByXYOnEdge(x, y);
 //                    throw "main.js->onMouseDown + STATE_NONE: We should detect clicks on edge no inside container";
                     if(contId != -1){                    
                         var container = STACK.containerGetById(contId);
@@ -839,10 +839,7 @@ function onMouseDown(ev){
                         Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
                     }
                     else{
-                        //DO NOTHING aka "Dolce far niente"
-                        //                    state = STATE_NONE;
-                        //                    setUpEditPanel(canvasProps);
-                        //                    Log.info('onMouseDown() + STATE_NONE  - no change');
+                        //DO NOTHING 
                     }
                 }
             }
@@ -1247,7 +1244,7 @@ function onMouseDown(ev){
         case STATE_CONTAINER_SELECTED:
             //find Connector at (x,y)
             var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
-            if(cId != -1){ //Clicked a Connector
+            if(cId !== -1){ //Clicked a Connector
                 selectedConnectorId = cId;
                 state = STATE_CONNECTOR_SELECTED;
                 var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
@@ -1280,38 +1277,35 @@ function onMouseDown(ev){
 
                     redraw = true;
                 }
-                else{
+                else{ //no Connector, no Figure
                     //find container's id
                     var contId = STACK.containerGetByXY(x, y);
-                    if(contId != -1 && contId != selectedContainerId){                   
-                        var container = STACK.containerGetById(contId);
-                        setUpEditPanel(container);
-                        state = STATE_CONTAINER_SELECTED;
-                        selectedContainerId = contId;
-                        Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
+                    if(contId == -1){ //no container detected, deselect current container
+                        setUpEditPanel(null);
+                        state = STATE_NONE;
+                        selectedContainerId = -1;
+                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + click on nothing - change to STATE_NONE');
                     }
-                    else{
-                        //DO NOTHING aka "Dolce far niente"
-
-                        
-                        //see if handler selected
-                        if(HandleManager.handleGet(x,y) != null){
-                            Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");
-                            HandleManager.handleSelectXY(x,y);
-
-//                            //TODO: just copy/paste code ....this acts like clone of the connector
-//                            var undoCmd = new ContainerAlterCommand(selectedContainerId); 
-//                            History.addUndo(undoCmd);
+                    else{ //we have a container
+                        if( contId != selectedContainerId){ //a different one
+                            var container = STACK.containerGetById(contId);
+                            setUpEditPanel(container);
+                            state = STATE_CONTAINER_SELECTED;
+                            selectedContainerId = contId;
+                            Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
                         }
-                        else{
-                            //did we select another connector?
-                            //                        state = STATE_NONE;
-//                            selectedContainerId = -1;
-//                            setUpEditPanel(canvasProps);
-//                            Log.info('onMouseDown() + STATE_NONE  - no change');
+                        else{ //same container 
+                            //see if handler selected
+                            if(HandleManager.handleGet(x,y) != null){
+                                Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");
+                                HandleManager.handleSelectXY(x,y);
 
-                        }  
-                    }
+    //                            //TODO: just copy/paste code ....this acts like clone of the connector
+    //                            var undoCmd = new ContainerAlterCommand(selectedContainerId); 
+    //                            History.addUndo(undoCmd);
+                            }
+                        }
+                    }                    
                 }
             }    
             break; //end STATE_CONTAINER_SELECTED
