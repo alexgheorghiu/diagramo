@@ -44,27 +44,106 @@ function Container(id, topLeft, bottomRight) {
     ];    
     
     //SHAPE - or decoration of the container
-    var headerSize = 20;
+    var headerHeight = 20;
     
     //HEADER
-    var header = new Polygon();            
-    header.addPoint(new Point(this.topLeft.x, this.topLeft.y));
-    header.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize));
-    header.addPoint(new Point(this.bottomRight.x, this.topLeft.y + headerSize));
-    header.addPoint(new Point(this.bottomRight.x, this.topLeft.y));
-    this.primitives.push(header);    
+    var header = new Path();
+    var hBottomRight = new Point(this.bottomRight.x, this.topLeft.y + headerHeight);
+    var roundness = 10;   
+    var l1 = new Line(
+            new Point(this.topLeft.x, hBottomRight.y),
+            new Point(this.topLeft.x, this.topLeft.y + roundness)
+        );
+
+    var c1 = new QuadCurve(           
+            new Point(this.topLeft.x, this.topLeft.y + roundness),
+            new Point(this.topLeft.x, this.topLeft.y),
+            new Point(this.topLeft.x + roundness, this.topLeft.y)
+        );
+
+    var l2 = new Line(
+            new Point(this.topLeft.x + roundness, this.topLeft.y),
+            new Point(hBottomRight.x - roundness, this.topLeft.y)
+        );
+
+    var c2 = new QuadCurve(
+            new Point(hBottomRight.x - roundness, this.topLeft.y),
+            new Point(hBottomRight.x, this.topLeft.y),
+            new Point(hBottomRight.x, this.topLeft.y + roundness)
+        );
+
+    var l3 = new Line(
+            new Point(hBottomRight.x, this.topLeft.y + roundness),
+            new Point(hBottomRight.x, hBottomRight.y)
+        );
+            
+    var l4 = new Line(
+            new Point(hBottomRight.x, hBottomRight.y),
+            new Point(this.topLeft.x, hBottomRight.y)
+        );
+
+    
+        
+    header.addPrimitive(l1);
+    header.addPrimitive(c1);
+    header.addPrimitive(l2);
+    header.addPrimitive(c2);
+    header.addPrimitive(l3);    
+    header.addPrimitive(l4);    
+    
+    this.primitives.push(header);
+
+//    var header = new Polygon();            
+//    header.addPoint(new Point(this.topLeft.x, this.topLeft.y));
+//    header.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize));
+//    header.addPoint(new Point(this.bottomRight.x, this.topLeft.y + headerSize));
+//    header.addPoint(new Point(this.bottomRight.x, this.topLeft.y));
+//    this.primitives.push(header);    
     
     this.properties.push(new BuilderProperty('Stroke Style', 'primitives.0.style.strokeStyle', BuilderProperty.TYPE_COLOR));
     this.properties.push(new BuilderProperty('Fill Style', 'primitives.0.style.fillStyle', BuilderProperty.TYPE_COLOR));
     this.properties.push(new BuilderProperty('Line Width', 'primitives.0.style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
     //CONTAINER
-    var actualContainer = new Polygon();
-    actualContainer.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize));
-    actualContainer.addPoint(new Point(this.bottomRight.x, this.topLeft.y + headerSize));
-    actualContainer.addPoint(new Point(this.bottomRight.x, this.bottomRight.y));
-    actualContainer.addPoint(new Point(this.topLeft.x, this.bottomRight.y)); 
-    actualContainer.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize)); 
+    var actualContainer = new Path();
+    var l = new Line(
+            new Point(this.topLeft.x, this.topLeft.y + headerHeight),
+            new Point(this.bottomRight.x, this.topLeft.y + headerHeight)
+        );
+    actualContainer.addPrimitive(l);
+    
+    l = new Line(
+            new Point(this.bottomRight.x, this.topLeft.y + headerHeight),
+            new Point(this.bottomRight.x, this.bottomRight.y - roundness)
+        );
+    actualContainer.addPrimitive(l);
+    
+    var c = new QuadCurve(
+            new Point(this.bottomRight.x, this.bottomRight.y - roundness),
+            new Point(this.bottomRight.x, this.bottomRight.y),
+            new Point(this.bottomRight.x - roundness, this.bottomRight.y)
+        );
+    actualContainer.addPrimitive(c);
+    
+    l = new Line(
+            new Point(this.bottomRight.x - roundness, this.bottomRight.y),
+            new Point(this.topLeft.x + roundness, this.bottomRight.y)
+        );
+    actualContainer.primitives.push(l);
+    
+    var c = new QuadCurve(
+            new Point(this.topLeft.x + roundness, this.bottomRight.y),
+            new Point(this.topLeft.x, this.bottomRight.y),
+            new Point(this.topLeft.x, this.bottomRight.y - roundness)
+        );
+    actualContainer.addPrimitive(c);
+    
+    l = new Line(
+            new Point(this.topLeft.x, this.bottomRight.y - roundness),
+            new Point(this.topLeft.x, this.topLeft.y + headerHeight)
+        );
+    actualContainer.primitives.push(l);    
+    
     this.primitives.push(actualContainer);    
     
     this.properties.push(new BuilderProperty('Stroke Style', 'primitives.1.style.strokeStyle', BuilderProperty.TYPE_COLOR));
