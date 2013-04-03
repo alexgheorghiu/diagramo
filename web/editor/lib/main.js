@@ -1242,72 +1242,80 @@ function onMouseDown(ev){
             
             
         case STATE_CONTAINER_SELECTED:
-            //find Connector at (x,y)
-            var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
-            if(cId !== -1){ //Clicked a Connector
-                selectedConnectorId = cId;
-                state = STATE_CONNECTOR_SELECTED;
-                var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
-                setUpEditPanel(con);
-                Log.info('onMouseDown() + STATE_CONTAINER_SELECTED  - change to STATE_CONNECTOR_SELECTED');
-                redraw = true;
-            } else {                                
-                //find figure at (x,y)
-                var fId = STACK.figureGetByXY(x, y);
-                if(fId != -1){ //Selected a figure
-                    if(STACK.figureGetById(fId).groupId != -1){ //if the figure belongs to a group then select that group
-                        selectedGroupId = STACK.figureGetById(fId).groupId;
-                        var grp = STACK.groupGetById(selectedGroupId);
-                        state = STATE_GROUP_SELECTED;
-//                        if(doUndo){
-//                            currentMoveUndo = new MatrixCommand(selectedGroupId, History.OBJECT_GROUP, History.MATRIX, Matrix.translationMatrix(grp.getBounds()[0],grp.getBounds()[1]), null);
-//                        }
-                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + group selected  =>  change to STATE_GROUP_SELECTED');
-                    }
-                    else{ //ok, we will select lonely figure
-                        selectedFigureId = fId;
-                        var f = STACK.figureGetById(fId);
-                        setUpEditPanel(f);
-                        state = STATE_FIGURE_SELECTED;
-//                        if(doUndo){
-//                            currentMoveUndo = new MatrixCommand(fId, History.OBJECT_FIGURE, History.MATRIX, Matrix.translationMatrix(f.getBounds()[0],f.getBounds()[1]), null);
-//                        }
-                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + lonely figure => change to STATE_FIGURE_SELECTED');
-                    }
-
+            if(HandleManager.handleGet(x, y) != null){ //Clicked a handler (of a Figure or Connector)
+                Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");       
+                /*Nothing important (??) should happen here. We just clicked the handler of the figure*/
+                HandleManager.handleSelectXY(x, y);
+            }
+            else{
+                //find Connector at (x,y)
+                var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
+                if(cId !== -1){ //Clicked a Connector
+                    selectedConnectorId = cId;
+                    state = STATE_CONNECTOR_SELECTED;
+                    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
+                    setUpEditPanel(con);
+                    Log.info('onMouseDown() + STATE_CONTAINER_SELECTED  - change to STATE_CONNECTOR_SELECTED');
                     redraw = true;
-                }
-                else{ //no Connector, no Figure
-                    //find container's id
-                    var contId = STACK.containerGetByXY(x, y);
-                    if(contId == -1){ //no container detected, deselect current container
-                        setUpEditPanel(null);
-                        state = STATE_NONE;
-                        selectedContainerId = -1;
-                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + click on nothing - change to STATE_NONE');
-                    }
-                    else{ //we have a container
-                        if( contId != selectedContainerId){ //a different one
-                            var container = STACK.containerGetById(contId);
-                            setUpEditPanel(container);
-                            state = STATE_CONTAINER_SELECTED;
-                            selectedContainerId = contId;
-                            Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
+                } else {                                
+                    //find figure at (x,y)
+                    var fId = STACK.figureGetByXY(x, y);
+                    if(fId != -1){ //Selected a figure
+                        if(STACK.figureGetById(fId).groupId != -1){ //if the figure belongs to a group then select that group
+                            selectedGroupId = STACK.figureGetById(fId).groupId;
+                            var grp = STACK.groupGetById(selectedGroupId);
+                            state = STATE_GROUP_SELECTED;
+    //                        if(doUndo){
+    //                            currentMoveUndo = new MatrixCommand(selectedGroupId, History.OBJECT_GROUP, History.MATRIX, Matrix.translationMatrix(grp.getBounds()[0],grp.getBounds()[1]), null);
+    //                        }
+                            Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + group selected  =>  change to STATE_GROUP_SELECTED');
                         }
-                        else{ //same container 
-                            //see if handler selected
-                            if(HandleManager.handleGet(x,y) != null){
-                                Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");
-                                HandleManager.handleSelectXY(x,y);
+                        else{ //ok, we will select lonely figure
+                            selectedFigureId = fId;
+                            var f = STACK.figureGetById(fId);
+                            setUpEditPanel(f);
+                            state = STATE_FIGURE_SELECTED;
+    //                        if(doUndo){
+    //                            currentMoveUndo = new MatrixCommand(fId, History.OBJECT_FIGURE, History.MATRIX, Matrix.translationMatrix(f.getBounds()[0],f.getBounds()[1]), null);
+    //                        }
+                            Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + lonely figure => change to STATE_FIGURE_SELECTED');
+                        }
 
-    //                            //TODO: just copy/paste code ....this acts like clone of the connector
-    //                            var undoCmd = new ContainerAlterCommand(selectedContainerId); 
-    //                            History.addUndo(undoCmd);
-                            }
+                        redraw = true;
+                    }
+                    else{ //no Connector, no Figure
+                        //find container's id
+                        var contId = STACK.containerGetByXY(x, y);
+                        if(contId == -1){ //no container detected, deselect current container
+                            setUpEditPanel(null);
+                            state = STATE_NONE;
+                            selectedContainerId = -1;
+                            HandleManager.clear();
+                            Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + click on nothing - change to STATE_NONE');
                         }
-                    }                    
-                }
-            }    
+                        else{ //we have a container
+                            if( contId != selectedContainerId){ //a different one
+                                var container = STACK.containerGetById(contId);
+                                setUpEditPanel(container);
+                                state = STATE_CONTAINER_SELECTED;
+                                selectedContainerId = contId;
+                                Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
+                            }
+                            else{ //same container 
+//                                //see if handler selected
+//                                if(HandleManager.handleGet(x,y) != null){
+//                                    Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");
+//                                    HandleManager.handleSelectXY(x,y);
+//
+//        //                            //TODO: just copy/paste code ....this acts like clone of the connector
+//        //                            var undoCmd = new ContainerAlterCommand(selectedContainerId); 
+//        //                            History.addUndo(undoCmd);
+//                                }
+                            }
+                        }                    
+                    }
+                }    
+            }
             break; //end STATE_CONTAINER_SELECTED
 
             
