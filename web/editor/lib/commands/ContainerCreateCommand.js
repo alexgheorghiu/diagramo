@@ -33,7 +33,7 @@ ContainerCreateCommand.prototype = {
             STACK.containerAdd(container);
             
             state = STATE_CONTAINER_SELECTED;
-            STACK.selectedContainerId = container.id;
+            selectedContainerId = container.id;
             
             this.id = container.id;
         }

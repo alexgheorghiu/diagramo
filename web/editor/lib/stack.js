@@ -245,6 +245,28 @@ Stack.prototype = {
             this.figureSelectedIndex--;
         }
     },
+            
+    /**Removes a container by it's id
+     *@param {Number} containerId - the {Container}'s id
+     *@author Alex Gheorghiu <alex@scriptoid.com>
+     **/
+    containerRemoveById :function(containerId){
+        var index = -1;
+        for(var i=0; i<this.containers.length; i++ ){
+            if(this.containers[i].id === containerId){
+                index = i;
+                break;
+            }
+        }
+
+        if(index > -1){
+            //remove figure
+            this.containers.splice(index, 1);
+
+            //reindex
+//            this.reindex();
+        }                
+    },            
 
     /**Removes a figure by it's id
      *@param {Number} figId - the {Figure}'s id

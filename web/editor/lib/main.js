@@ -575,6 +575,16 @@ function onKeyDown(ev){
                         History.addUndo(cmdDelCon);                                                
                     }
                     Log.groupEnd();
+                    break;
+                    
+                case STATE_CONTAINER_SELECTED:
+                    Log.group("Delete container");
+                    if(selectedContainerId != -1){
+                        var cmdDelContainer = new ContainerDeleteCommand(selectedContainerId);
+                        cmdDelContainer.execute();
+                        History.addUndo(cmdDelContainer);                                                
+                    }
+                    Log.groupEnd();
                     break;                                    
             }
             break;

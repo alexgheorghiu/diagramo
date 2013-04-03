@@ -109,6 +109,7 @@ $page = 'editor';
         
         <script type="text/javascript" src="./lib/containers.js"></script>
         <script type="text/javascript" src="./lib/commands/ContainerCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/ContainerDeleteCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/ContainerTranslateCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/ContainerScaleCommand.js"></script>
         
