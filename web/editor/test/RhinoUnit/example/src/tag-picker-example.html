@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+	<title>Tag Picker Example</title>
+	<style type="text/css">
+	.hidden {display: none}
+	</style>
+    <script type="text/javascript" src="../lib/adminUtils.js"></script>
+	<script type="text/javascript" src="TemplateRenderer.js"></script>
+	<script type="text/javascript" src="TagPickerController.js"></script>
+	<script type="text/javascript" src="TagPickerInputView.js"></script>
+	<script type="text/javascript" src="TagRepositoryStub.js"></script>
+	<script type="text/javascript" src="ExampleApplicationContext.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+	//<![CDATA[
+        var applicationContext = new rhinounit.example.tagpicker.ExampleApplicationContext();
+		
+		var controller = applicationContext.createTagPickerController("first-tag-picker");
+		controller.init();
+		
+		applicationContext.createTagPickerController("second-tag-picker").init();
+	//]]>
+	</script>
+	<div id="first-tag-picker">
+		<form>
+			<label for="tagPickerInput1">Please select the first tag</label>
+			<input id="tagPickerInput1" type="text" class="tag-picker-input" name="tagPickerInput" autocomplete="off"/>
+			<div class="tag-picker-load-message hidden">
+				Loading...
+			</div>
+			<div class="tag-picker-matched-tags">
+			</div>
+		</form>
+	</div>
+
+	<div id="second-tag-picker">
+		<form>
+			<label for="tagPickerInput2">Please select the second tag</label>
+			<input id="tagPickerInput2" type="text" class="tag-picker-input" name="tagPickerInput"  autocomplete="off"/>
+			<div class="tag-picker-load-message hidden">
+				Loading...
+			</div>
+			<div class="tag-picker-matched-tags">
+			</div>
+		</form>
+	</div>
+</body>
