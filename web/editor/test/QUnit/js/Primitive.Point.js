@@ -62,32 +62,32 @@ test("primitive.Point.near [Depends on Point.constructor]", function () {
     var x;
     var y;
     var point;
-    var radius;
 
     function getRadius(x1, y1, x2, y2) {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
-    x = 7;
-    y = 8;
+    function testNear(x,y) {
+        var radius = getRadius(point.x, point.y, x, y);
+        ok(point.near(x, y, radius), "new Point(" + point.x + "," + point.y + ").near(" + x + "," + y + "," + radius + ")");
+    }
+
+    x = 12;
+    y = 20;
     point = new Point(x,y);
 
     // test near() for Point's coordinates
-    ok(point.near(x,y,1), "Point is near it's coordinates");
+    testNear(x,y)
 
+    // test near() for new coordinates
     x = x - 1;
     y = y + 2;
-    radius = getRadius(point.x, point.y, x, y);
+    testNear(x,y)
 
     // test near() for new coordinates
-    ok(point.near(x, y, radius), "new Point(" + point.x + "," + point.y + ").near(" + x + "," + y + "," + radius + ")");
-
     x = x + 7.5;
     y = y - 3;
-    radius = getRadius(point.x, point.y, x, y);
-
-    // test near() for new coordinates
-    ok(point.near(x, y, radius), "new Point(" + point.x + "," + point.y + ").near(" + x + "," + y + "," + radius + ")");
+    testNear(x,y)
 });
 
 test("primitive.Point.equals [Depends on Point.constructor]", function () {
