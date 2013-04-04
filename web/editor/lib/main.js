@@ -21,6 +21,7 @@ var doUndo = true;
 var currentMoveUndo = null; 
 
 var CONNECTOR_MANAGER = new ConnectorManager();
+var CONTAINER_MANAGER = new ContainerFigureManager();
 
 /**An currentCloud - {Array} of 2 {ConnectionPoint} ids.
  * Cloud highlights 2 {ConnectionPoint}s whose are able to connect. */
@@ -1698,6 +1699,11 @@ function onMouseMove(ev){
                             var cmdTranslateFigure = new FigureTranslateCommand(selectedFigureId, translateMatrix);
                             History.addUndo(cmdTranslateFigure);
                             cmdTranslateFigure.execute();
+                            
+                            //TODO: see if we ended in a container                            
+                            throw "main->onMouseMove->FigureSelected: see if we ended in a container";
+                            //Add your briliant code RIGHT here. :)
+                            
                             redraw = true;
                             Log.info("onMouseMove() + STATE_FIGURE_SELECTED + drag - move selected figure");
                         }else{ //we are entering a figures selection sesssion

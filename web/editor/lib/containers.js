@@ -283,5 +283,133 @@ Container.prototype = {
         throw "container:getPoints() Not implemented";
     }
 
+};
+
+/** Creates the link between a {Container} and a {Figure}
+ * As relation between Container and Figure is a 1-to-many (at least now)
+ * we will use this class to represent the link
+ * 
+ * @constructor
+ * @this {ContainerFigure}
+ * @param {Number} containerId the id of the {Container}
+ * @param {Number} figureId the id of the {Figure}
+ * @author Alex
+ */
+function ContainerFigure(containerId, figureId) {
+    this.containerId = containerId;
+    
+    this.figureId = figureId;
 }
 
+
+ContainerFigure.prototype = {
+    constructor: ContainerFigure        
+};
+
+function ContainerFigureManager() {
+    /**An {Array} of [containerId, figureId] */
+    this.data = [];            
+}
+
+ContainerFigureManager.prototype = {
+    constructor: ContainerFigure,
+    
+    /**Adds a figure to a container
+     * @param {Number} containerId the id of the {Container}
+     * @param {Number} figureId the id of the {Figure}
+     * */
+    addFigure : function(containerId, figureId){
+        var i;
+        var v;
+        var present = false;
+        
+        //Test to see if figure is in ANY container ad a figure should be present in ONLY ONE container
+        for(i in this.data){
+            v = this.data[i];
+            if(v[1] === figureId){
+                present = true;
+                break;
+            }
+        }
+        
+        if(!present){
+            this.data.push([containerId, figureId]);
+        }
+    },
+         
+    /**Removes a figure from a container
+     * @param {Number} containerId the id of the {Container}
+     * @param {Number} figureId the id of the {Figure}
+     * */
+    removeFigure : function(containerId, figureId){
+        var i;
+        var v;
+        var index = -1;
+        
+        for(i in this.data){
+            v = this.data[i];
+            if(v[0] === containerId && v[1] === figureId){
+                index = i;
+                break;
+            }
+        }
+        
+        if(index !== -1){
+            this.data.splice(index, 1);
+        }
+    },
+    
+    /**Get all {Figure}s' ids that live inside a container
+     * @param {Number} containerId the id of the {Container}
+     * @return {Array}{Number} an array of Figure id
+     * */
+    getAllFigures : function(containerId){
+        var i;
+        var figureIds = [];
+        
+        for(i in this.data){
+            v = this.data[i];
+            if(v[0] === containerId){
+                figureIds.push(v[1]);
+            }
+        }
+        
+        return figureIds;
+    },
+          
+    /**Check if a figure is inside a container
+     * @param {Number} containerId the id of the {Container}
+     * @param {Number} figureId the id of the {Figure}
+     * @return {Boolean} true - if figure is inside a container
+     * */        
+    isFigureInContainer : function(containerId, figureId){
+        var i;
+        var v;
+        var present = false;
+        
+        for(i in this.data){
+            v = this.data[i];
+            if(v[0] === containerId && v[1] === figureId){
+                present = true;
+                break;
+            }
+        }
+        
+        return present;
+    }
+    
+};
+
+/**Creates a {ContainerFigureManager} out of JSON parsed object
+ *@param {JSONObject} o - the JSON parsed object
+ *@return {ContainerFigureManager} a newly constructed ContainerFigureManager
+ *@author Alex Gheorghiu <alex@scriptoid.com>
+ **/
+ContainerFigureManager.load = function(o){
+    var containerFigureManager = new ContainerFigureManager(); //empty constructor
+    
+    //TODO: it should work....not tested
+    containerFigureManager.data = o.data; 
+
+    return containerFigureManager;
+};
