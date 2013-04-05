@@ -1,3 +1,8 @@
+// analog for onload event of body tag
+document.addEventListener("DOMContentLoaded", function() {
+    init('');
+}, false);
+
 describe("primitive.Point suite", function () {
 
     it("primitive.Point.constructor [Depends on Style.constructor, Style.equals]", function () {
