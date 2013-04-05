@@ -3,6 +3,8 @@ document.addEventListener("DOMContentLoaded", function() {
     init('');
 }, false);
 
+module( "primitive.Point tests" );
+
 test("primitive.Point.constructor [Depends on Style.constructor, Style.equals]", function () {
     var x;
     var y;
