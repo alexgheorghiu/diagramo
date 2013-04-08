@@ -17,6 +17,7 @@ importClass(java.io.FileReader);
 
 var options;
 var testfailed = false;
+var rhinoUnitSelf = self;
 
 function loadFile(fileName) {
 	var file = new File(fileName);
@@ -34,8 +35,15 @@ if (attributes.get("rhinounitutilpath")) {
 }
 eval(loadFile(rhinoUnitUtilPath));
 
+var envJsPath = "src/env/";
+if (attributes.get("envjspath")) {
+    envJsPath = attributes.get("envjspath");
+}
+eval(loadFile(envJsPath + "env.rhino.js"));
+
 var ignoredGlobalVars = attributes.get("ignoredglobalvars") ? attributes.get("ignoredglobalvars").split(" ") : [];
 function ignoreGlobalVariableName(name) {
+/*
 	var foundVariable = false;
 	forEachElementOf(ignoredGlobalVars, function (ignoredGlobalVar) {
 		if (ignoredGlobalVar == name) {
@@ -43,6 +51,8 @@ function ignoreGlobalVariableName(name) {
 		}
 	});
 	return foundVariable;
+*/
+    return true;
 }
 
 var haltOnFirstUnitFailure = false;
@@ -84,25 +94,25 @@ function runTest(file) {
 
 	function failingTestMessage(testName, e) {
 		if (options.verbose) {
-			self.log("Failed: " + testName + ", " + e, 0);
+            rhinoUnitSelf.log("Failed: " + testName + ", " + e, 0);
 			if (options.stackTrace && e.stackTrace) {
-				self.log(e.stackTrace);
+                rhinoUnitSelf.log(e.stackTrace);
 			}
-			self.log("");
+            rhinoUnitSelf.log("");
 		}
 	}
 
 	function erroringTestMessage(testName, e) {
 		if (options.verbose) {
-			self.log("Error: " + testName + ", Reason: " + e, 0);
+            rhinoUnitSelf.log("Error: " + testName + ", Reason: " + e, 0);
 
 			if (e.rhinoException) {
 				var stackTrace = getStackTraceFromRhinoException(e.rhinoException);
 				var traceString = extractScriptStackTraceFromFullStackTrace(stackTrace, /runTest/);
-				self.log("The line number of the error within the file being tested is probably -> " + traceString.match(/:([0-9]+)/)[1] + " <-");
-				self.log(traceString);
+                rhinoUnitSelf.log("The line number of the error within the file being tested is probably -> " + traceString.match(/:([0-9]+)/)[1] + " <-");
+                rhinoUnitSelf.log(traceString);
 			}
-			self.log("");
+            rhinoUnitSelf.log("");
 		}
 	}
 
@@ -183,8 +193,8 @@ function runTest(file) {
 		failingTestMessage(file, "No tests defined");
 	}
 
-    self.log("Tests run: " + testCount + ", Failures: " + failingTests + ", Errors: " + erroringTests);
-	self.log("");
+    rhinoUnitSelf.log("Tests run: " + testCount + ", Failures: " + failingTests + ", Errors: " + erroringTests);
+    rhinoUnitSelf.log("");
 
 }
 
@@ -198,7 +208,7 @@ for (var j = 0; j < filesets.size(); j++) {
 	var srcFiles = ds.getIncludedFiles();
 
 	forEachElementOf(srcFiles, function (srcFile) {
-		self.log("Testsuite: " + srcFile);
+        rhinoUnitSelf.log("Testsuite: " + srcFile);
 		var jsfile = new File(fileset.getDir(project), srcFile);
 
 		var globalVars = {};
@@ -214,18 +224,18 @@ for (var j = 0; j < filesets.size(); j++) {
 				if (ignoreGlobalVariableName(varName)) {
 					delete this[varName];
 				} else {
-					self.log("Warning: " + srcFile + ", Reason: Polluted global namespace with '" + varName + "'", 0);
+                    rhinoUnitSelf.log("Warning: " + srcFile + ", Reason: Polluted global namespace with '" + varName + "'", 0);
 					testfailed = true;
 				}
 			}
 		}
 
 		if (testfailed && haltOnFirstUnitFailure) {
-			self.fail("RhinoUnit failed.");
+            rhinoUnitSelf.fail("RhinoUnit failed.");
 		}
 	});
 }
 
 if (testfailed) {
-	self.fail("RhinoUnit failed.");
+    rhinoUnitSelf.fail("RhinoUnit failed.");
 }
