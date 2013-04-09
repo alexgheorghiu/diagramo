@@ -6,8 +6,11 @@
 .qunit-result {
     padding: 10px;
     border-radius: 5px;
+    /*
     float: right;
     margin-top: -24px;
+    */
+    display: inline;
 }
 
 .qunit-result.passed {
