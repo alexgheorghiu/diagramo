@@ -20,6 +20,7 @@
     <script type="text/javascript" src="lib/builder.js"></script>
     <script type="text/javascript" src="lib/text.js"></script>
     <script type="text/javascript" src="lib/connections.js"></script>
+    <script type="text/javascript" src="lib/containers.js"></script>
     <script type="text/javascript" src="lib/groups.js"></script>
     <script type="text/javascript" src="lib/key.js"></script>
 
