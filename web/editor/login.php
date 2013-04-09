@@ -89,8 +89,6 @@ for ($i = 1; $i < count($key); $i++)
         <div class="content">
             <?require_once './common/messages.php';?>
 
-            <? include "qunit-tests-body.php"; ?>
-
             <form action="./common/controller.php" method="POST">
                 <input type="hidden" name="action" value="loginExe"/>
                 <table>
