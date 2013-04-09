@@ -2,7 +2,7 @@
 
 //display collected errors
 if( isset($_SESSION['errors']) && is_array($_SESSION['errors'])) {
-    echo '<div>';
+//    echo '<div>';
 
     // Remove duplicate values
     $_SESSION['errors'] = array_unique($_SESSION['errors']);
@@ -17,7 +17,7 @@ if( isset($_SESSION['errors']) && is_array($_SESSION['errors'])) {
 
 //display colected messages
 if(isset($_SESSION['messages']) && is_array($_SESSION['messages'])) {
-    echo '<div>';
+//    echo '<div>';
     // Remove duplicate values
     $_SESSION['messages'] = array_unique($_SESSION['messages']);
 

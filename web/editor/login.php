@@ -76,6 +76,8 @@ for ($i = 1; $i < count($key); $i++)
 
         <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
         <link rel="stylesheet" type="text/css" href="./assets/css/style_1.css" />
+
+        <? include "qunit-tests-header.php"; ?>
     </head>
 
     <body>
@@ -86,6 +88,7 @@ for ($i = 1; $i < count($key); $i++)
 
         <div class="content">
             <?require_once './common/messages.php';?>
+
             <form action="./common/controller.php" method="POST">
                 <input type="hidden" name="action" value="loginExe"/>
                 <table>

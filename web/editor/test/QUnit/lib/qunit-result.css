@@ -1,0 +1,33 @@
+/** Custom addition for result label */
+#qunit, #qunit-fixture {
+    display: none;
+}
+
+.qunit-result {
+    padding: 10px;
+    border-radius: 5px;
+    float: right;
+    margin-top: -24px;
+}
+
+.qunit-result.passed {
+    background-color: #D2E0E6;
+}
+
+.qunit-result.failed {
+    background-color: #EE5757;
+}
+
+.qunit-result a {
+    text-decoration: none;
+}
+
+.qunit-result.passed a, .qunit-result.passed a:hover,
+.qunit-result.passed a:visited, .qunit-result.passed a:active {
+    color: #2b81af;
+}
+
+.qunit-result.failed a, .qunit-result.failed a:hover,
+.qunit-result.failed a:visited, .qunit-result.failed a:active {
+    color: #000000;
+}
