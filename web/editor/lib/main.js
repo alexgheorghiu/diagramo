@@ -1703,6 +1703,25 @@ function onMouseMove(ev){
                             //TODO: see if we ended in a container                            
                             throw "main->onMouseMove->FigureSelected: see if we ended in a container";
                             //Add your briliant code RIGHT here. :)
+                            /*
+                            if figure belong to an existing container 
+                                if we moved it outside of current container (even partially?!)
+                                        unglue it from container
+                                           
+                            if figure dropped inside a container
+                                add it to the (new) container        
+                             */
+                            var containerId = CONTAINER_MANAGER.getContainerForFigure(selectedFigureId);
+                            if(containerId !== -1){
+                                var figure = STACK.figureGetById(selectedFigureId);
+                                var figBounds = figure.getBounds();
+                                
+                                var container = STACK.containerGetById(containerId);
+                                var contBounds = container.getBounds();
+                                
+                                //TODO: is figBouns in contBounds?
+                                //CONTAINER_MANAGER.removeFigure(containerId, selectedFigureId);
+                            }
                             
                             redraw = true;
                             Log.info("onMouseMove() + STATE_FIGURE_SELECTED + drag - move selected figure");
