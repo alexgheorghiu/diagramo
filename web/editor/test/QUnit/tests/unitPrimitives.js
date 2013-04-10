@@ -1,9 +1,4 @@
-// analog for onload event of body tag
-document.addEventListener("DOMContentLoaded", function() {
-    init('');
-}, false);
-
-module( "primitive.Point tests" );
+module( "Primitive.Point tests" );
 
 test("primitive.Point.constructor [Depends on Style.constructor, Style.equals]", function () {
     var x;
@@ -173,4 +168,74 @@ test("primitive.Point.getBounds [Depends on Point.constructor]", function () {
     for (i = 0; i < length; i++) {
         strictEqual( boundsArray[i], bounds[i], i + " bound from getBounds() is correct");
     }
+});
+
+
+module( "Primitive.Line tests" );
+
+test("primitive.Line.contains [Depends on Point.constructor, Line.constructor]", function () {
+    ok(new Line(new Point(10, 10), new Point(110, 60)).contains(50, 30), "point on the line");
+    ok(new Line(new Point(10, 10), new Point(110, 60)).contains(110, 60), "point on the segment edge");
+    ok(!new Line(new Point(10, 10), new Point(110, 60)).contains(130, 70), "point on the \"infinite\" line out of bounds");
+    ok(new Line(new Point(50, 10), new Point(50, 60)).contains(50, 30), "point on the vertical line");
+    ok(!new Line(new Point(50, 10), new Point(50, 60)).contains(60, 30), "point out of the vertical line");
+    ok(new Line(new Point(50, 10), new Point(50, 60)).contains(50, 10), "point on the vertical line bound");
+    ok(!new Line(new Point(50, 10), new Point(50, 60)).contains(50, 70), "point on the \"infinite\" vertical line out of bounds");
+});
+
+
+module( "SVG Export tests" );
+
+test("Compare generated SVG vs content of <a href=\"export.svg\">export.svg</a>", function () {
+    // Collecting SVG from multiple primitive.toSVG()
+    var svg = '';
+
+    //line
+    var line = new Line(new Point(10, 20), new Point(40, 75));
+    svg += line.toSVG();
+
+    //polyline
+    var polyline = new Polyline();
+    polyline.addPoint(new Point(60, 70));
+    polyline.addPoint(new Point(120, 80));
+    polyline.addPoint(new Point(100, 140));
+    svg += polyline.toSVG();
+
+    //polygon
+    var polygon = new Polygon();
+    polygon.addPoint(new Point(60, 170));
+    polygon.addPoint(new Point(120, 180));
+    polygon.addPoint(new Point(100, 240));
+    svg += polygon.toSVG();
+
+    //quad curve
+    var quad = new QuadCurve(new Point(100, 100), new Point(120, 140), new Point(200, 100));
+    svg += quad.toSVG();
+
+    //cubic curve
+    var cubic = new CubicCurve(new Point(200, 200), new Point(250, 250), new Point(300, 150), new Point(350, 200));
+    svg += cubic.toSVG();
+
+    //text
+    var text = new Text('SVG is pretty cool', 300, 300, 'Verdana', 20, true);
+    var R30 = Matrix.rotationMatrix(Math.PI/6);
+    text.transform(Matrix.translationMatrix(-300, -300));
+    text.transform(R30);
+    text.transform(Matrix.translationMatrix(300, 300));
+    svg += text.toSVG();
+
+    var text2 = new Text('SVG is pretty cool', 300, 300, 'Verdana', 20, true);
+    svg += text2.toSVG();
+
+    // retrieving SVG from export.svg file
+    var svgFile = $.ajax({
+        url: exportSVGPathPrefix + 'tests/export.svg',
+        async: false
+    }).responseText;
+    svgFile = svgFile
+        .replace(/[\r\n]/g, '')
+        .replace(/<\?xml.*?\?>/, '')
+        .replace(/<(\/)?svg.*?>/g, '');
+
+    ok(svg == svgFile, "svg from export.svg equals concatenation of .toSVG" );
 });
