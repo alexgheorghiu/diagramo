@@ -1512,7 +1512,7 @@ CubicCurve.prototype = {
         result += ' ' + this.controlPoint2.x + ',' + this.controlPoint2.y;
         result += ' ' + this.endPoint.x + ',' + this.endPoint.y;
 
-        result += '" style="' + this.style.toSVG() +  '"  />';
+        result += '" ' + this.style.toSVG() +  '  />';
         return result;
     }
 }

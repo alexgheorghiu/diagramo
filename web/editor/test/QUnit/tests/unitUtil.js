@@ -103,5 +103,8 @@ test("Util.Min/Max", function () {
 test("Util.miscelaneus", function () {
     var v = [new Point(10,10), new Point(100,10), new Point(100,100), new Point(10,100)];
     var p = new Point(20,10);
-    ok(Util.isPointInside(p, v), 'point on a border created by other points');
+
+    // negation because isPointInside:
+    // Tests whether a point is inside the area (excluding border) determined by a set of other points
+    ok(!Util.isPointInside(p, v), 'point on a border is not inside another points');
 });

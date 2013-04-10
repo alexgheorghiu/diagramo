@@ -237,5 +237,7 @@ test("Compare generated SVG vs content of <a href=\"export.svg\">export.svg</a>"
         .replace(/<\?xml.*?\?>/, '')
         .replace(/<(\/)?svg.*?>/g, '');
 
+    svg = svg.replace(/[\r\n]/g, '');
+
     ok(svg == svgFile, "svg from export.svg equals concatenation of .toSVG" );
 });
