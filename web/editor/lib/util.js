@@ -31,6 +31,20 @@ var Util = {
     getUnionBounds: function(shapes){
         //tODo
     },
+           
+    /**
+     * See if some bounds are inside other bounds.
+     * Bounds are in form [minX, minY, maxX, maxY]
+     * @param {Array<Number>} innerBounds the inner bounds
+     * @param {Array<Number>} outerBounds the outer bounds
+     * @return {Boolean} true if innerBounds are inside outerBounds
+     * */
+    areBoundsInBounds : function(innerBounds, outerBounds){
+        return (outerBounds[0] <= innerBounds[0] && (innerBounds[0] <= outerBounds[2]))
+        && (outerBounds[1] <= innerBounds[1] && (innerBounds[1] <= outerBounds[3]))
+        && (outerBounds[0] <= innerBounds[2] && (innerBounds[2] <= outerBounds[2]))
+        && (outerBounds[1] <= innerBounds[3] && (innerBounds[3] <= outerBounds[3]));
+    },
     
     
     /**Returns a Polygon out of an Array of points 

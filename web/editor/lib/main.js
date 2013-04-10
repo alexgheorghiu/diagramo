@@ -1703,8 +1703,9 @@ function onMouseMove(ev){
                             //TODO: see if we ended in a container                            
                             throw "main->onMouseMove->FigureSelected: see if we ended in a container";
                             //Add your briliant code RIGHT here. :)
-                            /*
-                            if figure belong to an existing container 
+                            
+                            /*Algorithm described:
+                            if figure belong to an existing container: 
                                 if we moved it outside of current container (even partially?!)
                                         unglue it from container
                                            
@@ -1712,15 +1713,24 @@ function onMouseMove(ev){
                                 add it to the (new) container        
                              */
                             var containerId = CONTAINER_MANAGER.getContainerForFigure(selectedFigureId);
-                            if(containerId !== -1){
+                            if(containerId !== -1){ //we are inside a container
                                 var figure = STACK.figureGetById(selectedFigureId);
                                 var figBounds = figure.getBounds();
                                 
                                 var container = STACK.containerGetById(containerId);
                                 var contBounds = container.getBounds();
                                 
-                                //TODO: is figBouns in contBounds?
-                                //CONTAINER_MANAGER.removeFigure(containerId, selectedFigureId);
+                                //Test if figure' bounds are inside container's bounds?                                
+                                if(!Util.areBoundsInBounds(figBounds, contBounds)){
+                                    //do nothing we are still in same container
+                                }
+                                else{
+                                    //CONTAINER_MANAGER.removeFigure(containerId, selectedFigureId);
+                                }
+                            }
+                            else{ //not in any container
+                                //TODO: find if dropped in another container
+                                
                             }
                             
                             redraw = true;
