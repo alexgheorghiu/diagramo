@@ -31,8 +31,14 @@
     <script type="text/javascript" src="lib/stack.js"></script>
     <script type="text/javascript" src="lib/main.js"></script>
 
+    <script type="text/javascript" src="test/QUnit/tests/Diagramo-init.js"></script>
+
     <!-- End Unit Tests init section -->
 
     <!-- Start Unit Tests section -->
-    <script type="text/javascript" src="test/QUnit/tests/Primitive.Point.js"></script>
+    <script type="text/javascript" src="test/QUnit/tests/unitPrimitives.js"></script>
+    <script type="text/javascript" src="test/QUnit/tests/unitBrowserReady.js"></script>
+    <script type="text/javascript" src="test/QUnit/tests/unitSerialization.js"></script>
+    <script type="text/javascript" src="test/QUnit/tests/unitText.js"></script>
+    <script type="text/javascript" src="test/QUnit/tests/unitUtil.js"></script>
     <!-- End Unit Tests section -->
