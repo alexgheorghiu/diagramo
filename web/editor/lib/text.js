@@ -72,6 +72,7 @@ function Text(string, x, y, font, size, outsideCanvas, align){
  *@return {Text} a newly constructed Text
  *@author Alex Gheorghiu <alex@scriptoid.com>
  *@author Janis Sejans <janis.sejans@towntech.lv>
+ *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
 Text.load = function(o){
     //TODO: update
