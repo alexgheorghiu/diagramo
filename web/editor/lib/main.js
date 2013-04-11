@@ -1695,7 +1695,7 @@ function onMouseMove(ev){
                         if (!SHIFT_PRESSED){//just translate the figure                            
                             canvas.style.cursor = 'move';
                             var translateMatrix = generateMoveMatrix(STACK.figureGetById(selectedFigureId), x, y);
-                        Log.info("onMouseMove() + STATE_FIGURE_SELECTED : translation matrix" + translateMatrix);
+                            Log.info("onMouseMove() + STATE_FIGURE_SELECTED : translation matrix" + translateMatrix);
                             var cmdTranslateFigure = new FigureTranslateCommand(selectedFigureId, translateMatrix);
                             History.addUndo(cmdTranslateFigure);
                             cmdTranslateFigure.execute();
@@ -1713,23 +1713,24 @@ function onMouseMove(ev){
                             var figBounds = figure.getBounds();
                             
                             var containerId = CONTAINER_MANAGER.getContainerForFigure(selectedFigureId);
-                            if(containerId !== -1){ //we are inside a container
+                            if(containerId !== -1){ //we are glued to a container
                                                                 
                                 var container = STACK.containerGetById(containerId);
                                 var contBounds = container.getBounds();
                                 
                                 //Test if figure' bounds are inside container's bounds?                                
-                                if(!Util.areBoundsInBounds(figBounds, contBounds)){
+                                if(Util.areBoundsInBounds(figBounds, contBounds)){
                                     //do nothing we are still in same container
                                 }
                                 else{
                                     //TODO: CONTAINER_MANAGER.removeFigure(containerId, selectedFigureId);
-                                    throw "main->onMouseMove->FigureSelected: removed from a container";
+                                    //throw "main->onMouseMove->FigureSelected: removed from a container";
+                                    CONTAINER_MANAGER.removeFigure(containerId, selectedFigureId);
                                 }
                             }
                             else{ //not in any container
                                 var newContainerId = -1;
-                                for(var c in STACK.containers){
+                                for(var c=0; c<STACK.containers.length; c++){
                                     var tempCont = STACK.containers[c];
                                     if( Util.areBoundsInBounds(figBounds, tempCont.getBounds()) ){
                                         newContainerId = c;
@@ -1739,7 +1740,8 @@ function onMouseMove(ev){
                                 
                                 if(newContainerId !== -1){
                                     //TODO: add figure to container
-                                    throw "main->onMouseMove->FigureSelected: add figure to container";
+                                    //throw "main->onMouseMove->FigureSelected: add figure to container";
+                                    CONTAINER_MANAGER.addFigure(newContainerId, selectedFigureId);
                                 }
                                 
                             }

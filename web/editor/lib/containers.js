@@ -411,7 +411,7 @@ ContainerFigureManager.prototype = {
         for(i in this.data){
             v = this.data[i];
             if( v[1] === figureId){
-                containerId === v[0] ;
+                containerId = v[0];
                 break;
             }
         }
