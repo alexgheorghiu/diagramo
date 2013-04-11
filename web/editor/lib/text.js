@@ -13,21 +13,22 @@
  * @param {Number} size - the size of the font
  * 
  * @param {Boolean} outsideCanvas - set this on true if you want to use the Text outside of canvas (ex: Export to SVG)
+ * @param {String} align - the alignment we are using for this text
  * @see list of web safe fonts : <a href="http://www.ampsoft.net/webdesign-l/WindowsMacFonts.html">http://www.ampsoft.net/webdesign-l/WindowsMacFonts.html</a> Arial, Verdana
  * </p>
  * @see /documents/specs/text.png
  * 
  * @author Alex Gheroghiu <alex@scriptoid.com>
  * @author Augustin <cdaugustin@yahoo.com>
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  * <p/>
  * Note:<br/>
  * Canvas's metrics do not report updated width for rotated (context) text ...so we need to compute it
- * All texts will be center aligned...for now
  * <p/>
  * Alignement note: <br/>
  * It can be Center|Left|Right <a href="http://dev.w3.org/html5/2dcontext/#dom-context-2d-textalign">http://dev.w3.org/html5/2dcontext/#dom-context-2d-textalign</a>
  **/
-function Text(string, x, y, font, size, outsideCanvas){
+function Text(string, x, y, font, size, outsideCanvas, align){
     /**Text used to display*/
     this.str = string;
 
@@ -41,7 +42,7 @@ function Text(string, x, y, font, size, outsideCanvas){
     this.lineSpacing = 1 / 4 * size; 
     
     /**Horizontal alignement of the text, can be: left, center, right*/
-    this.align = Text.ALIGN_CENTER;
+    this.align = align || Text.ALIGN_CENTER;
     
     /**Vertical alignement of the text - for now always middle*/
     this.valign = Text.VALIGN_MIDDLE;
@@ -74,7 +75,7 @@ function Text(string, x, y, font, size, outsideCanvas){
  **/
 Text.load = function(o){
     //TODO: update
-    var newText = new Text(o.str, o.x, o.y, o.font, o.size); //fake Text (if we do not use it we got errors - endless loop)
+    var newText = new Text(o.str, o.x, o.y, o.font, o.size, false, o.align); //fake Text (if we do not use it we got errors - endless loop)
     //x loaded by contructor
     //y loaded by contructor
     //size loaded by contructor
