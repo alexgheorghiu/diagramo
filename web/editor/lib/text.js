@@ -82,6 +82,7 @@ Text.load = function(o){
     //size loaded by contructor
     //font loaded by contructor
     //newText.lineSpacing = o.lineSpacing; //automatic computed from text size
+    //align loaded by contructor
     newText.vector = Point.loadArray(o.vector);
     newText.style = Style.load(o.style);
 
