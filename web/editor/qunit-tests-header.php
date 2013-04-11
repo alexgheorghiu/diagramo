@@ -29,6 +29,7 @@
     <script type="text/javascript" src="lib/canvasprops.js"></script>
     <script type="text/javascript" src="lib/connectionManagers.js"></script>
     <script type="text/javascript" src="lib/stack.js"></script>
+    <script type="text/javascript" src="lib/containers.js"></script>
     <script type="text/javascript" src="lib/main.js"></script>
 
     <script type="text/javascript" src="lib/sets/basic/basic.js"></script>
