@@ -60,7 +60,7 @@ function Text(string, x, y, font, size, outsideCanvas, align){
     }
     
     /**Used to display visual debug information*/
-    this.debug = false; 
+    this.debug = true;
     
     /*JSON object type used for JSON deserialization*/
     this.oType = 'Text'; 
@@ -294,6 +294,7 @@ Text.prototype = {
     /**Paints the text
      *@author Augustin <cdaugustin@yahoo.com>
      *@author Alex <alex@scriptoid.com>
+     *@author Artyom <artyom.pokatilov@gmail.com>
      **/
     paint:function(context){
 
@@ -318,11 +319,18 @@ Text.prototype = {
         
         //Y - offset
         var offsetY = 0;
-        if(this.valign == Text.VALIGN_TOP){
-            offsetY = -this.getNormalHeight();
-        }
-        else if(this.valign == Text.VALIGN_BOTTOM){
-            offsetY = this.getNormalHeight();
+        switch(this.valign) {
+            case Text.VALIGN_TOP:
+                offsetY = -this.getNormalHeight();
+                break;
+
+            case Text.VALIGN_BOTTOM:
+                offsetY = this.getNormalHeight();
+                break;
+
+            case Text.VALIGN_MIDDLE:
+                offsetY = 0.5 * this.size;
+                break;
         }
         
         var angle = Util.getAngle(this.vector[0],this.vector[1]);
@@ -369,13 +377,18 @@ Text.prototype = {
         context.fillStyle = this.style.fillStyle;
         context.font = this.size + "px " + this.font;
         context.textAlign = this.align;
+
+        if (this.valign == Text.VALIGN_MIDDLE) {
+            context.textBaseline = "middle";
+        }
+
         for(var i=0; i<lines.length; i++){
 //            Log.info("Line: " + lines[i] + " this.vector[0].x=" + this.vector[0].x + " offsetX=" + offsetX + " this.vector[0].y=" + this.vector[0].y + " offsetY=" + offsetY 
 //            + " this.getNormalHeight()=" + this.getNormalHeight() + " this.size=" + this.size + " this.lineSpacing=" + this.lineSpacing);
             context.fillText(
                 lines[i], 
                 this.vector[0].x + offsetX,
-                (this.vector[0].y - this.getNormalHeight() / 2 + (i+1) * this.size + i * this.lineSpacing) + offsetY 
+                (this.vector[0].y - this.getNormalHeight() / 2 + i * this.size + i * this.lineSpacing) + offsetY
             );
             //context.fillText(lines[i], this.vector[0].x, txtOffsetY * noLinesTxt);
             //context.fillText(linesText[i], -this.vector[0].x, txtOffsetY * noLinesTxt);
