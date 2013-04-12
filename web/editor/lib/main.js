@@ -1700,9 +1700,49 @@ function onMouseMove(ev){
                             History.addUndo(cmdTranslateFigure);
                             cmdTranslateFigure.execute();
                             
-                            //TODO: see if we ended in a container                            
-                            throw "main->onMouseMove->FigureSelected: see if we ended in a container";
-                            //Add your briliant code RIGHT here. :)
+                            
+                            /*Algorithm described:
+                            if figure belong to an existing container: 
+                                if we moved it outside of current container (even partially?!)
+                                        unglue it from container
+                                           
+                            if figure dropped inside a container
+                                add it to the (new) container        
+                             */
+                            var figure = STACK.figureGetById(selectedFigureId);
+                            var figBounds = figure.getBounds();
+                            
+                            var containerId = CONTAINER_MANAGER.getContainerForFigure(selectedFigureId);
+                            if(containerId !== -1){ //we are inside a container
+                                                                
+                                var container = STACK.containerGetById(containerId);
+                                var contBounds = container.getBounds();
+                                
+                                //Test if figure' bounds are inside container's bounds?                                
+                                if(!Util.areBoundsInBounds(figBounds, contBounds)){
+                                    //do nothing we are still in same container
+                                }
+                                else{
+                                    //TODO: CONTAINER_MANAGER.removeFigure(containerId, selectedFigureId);
+                                    throw "main->onMouseMove->FigureSelected: removed from a container";
+                                }
+                            }
+                            else{ //not in any container
+                                var newContainerId = -1;
+                                for(var c in STACK.containers){
+                                    var tempCont = STACK.containers[c];
+                                    if( Util.areBoundsInBounds(figBounds, tempCont.getBounds()) ){
+                                        newContainerId = c;
+                                        break;
+                                    }
+                                }
+                                
+                                if(newContainerId !== -1){
+                                    //TODO: add figure to container
+                                    throw "main->onMouseMove->FigureSelected: add figure to container";
+                                }
+                                
+                            }
                             
                             redraw = true;
                             Log.info("onMouseMove() + STATE_FIGURE_SELECTED + drag - move selected figure");

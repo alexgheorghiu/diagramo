@@ -396,6 +396,27 @@ ContainerFigureManager.prototype = {
         }
         
         return present;
+    },
+    
+    
+    /**Check if a figure is inside a container
+     * @param {Number} figureId the id of the {Figure}
+     * @return {Number} containerId the id of the {Container} or -1 if none found
+     * */        
+    getContainerForFigure : function(figureId){
+        var i;
+        var v;
+        var containerId = -1;
+        
+        for(i in this.data){
+            v = this.data[i];
+            if( v[1] === figureId){
+                containerId === v[0] ;
+                break;
+            }
+        }
+        
+        return containerId;
     }
     
 };
