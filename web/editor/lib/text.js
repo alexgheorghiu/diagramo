@@ -430,11 +430,15 @@ Text.prototype = {
     getNormalBounds:function(){
         var lines = this.str.split("\n");
 
+        // analog for html top/bottom paddings
+        // adds space between content and border
+        var verticalPadding = this.size / 4;
+
         var poly = new Polygon();
-        poly.addPoint(new Point(this.vector[0].x - this.getNormalWidth()/2 ,this.vector[0].y - this.getNormalHeight()/2));
-        poly.addPoint(new Point(this.vector[0].x + this.getNormalWidth()/2 ,this.vector[0].y - this.getNormalHeight()/2));
-        poly.addPoint(new Point(this.vector[0].x + this.getNormalWidth()/2 ,this.vector[0].y + this.getNormalHeight()/2));
-        poly.addPoint(new Point(this.vector[0].x - this.getNormalWidth()/2 ,this.vector[0].y + this.getNormalHeight()/2));
+        poly.addPoint(new Point(this.vector[0].x - this.getNormalWidth()/2 ,this.vector[0].y - this.getNormalHeight()/2 - verticalPadding));
+        poly.addPoint(new Point(this.vector[0].x + this.getNormalWidth()/2 ,this.vector[0].y - this.getNormalHeight()/2 - verticalPadding));
+        poly.addPoint(new Point(this.vector[0].x + this.getNormalWidth()/2 ,this.vector[0].y + this.getNormalHeight()/2 + verticalPadding));
+        poly.addPoint(new Point(this.vector[0].x - this.getNormalWidth()/2 ,this.vector[0].y + this.getNormalHeight()/2 + verticalPadding));
 
         return poly;
     },
