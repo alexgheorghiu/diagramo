@@ -59,6 +59,23 @@
                 for (var j in fonts) {
                     var font = fonts[j];
 
+                    context.beginPath();
+
+                    context.moveTo(0, yPos - size / 2);
+                    context.lineTo(canvas.width, yPos - size / 2);
+
+                    context.moveTo(0, yPos);
+                    context.lineTo(canvas.width, yPos);
+
+                    context.moveTo(0, yPos + size / 2);
+                    context.lineTo(canvas.width, yPos + size / 2);
+
+                    context.strokeStyle = '#ff0000';
+                    context.stroke();
+                    context.closePath();
+
+                    context.strokeStyle = '#000000';
+
                     var textElement = new Text(font + str, xPos, yPos, font, size, false, Text.ALIGN_CENTER);
                     textElement.paint(context);
 
@@ -71,7 +88,7 @@
 <body onload="javascript: draw();">
 <div>
     <span class="font-size-12">Font size 12</span>
-    <canvas id="canvas-12" width="400" height="50">no canvas </canvas>
+    <canvas id="canvas-12" width="340" height="50">no canvas </canvas>
 </div>
 
 <div>
@@ -81,7 +98,7 @@
 
 <div>
     <span class="font-size-30">Font size 30</span>
-    <canvas id="canvas-30" width="850" height="120">no canvas </canvas>
+    <canvas id="canvas-30" width="830" height="120">no canvas </canvas>
 </div>
 
 <div>
