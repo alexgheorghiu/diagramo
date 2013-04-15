@@ -45,7 +45,7 @@ function Text(string, x, y, font, size, outsideCanvas, align){
     this.align = align || Text.ALIGN_CENTER;
     
     /**Vertical alignement of the text - for now always middle*/
-    this.valign = Text.VALIGN_MIDDLE;
+//    this.valign = Text.VALIGN_MIDDLE;
 
     /**We will keep the initial point (as base line) and another point just above it - similar to a vector.
      *So when the text is transformed we will only transform the vector and get the new angle (if needed)
@@ -110,26 +110,32 @@ Text.ALIGNMENTS = [{
     Text:'Right'
 }];
 
+/*
+ There is no point in vertical alignment for a single text.
+ A text is vertically aligned to something external to it.
+ (The only exception is Chinese where they write from top to bottom
+ and in that case vertical alignment is similar to horizontal alignment in Latin alphabet).
+ */
 /**Top alignment*/
-Text.VALIGN_TOP = "top";
+//Text.VALIGN_TOP = "top";
 
 /**Middle alignment*/
-Text.VALIGN_MIDDLE = "middle";
+//Text.VALIGN_MIDDLE = "middle";
 
 /**Bottom alignment*/
-Text.VALIGN_BOTTOM = "bottom";
+//Text.VALIGN_BOTTOM = "bottom";
 
 /**An {Array} of  vertical alignments*/
-Text.VALIGNMENTS = [{
-    Value: Text.VALIGN_TOP,
-    Text:'Top'
-},{
-    Value: Text.VALIGN_MIDDLE,
-    Text:'Middle'
-},{
-    Value: Text.VALIGN_BOTTOM,
-    Text:'Bottom'
-}];
+//Text.VALIGNMENTS = [{
+//    Value: Text.VALIGN_TOP,
+//    Text:'Top'
+//},{
+//    Value: Text.VALIGN_MIDDLE,
+//    Text:'Middle'
+//},{
+//    Value: Text.VALIGN_BOTTOM,
+//    Text:'Bottom'
+//}];
 
 /**An {Array} of fonts*/
 Text.FONTS = [{
@@ -318,21 +324,22 @@ Text.prototype = {
         }
         
         //Y - offset
-        var offsetY = 0;
-        switch(this.valign) {
-            case Text.VALIGN_TOP:
-                offsetY = -this.getNormalHeight();
-                break;
+        var offsetY = 0.5 * this.size;
 
-            case Text.VALIGN_BOTTOM:
-                offsetY = this.getNormalHeight();
-                break;
+//        switch(this.valign) {
+//            case Text.VALIGN_TOP:
+//                offsetY = -this.getNormalHeight();
+//                break;
+//
+//            case Text.VALIGN_BOTTOM:
+//                offsetY = this.getNormalHeight();
+//                break;
+//
+//            case Text.VALIGN_MIDDLE:
+//                offsetY = 0.5 * this.size;
+//                break;
+//        }
 
-            case Text.VALIGN_MIDDLE:
-                offsetY = 0.5 * this.size;
-                break;
-        }
-        
         var angle = Util.getAngle(this.vector[0],this.vector[1]);
         //alert("Angle is + " + angle + ' point 0: ' + this.vector[0] + ' point 1: ' + this.vector[1]);
 
@@ -377,10 +384,11 @@ Text.prototype = {
         context.fillStyle = this.style.fillStyle;
         context.font = this.size + "px " + this.font;
         context.textAlign = this.align;
+        context.textBaseline = "middle";
 
-        if (this.valign == Text.VALIGN_MIDDLE) {
-            context.textBaseline = "middle";
-        }
+//        if (this.valign == Text.VALIGN_MIDDLE) {
+//            context.textBaseline = "middle";
+//        }
 
         for(var i=0; i<lines.length; i++){
 //            Log.info("Line: " + lines[i] + " this.vector[0].x=" + this.vector[0].x + " offsetX=" + offsetX + " this.vector[0].y=" + this.vector[0].y + " offsetY=" + offsetY 
@@ -430,15 +438,11 @@ Text.prototype = {
     getNormalBounds:function(){
         var lines = this.str.split("\n");
 
-        // analog for html top/bottom paddings
-        // adds space between content and border
-        var verticalPadding = this.size / 4;
-
         var poly = new Polygon();
-        poly.addPoint(new Point(this.vector[0].x - this.getNormalWidth()/2 ,this.vector[0].y - this.getNormalHeight()/2 - verticalPadding));
-        poly.addPoint(new Point(this.vector[0].x + this.getNormalWidth()/2 ,this.vector[0].y - this.getNormalHeight()/2 - verticalPadding));
-        poly.addPoint(new Point(this.vector[0].x + this.getNormalWidth()/2 ,this.vector[0].y + this.getNormalHeight()/2 + verticalPadding));
-        poly.addPoint(new Point(this.vector[0].x - this.getNormalWidth()/2 ,this.vector[0].y + this.getNormalHeight()/2 + verticalPadding));
+        poly.addPoint(new Point(this.vector[0].x - this.getNormalWidth()/2 ,this.vector[0].y - this.getNormalHeight()/2));
+        poly.addPoint(new Point(this.vector[0].x + this.getNormalWidth()/2 ,this.vector[0].y - this.getNormalHeight()/2));
+        poly.addPoint(new Point(this.vector[0].x + this.getNormalWidth()/2 ,this.vector[0].y + this.getNormalHeight()/2));
+        poly.addPoint(new Point(this.vector[0].x - this.getNormalWidth()/2 ,this.vector[0].y + this.getNormalHeight()/2));
 
         return poly;
     },
@@ -506,7 +510,7 @@ Text.prototype = {
         var cText = new Text(this.str, this.x, this.y, this.font, this.size, this.outsideCanvas);
         cText.align = this.align;
     
-        cText.valign = this.valign;
+//        cText.valign = this.valign;
         cText.vector = Point.cloneArray(this.vector);
         cText.style = this.style.clone();
 
