@@ -26,6 +26,9 @@ function ContainerTranslateCommand(containerId, matrix){
     ];
     this.reverseMatrix[0][2] = -this.matrix[0][2];
     this.reverseMatrix[1][2] = -this.matrix[1][2];
+    
+    /**contained figures' ids. Neded in case of undo */
+    this.containedFigures = [];
         
 }
 
@@ -36,6 +39,13 @@ ContainerTranslateCommand.prototype = {
     execute : function(){  
         var container = STACK.containerGetById(this.containerId);                
         container.transform(this.matrix);        
+        
+        //find all containing figures and translate them
+        this.containedFigures = CONTAINER_MANAGER.getAllFigures(this.containerId);
+        for(var i=0; i<this.containedFigures.length; i++){
+            var figure = STACK.figureGetById(this.containedFigures[i]);
+            figure.transform(this.matrix);
+        }
     },
     
     
@@ -43,6 +53,12 @@ ContainerTranslateCommand.prototype = {
     undo : function(){        
         var container = STACK.containerGetById(this.containerId);
         container.transform(this.reverseMatrix);
+        
+        //find all containing figures and translate them back
+        for(var i=0; i<this.containedFigures.length; i++){
+            var figure = STACK.figureGetById(this.containedFigures[i]);
+            figure.transform(this.reverseMatrix);
+        }
     }
 };
 

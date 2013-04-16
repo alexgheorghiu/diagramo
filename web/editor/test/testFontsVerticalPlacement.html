@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fonts vertical alignment</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!--[if IE]><script src="../assets/javascript/excanvas.js"></script><![endif]-->
+    <script type="text/javascript" src="../lib/util.js"></script>
+    <script type="text/javascript" src="../lib/primitives.js"></script>
+    <script type="text/javascript" src="../lib/style.js"></script>
+    <script type="text/javascript" src="../lib/matrix.js"></script>
+    <script type="text/javascript" src="../lib/text.js"></script>
+
+    <style>
+        .font-size-12 { font-size: 12px;}
+        .font-size-20 { font-size: 20px;}
+        .font-size-30 { font-size: 30px;}
+        .font-size-40 { font-size: 40px;}
+
+        span {display: block;}
+        div {display: block;}
+        canvas {border: 1px solid gray;}
+    </style>
+
+    <script type="text/javascript">
+        /**Just get the canvas*/
+        function getCanvas(size){
+            var canvas = document.getElementById("canvas-" + size);
+            return canvas;
+        }
+
+        /**Just get the context*/
+        function getContext(canvas){
+            if (window.G_vmlCanvasManager != undefined) { // ie IE
+                window.G_vmlCanvasManager.initElement(canvas);
+            }
+            return canvas.getContext("2d");
+        }
+
+        function draw(){
+            var sizes = [12, 20, 30, 40];
+            var canvas;
+            var context;
+            var str = '\nOXHoojjggq\nOXHoojjggq';
+
+            for (var i in sizes) {
+                var size = sizes[i];
+
+                canvas  = getCanvas(size);
+                context = getContext(canvas);
+
+
+                var xOffset = 7 * size;
+                var xPos = size * 3.5;
+                var yPos = size * 2;
+
+                var fonts = ['Arial', 'Arial Narrow', 'Courier New', 'Tahoma'];
+
+                for (var j in fonts) {
+                    var font = fonts[j];
+
+                    context.beginPath();
+
+                    //middle line
+                    context.moveTo(0, yPos - size / 2);
+                    context.lineTo(canvas.width, yPos - size / 2);
+
+                    //top line
+                    context.moveTo(0, yPos);
+                    context.lineTo(canvas.width, yPos);
+
+                    //bottom line
+                    context.moveTo(0, yPos + size / 2);
+                    context.lineTo(canvas.width, yPos + size / 2);
+                    
+                    //draw lines
+                    context.strokeStyle = '#ff0000';
+                    context.lineWidth = '1';
+                    context.stroke();
+                    context.closePath();
+
+                    //draw text
+                    context.strokeStyle = '#000000';
+
+                    var textElement = new Text(font + str, xPos, yPos, font, size, false, Text.ALIGN_CENTER);
+                    textElement.paint(context);
+
+                    xPos += xOffset;
+                }
+            }
+        }
+    </script>
+</head>
+<body onload="javascript: draw();">
+    <a href="./index.html">All tests</a>
+    <hr/>
+    <h1>Vertical text alignment</h1>
+    <div>
+        See how text of different size and fonts fit within some constraints:
+        <ul>
+            <li>computed top edge of text</li>
+            <li>computed center of text</li>
+            <li>computed bottom edge of text</li>
+        </ul>
+        <span style="background-color: yellow; display: inline;">
+            <b>Note:</b>
+            I would be nice to be able to automate this test too
+        </span>
+    </div>
+    
+    <hr/>
+    
+    <div>
+        <span class="font-size-12">Font size 12</span>
+        <canvas id="canvas-12" width="340" height="50">no canvas </canvas>
+    </div>
+
+    <div>
+        <span class="font-size-20">Font size 20</span>
+        <canvas id="canvas-20" width="550" height="80">no canvas </canvas>
+    </div>
+
+    <div>
+        <span class="font-size-30">Font size 30</span>
+        <canvas id="canvas-30" width="830" height="120">no canvas </canvas>
+    </div>
+
+    <div>
+        <span class="font-size-40">Font size 40</span>
+        <canvas id="canvas-40" width="1100" height="160">no canvas </canvas>
+    </div>
+
+
+    <!-- Fake canvas for Text::_getContext() dirty method -->
+    <canvas id="a" width="600" height="400" style="display: none;">no canvas </canvas>
+
+</body>
+</html>
