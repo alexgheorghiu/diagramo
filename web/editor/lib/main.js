@@ -157,6 +157,9 @@ var STATE_GROUP_SELECTED = 'group_selected';
 /**we have a container selected*/
 var STATE_CONTAINER_SELECTED = 'container_selected';
 
+/**we have a text editing*/
+var STATE_TEXT_EDITING = 'text_editing';
+
 /**Keeps current state*/
 var state = STATE_NONE;
 
@@ -384,6 +387,15 @@ function setUpEditPanel(shape){
             default: //both Figure and Connector
                 Builder.contructPropertiesPanel(propertiesPanel, shape);
         }
+    }
+}
+
+/**Setup edit mode for text primitive.
+ *@param textPrimitive - instance of Text primitive
+ **/
+function setUpTextEditMode(textPrimitive) {
+    if (textPrimitive.oType == "Text") {
+        alert('Set up Text editor!');
     }
 }
 
@@ -1572,7 +1584,6 @@ var lastMove = null;
  **/
 var snapMonitor = [0,0];
 
-
 /**Treats the mouse move event
  *@param {Event} ev - the event generated when key is up
  **/
@@ -2055,6 +2066,56 @@ function onMouseMove(ev){
     if(redraw){
         draw();
     }
+    return false;
+}
+
+
+/**Treats the mouse double click event
+ *@param {Event} ev - the event generated when key is clicked twice
+ **/
+function onDblClick(ev) {
+    var coords = getCanvasXY(ev);
+    var HTMLCanvas = getCanvas();
+    var x = coords[0];
+    var y = coords[1];
+    lastClick = [x,y];
+
+    var fId = STACK.figureGetByXY(x,y);
+    if (fId != -1) {
+        var textPrimitive = STACK.textGetByFigureXY(fId, x, y);
+
+        if (textPrimitive != null) {
+
+            // set current state
+            if (state == STATE_GROUP_SELECTED) {
+                var selectedGroup = STACK.groupGetById(selectedGroupId);
+                if(!selectedGroup.permanent){
+                    STACK.groupDestroy(selectedGroupId);
+                }
+                selectedGroupId = -1;
+            }
+
+            selectedFigureId = fId;
+            selectedConnectorId = -1;
+
+            // TODO: configure STATE_TEXT_EDITING
+            state = STATE_FIGURE_SELECTED;
+            //        state = STATE_TEXT_EDITING;
+
+            // set edit bar
+            setUpTextEditMode(textPrimitive);
+            redraw = true;
+        }
+    }
+
+    draw();
+
+    if (window.getSelection) {
+        window.getSelection().removeAllRanges();
+    } else if (document.selection) {
+        document.selection.empty();
+    }
+
     return false;
 }
 
@@ -2869,6 +2930,7 @@ function saveAs(){
 
 
 /**Add listeners to elements on the page*/
+// TODO: set dblclick handler for mobile (touches)
 function addListeners(){
     var canvas = getCanvas();
 
@@ -2882,6 +2944,7 @@ function addListeners(){
     canvas.addEventListener("mousemove", onMouseMove, false);
     canvas.addEventListener("mousedown", onMouseDown, false);
     canvas.addEventListener("mouseup", onMouseUp, false);
+    canvas.addEventListener("dblclick", onDblClick, false);
 
 
     if(false){
