@@ -13,21 +13,22 @@
  * @param {Number} size - the size of the font
  * 
  * @param {Boolean} outsideCanvas - set this on true if you want to use the Text outside of canvas (ex: Export to SVG)
+ * @param {String} align - the alignment we are using for this text
  * @see list of web safe fonts : <a href="http://www.ampsoft.net/webdesign-l/WindowsMacFonts.html">http://www.ampsoft.net/webdesign-l/WindowsMacFonts.html</a> Arial, Verdana
  * </p>
  * @see /documents/specs/text.png
  * 
  * @author Alex Gheroghiu <alex@scriptoid.com>
  * @author Augustin <cdaugustin@yahoo.com>
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  * <p/>
  * Note:<br/>
  * Canvas's metrics do not report updated width for rotated (context) text ...so we need to compute it
- * All texts will be center aligned...for now
  * <p/>
  * Alignement note: <br/>
  * It can be Center|Left|Right <a href="http://dev.w3.org/html5/2dcontext/#dom-context-2d-textalign">http://dev.w3.org/html5/2dcontext/#dom-context-2d-textalign</a>
  **/
-function Text(string, x, y, font, size, outsideCanvas){
+function Text(string, x, y, font, size, outsideCanvas, align){
     /**Text used to display*/
     this.str = string;
 
@@ -41,10 +42,10 @@ function Text(string, x, y, font, size, outsideCanvas){
     this.lineSpacing = 1 / 4 * size; 
     
     /**Horizontal alignement of the text, can be: left, center, right*/
-    this.align = Text.ALIGN_CENTER;
+    this.align = align || Text.ALIGN_CENTER;
     
     /**Vertical alignement of the text - for now always middle*/
-    this.valign = Text.VALIGN_MIDDLE;
+//    this.valign = Text.VALIGN_MIDDLE;
 
     /**We will keep the initial point (as base line) and another point just above it - similar to a vector.
      *So when the text is transformed we will only transform the vector and get the new angle (if needed)
@@ -59,7 +60,7 @@ function Text(string, x, y, font, size, outsideCanvas){
     }
     
     /**Used to display visual debug information*/
-    this.debug = false; 
+    this.debug = true;
     
     /*JSON object type used for JSON deserialization*/
     this.oType = 'Text'; 
@@ -71,15 +72,17 @@ function Text(string, x, y, font, size, outsideCanvas){
  *@return {Text} a newly constructed Text
  *@author Alex Gheorghiu <alex@scriptoid.com>
  *@author Janis Sejans <janis.sejans@towntech.lv>
+ *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
 Text.load = function(o){
     //TODO: update
-    var newText = new Text(o.str, o.x, o.y, o.font, o.size); //fake Text (if we do not use it we got errors - endless loop)
+    var newText = new Text(o.str, o.x, o.y, o.font, o.size, false, o.align); //fake Text (if we do not use it we got errors - endless loop)
     //x loaded by contructor
     //y loaded by contructor
     //size loaded by contructor
     //font loaded by contructor
     //newText.lineSpacing = o.lineSpacing; //automatic computed from text size
+    //align loaded by contructor
     newText.vector = Point.loadArray(o.vector);
     newText.style = Style.load(o.style);
 
@@ -107,26 +110,32 @@ Text.ALIGNMENTS = [{
     Text:'Right'
 }];
 
+/*
+ There is no point in vertical alignment for a single text.
+ A text is vertically aligned to something external to it.
+ (The only exception is Chinese where they write from top to bottom
+ and in that case vertical alignment is similar to horizontal alignment in Latin alphabet).
+ */
 /**Top alignment*/
-Text.VALIGN_TOP = "top";
+//Text.VALIGN_TOP = "top";
 
 /**Middle alignment*/
-Text.VALIGN_MIDDLE = "middle";
+//Text.VALIGN_MIDDLE = "middle";
 
 /**Bottom alignment*/
-Text.VALIGN_BOTTOM = "bottom";
+//Text.VALIGN_BOTTOM = "bottom";
 
 /**An {Array} of  vertical alignments*/
-Text.VALIGNMENTS = [{
-    Value: Text.VALIGN_TOP,
-    Text:'Top'
-},{
-    Value: Text.VALIGN_MIDDLE,
-    Text:'Middle'
-},{
-    Value: Text.VALIGN_BOTTOM,
-    Text:'Bottom'
-}];
+//Text.VALIGNMENTS = [{
+//    Value: Text.VALIGN_TOP,
+//    Text:'Top'
+//},{
+//    Value: Text.VALIGN_MIDDLE,
+//    Text:'Middle'
+//},{
+//    Value: Text.VALIGN_BOTTOM,
+//    Text:'Bottom'
+//}];
 
 /**An {Array} of fonts*/
 Text.FONTS = [{
@@ -291,6 +300,7 @@ Text.prototype = {
     /**Paints the text
      *@author Augustin <cdaugustin@yahoo.com>
      *@author Alex <alex@scriptoid.com>
+     *@author Artyom <artyom.pokatilov@gmail.com>
      **/
     paint:function(context){
 
@@ -314,14 +324,22 @@ Text.prototype = {
         }
         
         //Y - offset
-        var offsetY = 0;
-        if(this.valign == Text.VALIGN_TOP){
-            offsetY = -this.getNormalHeight();
-        }
-        else if(this.valign == Text.VALIGN_BOTTOM){
-            offsetY = this.getNormalHeight();
-        }
-        
+        var offsetY = 0.5 * this.size;
+
+//        switch(this.valign) {
+//            case Text.VALIGN_TOP:
+//                offsetY = -this.getNormalHeight();
+//                break;
+//
+//            case Text.VALIGN_BOTTOM:
+//                offsetY = this.getNormalHeight();
+//                break;
+//
+//            case Text.VALIGN_MIDDLE:
+//                offsetY = 0.5 * this.size;
+//                break;
+//        }
+
         var angle = Util.getAngle(this.vector[0],this.vector[1]);
         //alert("Angle is + " + angle + ' point 0: ' + this.vector[0] + ' point 1: ' + this.vector[1]);
 
@@ -366,13 +384,19 @@ Text.prototype = {
         context.fillStyle = this.style.fillStyle;
         context.font = this.size + "px " + this.font;
         context.textAlign = this.align;
+        context.textBaseline = "middle";
+
+//        if (this.valign == Text.VALIGN_MIDDLE) {
+//            context.textBaseline = "middle";
+//        }
+
         for(var i=0; i<lines.length; i++){
 //            Log.info("Line: " + lines[i] + " this.vector[0].x=" + this.vector[0].x + " offsetX=" + offsetX + " this.vector[0].y=" + this.vector[0].y + " offsetY=" + offsetY 
 //            + " this.getNormalHeight()=" + this.getNormalHeight() + " this.size=" + this.size + " this.lineSpacing=" + this.lineSpacing);
             context.fillText(
                 lines[i], 
                 this.vector[0].x + offsetX,
-                (this.vector[0].y - this.getNormalHeight() / 2 + (i+1) * this.size + i * this.lineSpacing) + offsetY 
+                (this.vector[0].y - this.getNormalHeight() / 2 + i * this.size + i * this.lineSpacing) + offsetY
             );
             //context.fillText(lines[i], this.vector[0].x, txtOffsetY * noLinesTxt);
             //context.fillText(linesText[i], -this.vector[0].x, txtOffsetY * noLinesTxt);
@@ -486,7 +510,7 @@ Text.prototype = {
         var cText = new Text(this.str, this.x, this.y, this.font, this.size, this.outsideCanvas);
         cText.align = this.align;
     
-        cText.valign = this.valign;
+//        cText.valign = this.valign;
         cText.vector = Point.cloneArray(this.vector);
         cText.style = this.style.clone();
 

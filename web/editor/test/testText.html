@@ -41,7 +41,7 @@
                 //drawCharacter('b', context);
                 var str = 'Python is a programming language that lets you work more\nquickly and integrate your systems more effectively. \n\nYou can learn to use Python and see almost immediate gains in productivity and \nlower maintenance costs.';
                 //t = new Text(str, 300, 0, 10,Text.ALIGN_RIGHT);
-                t = new Text(str, 200, 200, 'Arial', 10,Text.ALIGN_CENTER, context);
+                t = new Text(str, 200, 200, 'Arial', 10, false,Text.ALIGN_CENTER);
                 t.paint(context);
             }
 
@@ -61,8 +61,21 @@
     </head>
 
     <body onload="javascript: draw();">
-    <canvas id="a" style="border: 1px solid gray;" width="600" height="400">no canvas </canvas>
-    <input type="button" value="rotate" onclick="rotate();">
+        <a href="./index.html">All tests</a>
+        <hr/>
+        <h1>Text rotations and visual guidelines</h1>
+        <div>
+            See text's guidelines and behavior while rotating.
+            <br/>
+            <span style="background-color: yellow; display: inline;">
+                <b>Note:</b>
+                I would be nice to be able to automate this test too
+            </span>
+        </div>
 
-</body>
+        <hr/>
+        <canvas id="a" style="border: 1px solid gray;" width="600" height="400">no canvas </canvas>
+        <input type="button" value="rotate" onclick="rotate();">
+
+    </body>
 </html>
