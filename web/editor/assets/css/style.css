@@ -295,3 +295,41 @@ body{
     font-size: 20px;
 }
 
+#text-editor {
+    display: none;
+    z-index: 5;
+    position: absolute;
+}
+
+#text-editor .text-edit-tools-container {
+    float: left;
+    width: 100%;
+}
+
+#text-editor .text-edit-tools {
+    float: left;
+
+    background-image: url('../images/logo_background.png');
+    background-size: 100%;
+    background-position: top left;
+}
+
+#text-editor.active {
+    display: block;
+}
+
+#text-editor .line, #text-editor .textLine {
+    float: left;
+}
+
+#text-editor .line select {
+    float: left;
+}
+
+#text-editor .label {
+    display: none;
+}
+
+#text-editor .color_picker {
+    margin-top: 2px;
+}

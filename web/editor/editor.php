@@ -350,6 +350,7 @@ $page = 'editor';
                     <canvas id="a" width="800" height="600">
                         Your browser does not support HTML5. Please upgrade your browser to any modern version.
                     </canvas>
+                    <div id="text-editor"></div>
                 </div>
             </div>
             

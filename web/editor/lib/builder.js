@@ -37,6 +37,58 @@ Builder.contructPropertiesPanel = function(DOMObject, shape){
 }
 
 /**
+ *Creates the property panel for a Text primitive of shape {Figure}
+ *@param {DOMObject} DOMObject - the div of the properties panel
+ *@param {Figure} shape - the figure - parent of Text primitive
+ *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
+ **/
+Builder.contructTextPropertiesPanel = function(DOMObject, shape, textPrimitiveId){
+    // beginning of property string of BuilderProperty for primitive with id = primitiveId
+    var propertyPrefix;
+    var curProperty;
+
+    // <div> for text tools (font size, font family, alignment and color)
+    var toolContainer = document.createElement("div");
+    toolContainer.className = 'text-edit-tools-container';
+
+    var toolDiv = document.createElement("div");
+    toolDiv.className = 'text-edit-tools';
+
+    toolContainer.appendChild(toolDiv);
+    DOMObject.appendChild(toolContainer);
+
+    propertyPrefix = "primitives." + textPrimitiveId + ".";
+
+    for(var i=0; i<shape.properties.length; i++){
+        curProperty = shape.properties[i].property;
+        if (curProperty != null) {
+            switch (curProperty){
+                // string property
+                case propertyPrefix + 'str':
+                    shape.properties[i].injectInputArea(DOMObject, shape.id);
+                    break;
+                // size property
+                case propertyPrefix + 'size':
+                    shape.properties[i].injectInputArea(toolDiv, shape.id);
+                    break;
+                // font property
+                case propertyPrefix + 'font':
+                    shape.properties[i].injectInputArea(toolDiv, shape.id);
+                    break;
+                // align property
+                case propertyPrefix + 'align':
+                    shape.properties[i].injectInputArea(toolDiv, shape.id);
+                    break;
+                // color property
+                case propertyPrefix + 'style.fillStyle':
+                    shape.properties[i].injectInputArea(toolDiv, shape.id);
+                    break;
+            }
+        }
+    }
+}
+
+/**
  *Creates the properties for main CanvasProps
  *@param {DOMObject} DOMObject - the div of the properties panel
  *@param {CanvasProps} canvasProps - the CanvasProps for which the properties will be displayed

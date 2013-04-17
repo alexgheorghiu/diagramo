@@ -905,3 +905,23 @@ function repeat(str, count){
     
     return res;
 }
+
+/**
+ * Set selection on target interval inside text DOM element
+ * @param {HTMLElement} input - DOM element to set selection
+ * @param {Number} selectionStart - start position of selection
+ * @param {Number} selectionEnd - end position of selection
+ */
+function setSelectionRange(input, selectionStart, selectionEnd) {
+    if (input.setSelectionRange) {
+        input.focus();
+        input.setSelectionRange(selectionStart, selectionEnd);
+    }
+    else if (input.createTextRange) {
+        var range = input.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', selectionEnd);
+        range.moveStart('character', selectionStart);
+        range.select();
+    }
+}

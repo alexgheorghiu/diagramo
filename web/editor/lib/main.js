@@ -40,6 +40,9 @@ var GRIDWIDTH = 30;
 /**The distance (from a snap line) that will trigger a snap*/
 var SNAP_DISTANCE = 5;
 
+/**Default line width*/
+var defaultToolboxHeight = 24;
+
 var fillColor=null;
 var strokeColor='#000000';
 var currentText=null;
@@ -158,7 +161,7 @@ var STATE_GROUP_SELECTED = 'group_selected';
 var STATE_CONTAINER_SELECTED = 'container_selected';
 
 /**we have a text editing*/
-var STATE_TEXT_EDITING = 'text_editing';
+var STATE_TEXT_EDITING = STATE_FIGURE_SELECTED;
 
 /**Keeps current state*/
 var state = STATE_NONE;
@@ -390,13 +393,60 @@ function setUpEditPanel(shape){
     }
 }
 
-/**Setup edit mode for text primitive.
- *@param textPrimitive - instance of Text primitive
+/**Setup edit mode for Text primitive.
+ *@param figure - parent of Text primitive. Can be either Connector or Figure.
+ *@param textPrimitiveId - the id value of Text primitive
  **/
-function setUpTextEditMode(textPrimitive) {
-    if (textPrimitive.oType == "Text") {
-        alert('Set up Text editor!');
+function setUpTextEditMode(figure, textPrimitiveId) {
+    // set content of inline Text edit
+    var textEditor = $('#text-editor');
+    textEditor.empty();
+    textEditor.addClass('active');
+
+    Builder.contructTextPropertiesPanel(textEditor.get(0), figure, textPrimitiveId);
+
+    // set edit dialog position to top left (first) bound point of Text primitive
+    var textBounds = figure.primitives[textPrimitiveId].getBounds();
+    var leftCoord = textBounds[0] - defaultLineWidth;
+    var topCoord = textBounds[1] - defaultLineWidth - defaultToolboxHeight;
+
+    var editorWidth = textBounds[2] - textBounds[0] + defaultLineWidth;
+    var editorHeight = textBounds[3] - textBounds[1] + defaultLineWidth;
+
+    textEditor.css({'left': leftCoord + "px",'top': topCoord + "px"});
+
+    // remove <br> tags from text-editor
+    textEditor.find('br').remove();
+
+    // set focus to textarea to edit string
+    var textarea = textEditor.find('textarea');
+    textarea.css({'width': editorWidth,'height': editorHeight});
+
+    // get the HTMLElement not jQuery object
+    textarea = textarea.get(0);
+
+    // select all text inside textarea (like in Visio)
+    setSelectionRange(textarea, 0, textarea.value.length);
+
+    // set handler to hide inline editor when it loses focus
+    var focusHandler = function (e) {
+        var $this = $(e.target);
+
+        // check if user clicked part of editor or active color picker
+        // actually active color picker in that moment can be only for Text edit
+        if ($this.parents('#' + textEditor.get(0).id).length === 0
+            && !$this.hasClass('color_swatch')) {
+
+            textEditor.removeClass('active');
+            textEditor.attr('style','');
+            textEditor.empty();
+
+            $('body').unbind('click', focusHandler);
+        }
     }
+
+    // temporary handler for firing first click outside Text editor
+    $('body').bind('click', focusHandler);
 }
 
 
@@ -2082,9 +2132,10 @@ function onDblClick(ev) {
 
     var fId = STACK.figureGetByXY(x,y);
     if (fId != -1) {
-        var textPrimitive = STACK.textGetByFigureXY(fId, x, y);
+        var figure = STACK.figureGetById(fId);
+        var textPrimitiveId = STACK.textGetByFigureXY(fId, x, y);
 
-        if (textPrimitive != null) {
+        if (textPrimitiveId != -1) {
 
             // set current state
             if (state == STATE_GROUP_SELECTED) {
@@ -2099,22 +2150,25 @@ function onDblClick(ev) {
             selectedConnectorId = -1;
 
             // TODO: configure STATE_TEXT_EDITING
-            state = STATE_FIGURE_SELECTED;
-            //        state = STATE_TEXT_EDITING;
+            // currently STATE_TEXT_EDITING = STATE_FIGURE_SELECTED
+            state = STATE_TEXT_EDITING;
+            //            state = STATE_FIGURE_SELECTED;
 
             // set edit bar
-            setUpTextEditMode(textPrimitive);
+            setUpTextEditMode(figure, textPrimitiveId);
             redraw = true;
         }
     }
 
     draw();
 
-    if (window.getSelection) {
-        window.getSelection().removeAllRanges();
-    } else if (document.selection) {
-        document.selection.empty();
-    }
+    // bug fix for Chrome mousemove event after double click
+    // details here: http://stackoverflow.com/questions/8125165/event-listener-for-dblclick-causes-event-for-mousemove-to-not-work-and-show-a-ci
+//    if (window.getSelection) {
+//        window.getSelection().removeAllRanges();
+//    } else if (document.selection) {
+//        document.selection.empty();
+//    }
 
     return false;
 }

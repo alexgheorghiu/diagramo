@@ -2741,6 +2741,9 @@ Figure.prototype = {
     },
 
     addPrimitive:function(primitive){
+        // add id property to primitive equal its index
+        primitive.id = this.primitives.length;
+
         this.primitives.push(primitive);
     },
 

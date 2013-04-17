@@ -499,12 +499,12 @@ Stack.prototype = {
                 for (var j = primitiveLength - 1; j >= 0; j--) {
                     var primitive = figure.primitives[j];
                     if( (primitive.oType == "Text") && primitive.contains(x, y) ){
-                        return primitive;
+                        return primitive.id;
                     }
                 }
             } //end if
         }//end for
-        return null;
+        return -1;
     },
     
     /**
