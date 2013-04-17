@@ -432,7 +432,7 @@ function setUpTextEditMode(figure, textPrimitiveId) {
     var focusHandler = function (e) {
         var $this = $(e.target);
 
-        // check if user clicked part of editor or active color picker
+        // check if user fired mouse down on the part of editor or active color picker
         // actually active color picker in that moment can be only for Text edit
         if ($this.parents('#' + textEditor.get(0).id).length === 0
             && !$this.hasClass('color_swatch')) {
@@ -441,12 +441,12 @@ function setUpTextEditMode(figure, textPrimitiveId) {
             textEditor.attr('style','');
             textEditor.empty();
 
-            $('body').unbind('click', focusHandler);
+            $('body').unbind('mousedown', focusHandler);
         }
     }
 
     // temporary handler for firing first click outside Text editor
-    $('body').bind('click', focusHandler);
+    $('body').bind('mousedown', focusHandler);
 }
 
 
