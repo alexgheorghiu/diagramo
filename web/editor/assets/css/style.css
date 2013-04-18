@@ -301,6 +301,13 @@ body{
     position: absolute;
 }
 
+#text-editor textarea {
+    padding: 6px;
+    overflow: hidden;
+    resize: none;
+    line-height: 125%;
+}
+
 #text-editor .text-edit-tools-container {
     float: left;
     width: 100%;

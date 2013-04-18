@@ -43,6 +43,10 @@ var SNAP_DISTANCE = 5;
 var fillColor=null;
 var strokeColor='#000000';
 var currentText=null;
+
+/**Default top&bottom padding of Text editor's textarea*/
+var defaultEditorPadding = 6;
+
 var FIGURE_ESCAPE_DISTANCE = 30; /**the distance by which the connectors will escape Figure's bounds*/
 
 /**the distance by which the connectors will be able to connect with Figure*/
@@ -264,12 +268,13 @@ function setFigureSet(id){
  *@param {String} property - (or an {Array} of {String}s). The 'id' under which the property is stored
  *TODO: is there any case where we are using property as an array ?
  *@param {String} newValue - the new value of the property
- *@author Zack, Alex
+ *@param {Function} callback - callback to call on property change
+ *@author Zack, Alex, Artyom
  **/
-function updateShape(shapeId, property, newValue){
+function updateShape(shapeId, property, newValue, callback){
     //Log.group("main.js-->updateFigure");
     //Log.info("updateShape() figureId: " + figureId + " property: " + property + ' new value: ' + newValue);
-    
+
     var obj = STACK.figureGetById(shapeId); //try to find it inside {Figure}s
 
 
@@ -355,6 +360,11 @@ function updateShape(shapeId, property, newValue){
         //Log.info("updateShape(): it's a connector 2");
         objSave.updateMiddleText();
     }
+
+    // fire callback if it's a function
+    if (typeof(callback) === 'function') {
+        callback(property, newValue);
+    }
     
     //Log.groupEnd();
 
@@ -396,65 +406,11 @@ function setUpEditPanel(shape){
  **/
 function setUpTextEditMode(figure, textPrimitiveId) {
     // set content of inline Text edit
-    var $textEditor = $('#text-editor');
-    $textEditor.empty();
-    $textEditor.addClass('active');
+    var textEditor = document.getElementById('text-editor');
+    textEditor.innnerHTML = '';
+    textEditor.className = 'active';
 
-    Builder.contructTextPropertiesPanel($textEditor.get(0), figure, textPrimitiveId);
-
-    // set edit dialog position to top left (first) bound point of Text primitive
-    var textBounds = figure.primitives[textPrimitiveId].getBounds();
-    var leftCoord = textBounds[0] - defaultLineWidth;
-    // get toolbox height, because it's situated at the top of Text editor
-    var toolboxHeight = $textEditor.find('.text-edit-tools-container').height();
-    var topCoord = textBounds[1] - defaultLineWidth - toolboxHeight;
-
-    var editorWidth = textBounds[2] - textBounds[0] + defaultLineWidth;
-    var editorHeight = textBounds[3] - textBounds[1] + defaultLineWidth;
-
-    $textEditor.css({'left': leftCoord + "px",'top': topCoord + "px"});
-
-    // remove <br> tags from text-editor
-    $textEditor.find('br').remove();
-
-    // set focus to textarea to edit string
-    var textarea = $textEditor.find('textarea');
-    textarea.css({'width': editorWidth,'height': editorHeight});
-
-    // get the HTMLElement not jQuery object
-    textarea = textarea.get(0);
-
-    // select all text inside textarea (like in Visio)
-    setSelectionRange(textarea, 0, textarea.value.length);
-
-    // temporary handler for firing first click outside Text editor
-    var focusHandler = function (e) {
-        var $this = $(e.target);
-
-        // check if user fired mouse down on the part of editor or active color picker
-        // actually active color picker in that moment can be only for Text edit
-        if ($this.parents('#' + $textEditor.get(0).id).length === 0
-            && !$this.hasClass('color_swatch')) {
-
-            $textEditor.removeClass('active');
-            $textEditor.attr('style','');
-            $textEditor.empty();
-
-            $('body').unbind('mousedown', focusHandler);
-            $textEditor.find('input').unbind('keydown', keyDownHandler);
-        }
-    }
-
-    $('body').bind('mousedown', focusHandler);
-
-
-    // temporary handler to stop bubbling keydown event outside inputs of Text editor
-    // for example, figure moving on arrow keys
-    var keyDownHandler = function (e){
-        e.stopPropagation();
-    };
-
-    $textEditor.find('select').bind('keydown', keyDownHandler);
+    Builder.contructTextPropertiesPanel(textEditor, figure, textPrimitiveId);
 }
 
 

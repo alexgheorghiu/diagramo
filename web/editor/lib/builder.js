@@ -38,14 +38,14 @@ Builder.contructPropertiesPanel = function(DOMObject, shape){
 
 /**
  *Creates the property panel for a Text primitive of shape {Figure}
- *@param {DOMObject} DOMObject - the div of the properties panel
+ *@param {DOMObject} textEditor - the div of the properties panel
  *@param {Figure} shape - the figure - parent of Text primitive
  *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
  **/
-Builder.contructTextPropertiesPanel = function(DOMObject, shape, textPrimitiveId){
-    // beginning of property string of BuilderProperty for primitive with id = primitiveId
-    var propertyPrefix;
-    var curProperty;
+Builder.contructTextPropertiesPanel = function(textEditor, shape, textPrimitiveId){
+    // getting jQuery objects for jQuery usage
+    var $textEditor = $(textEditor);
+    var $textarea;
 
     // <div> for text tools (font size, font family, alignment and color)
     var toolContainer = document.createElement("div");
@@ -55,37 +55,136 @@ Builder.contructTextPropertiesPanel = function(DOMObject, shape, textPrimitiveId
     toolDiv.className = 'text-edit-tools';
 
     toolContainer.appendChild(toolDiv);
-    DOMObject.appendChild(toolContainer);
+    textEditor.appendChild(toolContainer);
 
-    propertyPrefix = "primitives." + textPrimitiveId + ".";
+    // beginning of property string of BuilderProperty for primitive with id = primitiveId
+    var propertyPrefix = "primitives." + textPrimitiveId + ".";
+
+    // value of BuiderProperty::property
+    var stringPropertyName = propertyPrefix + 'str';
+    var sizePropertyName = propertyPrefix + 'size';
+    var fontPropertyName = propertyPrefix + 'font';
+    var alignPropertyName = propertyPrefix + 'align';
+    var colorPropertyName = propertyPrefix + 'style.fillStyle';
+
+    // callback for changing properties inside Text Editor
+    // provides WYSIWYG functionality
+    var self = this;
+    var propertyCallback = function (property, value) {
+        switch(property) {
+            case sizePropertyName:
+                $textarea.css('font-size', value + 'px');
+                break;
+
+            case fontPropertyName:
+                $textarea.css('font-family', value);
+                break;
+
+            case alignPropertyName:
+                $textarea.css('text-align', value);
+                break;
+
+            case colorPropertyName:
+                $textarea.css('color', value);
+                break;
+        }
+
+        self.placeResizeTextPropertiesPanel($textEditor, shape, textPrimitiveId);
+    };
 
     for(var i=0; i<shape.properties.length; i++){
-        curProperty = shape.properties[i].property;
+        var curProperty = shape.properties[i].property;
         if (curProperty != null) {
+            var curValue = shape.properties[i].getValue(shape.id);
             switch (curProperty){
-                // string property
-                case propertyPrefix + 'str':
-                    shape.properties[i].injectInputArea(DOMObject, shape.id);
+                case stringPropertyName:
+                    shape.properties[i].injectInputArea(textEditor, shape.id, propertyCallback);
+                    $textarea = $textEditor.find('textarea');
+
+                    // remove <br> tags from text-editor
+                    $textEditor.find('br').remove();
+
+                    // set Text editor properties on initialization
+                    propertyCallback(curProperty, curValue);
+
                     break;
-                // size property
-                case propertyPrefix + 'size':
-                    shape.properties[i].injectInputArea(toolDiv, shape.id);
-                    break;
-                // font property
-                case propertyPrefix + 'font':
-                    shape.properties[i].injectInputArea(toolDiv, shape.id);
-                    break;
-                // align property
-                case propertyPrefix + 'align':
-                    shape.properties[i].injectInputArea(toolDiv, shape.id);
-                    break;
-                // color property
-                case propertyPrefix + 'style.fillStyle':
-                    shape.properties[i].injectInputArea(toolDiv, shape.id);
+
+                case sizePropertyName:
+                case fontPropertyName:
+                case alignPropertyName:
+                case colorPropertyName:
+                    shape.properties[i].injectInputArea(toolDiv, shape.id, propertyCallback);
+
+                    // set Text editor properties on initialization
+                    propertyCallback(curProperty, curValue);
+
                     break;
             }
         }
     }
+
+    this.placeResizeTextPropertiesPanel($textEditor, shape, textPrimitiveId);
+
+    // get the HTMLElement not jQuery object
+    var textarea = $textarea.get(0);
+
+    // select all text inside textarea (like in Visio)
+    setSelectionRange(textarea, 0, textarea.value.length);
+
+    // temporary handler for firing first click outside Text editor
+    var focusHandler = function (e) {
+        var $this = $(e.target);
+
+        // check if user fired mouse down on the part of editor or active color picker
+        // actually active color picker in that moment can be only for Text edit
+        if ($this.parents('#' + $textEditor.get(0).id).length === 0
+            && !$this.hasClass('color_swatch')) {
+
+            $textEditor.removeClass('active');
+            $textEditor.attr('style','');
+            $textEditor.empty();
+
+            $('body').unbind('mousedown', focusHandler);
+            $textEditor.find('input').unbind('keydown', keyDownHandler);
+        }
+    }
+
+    $('body').bind('mousedown', focusHandler);
+
+
+    // temporary handler to stop bubbling keydown event outside inputs of Text editor
+    // for example, figure moving on arrow keys
+    var keyDownHandler = function (e){
+        e.stopPropagation();
+    };
+
+    $textEditor.find('select').bind('keydown', keyDownHandler);
+}
+
+/**
+ *Places and sets size to the property panel for a Text primitive of shape {Figure}
+ *@param {jQuery} $textEditor - the jQuery object with div of the properties panel
+ *@param {Figure} shape - the figure - parent of Text primitive
+ *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
+ **/
+Builder.placeResizeTextPropertiesPanel = function ($textEditor, shape, textPrimitiveId){
+    var $textarea = $textEditor.find('textarea');
+
+    // set edit dialog position to top left (first) bound point of Text primitive
+    var textBounds = shape.primitives[textPrimitiveId].getBounds();
+    var leftCoord = textBounds[0] - defaultLineWidth * 2 - defaultEditorPadding / 2;
+
+    // get toolbox height, because it's situated at the top of Text editor
+    var toolboxHeight = $textEditor.find('.text-edit-tools-container').height();
+    var topCoord = textBounds[1] - toolboxHeight - defaultLineWidth * 2 - defaultEditorPadding / 2;
+
+    $textEditor.css({'left': leftCoord + "px",'top': topCoord + "px"});
+
+    var textareaWidth = textBounds[2] - textBounds[0];
+    var textareaHeight = textBounds[3] - textBounds[1];
+
+    // set focus to textarea to edit string
+    $textarea.css({'width': textareaWidth,'height': textareaHeight});
 }
 
 /**
@@ -290,30 +389,31 @@ BuilderProperty.prototype = {
      *
      *@param {HTMLElement} DOMObject - the div of the properties panel
      *@param {Number} figureId - the id of the figure we are using
+     *@param {Function} callback - callback to call on property change
      */
-    injectInputArea:function(DOMObject,figureId){
+    injectInputArea:function(DOMObject, figureId, callback){
         if(this.name == BuilderProperty.SEPARATOR){
             DOMObject.appendChild(document.createElement("hr"));
             return;
         }
         else if(this.type == BuilderProperty.TYPE_COLOR){
-            this.generateColorCode(DOMObject,figureId);
+            this.generateColorCode(DOMObject, figureId, callback);
         }
         else if(this.type == BuilderProperty.TYPE_TEXT){
-            this.generateTextCode(DOMObject,figureId);
+            this.generateTextCode(DOMObject, figureId, callback);
         }
         else if(this.type == BuilderProperty.TYPE_SINGLE_TEXT){
             this.generateSingleTextCode(DOMObject,figureId);
         }
         else if(this.type == BuilderProperty.TYPE_TEXT_FONT_SIZE){            
-            this.generateArrayCode(DOMObject,figureId, BuilderProperty.FONT_SIZES);
+            this.generateArrayCode(DOMObject,figureId, BuilderProperty.FONT_SIZES, callback);
 //            this.generateFontSizesCode(DOMObject,figureId);
         }
         else if(this.type == BuilderProperty.TYPE_TEXT_FONT_FAMILY){
-            this.generateArrayCode(DOMObject,figureId, Text.FONTS);
+            this.generateArrayCode(DOMObject,figureId, Text.FONTS, callback);
         }
         else if(this.type == BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT){
-            this.generateArrayCode(DOMObject,figureId, Text.ALIGNMENTS);
+            this.generateArrayCode(DOMObject,figureId, Text.ALIGNMENTS, callback);
         }
         else if(this.type == BuilderProperty.TYPE_CONNECTOR_END){
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.CONNECTOR_ENDS);
@@ -359,9 +459,10 @@ BuilderProperty.prototype = {
      *The text got updated when you leave the input area
      *
      *@param {HTMLElement} DOMObject - the div of the properties panel
-     *@param {Number} shapeId - the id of the {Figure} or {Connector} we are using    
+     *@param {Number} shapeId - the id of the {Figure} or {Connector} we are using
+     *@param {Function} callback - callback to call on property change
      **/
-    generateTextCode:function(DOMObject,shapeId){
+    generateTextCode:function(DOMObject, shapeId, callback){
         var uniqueId = new Date().getTime();
         var value = this.getValue(shapeId);
 
@@ -381,7 +482,7 @@ BuilderProperty.prototype = {
 
         text.onchange = function(shapeId,property){
             return function(){
-                updateShape(shapeId, property, this.value)
+                updateShape(shapeId, property, this.value, callback)
             }
         }(shapeId, this.property);
 
@@ -435,8 +536,9 @@ BuilderProperty.prototype = {
      *@param {HTMLElement} DOMObject - the div of the properties panel
      *@param {Number} figureId - the id of the figure we are using
      *@param {Array} v - a vector or hashes ex: [{Text:'Normal', Value:'Normal'},{Text:'Arrow', Value:'Arrow'}]
+     *@param {Function} callback - callback to call on property change
      */
-    generateArrayCode:function(DOMObject,figureId, v){
+    generateArrayCode:function(DOMObject, figureId, v, callback){
 //        Log.info("Font size length: " + v.length);
         var uniqueId = new Date().getTime();
         
@@ -464,7 +566,7 @@ BuilderProperty.prototype = {
         var selProperty = this.property; //save it in a separate variable as if refered by (this) it will refert to the 'select' DOM Object
         select.onchange = function(){
             //alert('Font size triggered. Figure id : ' + figureId + ' property: ' + selProperty + ' new value' + this.options[this.selectedIndex].value);
-            updateShape(figureId, selProperty, this.options[this.selectedIndex].value);
+            updateShape(figureId, selProperty, this.options[this.selectedIndex].value, callback);
         };
 
         DOMObject.appendChild(div);
@@ -476,8 +578,9 @@ BuilderProperty.prototype = {
      *
      *@param{HTMLElement} DOMObject - the div of the properties panel
      *@param{Number} figureId - the id of the figure we are using
+     *@param {Function} callback - callback to call on property change
      */
-    generateColorCode: function(DOMObject,figureId){
+    generateColorCode: function(DOMObject, figureId, callback){
         var value = this.getValue(figureId);
        
         var uniqueId = new Date().getTime();
@@ -500,7 +603,7 @@ BuilderProperty.prototype = {
         var propExposedToAnonymous = this.property;
         $('#colorpickerHolder'+uniqueId).change(function() {
             Log.info('generateColorCode(): figureId: ' + figureId + 'type: ' + this.type + ' name: ' + this.name + ' property: ' + this.property);
-            updateShape(figureId, propExposedToAnonymous, $('#colorpickerHolder'+uniqueId).val());
+            updateShape(figureId, propExposedToAnonymous, $('#colorpickerHolder'+uniqueId).val(), callback);
         });
     },
     
