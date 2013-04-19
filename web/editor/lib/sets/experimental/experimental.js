@@ -85,7 +85,7 @@ function figure_Stop(x,y)
     f.properties.push(new BuilderProperty('Font ', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));//f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS));
@@ -178,7 +178,7 @@ function figure_ImageFrame(x, y)
     f.properties.push(new BuilderProperty('Font ', 'primitives.2.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.2.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.2.style.fillStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     
     //Description
     var description = new Text("After working in local \ntheater plays and \ntelevision commercials in \nher childhood, Duff \ngained fame playing...."
@@ -194,7 +194,7 @@ function figure_ImageFrame(x, y)
     f.properties.push(new BuilderProperty('Font ', 'primitives.3.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.3.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.3.style.fillStyle', BuilderProperty.TYPE_COLOR));
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     
     //Born date
     var bornDate = new Text("born September 28, 1987" , x - 400 / 4, y + 200 / 4, 'tahoma', 14);

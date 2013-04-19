@@ -5,12 +5,14 @@
  * @param figureId {Numeric} -  the id of the object
  * @param property {String} - property name that is being edited on the figure
  * @param newValue {Object} - the value to set the property to
- * @author Alex
+ * @param callback {Function} - callback to call on property change
+ * @author Alex, Artyom
  */
-function ShapeChangePropertyCommand(figureId, property, newValue){
+function ShapeChangePropertyCommand(figureId, property, newValue, callback){
     this.figureId = figureId;
     this.property = property;    
     this.newValue = newValue;
+    this.callback = callback;
     this.previousValue = this._getValue(figureId, property);
     this.firstExecute = true;
     
@@ -24,7 +26,12 @@ ShapeChangePropertyCommand.prototype = {
         if(this.firstExecute){
             this._setValue(this.figureId, this.property, this.newValue);
             this.firstExecute = false; 
-            //setUpEditPanel(STACK.figureGetById(this.figureId)); 
+            //setUpEditPanel(STACK.figureGetById(this.figureId));
+
+            // fire callback if it's a function
+            if (typeof(this.callback) === 'function') {
+                this.callback(this.property, this.newValue);
+            }
         }
         else{
             throw "Redo not implemented.";
@@ -38,8 +45,12 @@ ShapeChangePropertyCommand.prototype = {
         
         var shape = this.__getShape(this.figureId);
         
-        setUpEditPanel(shape); 
-        
+        setUpEditPanel(shape);
+
+        // fire callback if it's a function
+        if (typeof(this.callback) === 'function') {
+            this.callback(this.property, this.previousValue);
+        }
     },
     
     

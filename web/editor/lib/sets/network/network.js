@@ -40,7 +40,7 @@ function figure_Person(x, y)
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + 24, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -84,7 +84,7 @@ function figure_Switch(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -128,7 +128,7 @@ function figure_Router(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -172,7 +172,7 @@ function figure_Cloud(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     
@@ -216,7 +216,7 @@ function figure_Server(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -260,7 +260,7 @@ function figure_Firewall(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -304,7 +304,7 @@ function figure_Building(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -347,7 +347,7 @@ function figure_Laptop(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -394,7 +394,7 @@ function figure_Desktop(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -438,7 +438,7 @@ function figure_Lock(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -482,7 +482,7 @@ function figure_PDA(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -526,7 +526,7 @@ function figure_Phone(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -570,7 +570,7 @@ function figure_Printer(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -614,7 +614,7 @@ function figure_Database(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -659,7 +659,7 @@ function figure_UPS(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
@@ -703,7 +703,7 @@ function figure_Wireless(x, y){
     f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
-    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);

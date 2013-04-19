@@ -335,7 +335,7 @@ function updateShape(shapeId, property, newValue, callback){
         if(newValue != obj[propGet]()){ //update ONLY if new value differ from the old one
             //Log.info('updateShape() : penultimate propSet: ' +  propSet);
             if(obj[propGet]() != newValue){
-                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue)
+                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue, callback)
                 undo.execute();
                 History.addUndo(undo);
             }
@@ -347,7 +347,7 @@ function updateShape(shapeId, property, newValue, callback){
     else{
         if(obj[propName] != newValue){ //try to change it ONLY if new value is different than the last one
             if(obj[propName] != newValue){
-                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue)
+                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue, callback)
                 undo.execute();
                 History.addUndo(undo);
             }
@@ -359,11 +359,6 @@ function updateShape(shapeId, property, newValue, callback){
     if(objSave instanceof Connector && propName == 'str'){
         //Log.info("updateShape(): it's a connector 2");
         objSave.updateMiddleText();
-    }
-
-    // fire callback if it's a function
-    if (typeof(callback) === 'function') {
-        callback(property, newValue);
     }
     
     //Log.groupEnd();
