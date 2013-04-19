@@ -44,8 +44,13 @@ var fillColor=null;
 var strokeColor='#000000';
 var currentText=null;
 
+var Browser = new Browser();
+
 /**Default top&bottom padding of Text editor's textarea*/
 var defaultEditorPadding = 6;
+
+/**Default border width of Text editor's textarea*/
+var defaultEditorBorderWidth = 1;
 
 var FIGURE_ESCAPE_DISTANCE = 30; /**the distance by which the connectors will escape Figure's bounds*/
 
@@ -384,13 +389,13 @@ function setUpEditPanel(shape){
                 //do nothing. We do not want to offer this to groups
                 break;
             case 'Container':
-                Builder.contructPropertiesPanel(propertiesPanel, shape);                
+                Builder.constructPropertiesPanel(propertiesPanel, shape);
                 break;
             case 'CanvasProps':
                 Builder.constructCanvasPropertiesPanel(propertiesPanel, shape);
                 break;
             default: //both Figure and Connector
-                Builder.contructPropertiesPanel(propertiesPanel, shape);
+                Builder.constructPropertiesPanel(propertiesPanel, shape);
         }
     }
 }
@@ -405,7 +410,7 @@ function setUpTextEditMode(figure, textPrimitiveId) {
     textEditor.innnerHTML = '';
     textEditor.className = 'active';
 
-    Builder.contructTextPropertiesPanel(textEditor, figure, textPrimitiveId);
+    Builder.constructTextPropertiesPanel(textEditor, figure, textPrimitiveId);
 }
 
 

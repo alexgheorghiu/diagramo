@@ -925,3 +925,26 @@ function setSelectionRange(input, selectionStart, selectionEnd) {
         range.select();
     }
 }
+
+/**A simple class to detect browser and it's version using navigator properties.
+ * Computing logic can be found here: http://stackoverflow.com/a/2401861/2097494
+ *
+ * @this {Browser}
+ * @constructor
+ **/
+function Browser() {
+    var N = navigator.appName.toLowerCase();
+    var ua = navigator.userAgent.toLowerCase();
+    var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+    var temp = ua.match(/version\/([\.\d]+)/i);
+    if(M && temp != null) {
+        M[2]= temp[1];
+    }
+    M= M? [M[1], M[2]]: [N, navigator.appVersion,'-?'];
+
+    this.webkit = M[0].indexOf("chrome") > -1 || M[0].indexOf("safari") > -1;
+    this.opera = M[0].indexOf("opera") > -1;
+    this.msie = M[0].indexOf("msie") > -1;
+    this.mozilla = M[0].indexOf("firefox") > -1;
+    this.version = M[1];
+}

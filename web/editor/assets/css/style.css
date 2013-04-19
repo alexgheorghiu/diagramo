@@ -327,6 +327,7 @@ body{
 
 #text-editor .line, #text-editor .textLine {
     float: left;
+    margin-right: 1px;
 }
 
 #text-editor .line select {

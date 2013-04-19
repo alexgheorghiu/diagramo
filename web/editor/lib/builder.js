@@ -30,7 +30,7 @@ Builder.load = function(o){
  *@param {DOMObject} DOMObject - the div of the properties panel
  *@param {Figure} shape - the figure for which the properties will be displayed
  **/
-Builder.contructPropertiesPanel = function(DOMObject, shape){
+Builder.constructPropertiesPanel = function(DOMObject, shape){
     for(var i = 0; i < shape.properties.length; i++){
         // regExp to avoid properties of Text editor
         if (/primitives\.\d+\.(str|size|font|align|style\.fillStyle)/g.test(shape.properties[i].property) === false) {
@@ -45,7 +45,7 @@ Builder.contructPropertiesPanel = function(DOMObject, shape){
  *@param {Figure} shape - the figure - parent of Text primitive
  *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
  **/
-Builder.contructTextPropertiesPanel = function(textEditor, shape, textPrimitiveId){
+Builder.constructTextPropertiesPanel = function(textEditor, shape, textPrimitiveId){
     // getting jQuery objects for jQuery usage
     var $textEditor = $(textEditor);
     var $textarea;
@@ -80,7 +80,7 @@ Builder.contructTextPropertiesPanel = function(textEditor, shape, textPrimitiveI
                 $textarea.css('font-size', value + 'px');
 
                 // set new property value to editor's tool
-                $textEditor.find("select[property='" + property + "']").val(value);
+                $textEditor.find("select[property='" + property + "']").get(0).value = value;
                 break;
 
             case fontPropertyName:
@@ -88,7 +88,7 @@ Builder.contructTextPropertiesPanel = function(textEditor, shape, textPrimitiveI
                 $textarea.css('font-family', value);
 
                 // set new property value to editor's tool
-                $textEditor.find("select[property='" + property + "']").val(value);
+                $textEditor.find("select[property='" + property + "']").get(0).value = value.toLowerCase();
                 break;
 
             case alignPropertyName:
@@ -96,7 +96,7 @@ Builder.contructTextPropertiesPanel = function(textEditor, shape, textPrimitiveI
                 $textarea.css('text-align', value);
 
                 // set new property value to editor's tool
-                $textEditor.find("select[property='" + property + "']").val(value);
+                $textEditor.find("select[property='" + property + "']").get(0).value = value;
                 break;
 
             case colorPropertyName:
@@ -106,7 +106,7 @@ Builder.contructTextPropertiesPanel = function(textEditor, shape, textPrimitiveI
                 // set new property value to editor's tool (colorPicker)
                 var $colorPicker = $textEditor.find("div.color_picker");
                 $colorPicker.css('background-color',value);
-                $colorPicker.siblings("input[type='text']").val(value);
+                $colorPicker.siblings("input[type='text']").get(0).value = value;
                 break;
         }
 
@@ -157,27 +157,27 @@ Builder.contructTextPropertiesPanel = function(textEditor, shape, textPrimitiveI
         $textEditor.attr('style','');
         $textEditor.empty();
 
-        $('body').unbind('mousedown', focusHandler);
+        $('body').unbind('mousedown', mouseDownHandler);
         $textEditor.find('input').unbind('keydown', keyDownHandler);
     }
 
-    // temporary handler for firing first click outside Text editor
-    var focusHandler = function (e) {
+    // temporary handler for firing first click outside of Text editor
+    var mouseDownHandler = function (e) {
         var $this = $(e.target);
 
         // check if user fired mouse down on the part of editor or active color picker
         // actually active color picker in that moment can be only for Text edit
-        if ($this.parents('#' + $textEditor.get(0).id).length === 0
+        if ($this.parents('#' + textEditor.id).length === 0
             && !$this.hasClass('color_swatch')) {
 
             destroyTextEditor();
         }
     }
 
-    $('body').bind('mousedown', focusHandler);
+    $('body').bind('mousedown', mouseDownHandler);
 
 
-    // temporary handler to stop bubbling keydown event outside inputs of Text editor
+    // temporary handler to stop bubbling keydown event outside of inputs of Text editor
     // for example, figure moving on arrow keys
     var keyDownHandler = function (e){
         e.KEY = e.keyCode;
@@ -214,12 +214,28 @@ Builder.placeResizeTextPropertiesPanel = function ($textEditor, shape, textPrimi
     var toolboxHeight = $textEditor.find('.text-edit-tools-container').height();
     var topCoord = textBounds[1] - toolboxHeight - defaultLineWidth * 2 - defaultEditorPadding / 2;
 
-    $textEditor.css({'left': leftCoord + "px",'top': topCoord + "px"});
-
     var textareaWidth = textBounds[2] - textBounds[0];
     var textareaHeight = textBounds[3] - textBounds[1];
 
-    // set focus to textarea to edit string
+    // Firefox includes border & padding as part of width and height,
+    // so width and height should additionally include border and padding twice
+    if (Browser.mozilla) {
+        textareaHeight += (defaultEditorBorderWidth + defaultEditorPadding) * 2;
+        topCoord -= (defaultEditorBorderWidth + defaultEditorPadding);
+        textareaWidth += (defaultEditorBorderWidth + defaultEditorPadding) * 2;
+        leftCoord -= (defaultEditorBorderWidth + defaultEditorPadding);
+    }
+
+    // some of IE magic:
+    // enough to add half of font-size to textarea's width to prevent auto-breaking to next line
+    // which is wrong in our case
+    if (Browser.msie) {
+        var fontSize = parseInt($textarea.css('font-size'), 10);
+        textareaWidth += fontSize / 2;
+        leftCoord -= fontSize / 4;
+    }
+
+    $textEditor.css({'left': leftCoord + "px",'top': topCoord + "px"});
     $textarea.css({'width': textareaWidth,'height': textareaHeight});
 }
 
@@ -511,6 +527,7 @@ BuilderProperty.prototype = {
         //text.style.cssText ="float: right";
         //text.style.cssText ="float: left";
         text.value = value;
+        text.spellcheck = false;
         text.style.width = "100%";
         //text.style.float = "left";
         div.appendChild(document.createElement("br"));
