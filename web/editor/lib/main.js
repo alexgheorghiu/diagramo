@@ -404,7 +404,7 @@ function setUpEditPanel(shape){
  *@param figure - parent of Text primitive. Can be either Connector or Figure.
  *@param textPrimitiveId - the id value of Text primitive
  **/
-function setUpTextEditMode(figure, textPrimitiveId) {
+function setUpTextEditorPopup(figure, textPrimitiveId) {
     // set content of inline Text edit
     var textEditor = document.getElementById('text-editor');
     textEditor.innnerHTML = '';
@@ -2119,7 +2119,7 @@ function onDblClick(ev) {
             //            state = STATE_FIGURE_SELECTED;
 
             // set edit bar
-            setUpTextEditMode(figure, textPrimitiveId);
+            setUpTextEditorPopup(figure, textPrimitiveId);
             redraw = true;
         }
     }
