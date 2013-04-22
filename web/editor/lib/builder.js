@@ -46,9 +46,8 @@ Builder.constructPropertiesPanel = function(DOMObject, shape){
  *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
  **/
 Builder.constructTextPropertiesPanel = function(textEditor, shape, textPrimitiveId){
-    // getting jQuery objects for jQuery usage
-    var $textEditor = $(textEditor);
-    var $textarea;
+
+    var textarea;
 
     // <div> for text tools (font size, font family, alignment and color)
     var toolContainer = document.createElement("div");
@@ -74,44 +73,46 @@ Builder.constructTextPropertiesPanel = function(textEditor, shape, textPrimitive
     // provides WYSIWYG functionality
     var self = this;
     var setProperty = function (property, value) {
-        switch(property) {
-            case sizePropertyName:
-                // set new property value to editor's textarea
-                $textarea.css('font-size', value + 'px');
+        if (textEditor.className === 'active') {
+            switch(property) {
+                case sizePropertyName:
+                    // set new property value to editor's textarea
+                    textarea.style['font-size'] = value + 'px';
 
-                // set new property value to editor's tool
-                $textEditor.find("select[property='" + property + "']").get(0).value = value;
-                break;
+                    // set new property value to editor's tool
+                    textEditor.getElementsByClassName(property)[0].value = value;
+                    break;
 
-            case fontPropertyName:
-                // set new property value to editor's textarea
-                $textarea.css('font-family', value);
+                case fontPropertyName:
+                    // set new property value to editor's textarea
+                    textarea.style['font-family'] = value;
 
-                // set new property value to editor's tool
-                $textEditor.find("select[property='" + property + "']").get(0).value = value.toLowerCase();
-                break;
+                    // set new property value to editor's tool
+                    textEditor.getElementsByClassName(property)[0].value = value.toLowerCase();
+                    break;
 
-            case alignPropertyName:
-                // set new property value to editor's textarea
-                $textarea.css('text-align', value);
+                case alignPropertyName:
+                    // set new property value to editor's textarea
+                    textarea.style['text-align'] = value;
 
-                // set new property value to editor's tool
-                $textEditor.find("select[property='" + property + "']").get(0).value = value;
-                break;
+                    // set new property value to editor's tool
+                    textEditor.getElementsByClassName(property)[0].value = value;
+                    break;
 
-            case colorPropertyName:
-                // set new property value to editor's textarea
-                $textarea.css('color', value);
+                case colorPropertyName:
+                    // set new property value to editor's textarea
+                    textarea.style['color'] = value;
 
-                // set new property value to editor's tool (colorPicker)
-                var $colorPicker = $textEditor.find("div.color_picker");
-                $colorPicker.css('background-color',value);
-                $colorPicker.siblings("input[type='text']").get(0).value = value;
-                break;
+                    // set new property value to editor's tool (colorPicker)
+                    var colorPicker = textEditor.getElementsByClassName('color_picker')[0];
+                    colorPicker.style['background-color'] = value;
+                    colorPicker.previousSibling.value = value;
+                    break;
+            }
+
+            self.placeResizeTextPropertiesPanel(textEditor, shape, textPrimitiveId);
         }
-
-        self.placeResizeTextPropertiesPanel($textEditor, shape, textPrimitiveId);
-    };
+    }
 
     for(var i = 0; i < shape.properties.length; i++){
         var curProperty = shape.properties[i].property;
@@ -120,10 +121,10 @@ Builder.constructTextPropertiesPanel = function(textEditor, shape, textPrimitive
             switch (curProperty){
                 case stringPropertyName:
                     shape.properties[i].injectInputArea(textEditor, shape.id, setProperty);
-                    $textarea = $textEditor.find('textarea');
+                    textarea = textEditor.getElementsByTagName('textarea')[0];
 
                     // remove <br> tags from text-editor
-                    $textEditor.find('br').remove();
+                    removeNodeList(textEditor.getElementsByTagName('br'));
 
                     // set Text editor properties on initialization
                     setProperty(curProperty, curValue);
@@ -144,74 +145,85 @@ Builder.constructTextPropertiesPanel = function(textEditor, shape, textPrimitive
         }
     }
 
-    this.placeResizeTextPropertiesPanel($textEditor, shape, textPrimitiveId);
-
-    // get the HTMLElement not jQuery object
-    var textarea = $textarea.get(0);
+    this.placeResizeTextPropertiesPanel(textEditor, shape, textPrimitiveId);
 
     // select all text inside textarea (like in Visio)
     setSelectionRange(textarea, 0, textarea.value.length);
 
     var destroyTextEditor = function () {
-        $textEditor.removeClass('active');
-        $textEditor.attr('style','');
-        $textEditor.empty();
+        textEditor.className = '';
+        textEditor.style.cssText = '';
+        textEditor.innerHTML = '';
 
-        $('body').unbind('mousedown', mouseDownHandler);
-        $textEditor.find('input').unbind('keydown', keyDownHandler);
+        unBindEvent(document, 'mousedown', mouseDownHandler);
+        unBindEventFromNodeList(textEditor.getElementsByTagName('select'), 'keydown', keyDownHandler);
     }
 
     // temporary handler for firing first click outside of Text editor
     var mouseDownHandler = function (e) {
-        var $this = $(e.target);
+        var target = e.target || e.srcElement;
+
 
         // check if user fired mouse down on the part of editor or active color picker
         // actually active color picker in that moment can be only for Text edit
-        if ($this.parents('#' + textEditor.id).length === 0
-            && !$this.hasClass('color_swatch')) {
+        if (target.className !== 'text-edit-tools'
+            && target.parentNode.className !== 'text-edit-tools'
+            && target.parentNode.parentNode.className !== 'text-edit-tools'
+            && target.parentNode.parentNode.id !== 'text-editor'
+
+            && target.className !== 'color_picker'
+
+            && target.id !== 'color_selector'
+            && target.parentNode.id !== 'color_selector'
+            && target.parentNode.parentNode.id !== 'color_selector') {
 
             destroyTextEditor();
         }
     }
 
-    $('body').bind('mousedown', mouseDownHandler);
+    bindEvent(document, 'mousedown', mouseDownHandler);
 
 
     // temporary handler to stop bubbling keydown event outside of inputs of Text editor
     // for example, figure moving on arrow keys
     var keyDownHandler = function (e){
-        e.KEY = e.keyCode;
-
-        switch(e.KEY){
+        switch(e.keyCode){
             case KEY.CTRL: //Ctrl
             case KEY.Z:
                 break;
             case KEY.ESCAPE: //Esc
                 destroyTextEditor();
             default:
-                e.stopPropagation();
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                } else {
+                    e.cancelBubble = true; // IE
+                }
+
                 break;
         }
     };
 
-    $textEditor.find('select').bind('keydown', keyDownHandler);
+    bindEventToNodeList(textEditor.getElementsByTagName('select'), 'keydown', keyDownHandler);
 }
 
 /**
  *Places and sets size to the property panel for a Text primitive of shape {Figure}
- *@param {jQuery} $textEditor - the jQuery object with div of the properties panel
+ *@param {HTMLElement} textEditor - the div of the properties panel
  *@param {Figure} shape - the figure - parent of Text primitive
  *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
  **/
-Builder.placeResizeTextPropertiesPanel = function ($textEditor, shape, textPrimitiveId){
-    var $textarea = $textEditor.find('textarea');
+Builder.placeResizeTextPropertiesPanel = function (textEditor, shape, textPrimitiveId){
+
+    var textarea = textEditor.getElementsByTagName('textarea')[0];
 
     // set edit dialog position to top left (first) bound point of Text primitive
     var textBounds = shape.primitives[textPrimitiveId].getBounds();
     var leftCoord = textBounds[0] - defaultLineWidth * 2 - defaultEditorPadding / 2;
 
     // get toolbox height, because it's situated at the top of Text editor
-    var toolboxHeight = $textEditor.find('.text-edit-tools-container').height();
+    var toolbox = textEditor.getElementsByClassName('text-edit-tools-container')[0];
+    var toolboxHeight = toolbox.offsetHeight;
     var topCoord = textBounds[1] - toolboxHeight - defaultLineWidth * 2 - defaultEditorPadding / 2;
 
     var textareaWidth = textBounds[2] - textBounds[0];
@@ -230,13 +242,16 @@ Builder.placeResizeTextPropertiesPanel = function ($textEditor, shape, textPrimi
     // enough to add half of font-size to textarea's width to prevent auto-breaking to next line
     // which is wrong in our case
     if (Browser.msie) {
-        var fontSize = parseInt($textarea.css('font-size'), 10);
+        var fontSize = parseInt(textarea.style['font-size'], 10);
         textareaWidth += fontSize / 2;
         leftCoord -= fontSize / 4;
     }
 
-    $textEditor.css({'left': leftCoord + "px",'top': topCoord + "px"});
-    $textarea.css({'width': textareaWidth,'height': textareaHeight});
+    textEditor.style.left = leftCoord + "px";
+    textEditor.style.top = topCoord + "px";
+
+    textarea.style.width = textareaWidth + "px";
+    textarea.style.height = textareaHeight + "px";
 }
 
 /**
@@ -617,7 +632,7 @@ BuilderProperty.prototype = {
         }
 
         var selProperty = this.property; //save it in a separate variable as if refered by (this) it will refert to the 'select' DOM Object
-        select.setAttribute('property',selProperty);
+        select.className = selProperty;
         select.onchange = function(){
             //alert('Font size triggered. Figure id : ' + figureId + ' property: ' + selProperty + ' new value' + this.options[this.selectedIndex].value);
             updateShape(figureId, selProperty, this.options[this.selectedIndex].value, callback);

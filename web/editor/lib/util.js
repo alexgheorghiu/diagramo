@@ -911,7 +911,7 @@ function repeat(str, count){
  * @param {HTMLElement} input - DOM element to set selection
  * @param {Number} selectionStart - start position of selection
  * @param {Number} selectionEnd - end position of selection
- */
+ **/
 function setSelectionRange(input, selectionStart, selectionEnd) {
     if (input.setSelectionRange) {
         input.focus();
@@ -947,4 +947,113 @@ function Browser() {
     this.msie = M[0].indexOf("msie") > -1;
     this.mozilla = M[0].indexOf("firefox") > -1;
     this.version = M[1];
+}
+
+/**
+ * Binds event to DOM element
+ * @param {HTMLElement} element - DOM element to bind event
+ * @param {String} event - name of target event
+ * @param {Function} handler - function to bind
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function bindEvent(element, event, handler) {
+    if (element.attachEvent) {
+        element.attachEvent('on' + event, handler);  // IE
+    } else {
+        element.addEventListener(event, handler, false);
+    }
+}
+
+/**
+ * Binds event to NodeList
+ * @param {NodeList} list - NodeList to bind event
+ * @param {String} event - name of target event
+ * @param {Function} handler - function to bind
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function bindEventToNodeList(list, event, handler) {
+    var i;
+    var length = list.length;
+
+    for (i = 0; i < length; i++) {
+        bindEvent(list[i], event, handler);
+    }
+}
+
+/**
+ * Unbinds event to DOM element
+ * @param {HTMLElement} element - DOM element to unbind event
+ * @param {String} event - name of target event
+ * @param {Function} handler - function to unbind
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function unBindEvent(element, event, handler) {
+    if (element.detachEvent) {
+        element.detachEvent('on' + event, handler);  // IE
+    } else {
+        element.removeEventListener(event, handler, false);
+    }
+}
+
+/**
+ * Unbinds event from NodeList
+ * @param {NodeList} list - NodeList to unbind event
+ * @param {String} event - name of target event
+ * @param {Function} handler - function to unbind
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function unBindEventFromNodeList(list, event, handler) {
+    var i;
+    var length = list.length;
+
+    for (i = 0; i < length; i++) {
+        unBindEvent(list[i], event, handler);
+    }
+}
+
+/**
+ * Removes DOM element
+ * @param {HTMLElement} element - DOM element to remove
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function removeElement(element) {
+    element && element.parentNode && element.parentNode.removeChild(element);
+}
+
+/**
+ * Removes NodeList
+ * @param {NodeList} list - NodeList to remove
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function removeNodeList(list) {
+    var i;
+    var length = list.length;
+
+    for (i = 0; i < length; i++) {
+        removeElement(list[i]);
+    }
 }
