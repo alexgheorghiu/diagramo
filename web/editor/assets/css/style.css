@@ -299,6 +299,7 @@ body{
     display: none;
     z-index: 5;
     position: absolute;
+    height: 25px;
 }
 
 #text-editor textarea {

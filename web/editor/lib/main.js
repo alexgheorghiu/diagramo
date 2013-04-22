@@ -44,6 +44,7 @@ var fillColor=null;
 var strokeColor='#000000';
 var currentText=null;
 
+/** Instance of Browser Class for defining browser */
 var Browser = new Browser();
 
 /**Default top&bottom padding of Text editor's textarea*/
@@ -167,7 +168,8 @@ var STATE_GROUP_SELECTED = 'group_selected';
 var STATE_CONTAINER_SELECTED = 'container_selected';
 
 /**we have a text editing*/
-var STATE_TEXT_EDITING = STATE_FIGURE_SELECTED;
+//var STATE_TEXT_EDITING = STATE_FIGURE_SELECTED;
+var STATE_TEXT_EDITING = 'text_editing';
 
 /**Keeps current state*/
 var state = STATE_NONE;
@@ -192,6 +194,9 @@ var lastClick = [];
 
 /**Default line width*/
 var defaultLineWidth = 2;
+
+/**Current instance of TextEditorPopup*/
+var currentTextEditor = null;
 
 /**Current selected figure id ( -1 if none selected)*/
 var selectedFigureId = -1;
@@ -410,7 +415,7 @@ function setUpTextEditorPopup(figure, textPrimitiveId) {
     textEditor.innnerHTML = '';
     textEditor.className = 'active';
 
-    Builder.constructTextPropertiesPanel(textEditor, figure, textPrimitiveId);
+    currentTextEditor = Builder.constructTextPropertiesPanel(textEditor, figure, textPrimitiveId);
 }
 
 
@@ -568,7 +573,12 @@ function onKeyDown(ev){
             selectedConnectionPointId = -1;
             selectedConnectorId = -1;
 
-            
+            // clear current text editor
+            if (state == STATE_TEXT_EDITING) {
+                currentTextEditor.destroy();
+                currentTextEditor = null;
+            }
+
             state = STATE_NONE;
             break;
 
@@ -810,6 +820,27 @@ function onMouseDown(ev){
     //alert("onMouseDown() + state " + state + " none state is " + STATE_NONE);
     
     switch(state){
+        case STATE_TEXT_EDITING:
+
+            /*Description:
+             * If we have active text editor in popup and we click mouse.  Here is what can happen:
+             * - if we clicked inside current text editor that nothing is happening
+             * - if we clicked canvas:
+             *      - we will remove text editor
+             *      - we will switch to STATE_NONE
+             *      - we will run STATE_NONE case next (without break;)
+             */
+
+            if (currentTextEditor.mouseClickedInside(ev)) {
+                break;
+            } else {
+                currentTextEditor.destroy();
+                currentTextEditor = null;
+
+                state = STATE_NONE;
+            }
+
+
         case STATE_NONE:
             //alert("onMouseDown() - STATE_NONE");
             snapMonitor = [0,0];
@@ -892,7 +923,6 @@ function onMouseDown(ev){
 //            redraw = true;
             throw "canvas> onMouseDown> STATE_FIGURE_CREATE> : this should not happen";  
             break;
-
 
         case STATE_FIGURE_SELECTED:
             snapMonitor = [0,0];
@@ -1807,7 +1837,29 @@ function onMouseMove(ev){
             }
             
             break;
-            
+
+        case STATE_TEXT_EDITING: // the same behaviour as STATE_FIGURE_SELECTED without pressed mouse
+
+            var handle = HandleManager.handleGet(x,y); //TODO: we should be able to replace it with .getSelectedHandle()
+
+            if(handle != null){ //We are over a Handle of selected Figure
+                canvas.style.cursor = handle.getCursor();
+                Log.info('onMouseMove() - STATE_FIGURE_SELECTED + over a Handler = change cursor to: ' + canvas.style.cursor);
+            }
+            else{
+                /*move figure only if no handle is selected*/
+                var tmpFigId = STACK.figureGetByXY(x, y); //pick first figure from (x, y)
+                if(tmpFigId != -1){
+                    canvas.style.cursor = 'move';
+                    Log.info("onMouseMove() + STATE_FIGURE_SELECTED + over a figure = change cursor");
+                }
+                else{
+                    canvas.style.cursor = 'default';
+                    Log.info("onMouseMove() + STATE_FIGURE_SELECTED + over nothin = change cursor to default");
+                }
+            }
+
+            break;
             
        case STATE_CONTAINER_SELECTED:
            //throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";           
@@ -2113,10 +2165,7 @@ function onDblClick(ev) {
             selectedFigureId = fId;
             selectedConnectorId = -1;
 
-            // TODO: configure STATE_TEXT_EDITING
-            // currently STATE_TEXT_EDITING = STATE_FIGURE_SELECTED
             state = STATE_TEXT_EDITING;
-            //            state = STATE_FIGURE_SELECTED;
 
             // set edit bar
             setUpTextEditorPopup(figure, textPrimitiveId);

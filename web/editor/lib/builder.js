@@ -40,13 +40,18 @@ Builder.constructPropertiesPanel = function(DOMObject, shape){
 }
 
 /**
- *Creates the property panel for a Text primitive of shape {Figure}
+ *Creates the property panel for a Text primitive of shape {Figure} and returns it
  *@param {DOMObject} textEditor - the div of the properties panel
  *@param {Figure} shape - the figure - parent of Text primitive
  *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
+ *
+ *@return {TextEditorPopup} - new instance of TextEditorPopup after init
  **/
 Builder.constructTextPropertiesPanel = function(textEditor, shape, textPrimitiveId){
-    (new TextEditorPopup(textEditor, shape, textPrimitiveId)).init();
+    var textEditor = new TextEditorPopup(textEditor, shape, textPrimitiveId);
+    textEditor.init();
+
+    return textEditor;
 }
 
 /**
@@ -617,21 +622,21 @@ TextEditorPopup.prototype.init = function (){
     setSelectionRange(textarea, 0, textarea.value.length);
 
     // wrapper for calling mouseDownHandler in TextEditorPopup closure
-    var mouseDownWrapper = function (e){
-        self.mouseDownHandler(e);
-    };
+//    var mouseDownWrapper = function (e){
+//        self.mouseDownHandler(e);
+//    };
 
     // temporary handler for firing first click outside of Text editor
-    bindEvent(document, 'mousedown', mouseDownWrapper);
+//    bindEvent(document, 'mousedown', mouseDownWrapper);
 
     // wrapper for calling keyDownHandler in TextEditorPopup closure
-    var keyDownWrapper = function (e){
-        self.keyDownHandler(e);
-    };
+//    var keyDownWrapper = function (e){
+//        self.keyDownHandler(e);
+//    };
 
     // temporary handler to stop bubbling keydown event outside of inputs of Text editor
     // for example, figure moving on arrow keys
-    bindEventToNodeList(this.element.getElementsByTagName('select'), 'keydown', keyDownWrapper);
+//    bindEventToNodeList(this.element.getElementsByTagName('select'), 'keydown', keyDownWrapper);
 }
 
 /**
@@ -651,47 +656,71 @@ TextEditorPopup.prototype.destroy = function (){
  *Handler to stop bubbling keydown event outside of inputs
  *@param {Event} e - event object
  **/
-TextEditorPopup.prototype.keyDownHandler = function (e) {
-    switch(e.keyCode){
-        case KEY.CTRL: //Ctrl
-        case KEY.Z:
-            break;
-        case KEY.ESCAPE: //Esc
-            this.destroy();
-        default:
-            if (e.stopPropagation) {
-                e.stopPropagation();
-            } else {
-                e.cancelBubble = true; // IE
-            }
-
-            break;
-    }
-}
+//TextEditorPopup.prototype.keyDownHandler = function (e) {
+//    switch(e.keyCode){
+//        case KEY.CTRL: //Ctrl
+//        case KEY.Z:
+//            break;
+//        case KEY.ESCAPE: //Esc
+//            this.destroy();
+//        default:
+//            if (e.stopPropagation) {
+//                e.stopPropagation();
+//            } else {
+//                e.cancelBubble = true; // IE
+//            }
+//
+//            break;
+//    }
+//}
 
 /**
  *Handler for firing first click outside of Text editor
  *@param {Event} e - event object
  **/
-TextEditorPopup.prototype.mouseDownHandler = function (e) {
+//TextEditorPopup.prototype.mouseDownHandler = function (e) {
+//    var target = e.target || e.srcElement;
+//
+//    check if user fired mouse down on the part of editor or active color picker
+//    actually active color picker in that moment can be only for Text edit
+//    if (target.className !== 'text-edit-tools'
+//        && target.parentNode.className !== 'text-edit-tools'
+//        && target.parentNode.parentNode.className !== 'text-edit-tools'
+//        && target.parentNode.parentNode.id !== 'text-editor'
+//
+//        && target.className !== 'color_picker'
+//
+//        && target.id !== 'color_selector'
+//        && target.parentNode.id !== 'color_selector'
+//        && target.parentNode.parentNode.id !== 'color_selector') {
+//
+//        this.destroy();
+//    }
+//}
+
+/**
+ *Returns true if mouse clicked inside TextEditorPopup
+ *@param {Event} e - mouseDown event object
+ *
+ *@return {Boolean} - true if clicked inside
+ **/
+TextEditorPopup.prototype.mouseClickedInside = function (e) {
     var target = e.target || e.srcElement;
 
     // check if user fired mouse down on the part of editor or active color picker
     // actually active color picker in that moment can be only for Text edit
-    if (target.className !== 'text-edit-tools'
-        && target.parentNode.className !== 'text-edit-tools'
-        && target.parentNode.parentNode.className !== 'text-edit-tools'
-        && target.parentNode.parentNode.id !== 'text-editor'
+    return (target.className === 'text-edit-tools'
+        || target.parentNode.className === 'text-edit-tools'
+        || target.parentNode.parentNode.className === 'text-edit-tools'
+        || target.parentNode.parentNode.id === 'text-editor'
 
-        && target.className !== 'color_picker'
+        || target.className === 'color_picker'
 
-        && target.id !== 'color_selector'
-        && target.parentNode.id !== 'color_selector'
-        && target.parentNode.parentNode.id !== 'color_selector') {
-
-        this.destroy();
-    }
+        || target.id === 'color_selector'
+        || target.parentNode.id === 'color_selector'
+        || target.parentNode.parentNode.id === 'color_selector');
 }
+
 
 /**
  *Places and sets size to the property panel
