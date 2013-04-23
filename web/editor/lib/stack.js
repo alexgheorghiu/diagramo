@@ -832,7 +832,7 @@ Stack.prototype = {
         
         
         //paint handlers for selected shape
-        if(state == STATE_FIGURE_SELECTED || state == STATE_TEXT_EDITING){ //FIGURE
+        if(state == STATE_FIGURE_SELECTED){ //FIGURE
             var f = this.figureGetById(selectedFigureId);
             HandleManager.shapeSet(f);
             //alert('Paint handles');

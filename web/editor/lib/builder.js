@@ -256,31 +256,30 @@ BuilderProperty.prototype = {
      *
      *@param {HTMLElement} DOMObject - the div of the properties panel
      *@param {Number} figureId - the id of the figure we are using
-     *@param {Function} callback - callback to call on property change
      */
-    injectInputArea:function(DOMObject, figureId, callback){
+    injectInputArea:function(DOMObject, figureId){
         if(this.name == BuilderProperty.SEPARATOR){
             DOMObject.appendChild(document.createElement("hr"));
             return;
         }
         else if(this.type == BuilderProperty.TYPE_COLOR){
-            this.generateColorCode(DOMObject, figureId, callback);
+            this.generateColorCode(DOMObject, figureId);
         }
         else if(this.type == BuilderProperty.TYPE_TEXT){
-            this.generateTextCode(DOMObject, figureId, callback);
+            this.generateTextCode(DOMObject, figureId);
         }
         else if(this.type == BuilderProperty.TYPE_SINGLE_TEXT){
             this.generateSingleTextCode(DOMObject,figureId);
         }
         else if(this.type == BuilderProperty.TYPE_TEXT_FONT_SIZE){            
-            this.generateArrayCode(DOMObject,figureId, BuilderProperty.FONT_SIZES, callback);
+            this.generateArrayCode(DOMObject,figureId, BuilderProperty.FONT_SIZES);
 //            this.generateFontSizesCode(DOMObject,figureId);
         }
         else if(this.type == BuilderProperty.TYPE_TEXT_FONT_FAMILY){
-            this.generateArrayCode(DOMObject,figureId, Text.FONTS, callback);
+            this.generateArrayCode(DOMObject,figureId, Text.FONTS);
         }
         else if(this.type == BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT){
-            this.generateArrayCode(DOMObject,figureId, Text.ALIGNMENTS, callback);
+            this.generateArrayCode(DOMObject,figureId, Text.ALIGNMENTS);
         }
         else if(this.type == BuilderProperty.TYPE_CONNECTOR_END){
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.CONNECTOR_ENDS);
@@ -327,9 +326,8 @@ BuilderProperty.prototype = {
      *
      *@param {HTMLElement} DOMObject - the div of the properties panel
      *@param {Number} shapeId - the id of the {Figure} or {Connector} we are using
-     *@param {Function} callback - callback to call on property change
      **/
-    generateTextCode:function(DOMObject, shapeId, callback){
+    generateTextCode:function(DOMObject, shapeId){
         var uniqueId = new Date().getTime();
         var value = this.getValue(shapeId);
 
@@ -350,7 +348,7 @@ BuilderProperty.prototype = {
 
         text.onchange = function(shapeId,property){
             return function(){
-                updateShape(shapeId, property, this.value, callback)
+                updateShape(shapeId, property, this.value)
             }
         }(shapeId, this.property);
 
@@ -388,7 +386,7 @@ BuilderProperty.prototype = {
         text.onchange = function(figureId,property){
             return function(){
                 Log.info("Builder.generateSingleTextCode() value: " + this.value);
-                updateShape(figureId, property, this.value)
+                updateShape(figureId, property, this.value);
             }
         }(figureId, this.property);
 
@@ -404,9 +402,8 @@ BuilderProperty.prototype = {
      *@param {HTMLElement} DOMObject - the div of the properties panel
      *@param {Number} figureId - the id of the figure we are using
      *@param {Array} v - a vector or hashes ex: [{Text:'Normal', Value:'Normal'},{Text:'Arrow', Value:'Arrow'}]
-     *@param {Function} callback - callback to call on property change
      */
-    generateArrayCode:function(DOMObject, figureId, v, callback){
+    generateArrayCode:function(DOMObject, figureId, v){
 //        Log.info("Font size length: " + v.length);
         var uniqueId = new Date().getTime();
         
@@ -435,7 +432,7 @@ BuilderProperty.prototype = {
         var selProperty = this.property; //save it in a separate variable as if refered by (this) it will refert to the 'select' DOM Object
         select.onchange = function(){
             //alert('Font size triggered. Figure id : ' + figureId + ' property: ' + selProperty + ' new value' + this.options[this.selectedIndex].value);
-            updateShape(figureId, selProperty, this.options[this.selectedIndex].value, callback);
+            updateShape(figureId, selProperty, this.options[this.selectedIndex].value);
         };
 
         DOMObject.appendChild(div);
@@ -447,9 +444,8 @@ BuilderProperty.prototype = {
      *
      *@param{HTMLElement} DOMObject - the div of the properties panel
      *@param{Number} figureId - the id of the figure we are using
-     *@param {Function} callback - callback to call on property change
      */
-    generateColorCode: function(DOMObject, figureId, callback){
+    generateColorCode: function(DOMObject, figureId){
         var value = this.getValue(figureId);
        
         var uniqueId = new Date().getTime();
@@ -472,7 +468,7 @@ BuilderProperty.prototype = {
         var propExposedToAnonymous = this.property;
         $('#colorpickerHolder'+uniqueId).change(function() {
             Log.info('generateColorCode(): figureId: ' + figureId + 'type: ' + this.type + ' name: ' + this.name + ' property: ' + this.property);
-            updateShape(figureId, propExposedToAnonymous, $('#colorpickerHolder'+uniqueId).val(), callback);
+            updateShape(figureId, propExposedToAnonymous, $('#colorpickerHolder'+uniqueId).val());
         });
     },
     
@@ -534,9 +530,14 @@ BuilderProperty.prototype = {
 }
 
 
+TextEditorPopup.prototype.STRING_PROPERTY_ENDING = 'str';
+TextEditorPopup.prototype.SIZE_PROPERTY_ENDING = 'size';
+TextEditorPopup.prototype.FONT_PROPERTY_ENDING = 'font';
+TextEditorPopup.prototype.ALIGN_PROPERTY_ENDING = 'align';
+TextEditorPopup.prototype.COLOR_PROPERTY_ENDING = 'style.fillStyle';
 
 /**
- * This instance is responsable for creating and updating Text Editor Popup
+ * This instance is responsible for creating and updating Text Editor Popup
  *
  * @constructor
  * @this {TextEditorPopup}
@@ -553,11 +554,22 @@ function TextEditorPopup(element, shape, textPrimitiveId){
     var propertyPrefix = "primitives." + this.textPrimitiveId + ".";
 
     // value of BuiderProperty::property
-    this.stringPropertyName = propertyPrefix + 'str';
-    this.sizePropertyName = propertyPrefix + 'size';
-    this.fontPropertyName = propertyPrefix + 'font';
-    this.alignPropertyName = propertyPrefix + 'align';
-    this.colorPropertyName = propertyPrefix + 'style.fillStyle';
+    this.stringPropertyName = propertyPrefix + this.STRING_PROPERTY_ENDING;
+    this.sizePropertyName = propertyPrefix + this.SIZE_PROPERTY_ENDING;
+    this.fontPropertyName = propertyPrefix + this.FONT_PROPERTY_ENDING;
+    this.alignPropertyName = propertyPrefix + this.ALIGN_PROPERTY_ENDING;
+    this.colorPropertyName = propertyPrefix + this.COLOR_PROPERTY_ENDING;
+}
+
+/**
+ * Checks if TextEditorPopup refers to target shape and id of Text primitive
+ * @param {Figure} shape - target figure to check
+ * @param {Number} textPrimitiveId - the id value of a target Text primitive
+ *
+ *@return {Boolean} - true if refers to target objects
+ **/
+TextEditorPopup.prototype.refersTo = function (shape, textPrimitiveId) {
+    return (this.shape.equals(shape) && this.textPrimitiveId === textPrimitiveId);
 }
 
 /**
@@ -576,29 +588,20 @@ TextEditorPopup.prototype.init = function (){
     toolContainer.appendChild(toolDiv);
     this.element.appendChild(toolContainer);
 
-    // changing property inside Text Editor
-    // provides WYSIWYG functionality
-    var self = this;
-
-    // wrapper for calling setProperty in TextEditorPopup closure
-    var setPropertyWrapper = function (property, value) {
-        self.setProperty(property, value);
-    };
-
     for(var i = 0; i < this.shape.properties.length; i++){
         var curProperty = this.shape.properties[i].property;
         if (curProperty != null) {
             var curValue = this.shape.properties[i].getValue(this.shape.id);
             switch (curProperty){
                 case this.stringPropertyName:
-                    this.shape.properties[i].injectInputArea(this.element, this.shape.id, setPropertyWrapper);
+                    this.shape.properties[i].injectInputArea(this.element, this.shape.id);
                     textarea = this.element.getElementsByTagName('textarea')[0];
 
                     // remove <br> tags from text-editor
                     removeNodeList(this.element.getElementsByTagName('br'));
 
                     // set Text editor properties on initialization
-                    setPropertyWrapper(curProperty, curValue);
+                    this.setProperty(curProperty, curValue);
 
                     break;
 
@@ -606,10 +609,10 @@ TextEditorPopup.prototype.init = function (){
                 case this.fontPropertyName:
                 case this.alignPropertyName:
                 case this.colorPropertyName:
-                    this.shape.properties[i].injectInputArea(toolDiv, this.shape.id, setPropertyWrapper);
+                    this.shape.properties[i].injectInputArea(toolDiv, this.shape.id);
 
                     // set Text editor properties on initialization
-                    setPropertyWrapper(curProperty, curValue);
+                    this.setProperty(curProperty, curValue);
 
                     break;
             }
@@ -620,23 +623,6 @@ TextEditorPopup.prototype.init = function (){
 
     // select all text inside textarea (like in Visio)
     setSelectionRange(textarea, 0, textarea.value.length);
-
-    // wrapper for calling mouseDownHandler in TextEditorPopup closure
-//    var mouseDownWrapper = function (e){
-//        self.mouseDownHandler(e);
-//    };
-
-    // temporary handler for firing first click outside of Text editor
-//    bindEvent(document, 'mousedown', mouseDownWrapper);
-
-    // wrapper for calling keyDownHandler in TextEditorPopup closure
-//    var keyDownWrapper = function (e){
-//        self.keyDownHandler(e);
-//    };
-
-    // temporary handler to stop bubbling keydown event outside of inputs of Text editor
-    // for example, figure moving on arrow keys
-//    bindEventToNodeList(this.element.getElementsByTagName('select'), 'keydown', keyDownWrapper);
 }
 
 /**
@@ -646,57 +632,8 @@ TextEditorPopup.prototype.destroy = function (){
     this.element.className = '';
     this.element.style.cssText = '';
     this.element.innerHTML = '';
-//
-//    unBindEvent(document, 'mousedown', this.mouseDownHandler);
-//    unBindEventFromNodeList(this.element.getElementsByTagName('select'), 'keydown', this.keyDownHandler);
 }
 
-
-/**
- *Handler to stop bubbling keydown event outside of inputs
- *@param {Event} e - event object
- **/
-//TextEditorPopup.prototype.keyDownHandler = function (e) {
-//    switch(e.keyCode){
-//        case KEY.CTRL: //Ctrl
-//        case KEY.Z:
-//            break;
-//        case KEY.ESCAPE: //Esc
-//            this.destroy();
-//        default:
-//            if (e.stopPropagation) {
-//                e.stopPropagation();
-//            } else {
-//                e.cancelBubble = true; // IE
-//            }
-//
-//            break;
-//    }
-//}
-
-/**
- *Handler for firing first click outside of Text editor
- *@param {Event} e - event object
- **/
-//TextEditorPopup.prototype.mouseDownHandler = function (e) {
-//    var target = e.target || e.srcElement;
-//
-//    check if user fired mouse down on the part of editor or active color picker
-//    actually active color picker in that moment can be only for Text edit
-//    if (target.className !== 'text-edit-tools'
-//        && target.parentNode.className !== 'text-edit-tools'
-//        && target.parentNode.parentNode.className !== 'text-edit-tools'
-//        && target.parentNode.parentNode.id !== 'text-editor'
-//
-//        && target.className !== 'color_picker'
-//
-//        && target.id !== 'color_selector'
-//        && target.parentNode.id !== 'color_selector'
-//        && target.parentNode.parentNode.id !== 'color_selector') {
-//
-//        this.destroy();
-//    }
-//}
 
 /**
  *Returns true if mouse clicked inside TextEditorPopup
@@ -768,6 +705,8 @@ TextEditorPopup.prototype.placeAndAutoSize = function () {
 /**
  * Changing property inside Text Editor
  * provides WYSIWYG functionality
+ * @param {String} property - property name that is being edited
+ * @param {Object} value - the value to set the property to
  **/
 TextEditorPopup.prototype.setProperty = function (property, value) {
     if (this.element.className === 'active') {

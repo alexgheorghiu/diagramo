@@ -60,7 +60,15 @@ FigureCreateCommand.prototype = {
     
     
     /**This method should be called every time the Command should be undone*/
-    undo : function(){ 
+    undo : function(){
+
+        // if current figure is in text editing state
+        if (state == STATE_TEXT_EDITING) {
+            // remove current text editor
+            currentTextEditor.destroy();
+            currentTextEditor = null;
+        }
+
         STACK.figureRemoveById(this.figureId);
         state = STATE_NONE;
     }

@@ -5,16 +5,19 @@
  * @param figureId {Numeric} -  the id of the object
  * @param property {String} - property name that is being edited on the figure
  * @param newValue {Object} - the value to set the property to
- * @param callback {Function} - callback to call on property change
  * @author Alex, Artyom
  */
-function ShapeChangePropertyCommand(figureId, property, newValue, callback){
+function ShapeChangePropertyCommand(figureId, property, newValue){
     this.figureId = figureId;
     this.property = property;    
     this.newValue = newValue;
-    this.callback = callback;
     this.previousValue = this._getValue(figureId, property);
     this.firstExecute = true;
+
+    // check if property corresponds to a Text primitive
+    // isTextPrimitiveProperty property used for calling TextEditorPopup callback on property change
+    this.textPrimitiveId = this._getTextPrimitiveId();
+    this.isTextPrimitiveProperty = this.textPrimitiveId !== -1;
     
     this.oType = "ShapeChangePropertyCommand";
 }
@@ -28,9 +31,15 @@ ShapeChangePropertyCommand.prototype = {
             this.firstExecute = false; 
             //setUpEditPanel(STACK.figureGetById(this.figureId));
 
-            // fire callback if it's a function
-            if (typeof(this.callback) === 'function') {
-                this.callback(this.property, this.newValue);
+            // if property change of Text primitive executed
+            // then state must be equal to text editing
+            // and we call it's setProperty method to provide WYSIWYG functionality
+            if (this.isTextPrimitiveProperty) {
+                if (state == STATE_TEXT_EDITING) {
+                    currentTextEditor.setProperty(this.property, this.newValue);
+                } else {
+                    throw "ShapeChangePropertyCommand:execute() - this should never happen";
+                }
             }
         }
         else{
@@ -47,9 +56,50 @@ ShapeChangePropertyCommand.prototype = {
         
         setUpEditPanel(shape);
 
-        // fire callback if it's a function
-        if (typeof(this.callback) === 'function') {
-            this.callback(this.property, this.previousValue);
+        // if property of Text primitive is changing back
+        // then we need to set this change on TextEditorPopup
+        // to provide WYSIWYG functionality
+        if (this.isTextPrimitiveProperty) {
+
+            // if we already in text editing state
+            if (state == STATE_TEXT_EDITING) {
+                // if currentTextEditor refers to another shape/primitive
+                // then we destroy current and create new TextEditorPopup
+                if (!currentTextEditor.refersTo(shape, this.textPrimitiveId)) {
+                    currentTextEditor.destroy();
+                    setUpTextEditorPopup(shape, this.textPrimitiveId);
+                }
+            } else {
+                // set current state as text editing
+
+                // if group selected
+                if (state == STATE_GROUP_SELECTED) {
+                    var selectedGroup = STACK.groupGetById(selectedGroupId);
+
+                    // if group is temporary then destroy it
+                    if(!selectedGroup.permanent){
+                        STACK.groupDestroy(selectedGroupId);
+                    }
+
+                    //deselect current group
+                    selectedGroupId = -1;
+                }
+
+                // deselect current figure
+                selectedFigureId = -1;
+
+                // deselect current connector
+                selectedConnectorId = -1;
+
+                // set current state
+                state = STATE_TEXT_EDITING;
+
+                // set up text editor
+                setUpTextEditorPopup(shape, this.textPrimitiveId);
+            }
+
+            // and we call setProperty of currentTextEditor method to provide WYSIWYG functionality
+            currentTextEditor.setProperty(this.property, this.previousValue);
         }
     },
     
@@ -111,6 +161,24 @@ ShapeChangePropertyCommand.prototype = {
         else{
             propertyObject[propertyAccessors[propertyAccessors.length -1]] = value;
         }  
+    },
+
+    /**
+     * Checks if property applied to Text primitive
+     * @return -1 if property didn't apply to Text primitive or id of the corresponding Text primitive otherwise
+    **/
+    _getTextPrimitiveId : function() {
+        var textPrimitiveId = -1;
+
+        // check by RegExp - is property applying to a Text primitive
+        // typical examples: "primitives.3.size", "primitives.1.str", "primitives.5.font"
+        if (/primitives\.\d+\.(str|size|font|align|style\.fillStyle)/g.test(this.property)) {
+            // according to RegExp this (between first and second dots) part is a number
+            var id = this.property.split('.')[1];
+
+            textPrimitiveId = parseInt(id, 10);
+        }
+        return textPrimitiveId;
     }
 }
 

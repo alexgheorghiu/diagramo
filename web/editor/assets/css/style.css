@@ -307,6 +307,9 @@ body{
     overflow: hidden;
     resize: none;
     line-height: 125%;
+
+    word-wrap: normal;
+    overflow-x: hidden;
 }
 
 #text-editor .text-edit-tools-container {
