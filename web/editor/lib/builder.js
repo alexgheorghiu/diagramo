@@ -719,7 +719,7 @@ TextEditorPopup.prototype.setProperty = function (property, value) {
     switch(property) {
         case this.sizePropertyName:
             // set new property value to editor's textarea
-            textarea.style['font-size'] = value + 'px';
+            textarea.style.fontSize = value + 'px';
 
             // set new property value to editor's tool
             this.tools.getElementsByClassName(property)[0].value = value;
@@ -727,7 +727,7 @@ TextEditorPopup.prototype.setProperty = function (property, value) {
 
         case this.fontPropertyName:
             // set new property value to editor's textarea
-            textarea.style['font-family'] = value;
+            textarea.style.fontFamily = value;
 
             // set new property value to editor's tool
             this.tools.getElementsByClassName(property)[0].value = value.toLowerCase();
@@ -735,7 +735,13 @@ TextEditorPopup.prototype.setProperty = function (property, value) {
 
         case this.alignPropertyName:
             // set new property value to editor's textarea
-            textarea.style['text-align'] = value;
+            textarea.style.textAlign = value;
+
+            // IE doesn't apply text-align property correctly to all lines of the textarea on a fly
+            // that is why we just copy it's text and paste it back to refresh text rendering
+            if (Browser.msie) {
+                textarea.value = textarea.value;
+            }
 
             // set new property value to editor's tool
             this.tools.getElementsByClassName(property)[0].value = value;
