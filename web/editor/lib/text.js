@@ -358,13 +358,13 @@ Text.prototype = {
             nBounds.transform( Matrix.translationMatrix(-this.vector[0].x,-this.vector[0].y) );
             nBounds.transform(Matrix.rotationMatrix(angle));
             nBounds.transform(Matrix.translationMatrix(this.vector[0].x,this.vector[0].y));
-            nBounds.style.strokeStyle = "rgb(250, 34, 35);";
+            nBounds.style.strokeStyle = "rgb(250, 34, 35)";
             //alert(this.bounds);
             nBounds.paint(context);
 
             //text bounds (GREEN) - the actually bounds after a rotation
             context.save();
-            context.strokeStyle = "rgb(30, 204, 35);";
+            context.strokeStyle = "rgb(30, 204, 35)";
             var v = nBounds.getBounds();
             context.beginPath();
             context.moveTo(v[0], v[1]);
