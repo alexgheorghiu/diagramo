@@ -42,13 +42,14 @@ Builder.constructPropertiesPanel = function(DOMObject, shape){
 /**
  *Creates the property panel for a Text primitive of shape {Figure} and returns it
  *@param {DOMObject} textEditor - the div of the properties panel
+ *@param {DOMObject} textEditorTools - the div of the text editor's tools
  *@param {Figure} shape - the figure - parent of Text primitive
  *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
  *
  *@return {TextEditorPopup} - new instance of TextEditorPopup after init
  **/
-Builder.constructTextPropertiesPanel = function(textEditor, shape, textPrimitiveId){
-    var textEditor = new TextEditorPopup(textEditor, shape, textPrimitiveId);
+Builder.constructTextPropertiesPanel = function(textEditor, textEditorTools, shape, textPrimitiveId){
+    var textEditor = new TextEditorPopup(textEditor, textEditorTools, shape, textPrimitiveId);
     textEditor.init();
 
     return textEditor;
@@ -541,12 +542,14 @@ TextEditorPopup.prototype.COLOR_PROPERTY_ENDING = 'style.fillStyle';
  *
  * @constructor
  * @this {TextEditorPopup}
- * @param {HTMLElement} element - the DOM object to create Text Editor Popup
- *@param {Figure} shape - the figure - parent of Text primitive
- *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
+ * @param {HTMLElement} editor - the DOM object to create Text Editor Popup
+ * @param {HTMLElement} tools - the DOM object to create Text Editor Tools
+ * @param {Figure} shape - the figure - parent of Text primitive
+ * @param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
  */
-function TextEditorPopup(element, shape, textPrimitiveId){
-    this.element = element;
+function TextEditorPopup(editor, tools, shape, textPrimitiveId){
+    this.editor = editor;
+    this.tools = tools;
     this.shape = shape;
     this.textPrimitiveId = textPrimitiveId;
 
@@ -578,27 +581,18 @@ TextEditorPopup.prototype.refersTo = function (shape, textPrimitiveId) {
 TextEditorPopup.prototype.init = function (){
     var textarea;
 
-    // <div> for text tools (font size, font family, alignment and color)
-    var toolContainer = document.createElement("div");
-    toolContainer.className = 'text-edit-tools-container';
-
-    var toolDiv = document.createElement("div");
-    toolDiv.className = 'text-edit-tools';
-
-    toolContainer.appendChild(toolDiv);
-    this.element.appendChild(toolContainer);
-
+    // <div> for text tools contains font size, font family, alignment and color
     for(var i = 0; i < this.shape.properties.length; i++){
         var curProperty = this.shape.properties[i].property;
         if (curProperty != null) {
             var curValue = this.shape.properties[i].getValue(this.shape.id);
             switch (curProperty){
                 case this.stringPropertyName:
-                    this.shape.properties[i].injectInputArea(this.element, this.shape.id);
-                    textarea = this.element.getElementsByTagName('textarea')[0];
+                    this.shape.properties[i].injectInputArea(this.editor, this.shape.id);
+                    textarea = this.editor.getElementsByTagName('textarea')[0];
 
                     // remove <br> tags from text-editor
-                    removeNodeList(this.element.getElementsByTagName('br'));
+                    removeNodeList(this.editor.getElementsByTagName('br'));
 
                     // set Text editor properties on initialization
                     this.setProperty(curProperty, curValue);
@@ -609,7 +603,7 @@ TextEditorPopup.prototype.init = function (){
                 case this.fontPropertyName:
                 case this.alignPropertyName:
                 case this.colorPropertyName:
-                    this.shape.properties[i].injectInputArea(toolDiv, this.shape.id);
+                    this.shape.properties[i].injectInputArea(this.tools, this.shape.id);
 
                     // set Text editor properties on initialization
                     this.setProperty(curProperty, curValue);
@@ -619,6 +613,9 @@ TextEditorPopup.prototype.init = function (){
         }
     }
 
+    this.editor.className = 'active';
+    this.tools.className = 'active';
+
     this.placeAndAutoSize();
 
     // select all text inside textarea (like in Visio)
@@ -626,12 +623,16 @@ TextEditorPopup.prototype.init = function (){
 }
 
 /**
- *Removes DOM structure and unbind events
+ *Removes DOM structure of editor and it's tools
  **/
 TextEditorPopup.prototype.destroy = function (){
-    this.element.className = '';
-    this.element.style.cssText = '';
-    this.element.innerHTML = '';
+    this.editor.className = '';
+    this.editor.style.cssText = '';
+    this.editor.innerHTML = '';
+
+    this.tools.className = '';
+    this.tools.style.cssText = '';
+    this.tools.innerHTML = '';
 }
 
 
@@ -644,12 +645,15 @@ TextEditorPopup.prototype.destroy = function (){
 TextEditorPopup.prototype.mouseClickedInside = function (e) {
     var target = e.target || e.srcElement;
 
-    // check if user fired mouse down on the part of editor or active color picker
+    // check if user fired mouse down on the part of editor, it's tools or active color picker
     // actually active color picker in that moment can be only for Text edit
-    return (target.className === 'text-edit-tools'
-        || target.parentNode.className === 'text-edit-tools'
-        || target.parentNode.parentNode.className === 'text-edit-tools'
-        || target.parentNode.parentNode.id === 'text-editor'
+    return (target.id === this.editor.id
+        || target.parentNode.id === this.editor.id
+        || target.parentNode.parentNode.id === this.editor.id
+
+        || target.id === this.tools.id
+        || target.parentNode.id === this.tools.id
+        || target.parentNode.parentNode.id === this.tools.id
 
         || target.className === 'color_picker'
 
@@ -663,16 +667,15 @@ TextEditorPopup.prototype.mouseClickedInside = function (e) {
  *Places and sets size to the property panel
  **/
 TextEditorPopup.prototype.placeAndAutoSize = function () {
-    var textarea = this.element.getElementsByTagName('textarea')[0];
+    var textarea = this.editor.getElementsByTagName('textarea')[0];
 
     // set edit dialog position to top left (first) bound point of Text primitive
     var textBounds = this.shape.primitives[this.textPrimitiveId].getBounds();
     var leftCoord = textBounds[0] - defaultLineWidth * 2 - defaultEditorPadding / 2;
 
     // get toolbox height, because it's situated at the top of Text editor
-    var toolbox = this.element.getElementsByClassName('text-edit-tools-container')[0];
-    var toolboxHeight = toolbox.offsetHeight;
-    var topCoord = textBounds[1] - toolboxHeight - defaultLineWidth * 2 - defaultEditorPadding / 2;
+    var toolboxHeight = this.tools.offsetHeight;
+    var topCoord = textBounds[1] - defaultLineWidth * 2 - defaultEditorPadding / 2;
 
     var textareaWidth = textBounds[2] - textBounds[0];
     var textareaHeight = textBounds[3] - textBounds[1];
@@ -680,10 +683,10 @@ TextEditorPopup.prototype.placeAndAutoSize = function () {
     // Firefox includes border & padding as part of width and height,
     // so width and height should additionally include border and padding twice
     if (Browser.mozilla) {
-        textareaHeight += (defaultEditorBorderWidth + defaultEditorPadding) * 2;
-        topCoord -= (defaultEditorBorderWidth + defaultEditorPadding);
-        textareaWidth += (defaultEditorBorderWidth + defaultEditorPadding) * 2;
-        leftCoord -= (defaultEditorBorderWidth + defaultEditorPadding);
+        textareaHeight += (defaultEditorPadding) * 2;
+        topCoord -= (defaultEditorPadding);
+        textareaWidth += (defaultEditorPadding) * 2;
+        leftCoord -= (defaultEditorPadding);
     }
 
     // some of IE magic:
@@ -695,8 +698,11 @@ TextEditorPopup.prototype.placeAndAutoSize = function () {
         leftCoord -= fontSize / 4;
     }
 
-    this.element.style.left = leftCoord + "px";
-    this.element.style.top = topCoord + "px";
+    this.editor.style.left = leftCoord + "px";
+    this.editor.style.top = topCoord + "px";
+
+    this.tools.style.left = leftCoord + "px";
+    this.tools.style.top = topCoord - toolboxHeight + "px";
 
     textarea.style.width = textareaWidth + "px";
     textarea.style.height = textareaHeight + "px";
@@ -709,44 +715,42 @@ TextEditorPopup.prototype.placeAndAutoSize = function () {
  * @param {Object} value - the value to set the property to
  **/
 TextEditorPopup.prototype.setProperty = function (property, value) {
-    if (this.element.className === 'active') {
-        var textarea = this.element.getElementsByTagName('textarea')[0];
-        switch(property) {
-            case this.sizePropertyName:
-                // set new property value to editor's textarea
-                textarea.style['font-size'] = value + 'px';
+    var textarea = this.editor.getElementsByTagName('textarea')[0];
+    switch(property) {
+        case this.sizePropertyName:
+            // set new property value to editor's textarea
+            textarea.style['font-size'] = value + 'px';
 
-                // set new property value to editor's tool
-                this.element.getElementsByClassName(property)[0].value = value;
-                break;
+            // set new property value to editor's tool
+            this.tools.getElementsByClassName(property)[0].value = value;
+            break;
 
-            case this.fontPropertyName:
-                // set new property value to editor's textarea
-                textarea.style['font-family'] = value;
+        case this.fontPropertyName:
+            // set new property value to editor's textarea
+            textarea.style['font-family'] = value;
 
-                // set new property value to editor's tool
-                this.element.getElementsByClassName(property)[0].value = value.toLowerCase();
-                break;
+            // set new property value to editor's tool
+            this.tools.getElementsByClassName(property)[0].value = value.toLowerCase();
+            break;
 
-            case this.alignPropertyName:
-                // set new property value to editor's textarea
-                textarea.style['text-align'] = value;
+        case this.alignPropertyName:
+            // set new property value to editor's textarea
+            textarea.style['text-align'] = value;
 
-                // set new property value to editor's tool
-                this.element.getElementsByClassName(property)[0].value = value;
-                break;
+            // set new property value to editor's tool
+            this.tools.getElementsByClassName(property)[0].value = value;
+            break;
 
-            case this.colorPropertyName:
-                // set new property value to editor's textarea
-                textarea.style['color'] = value;
+        case this.colorPropertyName:
+            // set new property value to editor's textarea
+            textarea.style['color'] = value;
 
-                // set new property value to editor's tool (colorPicker)
-                var colorPicker = this.element.getElementsByClassName('color_picker')[0];
-                colorPicker.style['background-color'] = value;
-                colorPicker.previousSibling.value = value;
-                break;
-        }
-
-        this.placeAndAutoSize();
+            // set new property value to editor's tool (colorPicker)
+            var colorPicker = this.tools.getElementsByClassName('color_picker')[0];
+            colorPicker.style['background-color'] = value;
+            colorPicker.previousSibling.value = value;
+            break;
     }
+
+    this.placeAndAutoSize();
 }

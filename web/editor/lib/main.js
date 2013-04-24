@@ -409,13 +409,12 @@ function setUpEditPanel(shape){
  *@param textPrimitiveId - the id value of Text primitive
  **/
 function setUpTextEditorPopup(figure, textPrimitiveId) {
-    // set content of inline Text edit
+    // get elements of Text Editor and it's tools
     var textEditor = document.getElementById('text-editor');
-    textEditor.innnerHTML = '';
-    textEditor.className = 'active';
+    var textEditorTools = document.getElementById('text-editor-tools');
 
     // set current Text editor to use it further in code
-    currentTextEditor = Builder.constructTextPropertiesPanel(textEditor, figure, textPrimitiveId);
+    currentTextEditor = Builder.constructTextPropertiesPanel(textEditor, textEditorTools, figure, textPrimitiveId);
 }
 
 
