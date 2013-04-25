@@ -33,7 +33,7 @@ Builder.load = function(o){
 Builder.constructPropertiesPanel = function(DOMObject, shape){
     for(var i = 0; i < shape.properties.length; i++){
         // regExp to avoid properties of Text editor
-        if (/primitives\.\d+\.(str|size|font|align|style\.fillStyle)/g.test(shape.properties[i].property) === false) {
+        if (/(primitives\.\d+|middleText)\.(str|size|font|align|style\.fillStyle)/g.test(shape.properties[i].property) === false) {
             shape.properties[i].injectInputArea(DOMObject, shape.id);
         }
     }
@@ -544,8 +544,8 @@ TextEditorPopup.prototype.COLOR_PROPERTY_ENDING = 'style.fillStyle';
  * @this {TextEditorPopup}
  * @param {HTMLElement} editor - the DOM object to create Text Editor Popup
  * @param {HTMLElement} tools - the DOM object to create Text Editor Tools
- * @param {Figure} shape - the figure - parent of Text primitive
- * @param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
+ * @param  shape - the figure or connector - parent of Text primitive
+ * @param {Number} textPrimitiveId - the id value of Text primitive child of shape for which the properties will be displayed
  */
 function TextEditorPopup(editor, tools, shape, textPrimitiveId){
     this.editor = editor;
@@ -553,8 +553,16 @@ function TextEditorPopup(editor, tools, shape, textPrimitiveId){
     this.shape = shape;
     this.textPrimitiveId = textPrimitiveId;
 
-    // beginning of property string of BuilderProperty for primitive with id = primitiveId
-    var propertyPrefix = "primitives." + this.textPrimitiveId + ".";
+    // beginning of property string of BuilderProperty for primitive
+    var propertyPrefix;
+
+    if (this.shapeIsAConnector()) {
+        // in case of connector with primitive = middleText
+        propertyPrefix = "middleText.";
+    } else {
+        // in case of figure with primitive.id = textPrimitiveId
+        propertyPrefix = "primitives." + this.textPrimitiveId + ".";
+    }
 
     // value of BuiderProperty::property
     this.stringPropertyName = propertyPrefix + this.STRING_PROPERTY_ENDING;
@@ -566,13 +574,19 @@ function TextEditorPopup(editor, tools, shape, textPrimitiveId){
 
 /**
  * Checks if TextEditorPopup refers to target shape and id of Text primitive
- * @param {Figure} shape - target figure to check
+ * @param  shape - target figure or connector to check
  * @param {Number} textPrimitiveId - the id value of a target Text primitive
  *
  *@return {Boolean} - true if refers to target objects
  **/
 TextEditorPopup.prototype.refersTo = function (shape, textPrimitiveId) {
-    return (this.shape.equals(shape) && this.textPrimitiveId === textPrimitiveId);
+    var result = this.shape.equals(shape);
+
+    // in case of connector textPrimitiveId will be underfined
+    if (textPrimitiveId != null) {
+        result &= this.textPrimitiveId === textPrimitiveId;
+    }
+    return result;
 }
 
 /**
@@ -635,6 +649,13 @@ TextEditorPopup.prototype.destroy = function (){
     this.tools.innerHTML = '';
 }
 
+/**
+ *Returns true if target shape of TextEditorPopup is a Connector
+  *@return {Boolean} - true shape property is a connector
+ **/
+TextEditorPopup.prototype.shapeIsAConnector = function (){
+    return this.shape.oType === "Connector";
+}
 
 /**
  *Returns true if mouse clicked inside TextEditorPopup
@@ -670,7 +691,16 @@ TextEditorPopup.prototype.placeAndAutoSize = function () {
     var textarea = this.editor.getElementsByTagName('textarea')[0];
 
     // set edit dialog position to top left (first) bound point of Text primitive
-    var textBounds = this.shape.primitives[this.textPrimitiveId].getBounds();
+    var textBounds
+
+    if (this.shapeIsAConnector()) {
+        // in case of connector primitive is a middleText property
+        textBounds = this.shape.middleText.getBounds();
+    } else {
+        // in case of connector primitive is a primitives[this.textPrimitiveId] property
+        textBounds = this.shape.primitives[this.textPrimitiveId].getBounds();
+    }
+
     var leftCoord = textBounds[0] - defaultLineWidth * 2 - defaultEditorPadding / 2;
 
     // get toolbox height, because it's situated at the top of Text editor

@@ -171,8 +171,8 @@ ShapeChangePropertyCommand.prototype = {
         var textPrimitiveId = -1;
 
         // check by RegExp - is property applying to a Text primitive
-        // typical examples: "primitives.3.size", "primitives.1.str", "primitives.5.font"
-        if (/primitives\.\d+\.(str|size|font|align|style\.fillStyle)/g.test(this.property)) {
+        // typical examples: "primitives.3.size", "primitives.1.str", "primitives.5.font" and "middleText.str" for a Connector
+        if (/(primitives\.\d+|middleText)\.(str|size|font|align|style\.fillStyle)/g.test(this.property)) {
             // according to RegExp this (between first and second dots) part is a number
             var id = this.property.split('.')[1];
 

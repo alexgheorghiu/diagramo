@@ -487,7 +487,7 @@ Stack.prototype = {
      *@param {Number} fId - the id of figure - parent of target Text primitive
      *@param {Number} x - the value on Ox axis
      *@param {Number} y - the value on Oy axis
-     *@return {Text} - the Text primitive or null if none found
+     *@return {Number} - the id value of Text primitive or -1 if none found
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     textGetByFigureXY:function(fId, x, y){

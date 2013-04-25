@@ -373,6 +373,26 @@ ConnectorManager.prototype = {
         return id;
     },
 
+
+    /**
+     *Returns the id value of connector for the given coordinates of it's middle text
+     *@param {Number} x - the value on Ox axis
+     *@param {Number} y - the value on Oy axis
+     *@return {Number} - id value of connector (parent of the text primitive with XY) otherwise -1
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    connectorGetByTextXY: function(x, y) {
+        var connectorsLength = this.connectors.length;
+        for(var i = connectorsLength - 1; i >= 0; i--){
+            var connector = this.connectors[i];
+            if( connector.middleText.contains(x, y) ) {
+                return connector.id;
+            }
+        }//end for
+        return -1;
+    },
+
+
     /**Adjust a Connector by its (one) ConnectionPoint
      *@param {Integer} cpId - the id of the connector
      *@param {Number} x - the x coordinates of the point

@@ -405,16 +405,16 @@ function setUpEditPanel(shape){
 }
 
 /**Setup edit mode for Text primitive.
- *@param figure - parent of Text primitive. Can be either Connector or Figure.
- *@param textPrimitiveId - the id value of Text primitive
+ *@param shape - parent of Text primitive. Can be either Connector or Figure.
+ *@param {Number} textPrimitiveId - the id value of Text primitive
  **/
-function setUpTextEditorPopup(figure, textPrimitiveId) {
+function setUpTextEditorPopup(shape, textPrimitiveId) {
     // get elements of Text Editor and it's tools
     var textEditor = document.getElementById('text-editor');
     var textEditorTools = document.getElementById('text-editor-tools');
 
     // set current Text editor to use it further in code
-    currentTextEditor = Builder.constructTextPropertiesPanel(textEditor, textEditorTools, figure, textPrimitiveId);
+    currentTextEditor = Builder.constructTextPropertiesPanel(textEditor, textEditorTools, shape, textPrimitiveId);
 }
 
 
@@ -845,8 +845,8 @@ function onMouseDown(ev){
                 state = STATE_NONE;
             }
 
-        // TODO: Further needs to be the same as for the STATE_NONE case
-        // to avoid repeating of the code next "break" statement commented
+        // TODO: Further needs to be the same behaviour as for the STATE_NONE case
+        // to avoid repeating of the code next "break" statement commented to let execution flow down
         // break;
 
 
@@ -2169,10 +2169,28 @@ function onDblClick(ev) {
     var y = coords[1];
     lastClick = [x,y];
 
+    // store clicked figure or connector
+    var shape = null;
+
+    // store id value of clicked text primitive
+    var textPrimitiveId = -1;
+
+
     /*Description:
      *In case you double clicked the mouse:
-     *  - if clicked a figure
-     *      - if clicked a text primitive of figure
+     *  - if clicked a connector
+     *          - save connector to shape
+     *          - save id value of text primitive (0 by default) to textPrimitiveId
+     *  - else
+     *      - if clicked a text inside connector
+     *          - save connector to shape
+     *          - save id value of text primitive (0 by default) to textPrimitiveId
+     *      - else
+     *          - if clicked a figure
+     *              - if clicked a text primitive of figure
+     *                  - save figure to shape
+     *                  - save id value of text primitive to textPrimitiveId
+     *  - if connector, text primitive inside connector or figure clicked
      *          - if group selected
      *              - if group is permanent then destroy it
      *              - deselect current group
@@ -2183,39 +2201,67 @@ function onDblClick(ev) {
      *  - else do nothing
      **/
 
-    var fId = STACK.figureGetByXY(x,y);
-    // check if we clicked a figure
-    if (fId != -1) {
-        var figure = STACK.figureGetById(fId);
-        var textPrimitiveId = STACK.textGetByFigureXY(fId, x, y);
-        // check if we clicked a text primitive inside of figure
-        if (textPrimitiveId != -1) {
-            // if group selected
-            if (state == STATE_GROUP_SELECTED) {
-                var selectedGroup = STACK.groupGetById(selectedGroupId);
+    //find Connector at (x,y)
+    var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
+    var connector = CONNECTOR_MANAGER.connectorGetById(cId);
 
-                // if group is temporary then destroy it
-                if(!selectedGroup.permanent){
-                    STACK.groupDestroy(selectedGroupId);
+    // check if we clicked a connector
+    if(cId != -1){
+        shape = connector;
+        textPrimitiveId = 0;
+    } else {
+        cId = CONNECTOR_MANAGER.connectorGetByTextXY(x, y);
+        connector = CONNECTOR_MANAGER.connectorGetById(cId);
+
+        // check if we clicked a text of connector
+        if (cId != -1) {
+            shape = connector;
+            textPrimitiveId = 0;
+        } else {
+            //find Figure at (x,y)
+            var fId = STACK.figureGetByXY(x,y);
+
+            // check if we clicked a figure
+            if (fId != -1) {
+                var figure = STACK.figureGetById(fId);
+                var tId = STACK.textGetByFigureXY(fId, x, y);
+
+                // if we clicked text primitive inside of figure
+                if (tId !== -1) {
+                    shape = figure;
+                    textPrimitiveId = tId;
                 }
+            }
+        }
+    }
 
-                //deselect current group
-                selectedGroupId = -1;
+    // check if we clicked a text primitive inside of shape
+    if (textPrimitiveId != -1) {
+        // if group selected
+        if (state == STATE_GROUP_SELECTED) {
+            var selectedGroup = STACK.groupGetById(selectedGroupId);
+
+            // if group is temporary then destroy it
+            if(!selectedGroup.permanent){
+                STACK.groupDestroy(selectedGroupId);
             }
 
-            // deselect current figure
-            selectedFigureId = -1;
-
-            // deselect current connector
-            selectedConnectorId = -1;
-
-            // set current state
-            state = STATE_TEXT_EDITING;
-
-            // set up text editor
-            setUpTextEditorPopup(figure, textPrimitiveId);
-            redraw = true;
+            //deselect current group
+            selectedGroupId = -1;
         }
+
+        // deselect current figure
+        selectedFigureId = -1;
+
+        // deselect current connector
+        selectedConnectorId = -1;
+
+        // set current state
+        state = STATE_TEXT_EDITING;
+
+        // set up text editor
+        setUpTextEditorPopup(shape, textPrimitiveId);
+        redraw = true;
     }
 
     draw();
