@@ -364,9 +364,9 @@ Handle.prototype = {
                 var index;
                 //find the two turning points this handle is in between
                 for(var i = 1; i < HandleManager.shape.turningPoints.length-1; i++){
-                    if(HandleManager.shape.turningPoints[i-1].y == HandleManager.shape.turningPoints[i].y 
-                        && HandleManager.shape.turningPoints[i].y == this.y 
-                        && Math.min(HandleManager.shape.turningPoints[i].x, HandleManager.shape.turningPoints[i-1].x) <= this.x 
+                    if(HandleManager.shape.turningPoints[i-1].y == HandleManager.shape.turningPoints[i].y
+                        && HandleManager.shape.turningPoints[i].y == this.y
+                        && Math.min(HandleManager.shape.turningPoints[i].x, HandleManager.shape.turningPoints[i-1].x) <= this.x
                         && Math.max(HandleManager.shape.turningPoints[i].x, HandleManager.shape.turningPoints[i-1].x) >= this.x)
                         {
                         index = i;
@@ -381,9 +381,9 @@ Handle.prototype = {
                 var index;
                 //find the two turning points this handle is in between
                 for(var i = 1; i < HandleManager.shape.turningPoints.length-1; i++){
-                    if(HandleManager.shape.turningPoints[i-1].x == HandleManager.shape.turningPoints[i].x 
-                        && HandleManager.shape.turningPoints[i].x == this.x 
-                        && Math.min(HandleManager.shape.turningPoints[i].y, HandleManager.shape.turningPoints[i-1].y) <= this.y 
+                    if(HandleManager.shape.turningPoints[i-1].x == HandleManager.shape.turningPoints[i].x
+                        && HandleManager.shape.turningPoints[i].x == this.x
+                        && Math.min(HandleManager.shape.turningPoints[i].y, HandleManager.shape.turningPoints[i-1].y) <= this.y
                         && Math.max(HandleManager.shape.turningPoints[i].y, HandleManager.shape.turningPoints[i-1].y) >= this.y)
                         {
                         index = i;

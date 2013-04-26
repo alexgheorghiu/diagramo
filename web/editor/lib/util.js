@@ -619,6 +619,46 @@ var Util = {
             return true;
         }
     },
+
+
+    /**
+     /* Tests whether a point is inside the area (including border) determined by a set of other points.
+     * If the points is on the border of the area it will be counted
+     *
+     * Algorithm: just get border (min/max) values for x and y
+     * and then check if target point inside and on a borer or outside of points
+     *
+     * @param point {Point} the point we want to check
+     * @param points {Array<Point>} a set of points ordered clockwise.
+     * */
+    isPointInsideOrOnBorder:function(point, points){
+        if(points.length < 3){
+            return false;
+        }
+
+        // set min & max values to coordinates of first point
+        var minX = points[0].x;
+        var maxX = points[0].x;
+        var minY = points[0].y;
+        var maxY = points[0].y;
+
+        // go through points and get min and max x, y values
+        for (var i = 1; i < points.length; i++) {
+            var p = points[i];
+
+            minX = Math.min(p.x,minX);
+            maxX = Math.max(p.x,maxX);
+            minY = Math.min(p.y,minY);
+            maxY = Math.max(p.y,maxY);
+        }
+
+        // check if point is inside and on a border of points or outside
+        if (point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY) {
+            return true;
+        } else {
+            return false;
+        }
+    },
     
 
 	/**

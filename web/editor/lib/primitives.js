@@ -751,14 +751,18 @@ Polygon.prototype = {
         return ret;
     },
 
-    contains:function(x, y){
+    contains:function(x, y, includeBorders){
         var inPath = false;
         var p = new Point(x,y);
         if(!p){
             alert('Polygon: P is null');
         }
-        
-        return Util.isPointInside(p, this.points);
+
+        if (includeBorders) {
+            return Util.isPointInsideOrOnBorder(p, this.points);
+        } else {
+            return Util.isPointInside(p, this.points);
+        }
     },
 
     transform:function(matrix){

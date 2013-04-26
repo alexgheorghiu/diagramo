@@ -691,7 +691,7 @@ TextEditorPopup.prototype.placeAndAutoSize = function () {
     var textarea = this.editor.getElementsByTagName('textarea')[0];
 
     // set edit dialog position to top left (first) bound point of Text primitive
-    var textBounds
+    var textBounds;
 
     if (this.shapeIsAConnector()) {
         // in case of connector primitive is a middleText property

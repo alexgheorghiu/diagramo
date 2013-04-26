@@ -1885,7 +1885,7 @@ function onMouseMove(ev){
 
             break;
             
-       case STATE_CONTAINER_SELECTED:
+        case STATE_CONTAINER_SELECTED:
            //throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";           
            
            //BRUTE COPY FROM FIGURE
@@ -2086,31 +2086,31 @@ function onMouseMove(ev){
             if(mousePressed==true && lastMove != null && HandleManager.handleGetSelected() != null){
                 Log.info("onMouseMove() + STATE_CONNECTOR_SELECTED - trigger a handler action");
                 var handle = HandleManager.handleGetSelected();
-                //alert('Handle action');
-                
+//                alert('Handle action');
+
                 /*We need completely new copies of the turningPoints in order to restore them,
                  *this is simpler than keeping track of the handle used, the direction in which the handle edits
                  *and the turningPoints it edits*/
-                
+
                 //store old turning points
                 var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
                 var oldTurns = [turns.length];
                 for(var i = 0; i < turns.length; i++){
                     oldTurns[i] = turns[i].clone();
                 }
-                
-                
+
+
                 //DO the handle action
                 handle.action(lastMove,x,y);
-                
+
                 //store new turning points
                 turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
                 var newTurns = [turns.length];
                 for(var i = 0; i < turns.length; i++){
                     newTurns[i] = turns[i].clone();
                 }
-                                
-                
+
+
                 //see if old turning points are the same as the new turning points
                 var difference = false;
                 for(var k=0;k<newTurns.length; k++){
@@ -2118,13 +2118,13 @@ function onMouseMove(ev){
                         difference = true;
                     }
                 }
-                
+
 //                //store the Command in History
 //                if(difference && doUndo){
 //                    currentMoveUndo = new ConnectorHandleCommand(selectedConnectorId, History.OBJECT_CONNECTOR, null, oldTurns, newTurns);
 //                    History.addUndo(currentMoveUndo);
 //                }
-                    
+
                 redraw = true;
             }
             break;
@@ -2320,6 +2320,10 @@ function connectorPickSecond(x, y, ev){
     //current connector
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId) //it should be the last one
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
+
+    // MANAGE TEXT
+    // update position of connector's text
+    con.updateMiddleText();
     
     //TODO: remove 
     //play with algorithm
@@ -2426,9 +2430,12 @@ function connectorMovePoint(connectionPointId, x, y, ev){
 
 
     //current connector
-    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId) 
+    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
-    
+
+    // MANAGE TEXT
+    // update position of connector's text
+    con.updateMiddleText();
     
     //MANAGE COLOR
     //update cursor if over a figure's cp

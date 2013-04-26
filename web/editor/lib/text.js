@@ -466,7 +466,8 @@ Text.prototype = {
         nBounds.transform(Matrix.rotationMatrix(angle));
         nBounds.transform(Matrix.translationMatrix(this.vector[0].x,this.vector[0].y));
 
-        return nBounds.contains(x,y);
+        // check if (x,y) is inside or on a borders of nBounds
+        return nBounds.contains(x,y,true);
     },
 
 
