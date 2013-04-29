@@ -33,11 +33,13 @@ test("primitive.Point.contains [Depends on Point.constructor]", function () {
 
     /**
      * In time of developing this test ("letters metrix") passes in Firefox, Chrome & Safari, but fails in IE9 and IE10.
-     * From the point of view of official HTML5 Canvas documentation (see http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html)
+     * From the point of view of official
+     * @see <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">HTML5 Canvas documentation</a>
      * we are doing everything correct: use the same font-family, font-size and the same method
      * CanvasRenderingContext2D :: TextMetrics measureText(DOMString text)
      *
-     * Our discovering of this issue documented here: https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9
+     * Our discovering of this issue documented
+     * @see <a href="https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9">here</a>
     **/
 //    test("letters metrix", function () {
 //        var r = true;
@@ -66,12 +68,14 @@ test("primitive.Point.contains [Depends on Point.constructor]", function () {
     });
 
     /**
-     * In time of developing this test ("symbol metrix") passes in Firefox, Chrome & Safari, but fails in IE9 and IE10.
-     * From the point of view of official HTML5 Canvas documentation (see http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html)
+     * In time of developing this test ("letters metrix") passes in Firefox, Chrome & Safari, but fails in IE9 and IE10.
+     * From the point of view of official
+     * @see <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">HTML5 Canvas documentation</a>
      * we are doing everything correct: use the same font-family, font-size and the same method
      * CanvasRenderingContext2D :: TextMetrics measureText(DOMString text)
      *
-     * Our discovering of this issue documented here: https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9
+     * Our discovering of this issue documented
+     * @see <a href="https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9">here</a>
      **/
 //    test("symbol metrix", function () {
 //        var r = true;
@@ -100,12 +104,14 @@ test("primitive.Point.contains [Depends on Point.constructor]", function () {
     });
 
     /**
-     * In time of developing this test ("word metrix") passes in Firefox, Chrome & Safari, but fails in IE9 and IE10.
-     * From the point of view of official HTML5 Canvas documentation (see http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html)
+     * In time of developing this test ("letters metrix") passes in Firefox, Chrome & Safari, but fails in IE9 and IE10.
+     * From the point of view of official
+     * @see <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">HTML5 Canvas documentation</a>
      * we are doing everything correct: use the same font-family, font-size and the same method
      * CanvasRenderingContext2D :: TextMetrics measureText(DOMString text)
      *
-     * Our discovering of this issue documented here: https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9
+     * Our discovering of this issue documented
+     * @see <a href="https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9">here</a>
      **/
 //    test("word metrix", function () {
 //        var r = testContext.measureText('Alex').width == 7 + 3 + 7 + 5;
