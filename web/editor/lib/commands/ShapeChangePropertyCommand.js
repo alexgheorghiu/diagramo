@@ -37,8 +37,8 @@ ShapeChangePropertyCommand.prototype = {
             if (this.isTextPrimitiveProperty) {
                 if (state == STATE_TEXT_EDITING) {
                     currentTextEditor.setProperty(this.property, this.newValue);
-                } else {
-                    throw "ShapeChangePropertyCommand:execute() - this should never happen";
+//                } else {
+//                    throw "ShapeChangePropertyCommand:execute() - this should never happen";
                 }
             }
         }

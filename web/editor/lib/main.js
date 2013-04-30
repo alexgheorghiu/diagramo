@@ -344,7 +344,7 @@ function updateShape(shapeId, property, newValue){
         if(newValue != obj[propGet]()){ //update ONLY if new value differ from the old one
             //Log.info('updateShape() : penultimate propSet: ' +  propSet);
             if(obj[propGet]() != newValue){
-                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue)
+                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue);
                 undo.execute();
                 History.addUndo(undo);
             }
