@@ -5,13 +5,14 @@
  * @param figureId {Numeric} -  the id of the object
  * @param property {String} - property name that is being edited on the figure
  * @param newValue {Object} - the value to set the property to
+ * @param [previousValue] {Object} - the previous value of property
  * @author Alex, Artyom
  */
-function ShapeChangePropertyCommand(figureId, property, newValue){
+function ShapeChangePropertyCommand(figureId, property, newValue, previousValue){
     this.figureId = figureId;
     this.property = property;    
     this.newValue = newValue;
-    this.previousValue = this._getValue(figureId, property);
+    this.previousValue = typeof(previousValue) !== 'undefined' ? previousValue : this._getValue(figureId, property);
     this.firstExecute = true;
 
     // check if property corresponds to a Text primitive
@@ -68,38 +69,30 @@ ShapeChangePropertyCommand.prototype = {
                 if (!currentTextEditor.refersTo(shape, this.textPrimitiveId)) {
                     currentTextEditor.destroy();
                     setUpTextEditorPopup(shape, this.textPrimitiveId);
+                    // and we call setProperty of currentTextEditor method to provide WYSIWYG functionality
+                    currentTextEditor.setProperty(this.property, this.previousValue);
                 }
-            } else {
-                // set current state as text editing
-
-                // if group selected
-                if (state == STATE_GROUP_SELECTED) {
-                    var selectedGroup = STACK.groupGetById(selectedGroupId);
-
-                    // if group is temporary then destroy it
-                    if(!selectedGroup.permanent){
-                        STACK.groupDestroy(selectedGroupId);
-                    }
-
-                    //deselect current group
-                    selectedGroupId = -1;
-                }
-
-                // deselect current figure
-                selectedFigureId = -1;
-
-                // deselect current connector
-                selectedConnectorId = -1;
-
-                // set current state
-                state = STATE_TEXT_EDITING;
-
-                // set up text editor
-                setUpTextEditorPopup(shape, this.textPrimitiveId);
             }
-
-            // and we call setProperty of currentTextEditor method to provide WYSIWYG functionality
-            currentTextEditor.setProperty(this.property, this.previousValue);
+//            } else {
+//                //if group selected
+//                if (state == STATE_GROUP_SELECTED) {
+//                    var selectedGroup = STACK.groupGetById(selectedGroupId);
+//
+//                    //if group is temporary then destroy it
+//                    if(!selectedGroup.permanent){
+//                        STACK.groupDestroy(selectedGroupId);
+//                    }
+//
+//                    //deselect current group
+//                    selectedGroupId = -1;
+//                }
+//
+//                //deselect current figure
+//                selectedFigureId = -1;
+//
+//                //deselect current connector
+//                selectedConnectorId = -1;
+//            }
         }
     },
     

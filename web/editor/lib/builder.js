@@ -348,12 +348,22 @@ BuilderProperty.prototype = {
         div.appendChild(document.createElement("br"));
         div.appendChild(text);
 
+        // used to change Text property
         text.onchange = function(shapeId,property){
             return function(){
-                updateShape(shapeId, property, this.value)
+                // update shape but without adding {Command} to the {History}
+                updateShape(shapeId, property, this.value, true)
             }
         }(shapeId, this.property);
 
+        // used to create undo {Command}
+        text.onblur = function(shapeId, property, previousValue){
+            return function(){
+                // create {Command} where previous value is
+                // the initialization value of textarea
+                updateShape(shapeId, property, this.value, false, previousValue)
+            }
+        }(shapeId, this.property, text.value);
 
         text.onmouseout = text.onchange;
         text.onkeyup = text.onchange;
@@ -813,6 +823,15 @@ TextEditorPopup.prototype = {
             result &= this.textPrimitiveId === textPrimitiveId;
         }
         return result;
+    },
+
+    /**
+     * Manually triggers onblur event of textarea inside TextEditor.
+     * @author Artyom
+     **/
+    blurTextArea : function () {
+        var textarea = this.editor.getElementsByTagName('textarea')[0];
+        textarea.onblur();
     }
    
 };

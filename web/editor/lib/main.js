@@ -278,11 +278,16 @@ function setFigureSet(id){
  *@param {String} property - (or an {Array} of {String}s). The 'id' under which the property is stored
  *TODO: is there any case where we are using property as an array ?
  *@param {String} newValue - the new value of the property
+ *@param {Boolean} [skipCommand = false] - if true than current {Command} won't be added to the {History}
+ *@param {String} [previousValue] - the previous value of the property
  *@author Zack, Alex, Artyom
  **/
-function updateShape(shapeId, property, newValue){
+function updateShape(shapeId, property, newValue, skipCommand, previousValue){
     //Log.group("main.js-->updateFigure");
     //Log.info("updateShape() figureId: " + figureId + " property: " + property + ' new value: ' + newValue);
+
+    // set default values of optional params
+    skipCommand = skipCommand || false;
 
     var obj = STACK.figureGetById(shapeId); //try to find it inside {Figure}s
 
@@ -341,25 +346,29 @@ function updateShape(shapeId, property, newValue){
          * a method of form set<property_name> in place
          */
         
-        if(newValue != obj[propGet]()){ //update ONLY if new value differ from the old one
+        if((typeof(previousValue) !== 'undefined' && previousValue != obj[propGet])
+            || (typeof(previousValue) === 'undefined' && newValue != obj[propGet]())){ //update ONLY if new value differ from the old one
             //Log.info('updateShape() : penultimate propSet: ' +  propSet);
-            if(obj[propGet]() != newValue){
-                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue);
+                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue, previousValue);
                 undo.execute();
-                History.addUndo(undo);
+
+                if (!skipCommand) {
+                    History.addUndo(undo);
+                }
             }
             //Log.info('updateShape() : call setXXX on object: ' +  propSet + " new value: " + newValue);
             //            obj[propSet](figure,newValue);
             obj[propSet](newValue);
-        }
     }
     else{
-        if(obj[propName] != newValue){ //try to change it ONLY if new value is different than the last one
-            if(obj[propName] != newValue){
-                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue)
+        if( (typeof(previousValue) !== 'undefined' && obj[propName] != previousValue)
+            || (typeof(previousValue) === 'undefined' && obj[propName] != newValue)){ //try to change it ONLY if new value is different than the last one
+                var undo = new ShapeChangePropertyCommand(shapeId, property, newValue, previousValue);
                 undo.execute();
-                History.addUndo(undo);
-            }
+
+                if (!skipCommand) {
+                    History.addUndo(undo);
+                }
             obj[propName] = newValue;
         }
     }
@@ -834,6 +843,7 @@ function onMouseDown(ev){
              * If we have active text editor in popup and we click mouse.  Here is what can happen:
              * - if we clicked inside current text editor that nothing is happening
              * - if we clicked canvas:
+             *      - we trigger onblur of text editor for IE and FF manually
              *      - we will remove text editor
              *      - we will switch to STATE_NONE
              *      - we will run STATE_NONE case next (without break;)
@@ -842,6 +852,12 @@ function onMouseDown(ev){
             if (currentTextEditor.mouseClickedInside(ev)) {
                 break;
             } else {
+                // IE and Firefox doesn't trigger blur event when mouse clicked canvas
+                // that is why we trigger this event manually
+                if (Browser.msie || Browser.mozilla) {
+                    currentTextEditor.blurTextArea();
+                }
+
                 currentTextEditor.destroy();
                 currentTextEditor = null;
 
