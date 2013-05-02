@@ -417,7 +417,7 @@ BuilderProperty.prototype = {
         
         var select = document.createElement("select");
         select.style.cssText ="float: right;";
-        select.className = this.property; // for DOM manipulation
+        select.id = this.property; // for DOM manipulation
         div.appendChild(select);
         
         for(var i=0; i< v.length; i++){
@@ -577,24 +577,6 @@ TextEditorPopup.ALIGN_PROPERTY_ENDING = 'align';
 TextEditorPopup.COLOR_PROPERTY_ENDING = 'style.fillStyle';
 
 
-/**
- * Checks if TextEditorPopup refers to target shape and id of Text primitive
- * @param  shape - target figure or connector to check
- * @param {Number} textPrimitiveId - the id value of a target Text primitive
- *
- *@return {Boolean} - true if refers to target objects
- **/
-TextEditorPopup.prototype.refersTo = function (shape, textPrimitiveId) {
-    var result = this.shape.equals(shape);
-
-    // in case of connector textPrimitiveId will be underfined
-    if (textPrimitiveId != null) {
-        result &= this.textPrimitiveId === textPrimitiveId;
-    }
-    return result;
-}
-
-
 TextEditorPopup.prototype = {
     
     constructor : TextEditorPopup,
@@ -668,15 +650,13 @@ TextEditorPopup.prototype = {
     setProperty : function (property, value) {
         var textarea = this.editor.getElementsByTagName('textarea')[0];
         switch(property) {
-            
-            //TODO: @Artom: Instead on counting on class name I would like to use DOM's unique IDs
-            
+
             case this.sizePropertyName:
                 // set new property value to editor's textarea
                 textarea.style.fontSize = value + 'px';
 
                 // set new property value to editor's tool
-                this.tools.getElementsByClassName(property)[0].value = value;
+                document.getElementById(property).value = value;
                 break;
 
             case this.fontPropertyName:
@@ -684,7 +664,7 @@ TextEditorPopup.prototype = {
                 textarea.style.fontFamily = value;
 
                 // set new property value to editor's tool
-                this.tools.getElementsByClassName(property)[0].value = value.toLowerCase();
+                document.getElementById(property).value = value.toLowerCase();
                 break;
 
             case this.alignPropertyName:
@@ -698,7 +678,7 @@ TextEditorPopup.prototype = {
                 }
 
                 // set new property value to editor's tool
-                this.tools.getElementsByClassName(property)[0].value = value;
+                document.getElementById(property).value = value;
                 break;
 
             case this.colorPropertyName:
@@ -734,9 +714,9 @@ TextEditorPopup.prototype = {
             textBounds = this.shape.primitives[this.textPrimitiveId].getBounds();
         }
 
-        //TODO: @Artyom: Where does this formula comes from?
-        var leftCoord = textBounds[0] - defaultLineWidth * 2 - defaultEditorPadding / 2;
-        var topCoord = textBounds[1] - defaultLineWidth * 2 - defaultEditorPadding / 2;
+        // change coordinates of editing Text primitive to include padding and border of Text Editor
+        var leftCoord = textBounds[0] - defaultEditorBorderWidth - defaultEditorPadding;
+        var topCoord = textBounds[1] - defaultEditorBorderWidth - defaultEditorPadding;
         
         // get toolbox height, because it's situated at the top of Text editor
         //@see https://developer.mozilla.org/en/docs/DOM/element.offsetHeight
@@ -797,8 +777,7 @@ TextEditorPopup.prototype = {
     *@author Artyom
     **/
    mouseClickedInside : function (e) {
-       //TODO: @Artyom: Do we still need this old crappy IE detection. In not, please remove it?
-       var target = e.target || e.srcElement;
+       var target = e.target;
 
        // check if user fired mouse down on the part of editor, it's tools or active color picker
        // actually active color picker in that moment can be only for Text edit
@@ -817,6 +796,23 @@ TextEditorPopup.prototype = {
            || target.parentNode.parentNode.id === 'color_selector';
    
        return inside;
-   }        
+   },
+
+    /**
+     * Checks if TextEditorPopup refers to target shape and id of Text primitive
+     * @param  shape - target figure or connector to check
+     * @param {Number} textPrimitiveId - the id value of a target Text primitive
+     *
+     *@return {Boolean} - true if refers to target objects
+     **/
+    refersTo : function (shape, textPrimitiveId) {
+        var result = this.shape.equals(shape);
+
+        // in case of connector textPrimitiveId will be underfined
+        if (textPrimitiveId != null) {
+            result &= this.textPrimitiveId === textPrimitiveId;
+        }
+        return result;
+    }
    
 };

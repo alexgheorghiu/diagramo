@@ -954,21 +954,9 @@ function repeat(str, count){
  * @author Artyom
  **/
 function setSelectionRange(input, selectionStart, selectionEnd) {
-    /*TODO: @Artyom: Do we need to make this tests anymore, for current browsers?
-    Is there any case in modern browser for this not to be supported
-    If we need them .... we might also need a warning or something on else {..}
-    Your choice
-    */
     if (input.setSelectionRange) {
         input.focus();
         input.setSelectionRange(selectionStart, selectionEnd);
-    }
-    else if (input.createTextRange) {
-        var range = input.createTextRange();
-        range.collapse(true);
-        range.moveEnd('character', selectionEnd);
-        range.moveStart('character', selectionStart);
-        range.select();
     }
 }
 
@@ -1006,13 +994,13 @@ function Browser() {
  * Note:  <br/>
  * Cross-browser solution for native JS.
  */
-function bindEvent(element, event, handler) {
-    if (element.attachEvent) {
-        element.attachEvent('on' + event, handler);  // IE
-    } else {
-        element.addEventListener(event, handler, false);
-    }
-}
+//function bindEvent(element, event, handler) {
+//    if (element.attachEvent) {
+//        element.attachEvent('on' + event, handler);  // IE
+//    } else {
+//        element.addEventListener(event, handler, false);
+//    }
+//}
 
 /**
  * Binds event to NodeList
@@ -1025,14 +1013,14 @@ function bindEvent(element, event, handler) {
  * Note:  <br/>
  * Cross-browser solution for native JS.
  */
-function bindEventToNodeList(list, event, handler) {
-    var i;
-    var length = list.length;
-
-    for (i = 0; i < length; i++) {
-        bindEvent(list[i], event, handler);
-    }
-}
+//function bindEventToNodeList(list, event, handler) {
+//    var i;
+//    var length = list.length;
+//
+//    for (i = 0; i < length; i++) {
+//        bindEvent(list[i], event, handler);
+//    }
+//}
 
 /**
  * Unbinds event to DOM element
@@ -1045,13 +1033,13 @@ function bindEventToNodeList(list, event, handler) {
  * Note:  <br/>
  * Cross-browser solution for native JS.
  */
-function unBindEvent(element, event, handler) {
-    if (element.detachEvent) {
-        element.detachEvent('on' + event, handler);  // IE
-    } else {
-        element.removeEventListener(event, handler, false);
-    }
-}
+//function unBindEvent(element, event, handler) {
+//    if (element.detachEvent) {
+//        element.detachEvent('on' + event, handler);  // IE
+//    } else {
+//        element.removeEventListener(event, handler, false);
+//    }
+//}
 
 /**
  * Unbinds event from NodeList
@@ -1064,14 +1052,14 @@ function unBindEvent(element, event, handler) {
  * Note:  <br/>
  * Cross-browser solution for native JS.
  */
-function unBindEventFromNodeList(list, event, handler) {
-    var i;
-    var length = list.length;
-
-    for (i = 0; i < length; i++) {
-        unBindEvent(list[i], event, handler);
-    }
-}
+//function unBindEventFromNodeList(list, event, handler) {
+//    var i;
+//    var length = list.length;
+//
+//    for (i = 0; i < length; i++) {
+//        unBindEvent(list[i], event, handler);
+//    }
+//}
 
 /**
  * Removes DOM element
