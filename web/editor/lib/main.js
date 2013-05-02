@@ -405,8 +405,9 @@ function setUpEditPanel(shape){
 }
 
 /**Setup edit mode for Text primitive.
- *@param shape - parent of Text primitive. Can be either Connector or Figure.
+ *@param shape - parent of Text primitive. Can be either {Connector} or {Figure}.
  *@param {Number} textPrimitiveId - the id value of Text primitive
+ *@author Artyom
  **/
 function setUpTextEditorPopup(shape, textPrimitiveId) {
     // get elements of Text Editor and it's tools
@@ -506,7 +507,9 @@ function onClick(ev){
 }
 
 
-
+/**
+ * @deprecated Does not seem to be used
+ * */
 function onDoubleClick(ev){
     var coords = getCanvasXY(ev);
     var HTMLCanvas = getCanvas();
@@ -2162,6 +2165,7 @@ function onMouseMove(ev){
 
 /**Treats the mouse double click event
  *@param {Event} ev - the event generated when key is clicked twice
+ *@author Artyom, Alex
  **/
 function onDblClick(ev) {
     var coords = getCanvasXY(ev);
@@ -2192,7 +2196,7 @@ function onDblClick(ev) {
      *                  - save id value of text primitive to textPrimitiveId
      *  - if connector, text primitive inside connector or figure clicked
      *          - if group selected
-     *              - if group is permanent then destroy it
+     *              - if group is temporary then destroy it
      *              - deselect current group
      *          - deselect current figure
      *          - deselect current connector
@@ -2203,20 +2207,21 @@ function onDblClick(ev) {
 
     //find Connector at (x,y)
     var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
-    var connector = CONNECTOR_MANAGER.connectorGetById(cId);
+    var connector = null;
 
     // check if we clicked a connector
     if(cId != -1){
+        connector = CONNECTOR_MANAGER.connectorGetById(cId);
         shape = connector;
-        textPrimitiveId = 0;
+        textPrimitiveId = 0; // (0 by default)
     } else {
         cId = CONNECTOR_MANAGER.connectorGetByTextXY(x, y);
-        connector = CONNECTOR_MANAGER.connectorGetById(cId);
-
+        
         // check if we clicked a text of connector
         if (cId != -1) {
+            connector = CONNECTOR_MANAGER.connectorGetById(cId);
             shape = connector;
-            textPrimitiveId = 0;
+            textPrimitiveId = 0; // (0 by default)
         } else {
             //find Figure at (x,y)
             var fId = STACK.figureGetByXY(x,y);

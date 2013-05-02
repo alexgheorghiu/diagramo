@@ -951,8 +951,14 @@ function repeat(str, count){
  * @param {HTMLElement} input - DOM element to set selection
  * @param {Number} selectionStart - start position of selection
  * @param {Number} selectionEnd - end position of selection
+ * @author Artyom
  **/
 function setSelectionRange(input, selectionStart, selectionEnd) {
+    /*TODO: @Artyom: Do we need to make this tests anymore, for current browsers?
+    Is there any case in modern browser for this not to be supported
+    If we need them .... we might also need a warning or something on else {..}
+    Your choice
+    */
     if (input.setSelectionRange) {
         input.focus();
         input.setSelectionRange(selectionStart, selectionEnd);
