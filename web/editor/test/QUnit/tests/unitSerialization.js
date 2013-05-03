@@ -28,13 +28,7 @@ test("test cubic curve", function () {
 test("test dashed arc", function () {
     var da = new DashedArc(100, 100, 50, 30, 45, 0, 1, 3);
 
-    var ser = JSON.stringify(da, function(key, val) {
-        if (typeof(val) !== 'undefined') {
-            // using of Number.prototype.toFixed allows
-            // number-to-string conversion without rounding (Opera case)
-            return val.toFixed ? val.toFixed(20) : val;
-        }
-    });
+    var ser = JSON.stringify(da, Util.operaReplacer);
     var unser = eval('(' + ser + ')');
     var newDa = DashedArc.load(unser);
 
