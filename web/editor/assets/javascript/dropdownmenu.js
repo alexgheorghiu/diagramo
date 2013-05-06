@@ -34,7 +34,7 @@ var dropdownSpace = {
             dropdownSpace.eMenuItem.style.visibility = 'hidden';
         }
         else{
-            Log.info("Nothing to close");
+            Log.info("dropdownmenu.js: Nothing to close");
         }
     },
 

@@ -80,6 +80,7 @@ body{
 
 #body{
     width: 100%;
+    position: relative;
 }
 
 .copyright {
@@ -294,3 +295,49 @@ body{
     font-size: 20px;
 }
 
+#text-editor, #text-editor-tools {
+    display: none;
+    z-index: 5;
+    position: absolute;
+}
+
+#text-editor textarea {
+    padding: 6px;
+    overflow: hidden;
+    resize: none;
+    line-height: 125%;
+
+    /* to prevent automatic line-breaks */
+    word-wrap: normal;
+    white-space: pre;
+    overflow-x: hidden;
+}
+
+#text-editor-tools {
+    float: left;
+
+    background-image: url('../images/logo_background.png');
+    background-size: 100%;
+    background-position: top left;
+}
+
+#text-editor.active, #text-editor-tools.active {
+    display: block;
+}
+
+#text-editor-tools .line, #text-editor .textLine {
+    float: left;
+    margin-right: 1px;
+}
+
+#text-editor-tools .line select {
+    float: left;
+}
+
+#text-editor .label, #text-editor-tools .label {
+    display: none;
+}
+
+#text-editor-tools .color_picker {
+    margin-top: 2px;
+}

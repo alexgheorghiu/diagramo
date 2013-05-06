@@ -30,10 +30,30 @@ Builder.load = function(o){
  *@param {DOMObject} DOMObject - the div of the properties panel
  *@param {Figure} shape - the figure for which the properties will be displayed
  **/
-Builder.contructPropertiesPanel = function(DOMObject, shape){
-    for(var i=0; i<shape.properties.length; i++){
-        shape.properties[i].injectInputArea(DOMObject, shape.id);
+Builder.constructPropertiesPanel = function(DOMObject, shape){
+    for(var i = 0; i < shape.properties.length; i++){
+        // regExp to avoid properties of Text editor
+        if (/(primitives\.\d+|middleText)\.(str|size|font|align|style\.fillStyle)/g.test(shape.properties[i].property) === false) {
+            shape.properties[i].injectInputArea(DOMObject, shape.id);
+        }
     }
+}
+
+/**
+ *Creates the property panel for a Text primitive of shape {Figure} and returns it
+ *@param {DOMObject} textEditor - the div of the properties panel
+ *@param {DOMObject} textEditorTools - the div of the text editor's tools
+ *@param {Figure} shape - the figure - parent of Text primitive
+ *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
+ *
+ *@return {TextEditorPopup} - new instance of TextEditorPopup after init
+ *@author Artyom
+ **/
+Builder.constructTextPropertiesPanel = function(textEditor, textEditorTools, shape, textPrimitiveId){
+    var textEditor = new TextEditorPopup(textEditor, textEditorTools, shape, textPrimitiveId);
+    textEditor.init();
+
+    return textEditor;
 }
 
 /**
@@ -239,16 +259,16 @@ BuilderProperty.prototype = {
      *@param {HTMLElement} DOMObject - the div of the properties panel
      *@param {Number} figureId - the id of the figure we are using
      */
-    injectInputArea:function(DOMObject,figureId){
+    injectInputArea:function(DOMObject, figureId){
         if(this.name == BuilderProperty.SEPARATOR){
             DOMObject.appendChild(document.createElement("hr"));
             return;
         }
         else if(this.type == BuilderProperty.TYPE_COLOR){
-            this.generateColorCode(DOMObject,figureId);
+            this.generateColorCode(DOMObject, figureId);
         }
         else if(this.type == BuilderProperty.TYPE_TEXT){
-            this.generateTextCode(DOMObject,figureId);
+            this.generateTextCode(DOMObject, figureId);
         }
         else if(this.type == BuilderProperty.TYPE_SINGLE_TEXT){
             this.generateSingleTextCode(DOMObject,figureId);
@@ -307,9 +327,9 @@ BuilderProperty.prototype = {
      *The text got updated when you leave the input area
      *
      *@param {HTMLElement} DOMObject - the div of the properties panel
-     *@param {Number} shapeId - the id of the {Figure} or {Connector} we are using    
+     *@param {Number} shapeId - the id of the {Figure} or {Connector} we are using
      **/
-    generateTextCode:function(DOMObject,shapeId){
+    generateTextCode:function(DOMObject, shapeId){
         var uniqueId = new Date().getTime();
         var value = this.getValue(shapeId);
 
@@ -322,6 +342,7 @@ BuilderProperty.prototype = {
         //text.style.cssText ="float: right";
         //text.style.cssText ="float: left";
         text.value = value;
+        text.spellcheck = false;
         text.style.width = "100%";
         //text.style.float = "left";
         div.appendChild(document.createElement("br"));
@@ -367,7 +388,7 @@ BuilderProperty.prototype = {
         text.onchange = function(figureId,property){
             return function(){
                 Log.info("Builder.generateSingleTextCode() value: " + this.value);
-                updateShape(figureId, property, this.value)
+                updateShape(figureId, property, this.value);
             }
         }(figureId, this.property);
 
@@ -384,7 +405,7 @@ BuilderProperty.prototype = {
      *@param {Number} figureId - the id of the figure we are using
      *@param {Array} v - a vector or hashes ex: [{Text:'Normal', Value:'Normal'},{Text:'Arrow', Value:'Arrow'}]
      */
-    generateArrayCode:function(DOMObject,figureId, v){
+    generateArrayCode:function(DOMObject, figureId, v){
 //        Log.info("Font size length: " + v.length);
         var uniqueId = new Date().getTime();
         
@@ -396,6 +417,7 @@ BuilderProperty.prototype = {
         
         var select = document.createElement("select");
         select.style.cssText ="float: right;";
+        select.className = this.property; // for DOM manipulation
         div.appendChild(select);
         
         for(var i=0; i< v.length; i++){
@@ -425,7 +447,7 @@ BuilderProperty.prototype = {
      *@param{HTMLElement} DOMObject - the div of the properties panel
      *@param{Number} figureId - the id of the figure we are using
      */
-    generateColorCode: function(DOMObject,figureId){
+    generateColorCode: function(DOMObject, figureId){
         var value = this.getValue(figureId);
        
         var uniqueId = new Date().getTime();
@@ -454,10 +476,10 @@ BuilderProperty.prototype = {
     
 
 
-    /**We use this to return a value based on the figure and the property string,
-     *similar to Javas Class.forname...sort of anyway
+    /**We use this to return a value of the property for a figure,
+     *Similar to Javas Class.forname...sort of anyway
      *We need this because passing direct references to simple data types (including strings) 
-     *only passes the value, not a reference to that value
+     *only passes the value, not a reference to that value (call by value not by reference)
      *
      *@param{Number} figureId - the id of the shape {Figure} or {Connector} we are using, could also be the canvas (figureId = 'a')
      */
@@ -476,7 +498,12 @@ BuilderProperty.prototype = {
                 obj = canvas;
             }
         }
-        //Log.info("Unsplit property: " + this.property);
+        
+        //Is it a Container?
+        if(obj == null){
+            obj = STACK.containerGetById(figureId);
+        }
+        Log.debug("Unsplit property: " + this.property);
         
         var propertyAccessors = this.property.split(".");
 //        Log.info("BuilderProperty::getValue() : propertyAccessors : " + propertyAccessors );
@@ -503,3 +530,293 @@ BuilderProperty.prototype = {
         }
     }
 }
+
+
+
+/**
+ * This instance is responsible for creating and updating Text Editor Popup
+ *
+ * @constructor
+ * @this {TextEditorPopup}
+ * @param {HTMLElement} editor - the DOM object to create Text Editor Popup
+ * @param {HTMLElement} tools - the DOM object to create Text Editor Tools
+ * @param  shape - the {Figure} or {Connector} - parent of Text primitive
+ * @param {Number} textPrimitiveId - the id value of Text primitive child of shape for which the properties will be displayed
+ * @author Artyom
+ */
+function TextEditorPopup(editor, tools, shape, textPrimitiveId){
+    this.editor = editor;
+    this.tools = tools;
+    this.shape = shape;
+    this.textPrimitiveId = textPrimitiveId;
+
+    // beginning of property string of BuilderProperty for primitive
+    var propertyPrefix;
+
+    if (this.shapeIsAConnector()) {
+        // in case of connector with primitive = middleText
+        propertyPrefix = "middleText.";
+    } else {
+        // in case of figure with primitive.id = textPrimitiveId
+        propertyPrefix = "primitives." + this.textPrimitiveId + ".";
+    }
+
+    // value of BuiderProperty::property
+    this.stringPropertyName = propertyPrefix + TextEditorPopup.STRING_PROPERTY_ENDING;
+    this.sizePropertyName = propertyPrefix + TextEditorPopup.SIZE_PROPERTY_ENDING;
+    this.fontPropertyName = propertyPrefix + TextEditorPopup.FONT_PROPERTY_ENDING;
+    this.alignPropertyName = propertyPrefix + TextEditorPopup.ALIGN_PROPERTY_ENDING;
+    this.colorPropertyName = propertyPrefix + TextEditorPopup.COLOR_PROPERTY_ENDING;
+}
+
+/**A set of predefined properties fragments*/
+TextEditorPopup.STRING_PROPERTY_ENDING = 'str';
+TextEditorPopup.SIZE_PROPERTY_ENDING = 'size';
+TextEditorPopup.FONT_PROPERTY_ENDING = 'font';
+TextEditorPopup.ALIGN_PROPERTY_ENDING = 'align';
+TextEditorPopup.COLOR_PROPERTY_ENDING = 'style.fillStyle';
+
+
+/**
+ * Checks if TextEditorPopup refers to target shape and id of Text primitive
+ * @param  shape - target figure or connector to check
+ * @param {Number} textPrimitiveId - the id value of a target Text primitive
+ *
+ *@return {Boolean} - true if refers to target objects
+ **/
+TextEditorPopup.prototype.refersTo = function (shape, textPrimitiveId) {
+    var result = this.shape.equals(shape);
+
+    // in case of connector textPrimitiveId will be underfined
+    if (textPrimitiveId != null) {
+        result &= this.textPrimitiveId === textPrimitiveId;
+    }
+    return result;
+}
+
+
+TextEditorPopup.prototype = {
+    
+    constructor : TextEditorPopup,
+    
+    /**
+     *Returns true if target shape of TextEditorPopup is a Connector
+      *@return {Boolean} - true shape property is a connector
+     **/
+    shapeIsAConnector : function (){
+        return this.shape.oType === "Connector";
+    },
+            
+      
+
+    /**
+    *Creates DOM structure and bind events
+    *@author Artyom
+    **/
+    init : function (){
+       var textarea;
+
+       // <div> for text tools contains font size, font family, alignment and color
+       for(var i = 0; i < this.shape.properties.length; i++){
+           var curProperty = this.shape.properties[i].property; //get property in long format ex: primitives.1.style.fillStyle
+           if (curProperty != null) {
+               var curValue = this.shape.properties[i].getValue(this.shape.id);
+               switch (curProperty){
+                   case this.stringPropertyName:
+                       this.shape.properties[i].injectInputArea(this.editor, this.shape.id);
+                       textarea = this.editor.getElementsByTagName('textarea')[0];
+
+                       // remove all <br> tags from text-editor as they were added by injectInputArea method 
+                       removeNodeList(this.editor.getElementsByTagName('br')); //defined in util.js
+
+                       // set Text editor properties on initialization
+                       this.setProperty(curProperty, curValue);
+
+                       break;
+
+                   case this.sizePropertyName:
+                   case this.fontPropertyName:
+                   case this.alignPropertyName:
+                   case this.colorPropertyName:
+                       this.shape.properties[i].injectInputArea(this.tools, this.shape.id);
+
+                       // set Text editor properties on initialization
+                       this.setProperty(curProperty, curValue);
+
+                       break;
+               }
+           }
+       }
+
+       this.editor.className = 'active';
+       this.tools.className = 'active';
+
+       this.placeAndAutoSize();
+
+       // select all text inside textarea (like in Visio)
+       setSelectionRange(textarea, 0, textarea.value.length);
+   },
+           
+           
+    /**
+     * Changing property inside Text Editor
+     * provides WYSIWYG functionality
+     * @param {String} property - property name that is being edited (in dotted notation)
+     * @param {Object} value - the value to set the property to
+     * @author Artyom
+     **/
+    setProperty : function (property, value) {
+        var textarea = this.editor.getElementsByTagName('textarea')[0];
+        switch(property) {
+            
+            //TODO: @Artom: Instead on counting on class name I would like to use DOM's unique IDs
+            
+            case this.sizePropertyName:
+                // set new property value to editor's textarea
+                textarea.style.fontSize = value + 'px';
+
+                // set new property value to editor's tool
+                this.tools.getElementsByClassName(property)[0].value = value;
+                break;
+
+            case this.fontPropertyName:
+                // set new property value to editor's textarea
+                textarea.style.fontFamily = value;
+
+                // set new property value to editor's tool
+                this.tools.getElementsByClassName(property)[0].value = value.toLowerCase();
+                break;
+
+            case this.alignPropertyName:
+                // set new property value to editor's textarea
+                textarea.style.textAlign = value;
+
+                // IE doesn't apply text-align property correctly to all lines of the textarea on a fly
+                // that is why we just copy it's text and paste it back to refresh text rendering
+                if (Browser.msie) {
+                    textarea.value = textarea.value;
+                }
+
+                // set new property value to editor's tool
+                this.tools.getElementsByClassName(property)[0].value = value;
+                break;
+
+            case this.colorPropertyName:
+                // set new property value to editor's textarea
+                textarea.style['color'] = value;
+
+                // set new property value to editor's tool (colorPicker)
+                var colorPicker = this.tools.getElementsByClassName('color_picker')[0];
+                colorPicker.style['background-color'] = value; //change the color to the proper one
+                colorPicker.previousSibling.value = value; //set the value to the "hidden" text field
+                break;
+        }
+
+        this.placeAndAutoSize();
+    },
+            
+
+    /**
+     *Places and sets size to the property panel
+     *@author Artyom
+     **/
+    placeAndAutoSize : function () {
+        var textarea = this.editor.getElementsByTagName('textarea')[0];
+
+        // set edit dialog position to top left (first) bound point of Text primitive
+        var textBounds;
+
+        if (this.shapeIsAConnector()) {
+            // in case of connector primitive is a middleText property
+            textBounds = this.shape.middleText.getBounds();
+        } else {
+            // in case of connector primitive is a primitives[this.textPrimitiveId] property
+            textBounds = this.shape.primitives[this.textPrimitiveId].getBounds();
+        }
+
+        //TODO: @Artyom: Where does this formula comes from?
+        var leftCoord = textBounds[0] - defaultLineWidth * 2 - defaultEditorPadding / 2;
+        var topCoord = textBounds[1] - defaultLineWidth * 2 - defaultEditorPadding / 2;
+        
+        // get toolbox height, because it's situated at the top of Text editor
+        //@see https://developer.mozilla.org/en/docs/DOM/element.offsetHeight
+        //@see http://stackoverflow.com/questions/4106538/difference-between-offsetheight-and-clientheight
+        var toolboxHeight = this.tools.offsetHeight; 
+        
+
+        var textareaWidth = textBounds[2] - textBounds[0];
+        var textareaHeight = textBounds[3] - textBounds[1];
+
+        // Firefox includes border & padding as part of width and height,
+        // so width and height should additionally include border and padding twice
+        if (Browser.mozilla) {
+            textareaHeight += (defaultEditorPadding) * 2;
+            topCoord -= (defaultEditorPadding);
+            textareaWidth += (defaultEditorPadding) * 2;
+            leftCoord -= (defaultEditorPadding);
+        }
+
+        // some of IE magic:
+        // enough to add half of font-size to textarea's width to prevent auto-breaking to next line
+        // which is wrong in our case
+        if (Browser.msie) {
+            var fontSize = parseInt(textarea.style['font-size'], 10);
+            textareaWidth += fontSize / 2;
+            leftCoord -= fontSize / 4;
+        }
+
+        this.editor.style.left = leftCoord + "px";
+        this.editor.style.top = topCoord + "px";
+
+        this.tools.style.left = leftCoord + "px";
+        this.tools.style.top = topCoord - toolboxHeight + "px";
+
+        textarea.style.width = textareaWidth + "px";
+        textarea.style.height = textareaHeight + "px";
+    },
+     
+    /**
+    *Removes DOM structure of editor and it's tools
+    *@author Artyom
+    **/        
+    destroy : function (){
+        this.editor.className = '';
+        this.editor.style.cssText = '';
+        this.editor.innerHTML = '';
+
+        this.tools.className = '';
+        this.tools.style.cssText = '';
+        this.tools.innerHTML = '';
+    },
+    
+    
+    /**
+    *Returns true if mouse clicked inside TextEditorPopup
+    *@param {Event} e - mouseDown event object
+    *@return {boolean} - true if clicked inside
+    *@author Artyom
+    **/
+   mouseClickedInside : function (e) {
+       //TODO: @Artyom: Do we still need this old crappy IE detection. In not, please remove it?
+       var target = e.target || e.srcElement;
+
+       // check if user fired mouse down on the part of editor, it's tools or active color picker
+       // actually active color picker in that moment can be only for Text edit
+       var inside = target.id === this.editor.id
+           || target.parentNode.id === this.editor.id
+           || target.parentNode.parentNode.id === this.editor.id
+
+           || target.id === this.tools.id
+           || target.parentNode.id === this.tools.id
+           || target.parentNode.parentNode.id === this.tools.id
+
+           || target.className === 'color_picker'
+
+           || target.id === 'color_selector'
+           || target.parentNode.id === 'color_selector'
+           || target.parentNode.parentNode.id === 'color_selector';
+   
+       return inside;
+   }        
+   
+};

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            function init(){
+                console.info("Page loaded");
+                
+                var brick = document.getElementById('brick');                
+                brick.addEventListener('mousedown', brickOnMouseDown, false);
+                brick.addEventListener('mouseup', brickOnMouseUp, false);
+                brick.addEventListener('mousemove', brickOnMouseMove, false);                
+                
+                var area1 = document.getElementById('area1');                
+                area1.addEventListener('mousemove', area1MouseMove, false);                
+            }
+            
+            var brickSelected = false;
+            function brickOnMouseDown(){
+                brickSelected = true;
+                //console.info("brickOnMouseDown: + brickSelected " + brickSelected);
+            }
+            
+            function brickOnMouseUp(){
+                brickSelected = false;
+                //console.info("brickOnMouseUp + brickSelected " + brickSelected);
+            }
+            
+            function brickOnMouseMove(){
+//                console.info("brickOnMouseMove + brickSelected " + brickSelected + " lastPosition: " + lastPosition);
+//                if(brickSelected){
+//                    var brick = document.getElementById('brick');                    
+//                    brick.style.left = lastPosition[0] + 'px';
+//                    brick.style.top = lastPosition[1] + 'px';
+////                    brick.style.top = '100px';
+////                    brick.style.left = '100px';
+//                }
+            }
+            
+            function mousedown(evt){
+                //console.info("mouse down");     
+                //evt.preventDefault();
+            }
+            
+            function mouseup(){
+                //console.info("Window + mouse up + brickSelected: " + brickSelected);
+                brickSelected = false;
+            }
+            
+            var lastPosition = [];
+            function mousemove(evt){
+                //console.info("mouse move " + evt.clientX + ',' + evt.clientY);
+                lastPosition = [evt.pageX, evt.pageY];
+                
+                var area1 = document.getElementById('area1');
+                var area2 = document.getElementById('area2');
+                
+                if(brickSelected){
+                    var brick = document.getElementById('brick');                    
+                    brick.style.left = (lastPosition[0] - 50) + 'px';
+                    brick.style.top = (lastPosition[1] - 50) + 'px';
+//                    brick.style.top = '100px';
+//                    brick.style.left = '100px';
+                    if(lastPosition[0] < 400 && lastPosition[1] < 400){
+                        area1.style.backgroundColor  = 'red';
+                    }
+                    else{
+                        area1.style.backgroundColor  = 'white';
+                    }
+                    
+                    if(lastPosition[0] > 400 && lastPosition[0] < 800 
+                        /*&& lastPosition[1] > 400*/ && lastPosition[1] < 400)
+                    {
+                        area2.style.backgroundColor  = 'red';
+                    }
+                    else{
+                        area2.style.backgroundColor  = 'white';
+                    }
+                    
+                }
+                else{
+                    
+                }
+            }
+            
+            
+            /*Finds position inside the area1 and on whole page*/
+            function area1MouseMove(evt){
+//                console.group("area1MouseMove");
+//                console.info('client [' + evt.clientX + ',' + evt.clientY + ']');
+//                console.info('page [' + evt.pageX + ',' + evt.pageY + ']');
+//                console.info('screen [' + evt.screenX + ',' + evt.screenY + ']');
+//                console.groupEnd();
+                
+//                var area1 = document.getElementById('area1');
+//                if(brickSelected){
+//                    area1.style.backgroundColor  = '#FF0000';
+//                }
+//                else{
+//                    area1.style.backgroundColor  = '#FF00FF';
+//                }
+            }
+            
+            window.addEventListener('load', init, false);
+            window.addEventListener('mousedown', mousedown, false);
+            window.addEventListener('mouseup', mouseup, false);
+            window.addEventListener('mousemove', mousemove, false);
+        </script>
+    </head>
+    <body style="position: relative;">
+        <div>TODO write content</div>
+        <!--
+        <canvas id="quilt" width="400" height="400" style="border: 1px solid gray;">
+             
+        </canvas>
+        -->
+        <div id="area1" style="width: 400px; height: 400px; border: 1px solid gray; display: inline-block;">            
+        </div>
+        
+        <div id="area2" style="width: 400px; height: 400px; border: 1px solid gray; display: inline-block;">            
+        </div>
+        
+        <div id="brick" style="background-color: green; color: white; display: inline-block; position: absolute; top: 500px; left: 500px; width: 100px; height: 100px;">
+            <img src="./rectangle.png"/>
+        </div>
+        
+        <img src="./rectangle.png" onclick="return false;"/>
+        <div onclick="return false;" style="background-image: url('./rectangle.png'); display: inline-block; width: 100px; height: 100px; cursor: pointer;"></div>
+    </body>
+</html>

@@ -1,6 +1,6 @@
 /**
  * An facade to add Commands, undo and redo them.
- * It keeps a STACK of commands and can tigger undo actions in the system.
+ * It keeps a STACK of commands and can trigger undo actions in the system.
  * @this {History} 
  * @constructor
  * @author Zack Newsham zack_newsham@yahoo.co.uk

@@ -30,6 +30,13 @@ ConnectorCreateCommand.prototype = {
     /**This method should be called every time the Command should be undone*/
     undo : function(){ 
         CONNECTOR_MANAGER.connectorRemoveById(this.connectorId, true);
+
+        // if current connector is in text editing state
+        if (state == STATE_TEXT_EDITING) {
+            // remove current text editor
+            currentTextEditor.destroy();
+            currentTextEditor = null;
+        }
         
         state = STATE_NONE;
         selectedConnectorId = -1;

@@ -310,6 +310,12 @@ Text.prototype = {
 
         var noLinesTxt = 0;
         var txtSizeHeight = this.size;
+
+        // update lineSpacing because it could be changed
+        // in dynamic way and we do not watch it
+        // TODO: reorganize by deleting lineSpacing at all or by adding get/set methods
+        this.lineSpacing = 1 / 4 * this.size;
+
         var txtSpaceLines = this.lineSpacing;
 
         var txtOffsetY = txtSizeHeight + txtSpaceLines;
@@ -460,7 +466,8 @@ Text.prototype = {
         nBounds.transform(Matrix.rotationMatrix(angle));
         nBounds.transform(Matrix.translationMatrix(this.vector[0].x,this.vector[0].y));
 
-        return nBounds.contains(x,y);
+        // check if (x,y) is inside or on a borders of nBounds
+        return nBounds.contains(x,y,true);
     },
 
 

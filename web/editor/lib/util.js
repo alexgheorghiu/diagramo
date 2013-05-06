@@ -31,6 +31,20 @@ var Util = {
     getUnionBounds: function(shapes){
         //tODo
     },
+           
+    /**
+     * See if some bounds are inside other bounds.
+     * Bounds are in form [minX, minY, maxX, maxY]
+     * @param {Array<Number>} innerBounds the inner bounds
+     * @param {Array<Number>} outerBounds the outer bounds
+     * @return {Boolean} true if innerBounds are inside outerBounds
+     * */
+    areBoundsInBounds : function(innerBounds, outerBounds){
+        return (outerBounds[0] <= innerBounds[0] && (innerBounds[0] <= outerBounds[2]))
+        && (outerBounds[1] <= innerBounds[1] && (innerBounds[1] <= outerBounds[3]))
+        && (outerBounds[0] <= innerBounds[2] && (innerBounds[2] <= outerBounds[2]))
+        && (outerBounds[1] <= innerBounds[3] && (innerBounds[3] <= outerBounds[3]));
+    },
     
     
     /**Returns a Polygon out of an Array of points 
@@ -605,6 +619,46 @@ var Util = {
             return true;
         }
     },
+
+
+    /**
+     /* Tests whether a point is inside the area (including border) determined by a set of other points.
+     * If the points is on the border of the area it will be counted
+     *
+     * Algorithm: just get border (min/max) values for x and y
+     * and then check if target point inside and on a borer or outside of points
+     *
+     * @param point {Point} the point we want to check
+     * @param points {Array<Point>} a set of points ordered clockwise.
+     * */
+    isPointInsideOrOnBorder:function(point, points){
+        if(points.length < 3){
+            return false;
+        }
+
+        // set min & max values to coordinates of first point
+        var minX = points[0].x;
+        var maxX = points[0].x;
+        var minY = points[0].y;
+        var maxY = points[0].y;
+
+        // go through points and get min and max x, y values
+        for (var i = 1; i < points.length; i++) {
+            var p = points[i];
+
+            minX = Math.min(p.x,minX);
+            maxX = Math.max(p.x,maxX);
+            minY = Math.min(p.y,minY);
+            maxY = Math.max(p.y,maxY);
+        }
+
+        // check if point is inside and on a border of points or outside
+        if (point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY) {
+            return true;
+        } else {
+            return false;
+        }
+    },
     
 
 	/**
@@ -912,4 +966,162 @@ function repeat(str, count){
     }
     
     return res;
+}
+
+/**
+ * Set selection on target interval inside text DOM element
+ * @param {HTMLElement} input - DOM element to set selection
+ * @param {Number} selectionStart - start position of selection
+ * @param {Number} selectionEnd - end position of selection
+ * @author Artyom
+ **/
+function setSelectionRange(input, selectionStart, selectionEnd) {
+    /*TODO: @Artyom: Do we need to make this tests anymore, for current browsers?
+    Is there any case in modern browser for this not to be supported
+    If we need them .... we might also need a warning or something on else {..}
+    Your choice
+    */
+    if (input.setSelectionRange) {
+        input.focus();
+        input.setSelectionRange(selectionStart, selectionEnd);
+    }
+    else if (input.createTextRange) {
+        var range = input.createTextRange();
+        range.collapse(true);
+        range.moveEnd('character', selectionEnd);
+        range.moveStart('character', selectionStart);
+        range.select();
+    }
+}
+
+/**A simple class to detect browser and it's version using navigator properties.
+ * Computing logic can be found here: http://stackoverflow.com/a/2401861/2097494
+ *
+ * @this {Browser}
+ * @constructor
+ **/
+function Browser() {
+    var N = navigator.appName.toLowerCase();
+    var ua = navigator.userAgent.toLowerCase();
+    var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+    var temp = ua.match(/version\/([\.\d]+)/i);
+    if(M && temp != null) {
+        M[2]= temp[1];
+    }
+    M= M? [M[1], M[2]]: [N, navigator.appVersion,'-?'];
+
+    this.webkit = M[0].indexOf("chrome") > -1 || M[0].indexOf("safari") > -1;
+    this.opera = M[0].indexOf("opera") > -1;
+    this.msie = M[0].indexOf("msie") > -1;
+    this.mozilla = M[0].indexOf("firefox") > -1;
+    this.version = M[1];
+}
+
+/**
+ * Binds event to DOM element
+ * @param {HTMLElement} element - DOM element to bind event
+ * @param {String} event - name of target event
+ * @param {Function} handler - function to bind
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function bindEvent(element, event, handler) {
+    if (element.attachEvent) {
+        element.attachEvent('on' + event, handler);  // IE
+    } else {
+        element.addEventListener(event, handler, false);
+    }
+}
+
+/**
+ * Binds event to NodeList
+ * @param {NodeList} list - NodeList to bind event
+ * @param {String} event - name of target event
+ * @param {Function} handler - function to bind
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function bindEventToNodeList(list, event, handler) {
+    var i;
+    var length = list.length;
+
+    for (i = 0; i < length; i++) {
+        bindEvent(list[i], event, handler);
+    }
+}
+
+/**
+ * Unbinds event to DOM element
+ * @param {HTMLElement} element - DOM element to unbind event
+ * @param {String} event - name of target event
+ * @param {Function} handler - function to unbind
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function unBindEvent(element, event, handler) {
+    if (element.detachEvent) {
+        element.detachEvent('on' + event, handler);  // IE
+    } else {
+        element.removeEventListener(event, handler, false);
+    }
+}
+
+/**
+ * Unbinds event from NodeList
+ * @param {NodeList} list - NodeList to unbind event
+ * @param {String} event - name of target event
+ * @param {Function} handler - function to unbind
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function unBindEventFromNodeList(list, event, handler) {
+    var i;
+    var length = list.length;
+
+    for (i = 0; i < length; i++) {
+        unBindEvent(list[i], event, handler);
+    }
+}
+
+/**
+ * Removes DOM element
+ * @param {HTMLElement} element - DOM element to remove
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function removeElement(element) {
+    element && element.parentNode && element.parentNode.removeChild(element);
+}
+
+/**
+ * Removes NodeList
+ * @param {NodeList} list - NodeList to remove
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ *
+ * Note:  <br/>
+ * Cross-browser solution for native JS.
+ */
+function removeNodeList(list) {
+    var i;
+    var length = list.length;
+
+    for (i = 0; i < length; i++) {
+        removeElement(list[i]);
+    }
 }

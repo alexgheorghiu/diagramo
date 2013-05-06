@@ -108,3 +108,17 @@ test("Util.miscelaneus", function () {
     // Tests whether a point is inside the area (excluding border) determined by a set of other points
     ok(!Util.isPointInside(p, v), 'point on a border is not inside another points');
 });
+
+
+test("Util.areBoundsInBounds", function () {
+    var outer = [0,0, 100,100];
+    
+    var inner = [10,10, 40, 40];    
+    ok(Util.areBoundsInBounds(inner, outer), 'inner bounds: ' + inner +  ' inside outer bounds: ' + outer);
+    
+    var inner2 = [0,0, 10, 10];    
+    ok(Util.areBoundsInBounds(inner, outer), 'inner bounds 2: ' + inner2 +  ' inside outer bounds: ' + outer);
+    
+    var wrongInner = [100, 100, 110, 110];    
+    strictEqual( Util.areBoundsInBounds(wrongInner, outer), false, 'wrong inner bounds : ' + wrongInner +  ' should not be inside outer bounds: ' + outer);
+});

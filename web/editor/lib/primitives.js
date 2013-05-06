@@ -751,14 +751,18 @@ Polygon.prototype = {
         return ret;
     },
 
-    contains:function(x, y){
+    contains:function(x, y, includeBorders){
         var inPath = false;
         var p = new Point(x,y);
         if(!p){
             alert('Polygon: P is null');
         }
-        
-        return Util.isPointInside(p, this.points);
+
+        if (includeBorders) {
+            return Util.isPointInsideOrOnBorder(p, this.points);
+        } else {
+            return Util.isPointInside(p, this.points);
+        }
     },
 
     transform:function(matrix){
@@ -1696,7 +1700,7 @@ Arc.prototype = {
             for(var i=0; i<curves.length; i++){
                 curves[i].transform(matrix);
             }
-            }
+        }
     },
 
 
@@ -2599,46 +2603,46 @@ Figure.load = function(o){
         /**We can not use instanceof Point construction as
          *the JSON objects are typeless... so JSONObject are simply objects */
         if(o.primitives[i].oType == 'Point'){
-            newFigure.primitives.push(Point.load(o.primitives[i]))
+            newFigure.addPrimitive(Point.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Line'){
-            newFigure.primitives.push(Line.load(o.primitives[i]))
+            newFigure.addPrimitive(Line.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Polyline'){
-            newFigure.primitives.push(Polyline.load(o.primitives[i]))
+            newFigure.addPrimitive(Polyline.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Polygon'){
-            newFigure.primitives.push(Polygon.load(o.primitives[i]))
+            newFigure.addPrimitive(Polygon.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'DottedPolygon'){
-            newFigure.primitives.push(DottedPolygon.load(o.primitives[i]))
+            newFigure.addPrimitive(DottedPolygon.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'QuadCurve'){
-            newFigure.primitives.push(QuadCurve.load(o.primitives[i]))
+            newFigure.addPrimitive(QuadCurve.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'CubicCurve'){
-            newFigure.primitives.push(CubicCurve.load(o.primitives[i]))
+            newFigure.addPrimitive(CubicCurve.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Arc'){
-            newFigure.primitives.push(Arc.load(o.primitives[i]))
+            newFigure.addPrimitive(Arc.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Ellipse'){
-            newFigure.primitives.push(Ellipse.load(o.primitives[i]))
+            newFigure.addPrimitive(Ellipse.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'DashedArc'){
-            newFigure.primitives.push(DashedArc.load(o.primitives[i]))
+            newFigure.addPrimitive(DashedArc.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Text'){
-            newFigure.primitives.push(Text.load(o.primitives[i]))
+            newFigure.addPrimitive(Text.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Path'){
-            newFigure.primitives.push(Path.load(o.primitives[i]))
+            newFigure.addPrimitive(Path.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Figure'){
-            newFigure.primitives.push(Figure.load(o.primitives[i])) //kinda recursevly
+            newFigure.addPrimitive(Figure.load(o.primitives[i])) //kinda recursevly
         }
         else if(o.primitives[i].oType == 'ImageFrame'){
-            newFigure.primitives.push(ImageFrame.load(o.primitives[i])) //kinda recursevly
+            newFigure.addPrimitive(ImageFrame.load(o.primitives[i])) //kinda recursevly
         }
     }//end for
 
@@ -2742,6 +2746,9 @@ Figure.prototype = {
     },
 
     addPrimitive:function(primitive){
+        // add id property to primitive equal its index
+        primitive.id = this.primitives.length;
+
         this.primitives.push(primitive);
     },
 
@@ -2977,6 +2984,7 @@ Figure.prototype = {
         }
         return false;
     },
+    
     toString:function(){
         var result = this.name + ' [id: ' + this.id + '] (';
         for(var i = 0; i<this.primitives.length; i++ ){

@@ -3,6 +3,13 @@
  */
 
 
+var connector_defaultConnectorTextSize = 12;
+var connector_defaultConnectorTextStr = "";
+var connector_defaultConnectorTextFont = "Arial";
+var connector_defaultConnectorTextStrokeStyle = "#000000";
+var connector_defaultConnectorTextFillStyle = "#000000";
+var connector_defaultConnectorTextBgStyle = "#ffffff";
+
 /**
  *It's a connector between 2 figureConnectionPoints.
  *
@@ -30,10 +37,10 @@ function Connector(startPoint,endPoint,type, id){
     this.style.strokeStyle = "#000000";
     
     /**The text that will appear in the middle of the connector*/
-    this.middleText = new Text("", (startPoint.x + endPoint.x)/2+10, (startPoint.y +  endPoint.y) / 2 - 13, 'Arial',10);
-    this.middleText.style.strokeStyle = "#000000";
-    this.middleText.style.fillStyle = "#000000";
-    this.middleText.bgStyle = "#ffffff";
+    this.middleText = new Text(connector_defaultConnectorTextStr, (startPoint.x + endPoint.x)/2+10, (startPoint.y +  endPoint.y) / 2 - 13, connector_defaultConnectorTextFont, connector_defaultConnectorTextSize);
+    this.middleText.style.strokeStyle = connector_defaultConnectorTextStrokeStyle;
+    this.middleText.style.fillStyle = connector_defaultConnectorTextFillStyle;
+    this.middleText.bgStyle = connector_defaultConnectorTextBgStyle;
 
     /**An {Array} of {BuilderProperties} to store exposed properties of the connector*/
     this.properties = [];
@@ -42,6 +49,10 @@ function Connector(startPoint,endPoint,type, id){
     this.properties.push(new BuilderProperty('Line Width','style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
     this.properties.push(new BuilderProperty('Color','style.strokeStyle', BuilderProperty.TYPE_COLOR));
     this.properties.push(new BuilderProperty('Text','middleText.str', BuilderProperty.TYPE_TEXT));
+    this.properties.push(new BuilderProperty('Text Size ', 'middleText.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
+    this.properties.push(new BuilderProperty('Font', 'middleText.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
+    this.properties.push(new BuilderProperty('Alignment', 'middleText.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    this.properties.push(new BuilderProperty('Text Color', 'middleText.style.fillStyle', BuilderProperty.TYPE_COLOR));
    
     /**Start style for connector. Ex: Connector.STYLE_NORMAL*/
     this.startStyle = Connector.STYLE_NORMAL;

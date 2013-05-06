@@ -79,6 +79,7 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/log.js"></script>
         <script type="text/javascript" src="./lib/text.js"></script>
         <script type="text/javascript" src="./lib/browserReady.js"></script>
+        <script type="text/javascript" src="./lib/containers.js"></script>
         <script type="text/javascript" src="./lib/main.js"></script>
         
         <script type="text/javascript" src="./lib/sets/basic/basic.js"></script>
@@ -107,9 +108,14 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/commands/GroupDeleteCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/GroupTranslateCommand.js"></script>
         
-        <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js"></script>
-        <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js"></script>                        
         
+        <script type="text/javascript" src="./lib/commands/ContainerCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/ContainerDeleteCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/ContainerTranslateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/ContainerScaleCommand.js"></script>
+        
+        <script type="text/javascript" src="./lib/commands/ConnectorCreateCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/ConnectorDeleteCommand.js"></script>                                
         <script type="text/javascript" src="./lib/commands/ConnectorAlterCommand.js"></script>
         
         <script type="text/javascript" src="./lib/commands/ShapeChangePropertyCommand.js"></script>
@@ -124,8 +130,7 @@ $page = 'editor';
         <!--[if IE]>
         <script src="./assets/javascript/excanvas.js"></script>
         <![endif]-->
-
-        
+       
     </head>
     <body onload="init('<?= isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId']) ? $_REQUEST['diagramId']:''?>');" id="body">
         
@@ -152,6 +157,10 @@ $page = 'editor';
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
             <a href="javascript:action('connector-organic');" title="Organic connector (Experimental)"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
+            
+            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            
+            <a href="javascript:action('container');" title="Container (Experimental)"><img src="assets/images/container.png" border="0" alt="Container"/></a>
             
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>            
                         
@@ -222,33 +231,117 @@ $page = 'editor';
                             document.write('<option value="' + setName + '">' + set['name'] + '</option>');
                         }
                     </script>
-
                 </select>
-                <script type="text/javascript">
-                    var first = true;
-                    for(var setName in figureSets){
-                        document.write('<div id="' + setName + '" ' + (!first ? 'style="display: none"' : '')+'>');
-                        document.write('<table border="0" cellpadding="0" cellspacing="0" width="120">');
-                        var counter = 0;
-                        var set = figureSets[setName];
-                        for(var figure in set['figures']){
-                            figure = set['figures'][figure];
-                            if(counter % 3 === 0){
-                                document.write('<tr>');
+                
+                <script>
+                    /**Builds the figure panel*/
+                    function buildPanel(){
+                        //var first = true;
+                        var firstPanel = true;
+                        for(var setName in figureSets){                            
+                            var set = figureSets[setName];
+                            
+                            //creates the div that will hold the figures
+                            var eSetDiv = document.createElement('div');
+                            eSetDiv.setAttribute('id', setName);
+                            //eSetDiv.style.border = '1px solid green';
+                            if(firstPanel) {
+                                firstPanel = false;
                             }
-                            document.write('<td align="center"><a href="javascript:createFigure(figure_'+figure.figureFunction+');"><img src="lib/sets/'+setName+'/'+figure.image+'" border="0" alt="'+ figure.figureFunction + '" /></a></td>');
-                            counter ++;
-                            if(counter % 3 === 0){
-                                document.write('</tr>');
+                            else{
+                                eSetDiv.style.display = 'none';
+                            }
+                            document.getElementById('figures').appendChild(eSetDiv);
+                            
+                            //add figures to the div
+                            for(var figure in set['figures']){
+                                figure = set['figures'][figure];
+                                
+                                var figureFunctionName = 'figure_' + figure.figureFunction;                                
+                                var figureThumbURL = 'lib/sets/' + setName + '/' + figure.image;
+                                
+                                var eFigure = document.createElement('img');
+                                eFigure.setAttribute('src', figureThumbURL);
+                                
+                                eFigure.addEventListener('mousedown', function (figureFunction, figureThumbURL){                                    
+                                    return function(evt) {
+                                        evt.preventDefault();
+                                        //Log.info("editor.php:buildPanel: figureFunctionName:" + figureFunctionName);
+                                        
+                                        createFigure(window[figureFunction] /*we need to search for function in window namespace (as all that we have is a simple string)**/
+                                            ,figureThumbURL);
+                                    };
+                                } (figureFunctionName, figureThumbURL)
+                                , false);
+
+                                //in case use drops the figure
+                                eFigure.addEventListener('mouseup', function (){
+                                    createFigureFunction = null;    
+                                    selectedFigureThumb = null;
+                                    state = STATE_NONE;
+                                }
+                                , false);                                                                                                
+                                
+                                
+                                eFigure.style.cursor = 'pointer';
+                                eFigure.style.marginRight = '5px';
+                                eFigure.style.marginTop = '2px';
+                                
+                                eSetDiv.appendChild(eFigure);
                             }
                         }
-                        if(counter % 3 !== 0){
-                            document.write('</tr>');
-                        }
-                        document.write('</table></div>');
-                        first = false;
                     }
-                </script>                
+                    
+                    buildPanel();
+                    
+//                    var first = true;
+//                    for(var setName in figureSets){
+//                        
+//                        document.write('<div id="' + setName + '" ' + (!first ? 'style="display: none"' : '')+'>');
+//                        document.write('<table border="0" cellpadding="0" cellspacing="0" width="120">');
+//                        var counter = 0;
+//                        var set = figureSets[setName];
+//                        for(var figure in set['figures']){
+//                            figure = set['figures'][figure];
+//                            if(counter % 3 == 0){
+//                                document.write('<tr>');
+//                            }
+//                            
+//                            var figureFunctionName = 'figure_' + figure.figureFunction;
+//                            var figureThumbURL = 'lib/sets/' + setName + '/' + figure.image;
+//                            
+//                            document.write('<td align="center">');
+//                            document.write('<a href="javascript:createFigure(' + figureFunctionName + "," + "'" + figureThumbURL + "'" + ');">');
+//                            
+//                            //TODO: how to prevent default behaviour?
+//                            var figureImageId = 'fig' + setName + '_' + figure.figureFunction;
+//                            document.write('<img id="' + figureImageId +'" onmousedown="javascript:createFigure(' + figureFunctionName + "," + "'" + figureThumbURL + "'" + ');" src="' + figureThumbURL + '" border="0" alt="'+ figure.figureFunction + '" />');
+//                            
+//                            var figureImageElem = document.getElementById(figureImageId);
+//                            figureImageId.onMouseDown = function(evt){
+//                                alert('I am here');
+//                                evt.preventDefault();
+//                            }
+//                            
+//                            //document.write('</a>');
+//                            document.write('</td>');
+//                            
+//                            counter ++;
+//                            if(counter % 3 == 0){
+//                                document.write('</tr>');
+//                            }
+//                        }
+//                        if(counter % 3 != 0){
+//                            document.write('</tr>');
+//                        }
+//                        document.write('</table></div>');
+//                        first = false;
+//                    }
+                </script>
+                
+                <div style="display:none;" id="more">
+                    More sets of figures <a href="http://diagramo.com/figures.php" target="_new">here</a>
+                </div>
             </div>
             
             <!--THE canvas-->
@@ -257,6 +350,8 @@ $page = 'editor';
                     <canvas id="a" width="800" height="600">
                         Your browser does not support HTML5. Please upgrade your browser to any modern version.
                     </canvas>
+                    <div id="text-editor"></div>
+                    <div id="text-editor-tools"></div>
                 </div>
             </div>
             

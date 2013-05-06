@@ -1,6 +1,13 @@
 /** Custom addition for result label */
-#qunit, #qunit-fixture {
+#qunit {
     display: none;
+}
+
+/* Make this block visible but shifted out from the screen */
+#qunit-fixture {
+    display: block;
+    margin: -10000px;
+    position: absolute;
 }
 
 .qunit-result {

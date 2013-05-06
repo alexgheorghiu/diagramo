@@ -28,6 +28,7 @@ FigureCreateCommand.prototype = {
     execute : function(){
         if(this.firstExecute){
             //create figure
+            //Log.info("FigureCreateCommand> execute> factoryFunction=" + this.factoryFunction);
             var createdFigure = this.factoryFunction(this.x, this.y);
               
             //move it into position
@@ -59,7 +60,15 @@ FigureCreateCommand.prototype = {
     
     
     /**This method should be called every time the Command should be undone*/
-    undo : function(){ 
+    undo : function(){
+
+        // if current figure is in text editing state
+        if (state == STATE_TEXT_EDITING) {
+            // remove current text editor
+            currentTextEditor.destroy();
+            currentTextEditor = null;
+        }
+
         STACK.figureRemoveById(this.figureId);
         state = STATE_NONE;
     }

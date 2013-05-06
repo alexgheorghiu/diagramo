@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            
+            
+            window.addEventListener("load", init, false);
+            
+            function init(){
+                window.addEventListener("click", documentOnClick, false);
+            }
+            
+            function documentOnClick(evt){
+                
+                var e = document.elementFromPoint(evt.clientX, evt.clientY);
+                console.info("Clicked on " + e.id);
+            }
+        </script>
+        <style type="text/css">
+            div {
+                border: 1px dotted #F2683E;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="one">One</div>
+        <div id="two">Two</div>
+        <div id="three">
+            Start three
+            <div id="four">Four</div>        
+            End three
+        </div>
+    </body>
+
+</html>
