@@ -57,8 +57,8 @@ function Connector(startPoint,endPoint,type, id){
     /**Start style for connector. Ex: Connector.STYLE_NORMAL*/
     this.startStyle = Connector.STYLE_NORMAL;
     
-    /**End style for connector. Ex: Connector.STYLE_NORMAL*/
-    this.endStyle = Connector.STYLE_NORMAL;
+    /**End style for connector. Ex: Connector.STYLE_ARROW*/
+    this.endStyle = Connector.STYLE_ARROW;
 
     /**The {ConnectionPoint}'s id that is currently being dragged*/
     this.activeConnectionPointId = -1;
