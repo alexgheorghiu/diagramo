@@ -20,9 +20,9 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
                     <a style="text-decoration: none; border-bottom: 1px solid #666;" href="javascript:saveAs();"  title="Save diagram as..."><img style="vertical-align:middle; margin-right: 3px;" src="assets/images/icon_save_as.jpg" border="0" width="22" height="22"/><span class="menuText">Save as...</span></a>
                     <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
                         <a style="text-decoration: none; border-bottom: 1px solid #666;" href="./exportDiagram.php?diagramId=<?=$_REQUEST['diagramId']?>"  title="Export diagram"><img style="vertical-align:middle; margin-right: 3px;" src="assets/images/icon_export.jpg" border="0" width="22" height="22"/><span class="menuText">Export</span></a>
+                        <a style="text-decoration: none; border-bottom: 1px solid #666;" href="javascript:print_diagram();" title="Print diagram"><img style="vertical-align:middle; margin-right: 3px;" src="assets/images/icon_print.png" border="0" width="20" height="21"/><span class="menuText">Print</span></a>
                     <?}?>
                 <?}?>
-                <a style="text-decoration: none; border-bottom: 1px solid #666;" href="javascript:print_diagram();" title="Print diagram"><img style="vertical-align:middle; margin-right: 3px;" src="assets/images/icon_print.png" border="0" width="20" height="21"/><span class="menuText">Print</span></a>
                 <?if (is_object($loggedUser)) { ?>    
                 <a style="text-decoration: none;" href="./common/controller.php?action=logoutExe"><img style="vertical-align:middle;" src="<?=$WEBADDRESS?>/editor/assets/images/icon_logout.gif" border="0" width="16" height="16"/><span class="menuText">Logout (<?= $loggedUser->email ?>)</span></a>
                 <?}?>

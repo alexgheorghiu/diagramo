@@ -146,10 +146,11 @@ $page = 'editor';
             
             <a style="text-decoration: none;" href="./myDiagrams.php" title="Open diagram"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
 
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+            <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
+                <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+                <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Print diagram"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
+            <?}?>
 
-            <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Print diagram"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
-            
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
             <a href="javascript:action('connector-straight');"  title="Straight connector"><img src="assets/images/icon_connector_straight.gif" border="0"/></a>

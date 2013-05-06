@@ -792,11 +792,14 @@ function onKeyDown(ev){
                 ev.preventDefault();
             }
             break;
+
         case KEY.P:
-            if(CNTRL_PRESSED){
-                //Log.info("CTRL-P pressed  ");
-                print_diagram();
-                ev.preventDefault();
+            if (currentDiagramId !== null) {
+                if(CNTRL_PRESSED){
+                    Log.info("CTRL-P pressed  ");
+                    print_diagram();
+                    ev.preventDefault();
+                }
             }
             break;
     }
@@ -3029,10 +3032,10 @@ function save(){
  * Print can be triggered in 3 cases:
  *  1 - from menu
  *  2 - from quick toolbar
- *  3 - from shortcut Ctrl-P (onKeyDown)
+ *  3 - from Ctrl + P shortcut
  *
- *  Create canvas and render diagram without the selection and stuff on it,
- *  add this canvas to iframe and print it.
+ *  Copy link to saved diagram's png file to src of image,
+ *  add it to iframe and call print of last.
  **/
 function print_diagram() {
     var printFrameId = "printFrame";
@@ -3055,24 +3058,31 @@ function print_diagram() {
     // get DOM of iframe
     var frameDoc = iframe.contentDocument || iframe.contentWindow.document;
 
-    var tempCanvas = frameDoc.getElementsByTagName('canvas');
+    var diagramImage = frameDoc.getElementsByTagName('img');
+    if(diagramImage.length > 0) {     // if image is already added
+        diagramImage = diagramImage[0];
 
-    if(tempCanvas.length > 0) {     // if canvas is already added
-        tempCanvas = tempCanvas[0];
-    } else {                        // if canvas isn't created yet
-        tempCanvas = frameDoc.createElement('canvas');
-        frameDoc.body.appendChild(tempCanvas);
+        // set source of image to png of saved diagram
+        diagramImage.setAttribute('src', "data/diagrams/" + currentDiagramId + ".png");
+
+    } else {                        // if image isn't created yet
+        diagramImage = frameDoc.createElement('img');
+
+        // set source of image to png of saved diagram
+        diagramImage.setAttribute('src', "data/diagrams/" + currentDiagramId + ".png");
+
+        if (frameDoc.body !== null) {
+            frameDoc.body.appendChild(diagramImage);
+        } else {  // IE case
+            frameDoc.src = "javascript:'<body></body>'";
+            frameDoc.write(diagramImage.outerHTML);
+            frameDoc.close();
+        }
     }
 
-    var canvas = getCanvas();
-
-    // adjust temp canvas size to main canvas (as it might have been changed)
-    tempCanvas.setAttribute('width', canvas.width);
-    tempCanvas.setAttribute('height', canvas.height);
-
-    // render the canvas without the selection and stuff
-    reset(tempCanvas);
-    STACK.paint(tempCanvas.getContext('2d'), true);
+    // adjust iframe size to main canvas (as it might have been changed)
+    iframe.setAttribute('width', canvasProps.getWidth());
+    iframe.setAttribute('height', canvasProps.getHeight());
 
     // print iframe
     iframe.contentWindow.print();
