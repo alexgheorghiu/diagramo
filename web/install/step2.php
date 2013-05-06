@@ -151,6 +151,25 @@ $requirements = loadRequirements();
             function showMessage(page){
                 myRef = window.open('./help/' + page + '.html','mywin','left=200,top=200,width=500,height=200,toolbar=0,resizable=0');
             }
+            
+            function init(){
+                document.addEventListener('keypress', onKey, false);
+            }
+            
+            function onKey(e){
+                if(e.keyCode === 13){
+                    var eLinkRetry = document.getElementById('linkRetry');
+                    if(eLinkRetry){ //first is retry
+                        eLinkRetry.click();
+                    }
+                    else{ //second is next
+                        var eLinkNext = document.getElementById('linkNext');
+                        eLinkNext.click();
+                    }
+                }
+            }
+
+            window.addEventListener('load', init, false);
         </script>
     </head>
     <body>
@@ -216,9 +235,9 @@ $requirements = loadRequirements();
             </div>
             <div id="navigator">
                 <?php if($errors){ ?>
-                <a href="step2.php"><img src="./assets/retry.png" border="0"/></a>
+                <a id="linkRetry"  href="step2.php"><img src="./assets/retry.png" border="0"/></a>
                 <?php }else{ ?>
-                <a href="step3.php"><img src="./assets/next.png" border="0"/></a>
+                <a id="linkNext" href="step3.php"><img src="./assets/next.png" border="0"/></a>
                 <?php }?>
             </div>
             

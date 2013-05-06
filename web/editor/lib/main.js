@@ -2985,7 +2985,7 @@ function save(){
 
     var diagram = { c: canvasProps, s:STACK, m:CONNECTOR_MANAGER };
     //Log.info('stringify ...');
-    var serializedDiagram = JSON.stringify(diagram);
+    var serializedDiagram = JSON.stringify(diagram,  Util.operaReplacer);
     //Log.info('JSON stringify : ' + serializedDiagram);
 
     var svgDiagram = toSVG();
@@ -3089,7 +3089,7 @@ function saveAs(){
 
 //                var $diagram = {c:canvas.save(), s:STACK, m:CONNECTOR_MANAGER};
    var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER};
-   $serializedDiagram = JSON.stringify($diagram);
+   $serializedDiagram = JSON.stringify($diagram,  Util.operaReplacer);
    var svgDiagram = toSVG();
 
    //save the URLs of figures as a CSV 

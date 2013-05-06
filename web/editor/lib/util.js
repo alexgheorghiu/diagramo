@@ -903,10 +903,32 @@ var Util = {
         }
 
         return score;
-    }    
+    },
+    
+    
+    /**
+     * Function to be used as a replacer in JSON's stringify process.
+     * We need this as Opera does some rounding (@see https://bitbucket.org/scriptoid/diagramo/issue/35/serialization-fails-on-opera-1115)
+     * @param {String} key the property of an object
+     * @param  val the value of the key
+     * @see https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/JSON/stringify
+     * @see https://developer.mozilla.org/en-US/docs/Using_native_JSON#The_replacer_parameter
+     * @author Artyom, Alex
+     * */
+    operaReplacer : function (key, val) {
+        if (typeof(val) !== 'undefined') {
+            // using of Number.prototype.toFixed allows
+            // number-to-string conversion without rounding (Opera case)
+            return val.toFixed ? val.toFixed(20) : val;
+        }
+
+        /*by default the return will be undefined which means the 'key' will not be stringified
+         * "If you return undefined, the property is not included in the output JSON string."
+         */
+    }
 
 
-}
+};
 
 /**Returns the sign of a number
  *@param {Number} x - the number

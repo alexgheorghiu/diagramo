@@ -22,6 +22,20 @@ define('STEP', 'step4');
     <head>
         <title>4 - Done</title>
         <link href="./assets/style.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript">
+            function init(){
+                document.addEventListener('keypress', onKey, false);
+            }
+            
+            function onKey(e){
+                if(e.keyCode === 13){
+                    var eLinkNext = document.getElementById('linkNext');
+                    eLinkNext.click();
+                }
+            }
+            
+            window.addEventListener('load', init, false);
+        </script>
     </head>
     <body>
 
@@ -40,7 +54,7 @@ define('STEP', 'step4');
                 
             </div>
             <div id="navigator">
-                <a href="../editor/login.php"><img src="./assets/next.png" border="0"/></a>
+                <a id="linkNext" href="../editor/login.php"><img src="./assets/next.png" border="0"/></a>
             </div>
             <?}?>
             

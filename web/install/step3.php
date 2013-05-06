@@ -125,7 +125,20 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
             function submitSettingsForm(){
                 document.forms['settingsForm'].submit();
             }
+            
+            function init(){
+                document.addEventListener('keypress', onKey, false);
+            }
+            
+            function onKey(e){
+                if(e.keyCode === 13){
+                    submitSettingsForm();
+                }
+            }
+            
+            window.addEventListener('load', init, false);
         </script>
+        
         <style type="text/css">
             .bigger {
                 font-family: sans-serif;
@@ -166,19 +179,19 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
                                     <tr>
                                         <td>Your name:</td>
                                         <td>&nbsp;&nbsp;</td>
-                                        <td><input type="text" name="admin_name" value="<?=$_REQUEST['admin_name']?>" /><span class="required">*</span></td>
+                                        <td><input tabindex="1" type="text" name="admin_name" value="<?=$_REQUEST['admin_name']?>" /><span class="required">*</span></td>
                                     </tr>
 
                                     <tr>
                                         <td>Your email:</td>
                                         <td>&nbsp;&nbsp;</td>
-                                        <td><input type="text" name="admin_email" value="<?=$_REQUEST['admin_email']?>" /><span class="required">*</span></td>
+                                        <td><input tabindex="2" type="text" name="admin_email" value="<?=$_REQUEST['admin_email']?>" /><span class="required">*</span></td>
                                     </tr>
 
                                     <tr>
                                         <td>Your password:</td>
                                         <td>&nbsp;&nbsp;</td>
-                                        <td><input type="password" name="admin_pass" value="<?=$_REQUEST['admin_pass']?>" /><span class="required">*</span></td>
+                                        <td><input tabindex="3" type="password" name="admin_pass" value="<?=$_REQUEST['admin_pass']?>" /><span class="required">*</span></td>
 
                                     </tr>
 

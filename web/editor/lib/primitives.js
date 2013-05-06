@@ -1655,6 +1655,7 @@ Arc.load = function(o){
 
     newArc.styleFlag = o.styleFlag;
     newArc.style = Style.load(o.style);
+    newArc.direction = o.direction;
 
     return newArc;
 }

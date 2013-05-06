@@ -15,8 +15,23 @@ $appUrl = substr($fullURL, 0, strpos($fullURL, '/install'));
     <head>
         <title>Step 1 - Welcome | Diagramo</title>
         <link href="./assets/style.css" rel="stylesheet" type="text/css" />        
+        <script type="text/javascript">
+            function init(){
+                document.addEventListener('keypress', onKey, false);
+            }
+            
+            function onKey(e){
+                if(e.keyCode === 13){
+                    var eLinkNext = document.getElementById('linkNext');
+                    eLinkNext.click();
+                }
+            }
+            
+            window.addEventListener('load', init, false);
+        </script>
+        
     </head>
-    <body onload="">
+    <body>
         
         <div id="content">            
             <?php include 'logo.php'?>
@@ -30,7 +45,7 @@ $appUrl = substr($fullURL, 0, strpos($fullURL, '/install'));
                 </div>
             </div>
             <div id="navigator">
-                <a href="step2.php"><img src="./assets/next.png" border="0"/></a>
+                <a id="linkNext" href="step2.php"><img src="./assets/next.png" border="0"/></a>
             </div>
             
             

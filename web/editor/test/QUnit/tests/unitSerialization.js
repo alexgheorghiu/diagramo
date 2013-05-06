@@ -28,7 +28,7 @@ test("test cubic curve", function () {
 test("test dashed arc", function () {
     var da = new DashedArc(100, 100, 50, 30, 45, 0, 1, 3);
 
-    var ser = JSON.stringify(da);
+    var ser = JSON.stringify(da, Util.operaReplacer);
     var unser = eval('(' + ser + ')');
     var newDa = DashedArc.load(unser);
 
