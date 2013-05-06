@@ -862,11 +862,21 @@ var Util = {
      * @author Artyom, Alex
      * */
     operaReplacer : function (key, val) {
-        if (typeof(val) !== 'undefined') {
+        if (typeof(val) !== 'undefined' && val !== null) {
             // using of Number.prototype.toFixed allows
             // number-to-string conversion without rounding (Opera case)
-            return val.toFixed ? val.toFixed(20) : val;
+            if (val.toFixed) {
+                val = val.toFixed(20);
+
+                // check if val has decimals and it ends with zero(s)
+                if (/\.\d*0+$/g.test(val)) {
+                    // remove last decimal zero(s) from the end of val (and with dot if it is actually)
+                    val = val.replace(/(\.)?0+$/g, '');
+                }
+            }
         }
+        return val;
+//            return val.toFixed ? val.toFixed(20) : val;
 
         /*by default the return will be undefined which means the 'key' will not be stringified
          * "If you return undefined, the property is not included in the output JSON string."
