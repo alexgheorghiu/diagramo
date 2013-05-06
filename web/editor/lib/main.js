@@ -792,6 +792,13 @@ function onKeyDown(ev){
                 ev.preventDefault();
             }
             break;
+        case KEY.P:
+            if(CNTRL_PRESSED){
+                //Log.info("CTRL-P pressed  ");
+                print_diagram();
+                ev.preventDefault();
+            }
+            break;
     }
     draw();
     return false;
@@ -3016,6 +3023,59 @@ function save(){
     );
 
 
+}
+
+/** Print current diagram
+ * Print can be triggered in 3 cases:
+ *  1 - from menu
+ *  2 - from quick toolbar
+ *  3 - from shortcut Ctrl-P (onKeyDown)
+ *
+ *  Create canvas and render diagram without the selection and stuff on it,
+ *  add this canvas to iframe and print it.
+ **/
+function print_diagram() {
+    var printFrameId = "printFrame";
+
+    var iframe = document.getElementById(printFrameId);
+
+    // if iframe isn't created
+    if (iframe == null) {
+        iframe = document.createElement("IFRAME");
+        iframe.id = printFrameId;
+
+        // hiding iframe
+        iframe.style.position = "absolute";
+        iframe.style.left = "-30000px";
+        iframe.style.top = "-30000px";
+
+        document.body.appendChild(iframe);
+    }
+
+    // get DOM of iframe
+    var frameDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+    var tempCanvas = frameDoc.getElementsByTagName('canvas');
+
+    if(tempCanvas.length > 0) {     // if canvas is already added
+        tempCanvas = tempCanvas[0];
+    } else {                        // if canvas isn't created yet
+        tempCanvas = frameDoc.createElement('canvas');
+        frameDoc.body.appendChild(tempCanvas);
+    }
+
+    var canvas = getCanvas();
+
+    // adjust temp canvas size to main canvas (as it might have been changed)
+    tempCanvas.setAttribute('width', canvas.width);
+    tempCanvas.setAttribute('height', canvas.height);
+
+    // render the canvas without the selection and stuff
+    reset(tempCanvas);
+    STACK.paint(tempCanvas.getContext('2d'), true);
+
+    // print iframe
+    iframe.contentWindow.print();
 }
 
 /**Exports current canvas as SVG*/

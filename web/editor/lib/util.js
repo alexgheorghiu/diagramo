@@ -916,7 +916,7 @@ var Util = {
      * @author Artyom, Alex
      * */
     operaReplacer : function (key, val) {
-        if (typeof(val) !== 'undefined') {
+        if (typeof(val) !== 'undefined' && val !== null) {
             // using of Number.prototype.toFixed allows
             // number-to-string conversion without rounding (Opera case)
             return val.toFixed ? val.toFixed(20) : val;

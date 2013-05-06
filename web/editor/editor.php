@@ -145,6 +145,10 @@ $page = 'editor';
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
             <a style="text-decoration: none;" href="./myDiagrams.php" title="Open diagram"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
+
+            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
+
+            <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Print diagram"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
             
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
