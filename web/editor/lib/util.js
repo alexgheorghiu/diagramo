@@ -859,14 +859,14 @@ var Util = {
      * @param  val the value of the key
      * @see https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/JSON/stringify
      * @see https://developer.mozilla.org/en-US/docs/Using_native_JSON#The_replacer_parameter
+     * @see https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Number/toFixed
      * @author Artyom, Alex
      * */
     operaReplacer : function (key, val) {
         if (typeof(val) !== 'undefined' && val !== null) {
-            // using of Number.prototype.toFixed allows
-            // number-to-string conversion without rounding (Opera case)
+            // As toFixed(...) method is specific only for Number type we will use it to test if val is actually a Number
             if (val.toFixed) {
-                val = val.toFixed(20);
+                val = val.toFixed(20); //this will ensure that ANY string representation will have a . (dot) and some 0 (zero)s at the end
 
                 // check if val has decimals and it ends with zero(s)
                 if (/\.\d*0+$/.test(val)) {
@@ -876,7 +876,6 @@ var Util = {
             }
         }
         return val;
-//            return val.toFixed ? val.toFixed(20) : val;
 
         /*by default the return will be undefined which means the 'key' will not be stringified
          * "If you return undefined, the property is not included in the output JSON string."
