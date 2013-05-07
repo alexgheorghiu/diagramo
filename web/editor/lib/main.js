@@ -2351,10 +2351,6 @@ function connectorPickSecond(x, y, ev){
     //current connector
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId) //it should be the last one
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
-
-    // MANAGE TEXT
-    // update position of connector's text
-    con.updateMiddleText();
     
     //TODO: remove 
     //play with algorithm
@@ -2424,6 +2420,10 @@ function connectorPickSecond(x, y, ev){
     con.turningPoints = Point.cloneArray(debugSolutions[0][2]);
     //CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId).point = con.turningPoints[0].clone();
     secConPoint.point = con.turningPoints[con.turningPoints.length-1].clone();
+
+    // MANAGE TEXT
+    // update position of connector's text
+    con.updateMiddleText();
 
     // before defining of {ConnectionPoint}'s position we reset currentCloud
     currentCloud = [];
