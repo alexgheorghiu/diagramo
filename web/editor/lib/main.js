@@ -3029,7 +3029,7 @@ function save(){
 }
 
 /** Print current diagram
- * Print can be triggered in 3 cases:
+ * Print can be triggered in 3 cases only after diagram was saved:
  *  1 - from menu
  *  2 - from quick toolbar
  *  3 - from Ctrl + P shortcut
@@ -3056,7 +3056,7 @@ function print_diagram() {
     }
 
     // get DOM of iframe
-    var frameDoc = iframe.contentDocument || iframe.contentWindow.document;
+    var frameDoc = iframe.contentDocument;
 
     var diagramImage = frameDoc.getElementsByTagName('img');
     if(diagramImage.length > 0) {     // if image is already added
@@ -3074,7 +3074,9 @@ function print_diagram() {
         if (frameDoc.body !== null) {
             frameDoc.body.appendChild(diagramImage);
         } else {  // IE case
+            // create body of iframe
             frameDoc.src = "javascript:'<body></body>'";
+            // append image through html of <img>
             frameDoc.write(diagramImage.outerHTML);
             frameDoc.close();
         }
