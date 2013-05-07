@@ -869,9 +869,9 @@ var Util = {
                 val = val.toFixed(20);
 
                 // check if val has decimals and it ends with zero(s)
-                if (/\.\d*0+$/g.test(val)) {
+                if (/\.\d*0+$/.test(val)) {
                     // remove last decimal zero(s) from the end of val (and with dot if it is actually)
-                    val = val.replace(/(\.)?0+$/g, '');
+                    val = val.replace(/(\.)?0+$/, '');
                 }
             }
         }

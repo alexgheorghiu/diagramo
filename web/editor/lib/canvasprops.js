@@ -64,7 +64,7 @@ CanvasProps.prototype = {
 
     /**
      * Set the width of the canvas. Also force a canvas resize
-     * @param {String} width - the new width
+     * @param {Number} width - the new width
      */
     setWidth:function(width){//required for undo
         this.width = width;
@@ -79,7 +79,7 @@ CanvasProps.prototype = {
 
     /**
      * Set the height of the canvas. Also force a Canvas resize
-     *  @param {String} height - the new height
+     *  @param {Number} height - the new height
      */
     setHeight:function(height){//required for undo
         this.height = height;
