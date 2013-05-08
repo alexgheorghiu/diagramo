@@ -15,6 +15,7 @@ div#color_selector {
   border: 1px solid #598FEF;
   background-color: #EFEFEF;
   padding: 2px;
+  z-index: 3;
 }
   div#color_custom {width: 100%; float:left }
   div#color_custom label {font-size: 95%; color: #2F2F2F; margin: 5px 2px; width: 25%}

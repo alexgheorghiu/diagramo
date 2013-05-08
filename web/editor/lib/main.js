@@ -3062,10 +3062,11 @@ function print_diagram() {
         iframe = document.createElement("IFRAME");
         iframe.id = printFrameId;
 
-        // hiding iframe
-        iframe.style.position = "absolute";
-        iframe.style.left = "-30000px";
-        iframe.style.top = "-30000px";
+        // prevent showing scrolls for iframe in editor
+        iframe.style.position = "fixed";
+
+        // hiding iframe, just set it behind the editor
+        iframe.style.zIndex = 1;
 
         document.body.appendChild(iframe);
     }
@@ -3704,6 +3705,7 @@ function documentOnMouseMove(evt){
                 draggingFigure = document.createElement('img');
                 draggingFigure.setAttribute('id', 'draggingThumb');
                 draggingFigure.style.position = 'absolute';
+                draggingFigure.style.zIndex = 3;  // set it in front of editor
                 body.appendChild(draggingFigure);
             }
 
