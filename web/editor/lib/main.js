@@ -935,9 +935,9 @@ function onMouseDown(ev){
                 }
                 else{
                     //find container's id
-                    var contId = STACK.containerGetByXYOnEdge(x, y);
+                    var contId = STACK.containerGetByXY(x, y);
 //                    throw "main.js->onMouseDown + STATE_NONE: We should detect clicks on edge no inside container";
-                    if(contId != -1){                    
+                    if(contId !== -1){                    
                         var container = STACK.containerGetById(contId);
                         setUpEditPanel(container);
                         state = STATE_CONTAINER_SELECTED;
@@ -1500,6 +1500,19 @@ function onMouseUp(ev){
             HandleManager.handleSelectedIndex = -1; //reset only the handler....the Figure is still selected
                        
             break;
+            
+            
+        case STATE_CONTAINER_SELECTED:
+            /*Description:
+             * This means that we have a Container selected and just released the mouse:
+             * - if we were altering (rotate/resize) the Container that will stop (Handler will be deselected)
+             * - if we were moving the Container .... that will stop (but figure remains selected)
+             */
+            
+            mousePressed = false;
+            HandleManager.handleSelectedIndex = -1; //reset only the handler....the Figure is still selected
+                       
+            break;
 
 
         case STATE_GROUP_SELECTED:
@@ -1721,9 +1734,9 @@ function onMouseMove(ev){
                     canvas.style.cursor = 'move';
                     Log.debug('onMouseMove() - STATE_NONE - mouse cursor = move (over connector)');
                 }
-                else if(STACK.containerIsOnEdge(x,y)){
+                else if(STACK.containerGetByXY(x,y) != -1){ //container has a lower priority than figure
                     canvas.style.cursor = 'move';
-                    Log.debug("onMouseMove() - STATE_NONE - mouse cursor = move (over container's edge)");
+                    Log.debug("onMouseMove() - STATE_NONE - mouse cursor = move (over container)");
                 }
                 else{ //default cursor
                     canvas.style.cursor = 'default';
@@ -1965,7 +1978,7 @@ function onMouseMove(ev){
 //                    throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";
                     
                     /*move figure only if no handle is selected*/
-                    if(STACK.containerIsOnEdge(x, y)){//pick first container from (x, y)
+                    if(STACK.containerGetByXY(x, y) !== -1){//pick first container from (x, y)
                         canvas.style.cursor = 'move';                            
                         Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over a container's edge = change cursor");
                     }
@@ -2349,7 +2362,7 @@ function connectorPickSecond(x, y, ev){
     Log.group("main: connectorPickSecond");
     
     //current connector
-    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId) //it should be the last one
+    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId); //it should be the last one
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
     
     //TODO: remove 
