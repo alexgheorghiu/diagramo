@@ -2323,7 +2323,7 @@ function connectorPickSecond(x, y, ev){
     Log.group("main: connectorPickSecond");
     
     //current connector
-    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId) //it should be the last one
+    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId); //it should be the last one
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
 
     // MANAGE TEXT
