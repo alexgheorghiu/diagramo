@@ -3036,6 +3036,8 @@ function save(){
  *
  *  Copy link to saved diagram's png file to src of image,
  *  add it to iframe and call print of last.
+ *
+ *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
 function print_diagram() {
     var printFrameId = "printFrame";
@@ -3058,9 +3060,10 @@ function print_diagram() {
     // get DOM of iframe
     var frameDoc = iframe.contentDocument;
 
-    var diagramImage = frameDoc.getElementsByTagName('img');
-    if(diagramImage.length > 0) {     // if image is already added
-        diagramImage = diagramImage[0];
+    var diagramImages = frameDoc.getElementsByTagName('img');
+    var diagramImage;
+    if(diagramImages.length > 0) {     // if image is already added
+        diagramImage = diagramImages[0];
 
         // set source of image to png of saved diagram
         diagramImage.setAttribute('src', "data/diagrams/" + currentDiagramId + ".png");
