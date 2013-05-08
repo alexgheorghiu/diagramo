@@ -22,7 +22,14 @@ ContainerDeleteCommand.prototype = {
     /**This method got called every time the Command must execute*/
     execute : function(){  
         if(this.firstExecute){
-                        
+            
+            //first unglue all contained figures
+            var figuresIds = CONTAINER_MANAGER.getAllFigures(this.containerId);
+            for(var i=0;i<figuresIds; i++){
+                CONTAINER_MANAGER.removeFigure(this.containerId, figuresIds[i]);
+            }
+            
+            //remove the actual container           
             STACK.containerRemoveById(this.containerId);
             selectedContainerId = -1;
             setUpEditPanel(canvasProps);

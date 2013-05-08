@@ -362,13 +362,14 @@ ContainerFigureManager.prototype = {
     /**Get all {Figure}s' ids that live inside a container
      * @param {Number} containerId the id of the {Container}
      * @return {Array}{Number} an array of Figure id
+     * @author Alex
      * */
     getAllFigures : function(containerId){
         var i;
         var figureIds = [];
         
         for(i in this.data){
-            v = this.data[i];
+            var v = this.data[i];
             if(v[0] === containerId){
                 figureIds.push(v[1]);
             }
