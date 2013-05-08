@@ -3090,7 +3090,9 @@ function print_diagram() {
 
         if (frameDoc.body !== null) {
             frameDoc.body.appendChild(diagramImage);
-        } else {  // IE case
+        } else {
+            // IE case for more details
+            // @see http://stackoverflow.com/questions/8298320/correct-access-of-dynamic-iframe-in-ie
             // create body of iframe
             frameDoc.src = "javascript:'<body></body>'";
             // append image through html of <img>
