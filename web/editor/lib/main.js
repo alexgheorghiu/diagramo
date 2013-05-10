@@ -458,7 +458,7 @@ function onKeyPress(ev){
  *Receives the key code of keyboard but not the ASCII
  *Treats the key pressed event
  *@param {Event} ev - the event generated when key is down
- *@see <a href="http://www.quirksmode.org/js/keys.html">http://www.quirksmode.org/js/keys.html</a>
+ *@see <a href="http://www.quirksmode.org/jskey/keys.html">http://www.quirksmode.org/js/keys.html</a>
  **/
 function onKeyDown(ev){
     
@@ -588,6 +588,12 @@ function onKeyDown(ev){
 
         case KEY.D:
             if(CNTRL_PRESSED){
+                if (ev.preventDefault){ 
+                    ev.preventDefault(); 
+                   } 
+                else { 
+                    ev.returnValue = false; 
+                    } 
                 action('duplicate');
             }
             break;
