@@ -1,1 +1,1 @@
-ant -f release-script.xml dist
+ant -f release-script.xml release
