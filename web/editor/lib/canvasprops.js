@@ -5,14 +5,17 @@
  * @this {Builder}
  * @param {Number} width - the width of the {Canvas}
  * @param {Number} height - the height of the {Canvas}
+ * @param {String} fillColor - the fill color of the {Canvas}
  * @author Zack Newsham <zack_newsham@yahoo.co.uk>
  * @author Alex Gheorghiu <alex@scriptoid.com>
  */
-function CanvasProps(width, height){    
+function CanvasProps(width, height, fillColor){
     /**Canvas width*/
     this.width = width;
     /**Canvas height*/
     this.height = height;
+    /**Canvas fill color*/
+    this.fillColor = fillColor;
     /**Canvas id. Used in main.js:updateShape() to see what object we have*/
     this.id = "canvasProps"; //
     /**Serialization type*/
@@ -23,7 +26,10 @@ function CanvasProps(width, height){
 CanvasProps.DEFAULT_HEIGHT = 600; 
 
 /**default width for canvas*/
-CanvasProps.DEFAULT_WIDTH = 800; 
+CanvasProps.DEFAULT_WIDTH = 800;
+
+/**default fill color for canvas*/
+CanvasProps.DEFAULT_FILL_COLOR = "#ffffff";
 
 /**
  *We only ever have one instance of this class (like STACK)
@@ -43,6 +49,8 @@ CanvasProps.load = function(o){
     tempVal = Number(o.width);
     canvasprops.width = !isNaN(tempVal) ? tempVal : CanvasProps.DEFAULT_WIDTH;
 
+    canvasprops.fillColor = o.fillColor;
+
     return canvasprops;
 }
 
@@ -53,7 +61,7 @@ CanvasProps.prototype = {
     
     /**Just clone the damn thing :)*/
     clone : function(){
-       return new CanvasProps(this.width, this.height);
+       return new CanvasProps(this.width, this.height, this.fillColor);
     },
     
     /**Get width of the canvas*/
@@ -71,6 +79,7 @@ CanvasProps.prototype = {
         this.sync();
     },
 
+
     /**Return the height of the canvas*/
     getHeight:function(){
         return this.height;
@@ -87,6 +96,22 @@ CanvasProps.prototype = {
     },
 
 
+    /**Return the fill color of the canvas*/
+    getFillColor:function(){
+        return this.fillColor;
+    },
+
+
+    /**
+     * Set the fill color of the canvas. Also force a Canvas sync
+     *  @param {String} fillColor - the new height
+     */
+    setFillColor:function(fillColor){//required for undo
+        this.fillColor = fillColor;
+        this.sync();
+    },
+
+
     /**
      *Resize the Canvas to current values
      *@author alex@scriptoid.com
@@ -96,6 +121,7 @@ CanvasProps.prototype = {
         
         canvas.height = this.height;
         canvas.width = this.width;
+        canvas.fillColor = this.fillColor;
 
         //whenever we change a detail of the width of the canvas, we need to update the map
         minimap.initMinimap();
@@ -108,7 +134,7 @@ CanvasProps.prototype = {
      *@return {String}
      **/
     toString: function(){
-       return "CanvasProp [width: " + this.width + " height: " + this.height + ' ]';
+       return "CanvasProp [width: " + this.width + " height: " + this.height + " fillColor: " + this.fillColor + ' ]';
     }
 }
 

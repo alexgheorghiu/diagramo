@@ -120,8 +120,8 @@ $page = 'editor';
         
         <script type="text/javascript" src="./lib/commands/ShapeChangePropertyCommand.js"></script>
         
-        <script type="text/javascript" src="./lib/commands/CanvasResizeCommand.js"></script>
-        
+        <script type="text/javascript" src="./lib/commands/CanvasAlterCommand.js"></script>
+
         
         <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/colorPicker_new.css" />

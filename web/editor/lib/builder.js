@@ -65,6 +65,41 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
     var div = document.createElement("div");
     //div.innerHTML = '<div></div>';why is this here?
 
+    // colorPicker plugin requires div to be already appended to the DOM
+    DOMObject.appendChild(div);
+
+    //fill color
+    var colorDiv = document.createElement("div");
+    colorDiv.className = "line";
+
+    var currentColor = canvasProps.getFillColor();
+    var uniqueId = new Date().getTime();
+
+    var retVal = '<div class="label"> Color </div>\n';
+    retVal += '<div id="colorSelector' + uniqueId + '" style="/*border: 1px solid #000000;*/ width: 16px; height: 16px; display: block; float: right; padding-right: 3px;">\n';
+    retVal += '<input type="text" value="' + currentColor + '" id="colorpickerHolder' + uniqueId + '">\n';
+    retVal += '</div>\n';
+    //very unhappy with this innerHTML thingy
+    colorDiv.innerHTML = retVal;
+    div.appendChild(colorDiv);
+
+    //let plugin do the job
+    $('#colorpickerHolder'+uniqueId).colorPicker();
+
+    //on change update the canvasProps
+    $('#colorpickerHolder'+uniqueId).change(function() {
+        var newColor = $('#colorpickerHolder'+uniqueId).val();
+        //Did we change fill color?
+        if(canvasProps.getFillColor() != newColor) {
+            var undo = new CanvasAlterCommand(canvasProps);
+            canvasProps.setFillColor(newColor);
+            History.addUndo(undo);
+
+            //trigger a repaint;
+            draw();
+        }
+    });
+
     //width
     var divWidth = document.createElement("div");
     divWidth.innerHTML = '<div class = "label">Width</div>';
@@ -72,7 +107,7 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
     var inputWidth = document.createElement("input");
     inputWidth.type = "text";
     inputWidth.className = "text"; //required for onkeydown
-    //inputWidth.style.cssText = "float: right";
+    inputWidth.style.cssText = "float: right";
     inputWidth.value = canvasProps.getWidth();
     divWidth.appendChild(inputWidth);
 
@@ -85,7 +120,7 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
     var inputHeight = document.createElement("input");
     inputHeight.type = "text";
     inputHeight.className = "text"; //required for onkeydown
-    //inputHeight.style.cssText = "float: right";
+    inputHeight.style.cssText = "float: right";
     inputHeight.value = canvasProps.getHeight();
     divHeight.appendChild(inputHeight);
 
@@ -120,7 +155,7 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
         //Did we change width or height?
         if(canvasProps.getWidth() != widthVal || canvasProps.getHeight() != heightVal){
-            var undo = new CanvasResizeCommand(canvasProps);
+            var undo = new CanvasAlterCommand(canvasProps);
             canvasProps.setWidth(widthVal);
             canvasProps.setHeight(heightVal);
 //            canvasProps.width = inputWidth.value;
@@ -138,10 +173,6 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
     divButton.appendChild(btnUpdate);
     div.appendChild(divButton);
-
-
-
-    DOMObject.appendChild(div);
 }
 
 

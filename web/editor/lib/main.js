@@ -2834,38 +2834,41 @@ function addBackground(canvasElement){
 	Log.info("addBackground: called");
 	
 	var ctx = canvasElement.getContext('2d');
-	
-	if(backgroundImageData == null){
-				
-		var columns = Math.floor(canvasElement.width / GRIDWIDTH) + 1;
-		//console.info("Columns: " + columns );
 
-		var rows = Math.floor(canvasElement.height / GRIDWIDTH) + 1;
-		//console.info("Rows: " + rows );
+    ctx.rect(0,0,canvasElement.width,canvasElement.height);
+    ctx.fillStyle = canvasProps.getFillColor();
+    ctx.fill();
 
-		for(var i=0;i<rows; i++){
-			for(var j=0; j<columns; j++){
-				ctx.beginPath();
-				ctx.strokeStyle = '#C0C0C0';
-				
-				//big cross
-				ctx.moveTo(j * GRIDWIDTH - 2, i * GRIDWIDTH);
-				ctx.lineTo(j * GRIDWIDTH + 2, i * GRIDWIDTH);
-				
-				ctx.moveTo(j * GRIDWIDTH, i * GRIDWIDTH - 2);
-				ctx.lineTo(j * GRIDWIDTH, i * GRIDWIDTH + 2);
-				
-				
-				//small dot
-				ctx.moveTo(j * GRIDWIDTH + GRIDWIDTH/2 - 1, i * GRIDWIDTH +  GRIDWIDTH/2);
-				ctx.lineTo(j * GRIDWIDTH + GRIDWIDTH/2 + 1, i * GRIDWIDTH +  GRIDWIDTH/2);
-				
-				ctx.stroke();
-			}
-		}
-		
-		backgroundImageData = canvasElement.toDataURL();
-	}
+    if(gridVisible){
+        var columns = Math.floor(canvasElement.width / GRIDWIDTH) + 1;
+        //console.info("Columns: " + columns );
+
+        var rows = Math.floor(canvasElement.height / GRIDWIDTH) + 1;
+        //console.info("Rows: " + rows );
+
+        for(var i=0;i<rows; i++){
+            for(var j=0; j<columns; j++){
+                ctx.beginPath();
+                ctx.strokeStyle = '#C0C0C0';
+
+                //big cross
+                ctx.moveTo(j * GRIDWIDTH - 2, i * GRIDWIDTH);
+                ctx.lineTo(j * GRIDWIDTH + 2, i * GRIDWIDTH);
+
+                ctx.moveTo(j * GRIDWIDTH, i * GRIDWIDTH - 2);
+                ctx.lineTo(j * GRIDWIDTH, i * GRIDWIDTH + 2);
+
+
+                //small dot
+                ctx.moveTo(j * GRIDWIDTH + GRIDWIDTH/2 - 1, i * GRIDWIDTH +  GRIDWIDTH/2);
+                ctx.lineTo(j * GRIDWIDTH + GRIDWIDTH/2 + 1, i * GRIDWIDTH +  GRIDWIDTH/2);
+
+                ctx.stroke();
+            }
+        }
+    }
+
+    backgroundImageData = canvasElement.toDataURL();
 	
 	var backgroundImage = new Image();
 	backgroundImage.src = backgroundImageData;
@@ -2902,9 +2905,9 @@ function draw(){
     reset(getCanvas());    
 	
 	//if grid visible paint it
-	if(gridVisible){ //paint grid
+//	if(gridVisible){ //paint grid
 		addBackground(getCanvas());
-	}
+//	}
 	
     //alert('Paint 2')
     STACK.paint(ctx);
@@ -3268,7 +3271,7 @@ function init(diagramId){
 
    //Canvas properties (width and height)
    if(canvasProps == null){//only create a new one if we have not already loaded one
-       canvasProps = new CanvasProps(CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT);
+       canvasProps = new CanvasProps(CanvasProps.DEFAULT_WIDTH, CanvasProps.DEFAULT_HEIGHT, CanvasProps.DEFAULT_FILL_COLOR);
    }
    //lets make sure that our canvas is set to the correct values
    canvasProps.setWidth(canvasProps.getWidth());
