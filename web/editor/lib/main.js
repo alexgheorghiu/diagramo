@@ -1845,7 +1845,7 @@ function onMouseMove(ev){
                                 for(var c=0; c<STACK.containers.length; c++){
                                     var tempCont = STACK.containers[c];
                                     if( Util.areBoundsInBounds(figBounds, tempCont.getBounds()) ){
-                                        newContainerId = c;
+                                        newContainerId = STACK.containers[c].id;
                                         break;
                                     }
                                 }
