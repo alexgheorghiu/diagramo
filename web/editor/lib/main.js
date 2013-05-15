@@ -2828,9 +2828,8 @@ function getCanvasXY(ev){
     return position;
 }
 
-
+/**Buffered image for background of canvas*/
 var backgroundImage = null;
-var backgroundCanvasColor = null;
 
 /**Adds a background to a canvas*/
 function addBackground(canvasElement){
@@ -2838,15 +2837,15 @@ function addBackground(canvasElement){
 
     var ctx = canvasElement.getContext('2d');
 
-    var currentCanvasColor = canvasProps.getFillColor();
+    // set background image if backgroundImage is null
+    if (!backgroundImage) {
 
-    // set background image if image doesn't exist or if canvas color changed
-    if (!backgroundImage || backgroundCanvasColor != currentCanvasColor) {
-
+        // fill canvas with fill color
         ctx.rect(0,0,canvasElement.width,canvasElement.height);
-        ctx.fillStyle = currentCanvasColor;
+        ctx.fillStyle = canvasProps.getFillColor();
         ctx.fill();
 
+        // draw grid if it's visible
         if(gridVisible){
             var columns = Math.floor(canvasElement.width / GRIDWIDTH) + 1;
             //console.info("Columns: " + columns );
@@ -2876,16 +2875,16 @@ function addBackground(canvasElement){
             }
         }
 
+        // set new buffered background image
         backgroundImage = new Image();
         backgroundImage.src = canvasElement.toDataURL();
-
-        backgroundCanvasColor = currentCanvasColor;
 
     } else {
     //	backgroundImage.onload = function(e){
     //		ctx.drawImage(this, 0, 0);
     //	} //end onload
 
+        // draw buffered background image on canvas
         ctx.drawImage(backgroundImage, 0, 0);
     }
 
