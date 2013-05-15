@@ -127,7 +127,7 @@ CanvasProps.prototype = {
         minimap.initMinimap();
 		
 		//also the background //TODO: move it someplace else
-		backgroundImageData = null;
+		backgroundImage = null;
     },
 
     /**Returns a representation of the object

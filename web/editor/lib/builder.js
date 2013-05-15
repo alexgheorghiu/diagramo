@@ -83,12 +83,14 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
     colorDiv.innerHTML = retVal;
     div.appendChild(colorDiv);
 
+    var colorPicker = document.getElementById('colorpickerHolder'+uniqueId);
+
     //let plugin do the job
-    $('#colorpickerHolder'+uniqueId).colorPicker();
+    $(colorPicker).colorPicker();
 
     //on change update the canvasProps
-    $('#colorpickerHolder'+uniqueId).change(function() {
-        var newColor = $('#colorpickerHolder'+uniqueId).val();
+    colorPicker.onchange = function() {
+        var newColor = colorPicker.value;
         //Did we change fill color?
         if(canvasProps.getFillColor() != newColor) {
             var undo = new CanvasAlterCommand(canvasProps);
@@ -98,7 +100,7 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
             //trigger a repaint;
             draw();
         }
-    });
+    };
 
     //width
     var divWidth = document.createElement("div");
