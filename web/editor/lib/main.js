@@ -1574,17 +1574,22 @@ function onMouseUp(ev){
                         points.push( new Point(STACK.figures[i].getBounds()[0], STACK.figures[i].getBounds()[3]) ); //bottom left
                         points.push( new Point(STACK.figures[i].getBounds()[2], STACK.figures[i].getBounds()[1]) ); //top right
                     }
-                    
+
+                    // flag shows if figure added to figuresToAdd array
+                    var figureAddedFlag = false;
+
                     //TODO: From Janis: we can remove this, because intersection(next block) will also select figures whose point is in area
-                    //for(var a = 0; a < points.length; a++){
-                    //    if( Util.isPointInside(points[a], selectionArea.getPoints()) ){
-                    //        figuresToAdd.push(STACK.figures[i].id);
-                    //        break;
-                    //    }
-                    //}
-                    
+                    for(var a = 0; a < points.length; a++){
+                        if( Util.isPointInside(points[a], selectionArea.getPoints()) ){
+                            figuresToAdd.push(STACK.figures[i].id);
+                            // set flag not to add figure twice
+                            figureAddedFlag = true;
+                            break;
+                        }
+                    }
+
                     //select figures whose line intersects selectionArea
-                    if(Util.polylineIntersectsRectangle(points,selectionArea.getBounds(),true)){
+                    if (!figureAddedFlag && Util.polylineIntersectsRectangle(points,selectionArea.getBounds(),true)){
                         figuresToAdd.push(STACK.figures[i].id);
                     }
                 } //end if
