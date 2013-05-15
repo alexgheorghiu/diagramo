@@ -519,15 +519,17 @@ BuilderProperty.prototype = {
 
         DOMObject.appendChild(div);
 
+        var colorPicker = document.getElementById('colorpickerHolder'+uniqueId);
+
         //let plugin do the job
-        $('#colorpickerHolder'+uniqueId).colorPicker();
+        $(colorPicker).colorPicker();
 
         //on change update the figure
         var propExposedToAnonymous = this.property;
-        $('#colorpickerHolder'+uniqueId).change(function() {
+        colorPicker.onchange = function() {
             Log.info('generateColorCode(): figureId: ' + figureId + 'type: ' + this.type + ' name: ' + this.name + ' property: ' + this.property);
-            updateShape(figureId, propExposedToAnonymous, $('#colorpickerHolder'+uniqueId).val());
-        });
+            updateShape(figureId, propExposedToAnonymous, colorPicker.value);
+        };
     },
     
 
