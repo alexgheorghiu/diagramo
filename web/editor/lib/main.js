@@ -1576,20 +1576,29 @@ function onMouseUp(ev){
                     }
 
                     // flag shows if figure added to figuresToAdd array
-                    var figureAddedFlag = false;
+                    var figureAddFlag = false;
+                    
+                    
+                    /**Idea: We want to select both figures completely encompassed by 
+                     * selection (case 1) and those that are intersected by selection (case 2)*/
 
-                    //TODO: From Janis: we can remove this, because intersection(next block) will also select figures whose point is in area
+                    //1 - test if any figure point inside selection
                     for(var a = 0; a < points.length; a++){
                         if( Util.isPointInside(points[a], selectionArea.getPoints()) ){
                             figuresToAdd.push(STACK.figures[i].id);
                             // set flag not to add figure twice
-                            figureAddedFlag = true;
+                            figureAddFlag = true;
                             break;
                         }
                     }
-
+                    
+                    //2 - test if any figure intersected by selection
+                    if(!figureAddFlag){ //run this ONLY if is not already proposed for addition
+                        figureAddFlag = Util.polylineIntersectsRectangle(points, selectionArea.getBounds(), true);
+                    }
+                    
                     //select figures whose line intersects selectionArea
-                    if (!figureAddedFlag && Util.polylineIntersectsRectangle(points,selectionArea.getBounds(),true)){
+                    if (figureAddFlag){
                         figuresToAdd.push(STACK.figures[i].id);
                     }
                 } //end if

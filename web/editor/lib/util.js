@@ -363,7 +363,7 @@ var Util = {
     },
     
     /**
-     *Tests if a a poluline defined by a set of points intersects a rectangle
+     *Tests if a a polyline defined by a set of points intersects a rectangle
      *@param {Array} points - and {Array} of {Point}s
      *@param {Array} bounds - the bounds of the rectangle defined by (x1, y1, x2, y2)
      *@param {Boolean} closedPolyline - incase polyline is closed figure then true, else false
