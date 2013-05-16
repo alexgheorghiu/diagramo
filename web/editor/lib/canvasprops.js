@@ -126,8 +126,8 @@ CanvasProps.prototype = {
         //whenever we change a detail of the width of the canvas, we need to update the map
         minimap.initMinimap();
 		
-		//also the background //TODO: move it someplace else
-		backgroundImage = null;
+        //also the background //TODO: move it someplace else
+        backgroundImage = null;
     },
 
     /**Returns a representation of the object
@@ -136,5 +136,5 @@ CanvasProps.prototype = {
     toString: function(){
        return "CanvasProp [width: " + this.width + " height: " + this.height + " fillColor: " + this.fillColor + ' ]';
     }
-}
+};
 

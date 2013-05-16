@@ -92,10 +92,10 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
     colorPicker.onchange = function() {
         var newColor = colorPicker.value;
         //Did we change fill color?
-        if(canvasProps.getFillColor() != newColor) {
-            var undo = new CanvasAlterCommand(canvasProps);
-            canvasProps.setFillColor(newColor);
-            History.addUndo(undo);
+        if(canvasProps.getFillColor() !== newColor) {
+            var cmd = new CanvasChangeColorCommand(newColor);
+            cmd.execute();
+            History.addUndo(cmd);
 
             //trigger a repaint;
             draw();
@@ -156,12 +156,9 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
         }
 
         //Did we change width or height?
-        if(canvasProps.getWidth() != widthVal || canvasProps.getHeight() != heightVal){
-            var undo = new CanvasAlterCommand(canvasProps);
-            canvasProps.setWidth(widthVal);
-            canvasProps.setHeight(heightVal);
-//            canvasProps.width = inputWidth.value;
-//            canvasProps.height = inputHeight.value;
+        if(canvasProps.getWidth() !== widthVal || canvasProps.getHeight() !== heightVal){
+            var undo = new CanvasChangeSizeCommand(widthVal, heightVal);
+            undo.execute();
             History.addUndo(undo);
         }
         

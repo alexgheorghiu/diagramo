@@ -220,13 +220,14 @@ var selectedConnectionPointId = -1;
 var dragging = false;
 
 /**Holds a wrapper around canvas object*/
-var canvasProps = null; //
+var canvasProps = null;
 
 /**Currently holds two elements the type: figure|group and the id*/
 var clipboardBuffer = [];
 
 /**Return current canvas.
  * Current canvas will ALWAYS have the 'a' as DOM id
+ * @return {HTMLCanvasElement} the DOM element of <canvas> tag
  * @author Alex Gheorghiu <alex@scriptoid.com>
  **/
 function getCanvas(){
@@ -2828,10 +2829,13 @@ function getCanvasXY(ev){
     return position;
 }
 
-/**Buffered image for background of canvas*/
+/**Buffered image for background of canvas
+ * It is set to null in CanvasProps::sync() method*/
 var backgroundImage = null;
 
-/**Adds a background to a canvas*/
+/**Adds a background to a canvas
+ * @param {HTMLCanvasElement} canvasElement the <canvas> DOM element
+ * */
 function addBackground(canvasElement){
 	Log.info("addBackground: called");
 
