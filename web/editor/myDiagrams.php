@@ -84,6 +84,7 @@ function firstName($email){
                         <td align="center" ><span class="formLabel">Thumb</span></td>
                         <td align="left" ><span class="formLabel">Name</span></td>
                         <td align="left" ><span class="formLabel">View</span></td>
+                        <td align="left" ><span class="formLabel">Export / Download</span></td>
                         <td align="left" ><span class="formLabel">Last Edit</span></td>                        
                         <td><span class="formLabel">Public</span></td>
                         <td><span class="formLabel">Settings</span></td>
@@ -107,6 +108,11 @@ function firstName($email){
                             <td align="center">
                                 <a href="./viewDiagram.php?diagramId=<?=$myDiagram->id ?>">
                                     as PNG
+                                </a>
+                            </td>
+                            <td align="center">
+                                <a href="./dmo.php?diagramId=<?=$myDiagram->id ?>">
+                                    export
                                 </a>
                             </td>
                             
