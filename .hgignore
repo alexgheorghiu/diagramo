@@ -6,6 +6,7 @@
 
 syntax: glob
 web/editor/data/diagrams/*.dia
+web/editor/data/diagrams/*.dmo
 web/editor/data/diagrams/*.jpg
 web/editor/data/diagrams/*.png
 web/editor/data/diagrams/*.svg

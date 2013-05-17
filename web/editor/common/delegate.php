@@ -98,7 +98,7 @@ class User {
 
 
 class Diagramdata {
-	const TYPE_DIA = 'dia';
+	const TYPE_DMO = 'dia';
 	const TYPE_SVG = 'svg';
 	const TYPE_JPG = 'jpg';
 	const TYPE_PNG = 'png';

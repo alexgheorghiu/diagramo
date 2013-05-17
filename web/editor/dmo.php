@@ -14,7 +14,7 @@ if (is_numeric($_REQUEST['diagramId'])) {
     $d->close();
     
     if (is_numeric($_SESSION['userId']) || $diagram->public) {
-        $filePath = dirname(__FILE__) . '/data/diagrams/' . $_REQUEST['diagramId'] . '.dia';
+        $filePath = dirname(__FILE__) . '/data/diagrams/' . $_REQUEST['diagramId'] . '.dmo';
 
 
         if (file_exists($filePath)) {
@@ -31,7 +31,7 @@ if (is_numeric($_REQUEST['diagramId'])) {
             header('Content-Transfer-Encoding: binary');
             header('Expires: 0');
             header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-            header('Content-Disposition: attachment; filename="' . $_REQUEST['diagramId'] . '.dia' . '"');
+            header('Content-Disposition: attachment; filename="' . $_REQUEST['diagramId'] . '.dmo' . '"');
             header('Pragma: public');
             header('Content-Length: ' . $fileSize);
 

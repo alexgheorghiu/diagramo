@@ -406,12 +406,12 @@ function save() {
         $nowIsNow = now();
 
         // 1 - update the Dia file
-        $diaData = $delegate->diagramdataGetByDiagramIdAndType($currentDiagramId, Diagramdata::TYPE_DIA);
+        $diaData = $delegate->diagramdataGetByDiagramIdAndType($currentDiagramId, Diagramdata::TYPE_DMO);
 
-        $fh = fopen(getStorageFolder() . '/' . $currentDiagramId . '.dia', 'w');
-        //$fh = fopen(dirname(__FILE__) . '/../diagrams/' . $currentDiagramId . '.dia', 'w');
+        $fh = fopen(getStorageFolder() . '/' . $currentDiagramId . '.dmo', 'w');
+        //$fh = fopen(dirname(__FILE__) . '/../diagrams/' . $currentDiagramId . '.dmo', 'w');
 
-//            $diaFile = dirname(__FILE__) . '/../diagrams/' . $_REQUEST['diagramId'] . '.dia';
+//            $diaFile = dirname(__FILE__) . '/../diagrams/' . $_REQUEST['diagramId'] . '.dmo';
         $diaSize = fwrite($fh, $_POST['diagram']);
         fclose($fh);
 
@@ -605,10 +605,10 @@ function firstSaveExe() {
     //create Dia file
     $diagramdata = new Diagramdata();
     $diagramdata->diagramId = $diagramId;
-    $diagramdata->type = Diagramdata::TYPE_DIA;
-    $diagramdata->fileName = $diagramId . '.dia';
+    $diagramdata->type = Diagramdata::TYPE_DMO;
+    $diagramdata->fileName = $diagramId . '.dmo';
 
-    $fh = fopen(getStorageFolder() . '/' . $diagramId . '.dia', 'w');
+    $fh = fopen(getStorageFolder() . '/' . $diagramId . '.dmo', 'w');
     $size = fwrite($fh, $_SESSION['tempDiagram']);
     fclose($fh);
 
@@ -709,9 +709,9 @@ function load() {
     }
 
     if($allow){
-        $diagramdata = $d->diagramdataGetByDiagramIdAndType($_REQUEST['diagramId'], Diagramdata::TYPE_DIA);
+        $diagramdata = $d->diagramdataGetByDiagramIdAndType($_REQUEST['diagramId'], Diagramdata::TYPE_DMO);
 
-        $diaFile = getStorageFolder() . '/' . $_REQUEST['diagramId'] . '.dia';
+        $diaFile = getStorageFolder() . '/' . $_REQUEST['diagramId'] . '.dmo';
 
         /**When switching from Linux to Windows some files might get corrupt so we will use file_get_contents*/
 //        $fh = fopen($diaFile, 'r');
@@ -765,14 +765,14 @@ function importDiagramExe() {
 //        $ndd = new Diagramdata();
 //        $ndd->diagramId = $diagramId;
 //        $ndd->type = Diagramdata::TYPE_DIA;
-//        $ndd->fileName = $diagramId . '.dia';
+//        $ndd->fileName = $diagramId . '.dmo';
 //        $ndd->fileSize = $size;
 //        $ndd->lastUpdate = now();
 //        
 //        $d->diagramdataCreate($ndd);
         
         //compute destination file 
-        $newFileName = 'tmp' . time() . '.dia';
+        $newFileName = 'tmp' . time() . '.dmo';
         $destFile = dirname(__FILE__) . '/../data/diagrams/' . $newFileName;
         if (move_uploaded_file($_FILES['diagramFile']['tmp_name'], $destFile)) {
             redirect('../editor.php?diagramId=' . $newFileName);
