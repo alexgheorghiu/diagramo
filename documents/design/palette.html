@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Diagramo color palette</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript">
+            var colors = {
+                '#E65227': 'darker orange (logo)',
+                '#EF6329': 'lighter orange (logo)',
+                '#0288AE': 'darker blue',
+                '#81CFE9': 'lighter blue',
+                '#F4F4F4': 'light gray',
+                '#656565': 'gray',
+                '#50B1D2': 'light blue',
+                '#1AA851': 'green',
+                '#32B050': 'light green'
+            };
+        </script>    
+    </head>
+    <body>
+        <h1>Color palette used in Diagramo</h1>
+        <div>
+        <script type="text/javascript">            
+            for(var code in colors){
+                document.write('<div style="position: relative;">');
+                document.write('<div style="width: 70px; margin-top: 10px; display: inline-block;">' + code + '</div>');
+                document.write('<div style="width: 200px; background-color: ' + code + '; display: inline-block;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>');
+                document.write('<div style="width: 270px; margin-top: 10px; margin-left: 5px; display: inline-block;">' + colors[code] + '</div>');
+            }   document.write('</div>');
+        </script>
+        </div>
+    </body>
+</html>

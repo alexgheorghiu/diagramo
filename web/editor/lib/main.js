@@ -3206,7 +3206,29 @@ function load(diagramId){
             //alert("loaded");
         }
     );
+}
 
+/**Loads a saved diagram
+ *@param {String} tempDiagramName - the name of temporary diagram
+ **/
+function loadTempDiagram(tempDiagramName){
+//    alert("load diagram [" + tempDiagramName + ']');
+
+    $.post("./common/controller.php", {action: 'loadTemp', tempName: tempDiagramName},
+        function(data){
+//                        alert(data);
+            var obj  = eval('(' + data + ')');
+            STACK = Stack.load(obj['s']);
+            canvasProps = CanvasProps.load(obj['c']);
+            canvasProps.sync();
+            setUpEditPanel(canvasProps);
+
+            CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
+            draw();
+
+            //alert("loaded");
+        }
+    );
 }
 
 /**Saves a diagram. Actually send the serialized version of diagram
@@ -3320,6 +3342,9 @@ function init(diagramId){
    if(isNumeric(diagramId)){
        currentDiagramId = diagramId;
        load(diagramId);       
+   }
+   else if(diagramId.substring && diagramId.substring(0, 3) === 'tmp'){ //it is a string and starts with "tmp"
+       loadTempDiagram(diagramId);
    }
 
 

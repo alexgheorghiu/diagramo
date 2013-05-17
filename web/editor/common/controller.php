@@ -67,6 +67,14 @@ switch ($action) {
     case 'load':
         load();
         break;
+    
+    case 'loadTemp':
+        loadTemp();
+        break;
+    
+    case 'importDiagramExe':
+        importDiagramExe();
+        break;
 
     case 'deleteDiagramExe':
         deleteDiagramExe();
@@ -713,6 +721,67 @@ function load() {
 
         print $data;
     }        
+}
+
+
+/**Loads a temporary diagram*/
+function loadTemp() {
+
+    if (!is_numeric($_SESSION['userId'])) {
+        print "Wrong way";
+        exit();
+    }
+    
+    $tempName = $_REQUEST['tempName'];
+    $diaFile = getStorageFolder() . '/' . $tempName;
+    $data = file_get_contents($diaFile);
+    print $data;
+}
+
+
+/**Imports a Diagram from a file*/
+function importDiagramExe() {
+
+    if (!is_numeric($_SESSION['userId'])) { //no user logged
+        print "Not allowed";
+        exit();
+    }
+
+    $d = new Delegate();
+    if (is_uploaded_file($_FILES['diagramFile']['tmp_name']) && filesize($_FILES['diagramFile']['tmp_name']) > 0) { //file is fine
+//        $size = filesize($_FILES['diagramFile']['tmp_name']);
+//                
+//        //create entry in 'diagram' table
+//        $nd = new Diagram();
+//        $nd->title = "Imported on " + now();
+//        $nd->public = 0;
+//        $nd->createdDate = now();
+//        $nd->lastUpdate = now();
+//        $nd->size = $size;
+//        
+//        $diagramId = $d->diagramCreate($nd);
+//        
+//        //create entry in 'diagramdata' table
+//        $ndd = new Diagramdata();
+//        $ndd->diagramId = $diagramId;
+//        $ndd->type = Diagramdata::TYPE_DIA;
+//        $ndd->fileName = $diagramId . '.dia';
+//        $ndd->fileSize = $size;
+//        $ndd->lastUpdate = now();
+//        
+//        $d->diagramdataCreate($ndd);
+        
+        //compute destination file 
+        $newFileName = 'tmp' . time() . '.dia';
+        $destFile = dirname(__FILE__) . '/../data/diagrams/' . $newFileName;
+        if (move_uploaded_file($_FILES['diagramFile']['tmp_name'], $destFile)) {
+            redirect('../editor.php?diagramId=' . $newFileName);
+        }
+        else{
+            redirect('../myDiagrams.php?error=Could not import diagram');
+        }
+        
+    }  
 }
 
 

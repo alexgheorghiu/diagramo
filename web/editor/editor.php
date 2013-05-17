@@ -45,7 +45,9 @@ $page = 'editor';
         <script type="text/javascript" src="./assets/javascript/json2.js"></script>
         <script type="text/javascript" src="./assets/javascript/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
-        <script type="text/javascript" src="./assets/javascript/jquery.simplemodal-1.3.5.min.js"></script>
+        
+        <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
+        <script type="text/javascript" src="./assets/simplemodal/js/jquery.simplemodal.js"></script>
         
         
         <script type="text/javascript">
@@ -58,6 +60,14 @@ $page = 'editor';
              * Use http://code.google.com/p/js-uri/
              **/
             var figureSetsURL = '<?=$WEBADDRESS?>' + '/editor/lib/sets';
+            
+            function showImport(){
+                //alert("ok");
+                var r = confirm("Current diagram will be deleted. Are you sure?");
+                if(r === true){                    
+                    $('#import-dialog').modal(); // jQuery object; this demo
+                }                
+            }
         </script>
         
         <script type="text/javascript" src="./lib/canvasprops.js"></script>
@@ -133,7 +143,7 @@ $page = 'editor';
         <![endif]-->
        
     </head>
-    <body onload="init('<?= isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId']) ? $_REQUEST['diagramId']:''?>');" id="body">
+    <body onload="init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId']:''?>');" id="body">
         
         <? require_once dirname(__FILE__) . '/header.php'; ?>
 
@@ -372,8 +382,18 @@ $page = 'editor';
             </div>
             
         </div>
-
-
+        
+        <!--The import panel-->
+        <div id="import-dialog" style="background-color: white; display: none; margin-top: auto; margin-bottom: auto;">
+            <form action="./common/controller.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="importDiagramExe"/>
+                <h2>Import Diagramo file </h2>
+                <p/>
+                <input type="file" name="diagramFile" id="diagramFile"/>  
+                <p/>
+                <input type="image" src="./assets/images/import.gif"/>
+            </form>
+        </div>
 
 
         <script type="text/javascript">
