@@ -90,5 +90,8 @@ FigureCreateCommand.prototype = {
         
         //change state
         state = STATE_NONE;
+
+        // set properties panel to canvas because current figure doesn't exist anymore
+        setUpEditPanel(canvasProps);
     }
 }
