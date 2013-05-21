@@ -372,3 +372,38 @@ body{
 #text-editor-tools .color_picker {
     margin-top: 2px;
 }
+
+#insert-image-dialog {
+    display: none;
+}
+
+#insert-image-dialog h2{
+    margin: 0 0 30px 0;
+}
+
+#insert-image-dialog .insert-image-line {
+    margin-bottom: 10px;
+}
+
+#insert-image-dialog .insert-image-line label {
+    padding-right: 10px;
+}
+
+#insert-image-dialog .submit-container {
+    margin: 31px 0 10px 0;;
+}
+
+#insert-image-dialog .submit-container input{
+    margin: auto;
+    display: block;
+    width: 100px;
+    height: 32px;
+}
+
+#insert-image-dialog .insert-image-line .right-offset {
+    float: right;
+}
+
+#insert-image-dialog .insert-image-line .url-input {
+    width: 232px;
+}

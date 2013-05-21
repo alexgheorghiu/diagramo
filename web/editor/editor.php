@@ -215,9 +215,8 @@ $page = 'editor';
             <a href="javascript:createFigure(figure_Text);"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
-<!--            <a href="javascript:createFigure(figure_SimpleImage);"  title="Add image"><img  style="vertical-align:middle;" src="/editor/assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
-            
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>-->
+            <a href="javascript:insertImage();"  title="Add image"><img src="/editor/assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
+            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
             <a href="javascript:action('undo');" title="Undo (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>
             <!-- TODO: From Janis: we have to create a nice icon for duplicate, currently this is the only command without an icon -->
@@ -395,6 +394,26 @@ $page = 'editor';
             </form>
         </div>
 
+        <!--Insert Image dialog content-->
+        <div id="insert-image-dialog">
+   			<h2>Insert Image</h2>
+            <form action="./common/controller.php" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="action" value="insertImageExe"/>
+                <div class="insert-image-line">
+                    <input type="radio" name="image-group" value="URL">
+                    <label>From URL:</label>
+                    <input type="text" class="url-input" name="imageFilePath" id="imageFilePath"/>
+                </div>
+                <div class="insert-image-line">
+                    <input type="radio" name="image-group" value="Upload" checked>
+                    <label>Upload:</label>
+                    <input type="file" class="right-offset" name="imageFile" id="imageFile"/>
+                </div>
+                <div class="submit-container">
+                    <input type="submit" value="Insert" />
+                </div>
+            </form>
+   		</div>
 
         <script type="text/javascript">
             function loadFill(check){

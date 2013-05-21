@@ -486,8 +486,23 @@ function createFigure(fFunction, thumbURL){
 
 }
 
+/** Insert image into current diagram
+ * Print can be triggered in 1 case:
+ *  1 - from quick toolbar
+ *
+ *  Description:
+ *  1) Call popup to get image from url or upload target image from local
+ *  2) Save image to backend
+ *  3) Create figure with target image add text caption
+ *
+ *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ **/
+function insertImage(){
+    var dialogContent = document.getElementById('insert-image-dialog');
+    $.modal(dialogContent,{minWidth:'380px', minHeight: '195px'});
+}
 
-/**Activate snapToGrip  option*/
+    /**Activate snapToGrip  option*/
 function snapToGrid(){	
 	Log.info("snapToGrid called;");
 	snapTo =! snapTo;
