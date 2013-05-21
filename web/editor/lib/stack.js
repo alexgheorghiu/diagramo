@@ -762,7 +762,7 @@ Stack.prototype = {
          * 4. selection area (last) 
          **/
         
-        if(visualDebug){
+        if(DIAGRAMO.debug){
             var  pos = 1;
             context.save();
             context.font = "10px Arial";
@@ -879,7 +879,7 @@ Stack.prototype = {
             Log.info(selectionArea.toString());
         }
         
-        if(visualDebug && debugSolutions){
+        if(DIAGRAMO.debug){
 //            Log.group("Visual debug");
             var colors = {
                 's0' : '#ff0000',
@@ -894,9 +894,9 @@ Stack.prototype = {
             };
             
             context.save();
-            for(var i=0; i<debugSolutions.length; i++){
+            for(var i=0; i<DIAGRAMO.debugSolutions.length; i++){
                 var shift = 3 + i * 3;
-                var solution = debugSolutions[i];
+                var solution = DIAGRAMO.debugSolutions[i];
 //                Log.info("Solution: " + solution + " type of " + typeof(solution[2]) + " length: " + solution.length );
 //                Log.info("Solution points: " + solution[2]);
                 var points = solution[2]; //get points

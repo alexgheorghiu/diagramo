@@ -5,12 +5,42 @@
  *SO TAKE CARE!
  **/
 
-var debugSolutions = false; 
 
-/**Set it on true if you want visual debug clues.
- * Note: See to set the Connector's visualDebug (Connector.visualDebug) to false too
- **/
-var visualDebug = true; 
+/**Diagramo namespace. We must place as much "global application" variables in here to avoid
+ * connflict and better management*/
+var DIAGRAMO = {
+    /**Set it on true if you want visual debug clues.
+    * Note: See to set the Connector's visualDebug (Connector.visualDebug) to false too
+    **/
+    debug : false,
+            
+    /**Keeps temporary connector solution.
+     * TODO: move to CONNECTION_MANAGE?!*/
+    debugSolutions : []
+};
+
+
+/**Switch on/off debug
+ * @param {Boolean} value optional value
+ * */
+DIAGRAMO.switchDebug = function(value) {
+    if(value == undefined){
+        DIAGRAMO.debug = !DIAGRAMO.debug;
+    }
+    else{
+        DIAGRAMO.debug = value;
+    }
+    
+    var iconDebug = document.getElementById('iconDebug');
+    
+    if(DIAGRAMO.debug){
+        iconDebug.src = './assets/images/icon_debug_true.gif';
+    }
+    else{
+        iconDebug.src = './assets/images/icon_debug_false.gif';
+    }
+};
+
 
 /**Activate or deactivate the undo feature
  *@deprecated
@@ -2423,7 +2453,7 @@ function connectorPickSecond(x, y, ev){
         var rStartBounds = rStartFigure ? rStartFigure.getBounds() : null;
         var rEndBounds = rEndFigure ? rEndFigure.getBounds() : null;
         
-        debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
     }
     
     //end remove block
@@ -2451,9 +2481,9 @@ function connectorPickSecond(x, y, ev){
     var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
     var secConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
     //adjust connector
-    Log.info("connectorPickSecond() -> Solution: " + debugSolutions[0][2]);
+    Log.info("connectorPickSecond() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
     
-    con.turningPoints = Point.cloneArray(debugSolutions[0][2]);
+    con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
     //CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId).point = con.turningPoints[0].clone();
     secConPoint.point = con.turningPoints[con.turningPoints.length-1].clone();
 
@@ -2556,16 +2586,16 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         var rEndBounds = rEndFigure ? rEndFigure.getBounds() : null;
 
         //solutions
-        debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
 
 
         //UPDATE CONNECTOR 
         var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
         var secondConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
         //adjust connector
-        Log.info("connectorMovePoint() -> Solution: " + debugSolutions[0][2]);
+        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
 
-        con.turningPoints = Point.cloneArray(debugSolutions[0][2]);
+        con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
         
         firstConPoint.point = con.turningPoints[0].clone();
 
@@ -2609,7 +2639,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         var rEndBounds = rEndFigure ? rEndFigure.getBounds() : null;
 
         //solutions
-        debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
 
 
         //UPDATE CONNECTOR
@@ -2617,9 +2647,9 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         var secondConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
         
         //adjust connector
-        Log.info("connectorMovePoint() -> Solution: " + debugSolutions[0][2]);
+        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
 
-        con.turningPoints = Point.cloneArray(debugSolutions[0][2]);
+        con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
         
         secondConPoint.point = con.turningPoints[con.turningPoints.length - 1].clone();
 

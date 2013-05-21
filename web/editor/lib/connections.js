@@ -62,9 +62,6 @@ function Connector(startPoint,endPoint,type, id){
 
     /**The {ConnectionPoint}'s id that is currently being dragged*/
     this.activeConnectionPointId = -1;
-
-    /**If true visual debug will be available*/
-    this.visualDebug = false;
     
     /**Serialization type*/
     this.oType = 'Connector'; //object type used for JSON deserialization
@@ -385,7 +382,7 @@ Connector.prototype = {
         
         
         
-        this.paintVisualDebug();
+        this.paintVisualDebug(context);
 
         this.paintStart(context);
         this.paintEnd(context);
@@ -469,7 +466,7 @@ Connector.prototype = {
     
     paintVisualDebug : function (context){
         //paint debug points
-        if(this.visualDebug){
+        if(DIAGRAMO.debug){
             context.beginPath();
             for(var i=0; i< this.turningPoints.length; i++){
                 context.moveTo(this.turningPoints[i].x, this.turningPoints[i].y);

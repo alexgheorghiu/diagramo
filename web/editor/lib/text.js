@@ -58,10 +58,7 @@ function Text(string, x, y, font, size, outsideCanvas, align){
     if(!outsideCanvas){
         this.bounds = this.getNormalBounds();
     }
-    
-    /**Used to display visual debug information*/
-    this.debug = true;
-    
+        
     /*JSON object type used for JSON deserialization*/
     this.oType = 'Text'; 
 }
@@ -351,7 +348,7 @@ Text.prototype = {
 
 
         //visual debug :D
-        if(this.debug){
+        if(DIAGRAMO.debug){
             //paint vector
             context.beginPath();
             context.moveTo(this.vector[0].x,this.vector[0].y);
