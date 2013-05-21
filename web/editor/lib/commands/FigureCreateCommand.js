@@ -9,6 +9,7 @@
  * @param {Number} x - the x coordinates
  * @param {Number} y - the x coordinates
  * @author Alex <alex@scriptoid.com>
+ *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  */
 function FigureCreateCommand(factoryFunction, x, y){
     this.oType = 'FigureCreateCommand';

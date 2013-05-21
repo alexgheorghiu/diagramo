@@ -12,6 +12,36 @@ function Builder(){
     
 }
 
+/**Image base path*/
+Builder.IMAGE_BASE_PATH = './assets/images/';
+
+/**Path to fill icon image*/
+Builder.IMAGE_FILL_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-fill.png' ;
+
+/**Path to stroke icon image*/
+Builder.IMAGE_STROKE_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-stroke.png' ;
+
+/**Path to line width icon image*/
+Builder.IMAGE_LINEWIDTH_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-linewidth.png' ;
+
+/**Path to start style icon image*/
+Builder.IMAGE_STARTSTYLE_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-startstyle.png' ;
+
+/**Path to end style icon image*/
+Builder.IMAGE_ENDSTYLE_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-endstyle.png' ;
+
+/**Path to width icon image*/
+Builder.IMAGE_WIDTH_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-h-resize.png' ;
+
+/**Path to height icon image*/
+Builder.IMAGE_HEIGHT_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-v-resize.png' ;
+
+/**Path to URL style icon image*/
+Builder.IMAGE_URL_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-url.png' ;
+
+/**Path to text style icon image*/
+Builder.IMAGE_TEXT_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-text.png' ;
+
 
 /**Creates a {Builder} out of JSON parsed object
  *@param {JSONObject} o - the JSON parsed object
@@ -47,7 +77,7 @@ Builder.constructPropertiesPanel = function(DOMObject, shape){
  *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
  *
  *@return {TextEditorPopup} - new instance of TextEditorPopup after init
- *@author Artyom
+ *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
 Builder.constructTextPropertiesPanel = function(textEditor, textEditorTools, shape, textPrimitiveId){
     var textEditor = new TextEditorPopup(textEditor, textEditorTools, shape, textPrimitiveId);
@@ -63,7 +93,7 @@ Builder.constructTextPropertiesPanel = function(textEditor, textEditorTools, sha
  **/
 Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
     var div = document.createElement("div");
-    //div.innerHTML = '<div></div>';why is this here?
+    var icon;
 
     // colorPicker plugin requires div to be already appended to the DOM
     DOMObject.appendChild(div);
@@ -75,12 +105,29 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
     var currentColor = canvasProps.getFillColor();
     var uniqueId = new Date().getTime();
 
-    var retVal = '<div class="label"> Color </div>\n';
-    retVal += '<div id="colorSelector' + uniqueId + '" style="/*border: 1px solid #000000;*/ width: 16px; height: 16px; display: block; float: right; padding-right: 3px;">\n';
-    retVal += '<input type="text" value="' + currentColor + '" id="colorpickerHolder' + uniqueId + '">\n';
-    retVal += '</div>\n';
-    //very unhappy with this innerHTML thingy
-    colorDiv.innerHTML = retVal;
+    var labelDiv = document.createElement("div");
+    labelDiv.className = "label";
+    labelDiv.textContent = "Color";
+
+    icon = new Image();
+    icon.className = 'prop-icon';
+    icon.src = Builder.IMAGE_FILL_ICON_PATH;
+    labelDiv.appendChild(icon);
+
+    colorDiv.appendChild(labelDiv);
+
+    var colorSelectorDiv = document.createElement("div");
+    colorSelectorDiv.id = 'colorSelector' + uniqueId;
+    colorSelectorDiv.className = 'color-selector';
+
+    var colorInput = document.createElement("input");
+    colorInput.type = "text";
+    colorInput.id = 'colorpickerHolder' + uniqueId;
+    colorInput.value = currentColor;
+    colorSelectorDiv.appendChild(colorInput);
+
+    colorDiv.appendChild(colorSelectorDiv);
+
     div.appendChild(colorDiv);
 
     var colorPicker = document.getElementById('colorpickerHolder'+uniqueId);
@@ -104,12 +151,17 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
     //width
     var divWidth = document.createElement("div");
-    divWidth.innerHTML = '<div class = "label">Width</div>';
+    divWidth.className = 'label';
+    divWidth.textContent = 'Width';
+
+    icon = new Image();
+    icon.className = 'prop-icon';
+    icon.src = Builder.IMAGE_WIDTH_ICON_PATH;
+    divWidth.appendChild(icon);
 
     var inputWidth = document.createElement("input");
     inputWidth.type = "text";
     inputWidth.className = "text"; //required for onkeydown
-    inputWidth.style.cssText = "float: right";
     inputWidth.value = canvasProps.getWidth();
     divWidth.appendChild(inputWidth);
 
@@ -117,12 +169,17 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
     //height
     var divHeight = document.createElement("div");
-    divHeight.innerHTML = '<div class = "label">Height</div>';
+    divHeight.className = 'label';
+    divHeight.textContent = 'Height';
+
+    icon = new Image();
+    icon.className = 'prop-icon';
+    icon.src = Builder.IMAGE_HEIGHT_ICON_PATH;
+    divHeight.appendChild(icon);
 
     var inputHeight = document.createElement("input");
     inputHeight.type = "text";
     inputHeight.className = "text"; //required for onkeydown
-    inputHeight.style.cssText = "float: right";
     inputHeight.value = canvasProps.getHeight();
     divHeight.appendChild(inputHeight);
 
@@ -130,7 +187,6 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
     //update button
     var divButton = document.createElement("div");
-    divButton.innerHTML = '<div class = "label"></div>';
 
     var btnUpdate = document.createElement("input");
     btnUpdate.setAttribute("type", "button");
@@ -333,7 +389,7 @@ BuilderProperty.prototype = {
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.LINE_WIDTHS);
         }
         else if(this.type == BuilderProperty.TYPE_URL){
-            this.generateSingleTextCode(DOMObject,figureId);
+            this.generateURLCode(DOMObject,figureId);
         }
     },
 
@@ -348,12 +404,16 @@ BuilderProperty.prototype = {
         var uniqueId = d.getTime();
         var value = this.getValue(figureId);
         var div = document.createElement("div");
-        div.innerHTML = '<div class=label>' + this.name + '</div>';
+
+        var labelDiv = document.createElement("div");
+        labelDiv.className = "label";
+        labelDiv.textContent = this.name;
+
+        div.appendChild(labelDiv);
 
         var check = document.createElement("input");
         check.type = "checkbox"
         check.className = "text"; //required for onkeydown
-        check.style.cssText ="float: right";
         check.checked = value;
         div.children[0].appendChild(check);
         check.onclick = function(figureId,property){
@@ -378,16 +438,18 @@ BuilderProperty.prototype = {
 
         var div = document.createElement("div");
         div.className = "textLine";
-        div.innerHTML = '<div class = "label">' + this.name + '</div>';
+
+        var labelDiv = document.createElement("div");
+        labelDiv.className = "label";
+        labelDiv.textContent = this.name;
+
+        div.appendChild(labelDiv);
 
         var text = document.createElement("textarea");
         text.className = "text"; //required for onkeydown
-        //text.style.cssText ="float: right";
-        //text.style.cssText ="float: left";
         text.value = value;
         text.spellcheck = false;
         text.style.width = "100%";
-        //text.style.float = "left";
         div.appendChild(document.createElement("br"));
         div.appendChild(text);
 
@@ -426,21 +488,71 @@ BuilderProperty.prototype = {
 
         var div = document.createElement("div");
         div.className = "line";
-        div.innerHTML = '<div class = "label">' + this.name + '</div>';
+
+        var labelDiv = document.createElement("div");
+        labelDiv.className = "label";
+        labelDiv.textContent = this.name;
+
+        var icon = new Image();
+        icon.className = 'prop-icon';
+        icon.src = Builder.IMAGE_TEXT_ICON_PATH;
+        labelDiv.appendChild(icon);
+
+        div.appendChild(labelDiv);
 
         var text = document.createElement("input");
         text.type = "text";
         text.className = "text"; //required for onkeydown
-        text.style.cssText = "float: right";
-        //text.style.cssText ="float: left";
         text.value = value;
-        //text.style.width = "100%";
-        //text.style.float = "left";
         div.appendChild(text);
 
         text.onchange = function(figureId,property){
             return function(){
                 Log.info("Builder.generateSingleTextCode() value: " + this.value);
+                updateShape(figureId, property, this.value);
+            }
+        }(figureId, this.property);
+
+
+        text.onmouseout = text.onchange;
+        text.onkeyup = text.onchange;
+        DOMObject.appendChild(div);
+    },
+
+
+    /**Generate the code to edit the URL.
+     *The URL got updated when you leave the input area
+     *
+     *@param {HTMLElement} DOMObject - the div of the properties panel
+     *@param {Number} figureId - the id of the figure we are using
+     **/
+    generateURLCode:function(DOMObject,figureId){
+        var uniqueId = new Date().getTime();
+        var value = this.getValue(figureId);
+
+        var div = document.createElement("div");
+        div.className = "line";
+
+        var labelDiv = document.createElement("div");
+        labelDiv.className = "label";
+        labelDiv.textContent = this.name;
+
+        var icon = new Image();
+        icon.className = 'prop-icon';
+        icon.src = Builder.IMAGE_URL_ICON_PATH;
+        labelDiv.appendChild(icon);
+
+        div.appendChild(labelDiv);
+
+        var text = document.createElement("input");
+        text.type = "text";
+        text.className = "text"; //required for onkeydown
+        text.value = value;
+        div.appendChild(text);
+
+        text.onchange = function(figureId,property){
+            return function(){
+                Log.info("Builder.generateURLCode() value: " + this.value);
                 updateShape(figureId, property, this.value);
             }
         }(figureId, this.property);
@@ -466,7 +578,38 @@ BuilderProperty.prototype = {
 
         var div = document.createElement("div");
         div.className = "line";
-        div.innerHTML = '<div class="label">'+this.name+'</div>';
+
+        var labelDiv = document.createElement("div");
+        labelDiv.className = "label";
+        labelDiv.textContent = this.name;
+
+        // get last name of property to define it's icon
+        var propNames = this.property.split('.');
+        var propLastName = propNames.pop();
+
+        var icon;
+        switch (propLastName) {
+            case "lineWidth":
+                icon = new Image();
+                icon.className = 'prop-icon';
+                icon.src = Builder.IMAGE_LINEWIDTH_ICON_PATH;
+                labelDiv.appendChild(icon);
+                break;
+            case "startStyle":
+                icon = new Image();
+                icon.className = 'prop-icon';
+                icon.src = Builder.IMAGE_STARTSTYLE_ICON_PATH;
+                labelDiv.appendChild(icon);
+                break;
+            case "endStyle":
+                icon = new Image();
+                icon.className = 'prop-icon';
+                icon.src = Builder.IMAGE_ENDSTYLE_ICON_PATH;
+                labelDiv.appendChild(icon);
+                break;
+        }
+
+        div.appendChild(labelDiv);
         
         var select = document.createElement("select");
         select.style.cssText ="float: right;";
@@ -506,13 +649,44 @@ BuilderProperty.prototype = {
         var uniqueId = new Date().getTime();
         var div = document.createElement("div");
         div.className = "line";
-        var retVal = '<div class="label">' + this.name + '</div>\n';
-        retVal += '<div id="colorSelector' + uniqueId + '" style="/*border: 1px solid #000000;*/ width: 16px; height: 16px; display: block; float: right; padding-right: 3px;">\n';
-        retVal += '<input type="text" value="' + value + '" id="colorpickerHolder' + uniqueId + '">\n';
-        //retVal+='<div style="background-color: '+value+';  width: 20px; height: 20px;"></div>\n';
-        retVal += '</div>\n';
-        //very unhappy with this innerHTML thingy
-        div.innerHTML = retVal;
+
+        var labelDiv = document.createElement("div");
+        labelDiv.className = "label";
+        labelDiv.textContent = this.name;
+
+        // get last name of property to define it's icon
+        var propNames = this.property.split('.');
+        var propLastName = propNames.pop();
+
+        var icon;
+        switch (propLastName) {
+            case "fillStyle":
+                icon = new Image();
+                icon.className = 'prop-icon';
+                icon.src = Builder.IMAGE_FILL_ICON_PATH;
+                labelDiv.appendChild(icon);
+                break;
+            case "strokeStyle":
+                icon = new Image();
+                icon.className = 'prop-icon';
+                icon.src = Builder.IMAGE_STROKE_ICON_PATH;
+                labelDiv.appendChild(icon);
+                break;
+        }
+
+        div.appendChild(labelDiv);
+
+        var colorSelectorDiv = document.createElement("div");
+        colorSelectorDiv.id = 'colorSelector' + uniqueId;
+        colorSelectorDiv.className = 'color-selector';
+
+        var colorInput = document.createElement("input");
+        colorInput.type = "text";
+        colorInput.id = 'colorpickerHolder' + uniqueId;
+        colorInput.value = value;
+        colorSelectorDiv.appendChild(colorInput);
+
+        div.appendChild(colorSelectorDiv);
 
         DOMObject.appendChild(div);
 
@@ -597,7 +771,7 @@ BuilderProperty.prototype = {
  * @param {HTMLElement} tools - the DOM object to create Text Editor Tools
  * @param  shape - the {Figure} or {Connector} - parent of Text primitive
  * @param {Number} textPrimitiveId - the id value of Text primitive child of shape for which the properties will be displayed
- * @author Artyom
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  */
 function TextEditorPopup(editor, tools, shape, textPrimitiveId){
     this.editor = editor;
@@ -638,7 +812,8 @@ TextEditorPopup.prototype = {
     
     /**
      *Returns true if target shape of TextEditorPopup is a Connector
-      *@return {Boolean} - true shape property is a connector
+     *@return {Boolean} - true shape property is a connector
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     shapeIsAConnector : function (){
         return this.shape.oType === "Connector";
@@ -648,7 +823,7 @@ TextEditorPopup.prototype = {
 
     /**
     *Creates DOM structure and bind events
-    *@author Artyom
+    *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
     **/
     init : function (){
        var textarea;
@@ -700,7 +875,7 @@ TextEditorPopup.prototype = {
      * provides WYSIWYG functionality
      * @param {String} property - property name that is being edited (in dotted notation)
      * @param {Object} value - the value to set the property to
-     * @author Artyom
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     setProperty : function (property, value) {
         var textarea = this.editor.getElementsByTagName('textarea')[0];
@@ -753,7 +928,7 @@ TextEditorPopup.prototype = {
 
     /**
      *Places and sets size to the property panel
-     *@author Artyom
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     placeAndAutoSize : function () {
         var textarea = this.editor.getElementsByTagName('textarea')[0];
@@ -812,7 +987,7 @@ TextEditorPopup.prototype = {
      
     /**
     *Removes DOM structure of editor and it's tools
-    *@author Artyom
+    *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
     **/        
     destroy : function (){
         this.editor.className = '';
@@ -829,7 +1004,7 @@ TextEditorPopup.prototype = {
     *Returns true if mouse clicked inside TextEditorPopup
     *@param {Event} e - mouseDown event object
     *@return {boolean} - true if clicked inside
-    *@author Artyom
+    *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
     **/
    mouseClickedInside : function (e) {
        var target = e.target;
@@ -859,6 +1034,7 @@ TextEditorPopup.prototype = {
      * @param {Number} textPrimitiveId - the id value of a target Text primitive
      *
      *@return {Boolean} - true if refers to target objects
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     refersTo : function (shape, textPrimitiveId) {
         var result = this.shape.equals(shape);
@@ -872,7 +1048,7 @@ TextEditorPopup.prototype = {
 
     /**
      * Manually triggers onblur event of textarea inside TextEditor.
-     * @author Artyom
+     * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     blurTextArea : function () {
         var textarea = this.editor.getElementsByTagName('textarea')[0];

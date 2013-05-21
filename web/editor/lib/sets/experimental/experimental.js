@@ -125,7 +125,7 @@ function figure_SimpleImage(x, y)
     var ifig = new ImageFrame(url, x, y, true);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;
@@ -165,7 +165,7 @@ function figure_ImageFrame(x, y)
     var ifig = new ImageFrame(url, x - 200 + 150/2, y - 100 + 150 / 2, false, 150, 150);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.1.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.1.url', BuilderProperty.TYPE_URL));
     
     //Title - 2
     var title = new Text("Hilary Erhard Duff", x + 100, y - 80, 'tahoma', 14);
@@ -235,7 +235,7 @@ function figure_Settings(x, y)
     var ifig = new ImageFrame(url, x, y, true);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;
@@ -261,7 +261,7 @@ function figure_Tango(x, y)
     var ifig = new ImageFrame(url, x, y, true, 200, 200);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;
@@ -288,7 +288,7 @@ function figure_Organic(x, y)
     var ifig = new ImageFrame(url, x, y, true, 200, 200);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;
@@ -314,7 +314,7 @@ function figure_Inkscape(x, y)
     var ifig = new ImageFrame(url, x, y, true, 200, 200);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;
@@ -339,7 +339,7 @@ function figure_Airport(x, y)
     var ifig = new ImageFrame(url, x, y, true, 200, 200);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;
@@ -365,7 +365,7 @@ function figure_200by200SVG(x, y)
     var ifig = new ImageFrame(url, x, y, true, 100, 100);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;
@@ -391,7 +391,7 @@ function figure_200by200PNG(x, y)
     var ifig = new ImageFrame(url, x, y, true, 100, 100);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;
@@ -420,7 +420,7 @@ function figure_3Figures(x, y)
     var ifig = new ImageFrame(url, x, y, true, 100, 100);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;
@@ -445,7 +445,7 @@ function figure_3FiguresNoSize(x, y)
     var ifig = new ImageFrame(url, x, y, true, 100, 100);
     ifig.debug = true;
     f.addPrimitive(ifig);
-    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_TEXT));
+    f.properties.push(new BuilderProperty('URL', 'primitives.0.url', BuilderProperty.TYPE_URL));
     
     f.finalise();
     return f;

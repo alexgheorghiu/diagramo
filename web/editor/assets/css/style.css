@@ -117,24 +117,53 @@ body{
     background-color: #F6F6F6;
     padding: 10px 10px 0 10px;
 }
-
+#edit hr {
+    /*Separator's style*/
+    float: left;
+    width: 100%;
+    margin: 5px 0;
+}
 #edit textarea {
     width: 200px;
     height: 50px;
 }
-
 #edit select {
     width: 100px;
 }
 #edit div.label {
     float: left;
+    width: 100%;
     color: #8C8C8C;
     text-shadow: 0px 1px 0px #FFFFFF;
+    margin-bottom: 3px;
+}
+#edit div.label input.text, #edit div.line input.text{
+    float: right;
+    margin: 0;
+}
+#edit div.label .prop-icon {
+    width: 20px;
+    height: 20px;
+    float: left;
+    padding-right: 3px;
 }
 #edit div.line {
     height: 22px;
-    clear: both;
+    /*clear: both;*/
     width: 100%;
+    float: left;
+    margin-bottom: 3px;
+}
+#edit div.line div.label{
+    width: auto;
+    margin-bottom: 0;
+}
+#right div.color-selector {
+    width: 16px;
+    height: 16px;
+    display: block;
+    float: right;
+    padding-right: 3px;
 }
 #edit div.textLine {
     clear: both;
