@@ -71,6 +71,10 @@ switch ($action) {
     case 'loadTemp':
         loadTemp();
         break;
+
+    case 'insertImageExe':
+        insertImageExe();
+        break;
     
     case 'importDiagramExe':
         importDiagramExe();
@@ -736,6 +740,59 @@ function loadTemp() {
     $diaFile = getStorageFolder() . '/' . $tempName;
     $data = file_get_contents($diaFile);
     print $data;
+}
+
+
+/**Insert image inside diagram:
+    1) Check: get image from URL or get uploaded one.
+    2) Save image on server.
+    3) Return path to it.
+
+*  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+*/
+function insertImageExe() {
+
+    if (!is_numeric($_SESSION['userId'])) { //no user logged
+        print "Not allowed";
+        exit();
+    }
+
+    $imgSource = $_REQUEST['image-group'];
+
+    $max_size = 5000000; // 5 MB limit for import image
+
+    switch ($imgSource) {
+
+        case 'URL':
+            $imageURL = $_REQUEST['imageURL'];
+            $fileName = parse_url($imageURL);
+            $imageFile = get($imageURL);
+            $imagePath = getImportStorageFolder() . '/' . $fileName;
+            if ($imageFile !== false && strlen($imageFile) > 0 && strlen($imageFile) <= $max_size) { //file is fine
+                $fh = fopen($imagePath, 'w');
+                $size = fwrite($fh, $imageFile);
+                fclose($fh);
+            } else {
+                // can't upload image from URL
+            }
+            break;
+
+        case 'Upload':
+            $imageFile = $_FILES['imageFile']['tmp_name'];
+            if (is_uploaded_file($imageFile) && filesize($imageFile) > 0 && filesize($imageFile) <= $max_size) { //file is fine
+                $fileName = $_FILES["imageFile"]["name"];
+                $imagePath = getImportStorageFolder() . '/' . $fileName;
+                if (!move_uploaded_file($imageFile, $imagePath)) {
+                    // can't move uploaded file
+                }
+            } else {
+                // file isn't uploaded
+            }
+            break;
+
+    }
+
+    print $imagePath;
 }
 
 

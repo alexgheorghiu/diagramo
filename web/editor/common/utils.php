@@ -5,11 +5,21 @@ date_default_timezone_set('America/New_York');
 
 
 /**
- * Returns the path to the diagrams storage folder.
+  * Returns the path to the diagrams storage folder.
+  * The path does not contain the trailing /
+  */
+ function getStorageFolder(){
+     return dirname(__FILE__) . '/../data/diagrams';
+ }
+
+/**
+ * Returns the path to the import images storage folder.
  * The path does not contain the trailing /
+ *
+ *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  */
-function getStorageFolder(){
-    return dirname(__FILE__) . '/../data/diagrams';
+function getImportStorageFolder(){
+    return dirname(__FILE__) . '/../data/import';
 }
 
 // Set a error message into session

@@ -215,7 +215,7 @@ $page = 'editor';
             <a href="javascript:createFigure(figure_Text);"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
-            <a href="javascript:insertImage();"  title="Add image"><img src="/editor/assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
+            <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="/editor/assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
             <a href="javascript:action('undo');" title="Undo (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>
@@ -402,7 +402,7 @@ $page = 'editor';
                 <div class="insert-image-line">
                     <input type="radio" name="image-group" value="URL">
                     <label>From URL:</label>
-                    <input type="text" class="url-input" name="imageFilePath" id="imageFilePath"/>
+                    <input type="text" class="url-input" name="imageURL" id="imageURL"/>
                 </div>
                 <div class="insert-image-line">
                     <input type="radio" name="image-group" value="Upload" checked>
@@ -410,7 +410,7 @@ $page = 'editor';
                     <input type="file" class="right-offset" name="imageFile" id="imageFile"/>
                 </div>
                 <div class="submit-container">
-                    <input type="submit" value="Insert" />
+                    <input type="button" onclick="javascript:insertImage(this)" value="Insert" />
                 </div>
             </form>
    		</div>

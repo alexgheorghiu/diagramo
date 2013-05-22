@@ -39,6 +39,8 @@ DIAGRAMO.switchDebug = function(value) {
     else{
         iconDebug.src = './assets/images/icon_debug_false.gif';
     }
+
+    draw();
 };
 
 
@@ -486,9 +488,22 @@ function createFigure(fFunction, thumbURL){
 
 }
 
-/** Insert image into current diagram
- * Print can be triggered in 1 case:
+/** Show "Insert image" dialog
+ * Insert image dialog can be triggered in 1 case:
  *  1 - from quick toolbar
+
+ *  Description:
+ *  Call popup to get image from url or upload target image from local
+ *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ **/
+function showInsertImageDialog(){
+    var dialogContent = document.getElementById('insert-image-dialog');
+    $.modal(dialogContent,{minWidth:'380px', minHeight: '195px'});
+}
+
+/** Insert image into current diagram
+ * Insert image can be triggered in 1 case:
+ *  1 - from insert image dialog
  *
  *  Description:
  *  1) Call popup to get image from url or upload target image from local
@@ -497,9 +512,24 @@ function createFigure(fFunction, thumbURL){
  *
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
-function insertImage(){
-    var dialogContent = document.getElementById('insert-image-dialog');
-    $.modal(dialogContent,{minWidth:'380px', minHeight: '195px'});
+function insertImage(insertButton){
+    // get parent form element
+    var formElement = insertButton.parentNode.parentNode;
+
+
+    var formData = new FormData(formElement);
+
+    var oReq = new XMLHttpRequest();
+    oReq.open("POST", "./common/controller.php", true);
+    oReq.onload = function(oEvent) {
+        if (oReq.status == 200) {
+            alert("Uploaded!");
+        } else {
+            alert("Error " + oReq.status + " occurred uploading your file.<br \/>");
+        }
+    };
+
+    oReq.send(formData);
 }
 
     /**Activate snapToGrip  option*/
