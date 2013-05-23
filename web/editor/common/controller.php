@@ -767,7 +767,7 @@ function insertImageExe() {
             $imageURL = $_REQUEST['imageURL'];
             $fileName = parse_url($imageURL);
             $imageFile = get($imageURL);
-            $imagePath = getImportStorageFolder() . '/' . $fileName;
+            $imagePath = getImportFolder() . '/' . $fileName;
             if ($imageFile !== false && strlen($imageFile) > 0 && strlen($imageFile) <= $max_size) { //file is fine
                 $fh = fopen($imagePath, 'w');
                 $size = fwrite($fh, $imageFile);
@@ -781,7 +781,7 @@ function insertImageExe() {
             $imageFile = $_FILES['imageFile']['tmp_name'];
             if (is_uploaded_file($imageFile) && filesize($imageFile) > 0 && filesize($imageFile) <= $max_size) { //file is fine
                 $fileName = $_FILES["imageFile"]["name"];
-                $imagePath = getImportStorageFolder() . '/' . $fileName;
+                $imagePath = getImportFolder() . '/' . $fileName;
                 if (!move_uploaded_file($imageFile, $imagePath)) {
                     // can't move uploaded file
                 }
@@ -792,7 +792,10 @@ function insertImageExe() {
 
     }
 
-    print $imagePath;
+    // call insert image function and send saved image path to it
+    print '<script type="text/javascript">'
+            . 'window.top.window.insertImage("' . $fileName . '")'
+            . '</script>';
 }
 
 

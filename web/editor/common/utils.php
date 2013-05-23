@@ -18,8 +18,8 @@ date_default_timezone_set('America/New_York');
  *
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  */
-function getImportStorageFolder(){
-    return dirname(__FILE__) . '/../data/import';
+function getImportFolder(){
+    return dirname(__FILE__) . '/' . '../data/import';
 }
 
 // Set a error message into session

@@ -251,6 +251,9 @@ var selectedConnectionPointId = -1;
 /**Set on true while we drag*/
 var dragging = false;
 
+/**Currently inserted image filename*/
+var insertedImageFileName = null;
+
 /**Holds a wrapper around canvas object*/
 var canvasProps = null;
 
@@ -497,8 +500,37 @@ function createFigure(fFunction, thumbURL){
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
 function showInsertImageDialog(){
+    // clear text editing mode
+    if (state == STATE_TEXT_EDITING) {
+        currentTextEditor.destroy();
+        currentTextEditor = null;
+    }
+
+    // deselect everything
+    selectedFigureId = -1;
+    selectedConnectionPointId = -1;
+    selectedConnectorId = -1;
+    selectedContainerId = -1;
+
+    // if group selected
+    if (state == STATE_GROUP_SELECTED) {
+        var selectedGroup = STACK.groupGetById(selectedGroupId);
+
+        // if group is temporary then destroy it
+        if(!selectedGroup.permanent){
+            STACK.groupDestroy(selectedGroupId);
+        }
+
+        //deselect current group
+        selectedGroupId = -1;
+    }
+
+    state = STATE_NONE;
+
+    draw();
+
     var dialogContent = document.getElementById('insert-image-dialog');
-    $.modal(dialogContent,{minWidth:'380px', minHeight: '195px'});
+    $.modal(dialogContent,{minWidth:'380px', minHeight: '195px', overlayClose: true});
 }
 
 /** Insert image into current diagram
@@ -512,24 +544,13 @@ function showInsertImageDialog(){
  *
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
-function insertImage(insertButton){
-    // get parent form element
-    var formElement = insertButton.parentNode.parentNode;
+function insertImage(imageFileName){
+//    alert(imagePath);
+    insertedImageFileName = imageFileName;
+    action('insertImage');
 
-
-    var formData = new FormData(formElement);
-
-    var oReq = new XMLHttpRequest();
-    oReq.open("POST", "./common/controller.php", true);
-    oReq.onload = function(oEvent) {
-        if (oReq.status == 200) {
-            alert("Uploaded!");
-        } else {
-            alert("Error " + oReq.status + " occurred uploading your file.<br \/>");
-        }
-    };
-
-    oReq.send(formData);
+    // close current insert image dialog
+    $.modal.close()
 }
 
     /**Activate snapToGrip  option*/
@@ -3486,6 +3507,23 @@ function action(action){
             
             redraw = true;
             
+            break;
+
+        case 'insertImage':
+            Log.info("main.js->action()->insertImage. Nr of actions in the STACK: " + History.COMMANDS.length);
+
+            if (state == STATE_TEXT_EDITING) {
+                currentTextEditor.destroy();
+                currentTextEditor = null;
+            }
+
+            //creates a container
+            var cmdFigureCreate = new InsertedImageFigureCreateCommand(figure_InsertedImage, insertedImageFileName, 100, 100);
+            cmdFigureCreate.execute();
+            History.addUndo(cmdFigureCreate);
+
+            redraw = true;
+
             break;
         
         case 'ungroup':

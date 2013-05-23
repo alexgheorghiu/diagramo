@@ -60,7 +60,8 @@ $page = 'editor';
              * Use http://code.google.com/p/js-uri/
              **/
             var figureSetsURL = '<?=$WEBADDRESS?>' + '/editor/lib/sets';
-            
+            var insertImageURL = '<?=$WEBADDRESS?>' + '/editor/data/import/';
+
             function showImport(){
                 //alert("ok");
                 var r = confirm("Current diagram will be deleted. Are you sure?");
@@ -101,7 +102,7 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/minimap.js"></script>
 
         <script type="text/javascript" src="./lib/commands/History.js"></script>
-        
+
         <script type="text/javascript" src="./lib/commands/FigureCreateCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/FigureCloneCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/FigureTranslateCommand.js"></script>
@@ -132,6 +133,8 @@ $page = 'editor';
         
         <script type="text/javascript" src="./lib/commands/CanvasChangeColorCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/CanvasChangeSizeCommand.js"></script>
+
+        <script type="text/javascript" src="./lib/commands/InsertedImageFigureCreateCommand.js"></script>
 
         
         <script type="text/javascript" src="./assets/javascript/colorPicker_new.js"></script>
@@ -397,7 +400,7 @@ $page = 'editor';
         <!--Insert Image dialog content-->
         <div id="insert-image-dialog">
    			<h2>Insert Image</h2>
-            <form action="./common/controller.php" method="POST" enctype="multipart/form-data">
+            <form action="./common/controller.php" method="POST" target="upload_target" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="insertImageExe"/>
                 <div class="insert-image-line">
                     <input type="radio" name="image-group" value="URL">
@@ -410,10 +413,12 @@ $page = 'editor';
                     <input type="file" class="right-offset" name="imageFile" id="imageFile"/>
                 </div>
                 <div class="submit-container">
-                    <input type="button" onclick="javascript:insertImage(this)" value="Insert" />
+                    <input type="submit" value="Insert" />
                 </div>
             </form>
    		</div>
+   		<!--Insert Image hidden iframe-->
+   		<iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px;"></iframe>
 
         <script type="text/javascript">
             function loadFill(check){
