@@ -774,6 +774,11 @@ function insertImageExe() {
                 fclose($fh);
             } else {
                 // can't upload image from URL
+
+                // call insert image function and send error message
+                print '<script type="text/javascript">'
+                    . 'window.top.window.insertImage("", "Error uploading image from URL. Max allowed size is 5MB." )'
+                    . '</script>';
             }
             break;
 
@@ -784,9 +789,19 @@ function insertImageExe() {
                 $imagePath = getImportFolder() . '/' . $fileName;
                 if (!move_uploaded_file($imageFile, $imagePath)) {
                     // can't move uploaded file
+
+                    // call insert image function and send error message
+                    print '<script type="text/javascript">'
+                        . 'window.top.window.insertImage("", "Error uploading image. Max allowed size is 5MB." )'
+                        . '</script>';
                 }
             } else {
                 // file isn't uploaded
+
+                // call insert image function and send error message
+                print '<script type="text/javascript">'
+                    . 'window.top.window.insertImage("", "Error uploading image. Max allowed size is 5MB." )'
+                    . '</script>';
             }
             break;
 

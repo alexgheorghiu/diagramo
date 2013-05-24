@@ -537,20 +537,29 @@ function showInsertImageDialog(){
  * Insert image can be triggered in 1 case:
  *  1 - from insert image dialog
  *
+ * @param {String} imageFileName - filename of uploaded image
+ * @param {String} errorMessage - error message
+ *
  *  Description:
  *  1) Call popup to get image from url or upload target image from local
  *  2) Save image to backend
- *  3) Create figure with target image add text caption
+ *  3) Close popup
+ *  4) If there were errors - go to 5 else - go to 6
+ *  5) Alert error message
+ *  6) Create figure with target image and text caption
  *
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
-function insertImage(imageFileName){
-//    alert(imagePath);
-    insertedImageFileName = imageFileName;
-    action('insertImage');
-
+function insertImage(imageFileName, errorMessage){
     // close current insert image dialog
-    $.modal.close()
+    $.modal.close();
+
+    if (errorMessage) {
+        alert(errorMessage);
+    } else {
+        insertedImageFileName = imageFileName;
+        action('insertImage');
+    }
 }
 
     /**Activate snapToGrip  option*/
