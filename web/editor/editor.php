@@ -412,6 +412,8 @@ $page = 'editor';
                     <label>Upload:</label>
                     <input type="file" class="right-offset" name="imageFile" id="imageFile"/>
                 </div>
+                <div id="upload-image-error">
+                </div>
                 <div class="submit-container">
                     <input type="submit" value="Insert" />
                 </div>

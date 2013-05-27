@@ -777,8 +777,10 @@ function insertImageExe() {
 
                 // call insert image function and send error message
                 print '<script type="text/javascript">'
-                    . 'window.top.window.insertImage("", "Error uploading image from URL. Max allowed size is 5MB." )'
+                    . 'window.top.window.insertImage("", "Error uploading image from URL. Check typed URL. Max allowed size is 5MB." )'
                     . '</script>';
+
+                exit();
             }
             break;
 
@@ -792,16 +794,20 @@ function insertImageExe() {
 
                     // call insert image function and send error message
                     print '<script type="text/javascript">'
-                        . 'window.top.window.insertImage("", "Error uploading image. Max allowed size is 5MB." )'
+                        . 'window.top.window.insertImage("", "Error uploading image. Check chosen file. Max allowed size is 5MB." )'
                         . '</script>';
+
+                    exit();
                 }
             } else {
                 // file isn't uploaded
 
                 // call insert image function and send error message
                 print '<script type="text/javascript">'
-                    . 'window.top.window.insertImage("", "Error uploading image. Max allowed size is 5MB." )'
+                    . 'window.top.window.insertImage("", "Error uploading image. Check chosen file. Max allowed size is 5MB." )'
                     . '</script>';
+
+                exit();
             }
             break;
 

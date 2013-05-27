@@ -390,7 +390,7 @@ body{
 }
 
 #insert-image-dialog .submit-container {
-    margin: 31px 0 10px 0;;
+    margin: 31px 0 0 0;;
 }
 
 #insert-image-dialog .submit-container input{
@@ -406,4 +406,18 @@ body{
 
 #insert-image-dialog .insert-image-line .url-input {
     width: 232px;
+}
+
+#upload-image-dialog {
+    height: auto !important;
+    width: 300px;
+    color: black;
+    background-color: white;
+    border: 2px solid black;
+    padding: 10px;
+}
+
+#upload-image-error {
+    color: red;
+    margin-top:15px;
 }

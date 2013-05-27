@@ -491,6 +491,9 @@ function createFigure(fFunction, thumbURL){
 
 }
 
+// Id of the DOM object for errors of image upload
+var uploadImageErrorDivId = 'upload-image-error';
+
 /** Show "Insert image" dialog
  * Insert image dialog can be triggered in 1 case:
  *  1 - from quick toolbar
@@ -530,7 +533,13 @@ function showInsertImageDialog(){
     draw();
 
     var dialogContent = document.getElementById('insert-image-dialog');
-    $.modal(dialogContent,{minWidth:'380px', minHeight: '195px', overlayClose: true});
+    $.modal(dialogContent,{minWidth:'380px', containerId: 'upload-image-dialog', overlayClose: true});
+    // update dialog's position
+    $.modal.setPosition();
+
+    // empty upload errors in dialog
+    var errorDiv = document.getElementById(uploadImageErrorDivId);
+    errorDiv.innerHTML = '';
 }
 
 /** Insert image into current diagram
@@ -551,12 +560,17 @@ function showInsertImageDialog(){
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
 function insertImage(imageFileName, errorMessage){
-    // close current insert image dialog
-    $.modal.close();
-
     if (errorMessage) {
-        alert(errorMessage);
+        // set upload errors to dialog
+        var errorDiv = document.getElementById(uploadImageErrorDivId);
+        errorDiv.innerHTML = errorMessage;
+
+        // update dialog's position
+        $.modal.setPosition();
     } else {
+        // close current insert image dialog
+        $.modal.close();
+
         insertedImageFileName = imageFileName;
         action('insertImage');
     }
