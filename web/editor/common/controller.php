@@ -72,8 +72,12 @@ switch ($action) {
         loadTemp();
         break;
 
-    case 'insertImageExe':
-        insertImageExe();
+    case 'getUploadedImageFileNames':
+        getUploadedImageFileNames();
+        break;
+
+    case 'insertImage':
+        insertImage();
         break;
     
     case 'importDiagramExe':
@@ -743,6 +747,34 @@ function loadTemp() {
 }
 
 
+/** Returns filenames array for uploaded images.
+*  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+*/
+function getUploadedImageFileNames() {
+    // get folder of uploaded images
+    $dir = getUploadedImageFolder() . "/";
+
+    // index of uploaded image
+    $i = 0;
+
+    // print filenames that matched to images pattern
+    echo "[";
+    // find images in upload directory
+    foreach(glob($dir . "*.{jpg,jpeg,png,gif,bmp}", GLOB_BRACE) as $filename){
+        if (!is_dir($filename)) {
+            $filename = str_replace($dir, "", $filename);
+            // added comma before every filename after first
+            if ($i > 0) {
+                echo ",";
+            }
+            echo "\"" . $filename . "\"";
+            $i++;
+        }
+    }
+    echo "]";
+}
+
+
 /**Insert image inside diagram:
     1) Check: get image from URL or get uploaded one.
     2) Save image on server.
@@ -750,7 +782,7 @@ function loadTemp() {
 
 *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
 */
-function insertImageExe() {
+function insertImage() {
 
     if (!is_numeric($_SESSION['userId'])) { //no user logged
         print "Not allowed";
@@ -765,13 +797,17 @@ function insertImageExe() {
 
         case 'URL':
             $imageURL = $_REQUEST['imageURL'];
-            $fileName = parse_url($imageURL);
+            $fileName = basename($imageURL);
+            $ext = pathinfo($fileName, PATHINFO_EXTENSION);
             $imageFile = get($imageURL);
-            $imagePath = getImportFolder() . '/' . $fileName;
-            if ($imageFile !== false && strlen($imageFile) > 0 && strlen($imageFile) <= $max_size) { //file is fine
+            $imagePath = getUploadedImageFolder() . '/' . $fileName;
+            if ($imageFile !== false && strlen($imageFile) > 0 && strlen($imageFile) <= $max_size && //file is fine
+                ($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif" || $ext == "bmp")) { //file is image
+
                 $fh = fopen($imagePath, 'w');
                 $size = fwrite($fh, $imageFile);
                 fclose($fh);
+
             } else {
                 // can't upload image from URL
 
@@ -786,9 +822,12 @@ function insertImageExe() {
 
         case 'Upload':
             $imageFile = $_FILES['imageFile']['tmp_name'];
-            if (is_uploaded_file($imageFile) && filesize($imageFile) > 0 && filesize($imageFile) <= $max_size) { //file is fine
-                $fileName = $_FILES["imageFile"]["name"];
-                $imagePath = getImportFolder() . '/' . $fileName;
+            $fileName = $_FILES["imageFile"]["name"];
+            $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+            if (is_uploaded_file($imageFile) && filesize($imageFile) > 0 && filesize($imageFile) <= $max_size && //file is fine
+                ($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif" || $ext == "bmp")) { //file is image
+
+                $imagePath = getUploadedImageFolder() . '/' . $fileName;
                 if (!move_uploaded_file($imageFile, $imagePath)) {
                     // can't move uploaded file
 
@@ -799,6 +838,7 @@ function insertImageExe() {
 
                     exit();
                 }
+
             } else {
                 // file isn't uploaded
 
@@ -809,6 +849,10 @@ function insertImageExe() {
 
                 exit();
             }
+            break;
+
+        case 'Reuse':
+            $fileName = $_REQUEST['reuseImageFile'];
             break;
 
     }

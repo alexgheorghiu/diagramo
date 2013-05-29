@@ -401,16 +401,22 @@ $page = 'editor';
         <div id="insert-image-dialog">
    			<h2>Insert Image</h2>
             <form action="./common/controller.php" method="POST" target="upload_target" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="insertImageExe"/>
+                <input type="hidden" name="action" value="insertImage"/>
                 <div class="insert-image-line">
-                    <input type="radio" name="image-group" value="URL">
+                    <input type="radio" name="image-group" value="URL" checked>
                     <label>From URL:</label>
                     <input type="text" class="url-input" name="imageURL" id="imageURL"/>
                 </div>
                 <div class="insert-image-line">
-                    <input type="radio" name="image-group" value="Upload" checked>
+                    <input type="radio" name="image-group" value="Upload">
                     <label>Upload:</label>
                     <input type="file" class="right-offset" name="imageFile" id="imageFile"/>
+                </div>
+                <div class="insert-image-line">
+                    <input type="radio" name="image-group" value="Reuse" id="insert-image-reuse-group">
+                    <label>Reuse:</label>
+                    <select id="insert-image-reuse"  name="reuseImageFile">
+                    </select>
                 </div>
                 <div id="upload-image-error">
                 </div>

@@ -491,18 +491,10 @@ function createFigure(fFunction, thumbURL){
 
 }
 
-// Id of the DOM object for errors of image upload
-var uploadImageErrorDivId = 'upload-image-error';
-
-/** Show "Insert image" dialog
- * Insert image dialog can be triggered in 1 case:
- *  1 - from quick toolbar
-
- *  Description:
- *  Call popup to get image from url or upload target image from local
- *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
- **/
-function showInsertImageDialog(){
+/*
+* Resets any state to STATE_NONE
+*/
+function resetToNoneState() {
     // clear text editing mode
     if (state == STATE_TEXT_EDITING) {
         currentTextEditor.destroy();
@@ -529,8 +521,25 @@ function showInsertImageDialog(){
     }
 
     state = STATE_NONE;
+}
+
+// Id of the DOM object for errors of image upload
+var uploadImageErrorDivId = 'upload-image-error';
+
+/** Show "Insert image" dialog
+ * Insert image dialog can be triggered in 1 case:
+ *  1 - from quick toolbar
+
+ *  Description:
+ *  Call popup to get image from url or upload target image from local
+ *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ **/
+function showInsertImageDialog(){
+    resetToNoneState();
 
     draw();
+
+    setUploadedImagesList();
 
     var dialogContent = document.getElementById('insert-image-dialog');
     $.modal(dialogContent,{minWidth:'380px', containerId: 'upload-image-dialog', overlayClose: true});
@@ -540,6 +549,45 @@ function showInsertImageDialog(){
     // empty upload errors in dialog
     var errorDiv = document.getElementById(uploadImageErrorDivId);
     errorDiv.innerHTML = '';
+}
+
+/** Show filenames of uploaded images in "Insert image" dialog
+ * Get filenames from server and insert them into dialog
+ *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ **/
+function setUploadedImagesList(){
+    //see: http://api.jquery.com/jQuery.get/
+    $.post("./common/controller.php",
+        {action: 'getUploadedImageFileNames'},
+        function(data){
+            var list = document.getElementById('insert-image-reuse');
+            var reuseGroup = document.getElementById('insert-image-reuse-group');
+
+            data = JSON.parse(data);
+
+            if (data != null && data.length) {
+                var i,
+                    length = data.length,
+                    option;
+
+                // add options with filenames to select
+                for (i = 0; i < length; i++) {
+                    option = document.createElement('option');
+                    option.value = data[i];
+                    option.textContent = data[i];
+                    list.appendChild(option);
+                }
+
+                // enable reuse select and group button
+                list.disabled = false;
+                reuseGroup.disabled = false;
+            } else {
+                // disable reuse select and group button
+                list.disabled = true;
+                reuseGroup.disabled = true;
+            }
+        }
+    );
 }
 
 /** Insert image into current diagram

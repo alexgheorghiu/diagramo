@@ -13,12 +13,12 @@ date_default_timezone_set('America/New_York');
  }
 
 /**
- * Returns the path to the import images storage folder.
+ * Returns the path to the uploaded images storage folder.
  * The path does not contain the trailing /
  *
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  */
-function getImportFolder(){
+function getUploadedImageFolder(){
     return dirname(__FILE__) . '/' . '../data/import';
 }
 

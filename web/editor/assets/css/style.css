@@ -421,3 +421,12 @@ body{
     color: red;
     margin-top:15px;
 }
+
+#insert-image-reuse {
+    width: 239px;
+    margin-left: 29px;
+}
+
+#imageFile {
+    margin-right: 34px;
+}
