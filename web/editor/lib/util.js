@@ -505,7 +505,7 @@ var Util = {
      * @param {Number} length - the length of the line
      * @param {Number} angle - the angle of the line in radians
      * @return {Point} - the endPoint of the line
-     * @autho Zack
+     * @author Zack
      */
     getEndPoint:function(startPoint, length, angle){
         var endPoint = startPoint.clone();
@@ -996,6 +996,8 @@ function setSelectionRange(input, selectionStart, selectionEnd) {
  *
  * @this {Browser}
  * @constructor
+ *
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  **/
 function Browser() {
     var N = navigator.appName.toLowerCase();

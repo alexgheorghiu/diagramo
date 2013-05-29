@@ -514,35 +514,50 @@ ImageFrame.prototype = {
 /* Figure used for figure of import image; based on ImageFrame */
 function figure_InsertedImage(imgURL, x, y)
 {
+    // get full image URL after added prefix of upload folder
+    var url = insertImageURL + imgURL;
+
+    // create new figure
     var f = new Figure("InsertedImage");
     f.style.fillStyle = figure_defaultFillStyle;
     f.style.strokeStyle = figure_defaultStrokeStyle;
 
-    var url = insertImageURL + imgURL;
-
-    var ifig = new ImageFrame(url, x, y, true, 48, 48);
+    // figure's part with image
+    var ifig = new ImageFrame(url, x, y, true);
     ifig.debug = true;
     f.addPrimitive(ifig);
 
-    //Text
-    f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
-    f.properties.push(new BuilderProperty('Text Size', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
-    f.properties.push(new BuilderProperty('Font', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
-    f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
-    f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
+    // set callback to get image's natural size and use it for new figure
+    ifig.image.addEventListener("load", function (){
 
-//    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
-    f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+        // image size
+        var imageWidth = ifig.image.width;
+        var imageHeight = ifig.image.height;
 
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + 24, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
-    f.addPrimitive(t2);
+        //Text
+        f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
+        f.properties.push(new BuilderProperty('Text Size', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
+        f.properties.push(new BuilderProperty('Font', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
+        f.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+        f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
-    //Connection Points
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + 24, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - 24, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - 24), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + 35), ConnectionPoint.TYPE_FIGURE);
+        f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
+
+        var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight / 2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
+        t2.style.fillStyle = figure_defaultFillTextStyle;
+        f.addPrimitive(t2);
+
+        ifig.frameHeight = imageHeight + figure_defaultFigureTextSize;
+
+        //Connection Points
+        CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + imageWidth / 2, y), ConnectionPoint.TYPE_FIGURE);
+        CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - imageWidth / 2, y), ConnectionPoint.TYPE_FIGURE);
+        CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - imageHeight / 2 - figure_defaultFigureTextSize / 2), ConnectionPoint.TYPE_FIGURE);
+        CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + imageHeight / 2 + figure_defaultFigureTextSize / 2), ConnectionPoint.TYPE_FIGURE);
+
+        f.finalise();
+        draw();
+    }, false);
 
     f.finalise();
     return f;
