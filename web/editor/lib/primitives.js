@@ -261,6 +261,7 @@ Line.prototype = {
         context.moveTo(this.startPoint.x, this.startPoint.y);
         if(this.style.dashLength==0){
             context.lineTo(this.endPoint.x, this.endPoint.y);
+            context.closePath();
         }
         else{
 
@@ -2363,7 +2364,6 @@ Path.prototype = {
     },
 
     paint:function(context){
-		context.beginPath();
         context.save();
 
         if(this.style != null){
@@ -2377,7 +2377,7 @@ Path.prototype = {
         //not allowing multiple colours in a single path will clean this code up hugely.
         //
         if(this.style.fillStyle != null && this.style.fillStyle != "" ){
-            
+            context.beginPath();
             context.moveTo(this.primitives[0].startPoint.x,this.primitives[0].startPoint.y);
             for(var i = 0; i<this.primitives.length; i++ ){
                 var primitive  = this.primitives[i];
@@ -2413,6 +2413,7 @@ Path.prototype = {
 
                 if(primitive instanceof Line){
                     context.lineTo(primitive.endPoint.x,primitive.endPoint.y);
+                    context.closePath();
                 //Log.info("line");
                 }
                 else if(primitive instanceof Polyline){
