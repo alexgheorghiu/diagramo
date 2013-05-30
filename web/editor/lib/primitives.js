@@ -261,7 +261,7 @@ Line.prototype = {
         context.moveTo(this.startPoint.x, this.startPoint.y);
         if(this.style.dashLength==0){
             context.lineTo(this.endPoint.x, this.endPoint.y);
-            context.closePath();
+            context.closePath(); // added for line's correct Chrome's displaying
         }
         else{
 
@@ -2413,7 +2413,7 @@ Path.prototype = {
 
                 if(primitive instanceof Line){
                     context.lineTo(primitive.endPoint.x,primitive.endPoint.y);
-                    context.closePath();
+                    context.closePath(); // added for line's correct Chrome's displaying
                 //Log.info("line");
                 }
                 else if(primitive instanceof Polyline){
