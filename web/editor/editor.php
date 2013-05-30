@@ -399,7 +399,7 @@ $page = 'editor';
 
         <!--Insert Image dialog content-->
         <div id="insert-image-dialog">
-   			<h2>Insert Image</h2>
+            <h2>Insert Image</h2>
             <form action="./common/controller.php" method="POST" target="upload_target" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="insertImage"/>
                 <div class="insert-image-line">
@@ -424,9 +424,10 @@ $page = 'editor';
                     <input type="submit" value="Insert" />
                 </div>
             </form>
-   		</div>
-   		<!--Insert Image hidden iframe-->
-   		<iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px;"></iframe>
+        </div>
+        
+        <!--Insert Image hidden iframe-->
+        <iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px;"></iframe>
 
         <script type="text/javascript">
             function loadFill(check){
