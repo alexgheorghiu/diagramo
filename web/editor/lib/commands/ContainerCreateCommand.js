@@ -36,6 +36,9 @@ ContainerCreateCommand.prototype = {
             selectedContainerId = container.id;
             
             this.id = container.id;
+
+            //set up it's editor
+            setUpEditPanel(container);
         }
         else{ //redo
             throw "ContainerCreateCommand:execute(). Redo not implemented";

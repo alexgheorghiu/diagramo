@@ -1568,8 +1568,8 @@ function onMouseDown(ev){
                         //find container's id
                         var contId = STACK.containerGetByXY(x, y);
                         if(contId == -1){ //no container detected, deselect current container
-                            setUpEditPanel(null);
                             state = STATE_NONE;
+                            setUpEditPanel(canvasProps);
                             selectedContainerId = -1;
                             HandleManager.clear();
                             Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + click on nothing - change to STATE_NONE');

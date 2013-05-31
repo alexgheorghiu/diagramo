@@ -1354,8 +1354,8 @@ ConnectionPoint.prototype = {
         context.strokeStyle = '#000000';
         context.beginPath();
         context.arc(this.point.x, this.point.y, ConnectionPoint.RADIUS, 0, (Math.PI/180)*360, false);
-        context.fill();
         context.stroke();
+        context.fill();
         context.restore();
     },
 
