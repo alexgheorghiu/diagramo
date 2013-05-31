@@ -45,112 +45,92 @@ function Container(id, topLeft, bottomRight) {
     
     //SHAPE - or decoration of the container
     var headerHeight = 20;
-    
+
+    // figure's path
+    var containerPath = new Path();
+
     //HEADER
-    var header = new Path();
     var hBottomRight = new Point(this.bottomRight.x, this.topLeft.y + headerHeight);
-    var roundness = 10;   
+    var roundness = 10;
+
     var l1 = new Line(
             new Point(this.topLeft.x, hBottomRight.y),
             new Point(this.topLeft.x, this.topLeft.y + roundness)
         );
+    containerPath.addPrimitive(l1);
 
     var c1 = new QuadCurve(           
             new Point(this.topLeft.x, this.topLeft.y + roundness),
             new Point(this.topLeft.x, this.topLeft.y),
             new Point(this.topLeft.x + roundness, this.topLeft.y)
         );
+    containerPath.addPrimitive(c1);
 
     var l2 = new Line(
             new Point(this.topLeft.x + roundness, this.topLeft.y),
             new Point(hBottomRight.x - roundness, this.topLeft.y)
         );
+    containerPath.addPrimitive(l2);
 
     var c2 = new QuadCurve(
             new Point(hBottomRight.x - roundness, this.topLeft.y),
             new Point(hBottomRight.x, this.topLeft.y),
             new Point(hBottomRight.x, this.topLeft.y + roundness)
         );
+    containerPath.addPrimitive(c2);
 
     var l3 = new Line(
             new Point(hBottomRight.x, this.topLeft.y + roundness),
             new Point(hBottomRight.x, hBottomRight.y)
         );
-            
-    var l4 = new Line(
-            new Point(hBottomRight.x, hBottomRight.y),
-            new Point(this.topLeft.x, hBottomRight.y)
-        );
+    containerPath.addPrimitive(l3);
 
-    
-        
-    header.addPrimitive(l1);
-    header.addPrimitive(c1);
-    header.addPrimitive(l2);
-    header.addPrimitive(c2);
-    header.addPrimitive(l3);    
-    header.addPrimitive(l4);    
-    
-    this.primitives.push(header);
 
-//    var header = new Polygon();            
-//    header.addPoint(new Point(this.topLeft.x, this.topLeft.y));
-//    header.addPoint(new Point(this.topLeft.x, this.topLeft.y + headerSize));
-//    header.addPoint(new Point(this.bottomRight.x, this.topLeft.y + headerSize));
-//    header.addPoint(new Point(this.bottomRight.x, this.topLeft.y));
-//    this.primitives.push(header);    
-    
-    this.properties.push(new BuilderProperty('Stroke Style', 'primitives.0.style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    this.properties.push(new BuilderProperty('Fill Style', 'primitives.0.style.fillStyle', BuilderProperty.TYPE_COLOR));
-    this.properties.push(new BuilderProperty('Line Width', 'primitives.0.style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
-    
-    //CONTAINER
-    var actualContainer = new Path();
+    //BODY
     var l = new Line(
             new Point(this.topLeft.x, this.topLeft.y + headerHeight),
             new Point(this.bottomRight.x, this.topLeft.y + headerHeight)
         );
-    actualContainer.addPrimitive(l);
+    containerPath.addPrimitive(l);
     
     l = new Line(
             new Point(this.bottomRight.x, this.topLeft.y + headerHeight),
             new Point(this.bottomRight.x, this.bottomRight.y - roundness)
         );
-    actualContainer.addPrimitive(l);
+    containerPath.addPrimitive(l);
     
     var c = new QuadCurve(
             new Point(this.bottomRight.x, this.bottomRight.y - roundness),
             new Point(this.bottomRight.x, this.bottomRight.y),
             new Point(this.bottomRight.x - roundness, this.bottomRight.y)
         );
-    actualContainer.addPrimitive(c);
+    containerPath.addPrimitive(c);
     
     l = new Line(
             new Point(this.bottomRight.x - roundness, this.bottomRight.y),
             new Point(this.topLeft.x + roundness, this.bottomRight.y)
         );
-    actualContainer.primitives.push(l);
+    containerPath.primitives.push(l);
     
-    var c = new QuadCurve(
+    c = new QuadCurve(
             new Point(this.topLeft.x + roundness, this.bottomRight.y),
             new Point(this.topLeft.x, this.bottomRight.y),
             new Point(this.topLeft.x, this.bottomRight.y - roundness)
         );
-    actualContainer.addPrimitive(c);
+    containerPath.addPrimitive(c);
     
     l = new Line(
             new Point(this.topLeft.x, this.bottomRight.y - roundness),
             new Point(this.topLeft.x, this.topLeft.y + headerHeight)
         );
-    actualContainer.primitives.push(l);    
-    
-    this.primitives.push(actualContainer);    
-    
-    this.properties.push(new BuilderProperty('Stroke Style', 'primitives.1.style.strokeStyle', BuilderProperty.TYPE_COLOR));
-    this.properties.push(new BuilderProperty('Fill Style', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
-    this.properties.push(new BuilderProperty('Line Width', 'primitives.1.style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
-    
-    
+    containerPath.primitives.push(l);
+
+
+    this.primitives.push(containerPath);
+
+    this.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
+    this.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
+    this.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
     
     //TITLE
@@ -159,12 +139,12 @@ function Container(id, topLeft, bottomRight) {
     title.style.fillStyle = '#000000';
     this.primitives.push(title);
     
-    this.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
-    this.properties.push(new BuilderProperty('Text', 'primitives.2.str', BuilderProperty.TYPE_TEXT));
-    this.properties.push(new BuilderProperty('Text Size', 'primitives.2.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
-    this.properties.push(new BuilderProperty('Font', 'primitives.2.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
-    this.properties.push(new BuilderProperty('Alignment', 'primitives.2.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
-    this.properties.push(new BuilderProperty('Text Color', 'primitives.2.style.fillStyle', BuilderProperty.TYPE_COLOR));
+//    this.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
+    this.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
+    this.properties.push(new BuilderProperty('Text Size', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
+    this.properties.push(new BuilderProperty('Font', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
+    this.properties.push(new BuilderProperty('Alignment', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    this.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
 
     /**Serialization type*/
