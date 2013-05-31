@@ -59,8 +59,9 @@ $page = 'editor';
              * Option 2:
              * Use http://code.google.com/p/js-uri/
              **/
-            var figureSetsURL = '<?=$WEBADDRESS?>' + '/editor/lib/sets';
-            var insertImageURL = '<?=$WEBADDRESS?>' + '/editor/data/import/';
+            var appURL = '<?=$WEBADDRESS?>';
+            var figureSetsURL = appURL + '/editor/lib/sets';
+            var insertImageURL = appURL + '/editor/data/import/';
 
             function showImport(){
                 //alert("ok");

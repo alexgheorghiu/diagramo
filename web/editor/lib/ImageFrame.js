@@ -83,7 +83,11 @@ function ImageFrame(url, x, y, scale, frameWidth, frameHeight){
     
     this.setUrl(url);
    
-    /**Used to display visual debug information. If set on true it will display interesting stuff (for a developer)*/
+    /**
+     * TODO: remove it
+     * Used to display visual debug information. If set on true it will display interesting stuff (for a developer)
+     * @deprecated - use Diagramo.debug instead
+     * */
     this.debug = false; 
     
     /**The style of the Image. Kinda fake/default value*/
@@ -511,12 +515,15 @@ ImageFrame.prototype = {
 }
 
 
-/* Figure used for figure of import image; based on ImageFrame */
-function figure_InsertedImage(imgURL, x, y)
+/* 
+ * "Static" method used for importing images
+ * @param {String} url - the URL of the image. Pay attention to come from same base URL as the application
+ * @param {Number} x - X coordinates of the figure
+ * @param {Number} y - Y coordinates of the figure
+ * @author Artyom, Alex
+ * */
+ImageFrame.figure_InsertedImage = function(url, x, y)
 {
-    // get full image URL after added prefix of upload folder
-    var url = insertImageURL + imgURL;
-
     // create new figure
     var f = new Figure("InsertedImage");
     f.style.fillStyle = figure_defaultFillStyle;
@@ -524,7 +531,6 @@ function figure_InsertedImage(imgURL, x, y)
 
     // figure's part with image
     var ifig = new ImageFrame(url, x, y, true);
-    ifig.debug = true;
     f.addPrimitive(ifig);
 
     // set callback to get image's natural size and use it for new figure
@@ -561,4 +567,4 @@ function figure_InsertedImage(imgURL, x, y)
 
     f.finalise();
     return f;
-}
+};

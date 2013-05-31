@@ -3589,7 +3589,7 @@ function action(action){
             }
 
             //creates a container
-            var cmdFigureCreate = new InsertedImageFigureCreateCommand(figure_InsertedImage, insertedImageFileName, 100, 100);
+            var cmdFigureCreate = new InsertedImageFigureCreateCommand(insertedImageFileName, 100, 100);
             cmdFigureCreate.execute();
             History.addUndo(cmdFigureCreate);
 

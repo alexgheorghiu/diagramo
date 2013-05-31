@@ -13,6 +13,11 @@ web/editor/data/diagrams/*.svg
 web/editor/data/diagrams/*.csv
 web/editor/data/*.db
 
+web/editor/data/import/*.png
+web/editor/data/import/*.jpg
+web/editor/data/import/*.gif
+web/editor/data/import/*.bmp
+
 documents/mailserver/*.html
 documents/jsdoc-toolkit/out/
 documents/jsdoc-toolkit/test.bat

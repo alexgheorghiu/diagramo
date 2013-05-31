@@ -5,19 +5,17 @@
  *
  * @this {InsertedImageFigureCreateCommand}
  * @constructor
- * @param {Function} factoryFunction - the function that will create the {Figure} of inserted image. It will be local copy (of original pointer)
  * @param {String} imgFileName - filename of inserted image
  * @param {Number} x - the x coordinates
  * @param {Number} y - the x coordinates
  *
- * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>, Alex
  */
-function InsertedImageFigureCreateCommand(factoryFunction, imgFileName, x, y){
+function InsertedImageFigureCreateCommand(imgFileName, x, y){
     this.oType = 'InsertedImageFigureCreateCommand';
 
     /**Any sequence of many mergeable actions can be packed by the history*/
     this.mergeable = false;
-    this.factoryFunction = factoryFunction;
     this.imgFileName = imgFileName;
     this.x = x;
     this.y = y;
@@ -32,7 +30,9 @@ InsertedImageFigureCreateCommand.prototype = {
         if(this.firstExecute){
             //create figure
             //Log.info("InsertedImageFigureCreateCommand> execute> factoryFunction=" + this.factoryFunction);
-            var createdFigure = this.factoryFunction(this.imgFileName, this.x, this.y);
+            var imageURL = appURL  + '/editor/imported.php?imgFileName=' + this.imgFileName;
+            var createdFigure = ImageFrame.figure_InsertedImage(imageURL, this.x, this.y);
+//            var createdFigure = this.factoryFunction(this.imgFileName, this.x, this.y);
 
             //move it into position
             createdFigure.transform(Matrix.translationMatrix(this.x - createdFigure.rotationCoords[0].x, this.y - createdFigure.rotationCoords[0].y))

@@ -791,7 +791,6 @@ function insertImage() {
 
     $imgSource = $_REQUEST['image-group'];
 
-    $max_size = 5000000; // 5 MB limit for import image
 
     switch ($imgSource) {
 
@@ -801,8 +800,8 @@ function insertImage() {
             $ext = pathinfo($fileName, PATHINFO_EXTENSION);
             $imageFile = get($imageURL);
             $imagePath = getUploadedImageFolder() . '/' . $fileName;
-            if ($imageFile !== false && strlen($imageFile) > 0 && strlen($imageFile) <= $max_size && //file is fine
-                ($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif" || $ext == "bmp")) { //file is image
+            if ($imageFile !== false && strlen($imageFile) > 0  
+                    && ($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif" || $ext == "bmp")) { //file is image
 
                 $fh = fopen($imagePath, 'w');
                 $size = fwrite($fh, $imageFile);
@@ -824,8 +823,8 @@ function insertImage() {
             $imageFile = $_FILES['imageFile']['tmp_name'];
             $fileName = $_FILES["imageFile"]["name"];
             $ext = pathinfo($fileName, PATHINFO_EXTENSION);
-            if (is_uploaded_file($imageFile) && filesize($imageFile) > 0 && filesize($imageFile) <= $max_size && //file is fine
-                ($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif" || $ext == "bmp")) { //file is image
+            if (is_uploaded_file($imageFile) && filesize($imageFile) > 0  
+                    && ($ext == "jpg" || $ext == "jpeg" || $ext == "png" || $ext == "gif" || $ext == "bmp")) { //file is image
 
                 $imagePath = getUploadedImageFolder() . '/' . $fileName;
                 if (!move_uploaded_file($imageFile, $imagePath)) {
@@ -833,7 +832,7 @@ function insertImage() {
 
                     // call insert image function and send error message
                     print '<script type="text/javascript">'
-                        . 'window.top.window.insertImage("", "Error uploading image. Check chosen file. Max allowed size is 5MB." )'
+                        . 'window.top.window.insertImage("", "Error uploading image. Check chosen file." )'
                         . '</script>';
 
                     exit();
@@ -844,7 +843,7 @@ function insertImage() {
 
                 // call insert image function and send error message
                 print '<script type="text/javascript">'
-                    . 'window.top.window.insertImage("", "Error uploading image. Check chosen file. Max allowed size is 5MB." )'
+                    . 'window.top.window.insertImage("", "Error uploading image. Check chosen file. " )'
                     . '</script>';
 
                 exit();
