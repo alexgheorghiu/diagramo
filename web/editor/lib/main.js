@@ -3210,7 +3210,7 @@ function save(){
         return;
     }
 
-    var diagram = { c: canvasProps, s:STACK, m:CONNECTOR_MANAGER };
+    var diagram = { c: canvasProps, s:STACK, m:CONNECTOR_MANAGER, p:CONTAINER_MANAGER };
     //Log.info('stringify ...');
     var serializedDiagram = JSON.stringify(diagram,  Util.operaReplacer);
     //Log.info('JSON stringify : ' + serializedDiagram);
@@ -3368,6 +3368,7 @@ function load(diagramId){
             setUpEditPanel(canvasProps);
 
             CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
+            CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
             draw();
 
             //alert("loaded");
@@ -3391,6 +3392,7 @@ function loadTempDiagram(tempDiagramName){
             setUpEditPanel(canvasProps);
 
             CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
+            CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
             draw();
 
             //alert("loaded");
@@ -3405,7 +3407,7 @@ function saveAs(){
    var dataURL = renderedCanvas();
 
 //                var $diagram = {c:canvas.save(), s:STACK, m:CONNECTOR_MANAGER};
-   var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER};
+   var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER, p:CONTAINER_MANAGER };
    $serializedDiagram = JSON.stringify($diagram,  Util.operaReplacer);
    var svgDiagram = toSVG();
 

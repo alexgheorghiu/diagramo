@@ -10,7 +10,7 @@
  */
 function Container(id, topLeft, bottomRight) {
     /**Group's id*/
-    if(id){
+    if( isNaN(id)){
         this.id = id;
     }
     else{
@@ -134,7 +134,7 @@ function Container(id, topLeft, bottomRight) {
     
     
     //TITLE
-    var title = new Text("Container", (this.topLeft.x + this.bottomRight.x)/2, this.topLeft.y + Text.DEFAULT_SIZE /*@see https://bitbucket.org/scriptoid/diagramo/issue/31/text-vertical-aligment*/, Text.FONTS[0], Text.DEFAULT_SIZE, false);
+    var title = new Text("Container", (this.topLeft.x + this.bottomRight.x)/2, this.topLeft.y + Text.DEFAULT_SIZE /*@see https://bitbucket.org/scriptoid/diagramo/issue/31/text-vertical-aligment*/, Text.FONTS[0].Text, Text.DEFAULT_SIZE, false);
 //    title.debug = true;
     title.style.fillStyle = '#000000';
     this.primitives.push(title);
@@ -149,6 +149,48 @@ function Container(id, topLeft, bottomRight) {
 
     /**Serialization type*/
     this.oType = 'Container';
+}
+
+/**Creates a new {Array} of {Container}s out of JSON parsed object
+ *@param {JSONObject} v - the JSON parsed object
+ *@return {Array} of newly constructed {Container}s
+ *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ **/
+Container.loadArray = function(v){
+    var newContainers = [];
+    var containerLength = v.length;
+
+    for(var i = 0; i < containerLength; i++){
+        newContainers.push(Container.load(v[i]));
+    }
+
+    return newContainers;
+}
+
+/**Creates a new {Container} out of JSON parsed object
+ *@param {JSONObject} o - the JSON parsed object
+ *@return {Container} a newly constructed Container
+ *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ **/
+Container.load = function(o){
+    // parse first topLeft and bottomRight points from JSON
+    var topLeft = Point.load(o.topLeft);
+    var bottomRight = Point.load(o.bottomRight);
+
+    var newContainer = new Container(Number(o.id), topLeft, bottomRight);
+    newContainer.primitives = [];
+    for(var i=0; i< o.primitives.length; i++){
+        var primitive = Util.loadPrimitive(o.primitives[i]);
+        if (primitive != null) {
+            newContainer.addPrimitive(primitive);
+        }
+    }
+
+    newContainer.style = Style.load(o.style);
+    newContainer.properties = BuilderProperty.loadArray(o.properties);
+    newContainer.rotationCoords = Point.loadArray(o.rotationCoords);
+
+    return newContainer;
 }
 
 Container.prototype = {
@@ -217,11 +259,47 @@ Container.prototype = {
         var bottomLeft = new Point(this.topLeft.x, this.bottomRight.y);
         return Util.isPointInside(new Point(x,y),[this.topLeft, topRight, this.bottomRight, bottomLeft]);
     },
-        
-        
-    /***/
-    equals: function(c) {
-        throw "container:equals() Not implemented";
+
+
+    equals:function(anotherFigure){
+        if( !(anotherFigure instanceof Container) ){
+            Log.info("Container:equals() 0");
+            return false;
+        }
+
+        //test primitives
+        if(this.primitives.length == anotherFigure.primitives.length){
+            for(var i=0; i<this.primitives.length; i++){
+                if(!this.primitives[i].equals(anotherFigure.primitives[i])){
+                    Log.info("Container:equals() 1");
+                    return false;
+                }
+            }
+        }
+        else{
+            Log.info("Container:equals() 2");
+            return false;
+        }
+
+
+        //test rotation coords
+        if(this.rotationCoords.length == anotherFigure.rotationCoords.length){
+            for(var i in this.rotationCoords){
+                if(!this.rotationCoords[i].equals(anotherFigure.rotationCoords[i])){
+                    return false;
+                }
+            }
+        }
+        else{
+            return false;
+        }
+
+        //test style
+        if(!this.style.equals(anotherFigure.style)){
+            return false;
+        }
+
+        return true;
     },
         
         
@@ -261,6 +339,13 @@ Container.prototype = {
         
     getPoints: function() {
         throw "container:getPoints() Not implemented";
+    },
+
+    addPrimitive:function(primitive){
+        // add id property to primitive equal its index
+        primitive.id = this.primitives.length;
+
+        this.primitives.push(primitive);
     }
 
 };
@@ -398,6 +483,30 @@ ContainerFigureManager.prototype = {
         }
         
         return containerId;
+    },
+
+    equals:function (anotherManager){
+        if ( !(anotherManager instanceof ContainerFigureManager) ) {
+            Log.info("ContainerFigureManager:equals() 0");
+            return false;
+        }
+
+        // test data
+        if(this.data.length == anotherManager.data.length){
+            for(var i = 0; i < this.data.length; i++){
+                if(this.data[i][0] !== anotherManager.data[i][0]
+                || this.data[i][1] !== anotherManager.data[i][1]){
+                    Log.info("ContainerFigureManager:equals() 1");
+                    return false;
+                }
+            }
+        }
+        else{
+            Log.info("ContainerFigureManager:equals() 2");
+            return false;
+        }
+
+        return true;
     }
     
 };
@@ -411,7 +520,16 @@ ContainerFigureManager.load = function(o){
     var containerFigureManager = new ContainerFigureManager(); //empty constructor
     
     //TODO: it should work....not tested
-    containerFigureManager.data = o.data; 
+    containerFigureManager.data = [];
+
+    var dataLength = o.data.length;
+    for (var i = 0; i < dataLength; i++) {
+        var newData = [  // convert value to Number
+            Number(o.data[i][0]),
+            Number(o.data[i][1])
+        ];
+        containerFigureManager.data.push(newData);
+    }
 
     return containerFigureManager;
 };

@@ -934,8 +934,64 @@ var Util = {
         /*by default the return will be undefined which means the 'key' will not be stringified
          * "If you return undefined, the property is not included in the output JSON string."
          */
-    }
+    },
+    
+        /**Creates a new primitive out of JSON parsed object
+     *@param {JSONObject} o - the JSON parsed object of primitive
+     *@return {primitive} a newly constructed primitive
+     *@author Alex Gheorghiu <alex@scriptoid.com>
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    loadPrimitive: function (o){
+        var result = null;
 
+        /**We can not use instanceof Point construction as
+         *the JSON objects are typeless... so JSONObject are simply objects */
+        if(o.oType == 'Point'){
+            result = Point.load(o);
+        }
+        else if(o.oType == 'Line'){
+            result = Line.load(o);
+        }
+        else if(o.oType == 'Polyline'){
+            result = Polyline.load(o);
+        }
+        else if(o.oType == 'Polygon'){
+            result = Polygon.load(o);
+        }
+        else if(o.oType == 'DottedPolygon'){
+            result = DottedPolygon.load(o);
+        }
+        else if(o.oType == 'QuadCurve'){
+            result = QuadCurve.load(o);
+        }
+        else if(o.oType == 'CubicCurve'){
+            result = CubicCurve.load(o);
+        }
+        else if(o.oType == 'Arc'){
+            result = Arc.load(o);
+        }
+        else if(o.oType == 'Ellipse'){
+            result = Ellipse.load(o);
+        }
+        else if(o.oType == 'DashedArc'){
+            result = DashedArc.load(o);
+        }
+        else if(o.oType == 'Text'){
+            result = Text.load(o);
+        }
+        else if(o.oType == 'Path'){
+            result = Path.load(o);
+        }
+        else if(o.oType == 'Figure'){
+            result = Figure.load(o); //kinda recursevly
+        }
+        else if(o.oType == 'ImageFrame'){
+            result = ImageFrame.load(o); //kinda recursevly
+        }
+
+        return result;
+    }
 
 };
 

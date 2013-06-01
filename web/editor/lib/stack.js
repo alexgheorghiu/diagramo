@@ -40,6 +40,7 @@ Stack.load = function(o){
     
 
     newStack.figures = Figure.loadArray(o.figures);
+    newStack.containers = Container.loadArray(o.containers);
     newStack.groups = Group.loadArray(o.groups);
     newStack.figureSelectedIndex = o.figureSelectedIndex;
     newStack.currentId = o.currentId;
