@@ -430,3 +430,12 @@ body{
 #imageFile {
     margin-right: 34px;
 }
+
+#printFrame {
+    position: fixed;
+    top: 72px;
+    bottom: 0px;
+    left: 130px;
+    right: 260px;
+    z-index: 1;
+}

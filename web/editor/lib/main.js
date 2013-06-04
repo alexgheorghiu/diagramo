@@ -3266,12 +3266,6 @@ function print_diagram() {
         iframe = document.createElement("IFRAME");
         iframe.id = printFrameId;
 
-        // prevent showing scrolls for iframe in editor
-        iframe.style.position = "fixed";
-
-        // hiding iframe, just set it behind the editor
-        iframe.style.zIndex = 1;
-
         document.body.appendChild(iframe);
     }
 
