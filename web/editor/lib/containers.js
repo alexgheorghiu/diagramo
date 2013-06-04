@@ -126,7 +126,7 @@ function Container(id, topLeft, bottomRight) {
     containerPath.primitives.push(l);
 
 
-    this.primitives.push(containerPath);
+    this.addPrimitive(containerPath);
 
     this.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     this.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
@@ -137,7 +137,7 @@ function Container(id, topLeft, bottomRight) {
     var title = new Text("Container", (this.topLeft.x + this.bottomRight.x)/2, this.topLeft.y + Text.DEFAULT_SIZE /*@see https://bitbucket.org/scriptoid/diagramo/issue/31/text-vertical-aligment*/, Text.FONTS[0].Text, Text.DEFAULT_SIZE, false);
 //    title.debug = true;
     title.style.fillStyle = '#000000';
-    this.primitives.push(title);
+    this.addPrimitive(title);
     
 //    this.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     this.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
