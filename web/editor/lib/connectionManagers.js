@@ -144,7 +144,7 @@ ConnectorManager.prototype = {
      */
     connectorCreate:function(startPoint,endPoint,type){
         //get a new id for Connector
-        var id = STACK.currentId++;
+        var id = STACK.generateId();
 
         //create and save connector
         this.connectors.push(new Connector(startPoint,endPoint,type, id));
