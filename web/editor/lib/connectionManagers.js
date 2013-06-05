@@ -1320,7 +1320,7 @@ ConnectorManager.prototype = {
     },
 
 
-    /**Removes all the  {Glue}s  based on first Id (usually the Connector)
+    /**Removes all the  {Glue}s  based on second Id (usually the Connector)
      *@param {Number} id - the id of the second shape (usually the Connector)
      *@author Alex Gheorghiu <alex@scriptoid.com>
      **/

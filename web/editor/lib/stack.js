@@ -283,6 +283,17 @@ Stack.prototype = {
         }
 
         if(index > -1){
+            //remove all affected Glues
+            var cCPs = CONNECTOR_MANAGER.connectionPointGetAllByParent(figId); //get all connection points
+            var length = cCPs.length;
+            var k;
+            for(k = 0; k < length; k++) {
+                CONNECTOR_MANAGER.glueRemoveAllByFirstId(cCPs[k].id);
+            }
+
+            // remove figure's connection points
+            CONNECTOR_MANAGER.connectionPointRemoveAllByParent(figId);
+
             //remove figure
             this.figures.splice(index, 1);
 
