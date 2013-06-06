@@ -424,7 +424,7 @@ Stack.prototype = {
      *Returns second figure glued to a connector
      *@param {Number} connectorId - the id of the connector
      *@return {Figure} - the figure connected, or null if none 
-     **/    
+     **/
     figureGetAsSecondFigureForConnector: function(connectorId){
         Log.group("STACK: figureGetAsSecondFigureForConnector");
         

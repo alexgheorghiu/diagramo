@@ -56,9 +56,7 @@ function Point(x, y){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 Point.load = function(o){
-    var newPoint = new Point();
-    newPoint.x = o.x;
-    newPoint.y = o.y;
+    var newPoint = new Point(Number(o.x), Number(o.y));
     newPoint.style = Style.load(o.style);
     return newPoint;
 }
