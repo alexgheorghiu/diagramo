@@ -518,6 +518,32 @@ Stack.prototype = {
         }//end for
         return -1;
     },
+
+    /**
+     *Returns the Text primitive of parent container for the given coordinates
+     *It will return the first Text primitive we found from top to bottom (Z-order)
+     *@param {Number} cId - the id of container - parent of target Text primitive
+     *@param {Number} x - the value on Ox axis
+     *@param {Number} y - the value on Oy axis
+     *@return {Number} - the id value of Text primitive or -1 if none found
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    textGetByContainerXY:function(cId, x, y){
+        var containerLength = this.containers.length;
+        for(var i = containerLength - 1; i >= 0; i--){
+            var container = this.containers[i];
+            if(container.id === cId){
+                var primitiveLength = container.primitives.length;
+                for (var j = primitiveLength - 1; j >= 0; j--) {
+                    var primitive = container.primitives[j];
+                    if( (primitive.oType == "Text") && primitive.contains(x, y) ){
+                        return primitive.id;
+                    }
+                }
+            } //end if
+        }//end for
+        return -1;
+    },
     
     /**
      *Returns the Container's id if there is a container for the given coordinates
@@ -571,7 +597,7 @@ Stack.prototype = {
             }
         }
         return null;
-    },    
+    },
     
     /**
      *Returns an Array of Figure's id if there are figures for the given coordinates

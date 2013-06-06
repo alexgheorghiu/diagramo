@@ -2465,6 +2465,21 @@ function onDblClick(ev) {
                     shape = figure;
                     textPrimitiveId = tId;
                 }
+            } else {
+                //find Container at (x,y)
+                var contId = STACK.containerGetByXY(x, y);
+
+                // check if we clicked a container
+                if(contId !== -1){
+                    var container = STACK.containerGetById(contId);
+                    var tId = STACK.textGetByContainerXY(contId, x, y);
+
+                    // if we clicked text primitive inside of figure
+                    if (tId !== -1) {
+                        shape = container;
+                        textPrimitiveId = tId;
+                    }
+                }
             }
         }
     }
@@ -2486,6 +2501,9 @@ function onDblClick(ev) {
 
         // deselect current figure
         selectedFigureId = -1;
+
+        // deselect current container
+        selectedContainerId = -1;
 
         // deselect current connector
         selectedConnectorId = -1;
