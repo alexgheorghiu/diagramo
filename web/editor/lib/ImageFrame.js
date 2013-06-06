@@ -549,7 +549,7 @@ ImageFrame.figure_InsertedImage = function(url, x, y)
 
         f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
-        var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight / 2 + figure_defaultFigureTextSize * 1.5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
+        var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight / 2 + figure_defaultFigureTextSize * 2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
         t2.style.fillStyle = figure_defaultFillTextStyle;
         f.addPrimitive(t2);
 
@@ -559,7 +559,7 @@ ImageFrame.figure_InsertedImage = function(url, x, y)
         CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + imageWidth / 2, y), ConnectionPoint.TYPE_FIGURE);
         CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - imageWidth / 2, y), ConnectionPoint.TYPE_FIGURE);
         CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - imageHeight / 2), ConnectionPoint.TYPE_FIGURE);
-        CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + imageHeight / 2 + figure_defaultFigureTextSize * 2.5), ConnectionPoint.TYPE_FIGURE);
+        CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + imageHeight / 2 + figure_defaultFigureTextSize * 3), ConnectionPoint.TYPE_FIGURE);
 
         f.finalise();
         draw();
