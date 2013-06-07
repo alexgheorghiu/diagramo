@@ -23,11 +23,11 @@ function Command(){
 
 Command.prototype = {
     /**This method got called every time the Command must execute*/
-    execute : function(){        
+    execute : function(){
     },
     
     
     /**This method should be called every time the Command should be undone*/
-    undo : function(){        
+    undo : function(){
     }
 }

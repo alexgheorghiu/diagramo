@@ -13,14 +13,14 @@ function CanvasChangeSizeCommand(newWidth, newHeight){
     
     this.width = newWidth;
     this.height = newHeight;
-    
+
     this.oType = "CanvasChangeSizeCommand";
 }
 
 CanvasChangeSizeCommand.prototype = {
-    
+
     constructor : CanvasChangeSizeCommand,
-    
+
     /**This method got called every time the Command must execute*/
     execute : function(){
         //Attention: canvasProps is a global variable
@@ -29,8 +29,8 @@ CanvasChangeSizeCommand.prototype = {
         
         setUpEditPanel(canvasProps);
     },
-    
-    
+
+
     /**This method should be called every time the Command should be undone*/
     undo : function(){
         canvasProps.setWidth(this.previousWidth);

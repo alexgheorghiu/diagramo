@@ -48,12 +48,12 @@ Builder.IMAGE_TEXT_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-text.png' ;
  *@return {Builder} a newly constructed Builder
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
-Builder.load = function(o){
-    var newBuilder = new Builder();
-    newBuilder.properties = BuilderProperty.loadArray(o.properties);
-    newBuilder.figureId = o.figureId;
-    return newBuilder;
-}
+//Builder.load = function(o){
+//    var newBuilder = new Builder();
+//    newBuilder.properties = BuilderProperty.loadArray(o.properties);
+//    newBuilder.figureId = o.figureId;
+//    return newBuilder;
+//}
 
 /**
  *Creates the property panel for a shape {Figure} or {Connector}

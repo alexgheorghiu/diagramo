@@ -428,7 +428,7 @@ $page = 'editor';
         </div>
         
         <!--Insert Image hidden iframe-->
-        <iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px;"></iframe>
+        <iframe id="upload_target" name="upload_target" style="width:0;height:0;border:0px;"></iframe>
 
         <script type="text/javascript">
             function loadFill(check){
