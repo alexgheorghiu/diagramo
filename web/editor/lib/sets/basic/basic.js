@@ -357,7 +357,7 @@ function figure_RightTriangle(x,y)
     e.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     e.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentShortSize/2, y + figure_defaultFigureSegmentSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
+    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentShortSize/3, y + figure_defaultFigureSegmentSize*0.70, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
     t2.style.fillStyle = figure_defaultFillTextStyle;
 
     e.addPrimitive(t);
