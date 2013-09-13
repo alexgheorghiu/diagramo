@@ -32,5 +32,6 @@ web/editor/common/settings.php
 
 build/
 build-all-in-one/
+build-light
 dist/
 temp/

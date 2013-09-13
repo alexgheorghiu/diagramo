@@ -10,12 +10,15 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
     <property name="docs.dir" value="${basedir}/documents"/>
     <property name="build-all-in-one.dir" value="${basedir}/build-all-in-one"/>
     <property name="dist-all-in-one.dir" value="${basedir}/dist-all-in-one"/>
+    <property name="build-light.dir" value="${basedir}/build-light"/>
+    <property name="dist-light.dir" value="${basedir}/dist-light"/>
     <property name="temp.dir" value="${basedir}/temp"/>
     <property name="web.dir" value="${basedir}/web"/>
     <property name="editor.dir" value="${web.dir}/editor"/>
     
     <property name="script.release.file" value="${dist.dir}/diagramo-lamp.zip"/>
     <property name="all-in-one.release.file" value="${dist.dir}/diagramo-all-in-one.zip"/>
+    <property name="light.release.file" value="${dist.dir}/diagramo-light.zip"/>
 
 
     <target name="list">
@@ -189,8 +192,26 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
     <target name="release" depends="release-lamp, release-all-in-one">
         <echo>+------------------RELEASE-----------------------------+</echo>
     </target>
+    
+    <target name="build-light" depends="obfuscate">
+        <echo>+------------------BUILD LIGHT VERSION-----------------------------+</echo>
+        <copy todir="${build-light.dir}">
+            <fileset dir="${build.dir}">
+                <exclude name="**/*.php"/>
+                <exclude name="install/"/>
+                <exclude name="assets/"/>
+                <exclude name="editor/data/"/>
+                <exclude name="editor/common/"/>
+                <exclude name="README.TXT"/>
+            </fileset>
+        </copy>
+    </target>
 
 
+    <target name="release-light" depends="build-light">
+        <echo>+------------------RELEASE LIGHT VERSION-----------------------------+</echo>
+        <zip destfile="${light.release.file}" basedir="${build-light.dir}" />
+    </target>
 
     <target name="clean">
         <echo>+------------------SCRIPT CLEAN----------------------------+</echo>
@@ -198,6 +219,8 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
         <delete dir="${dist.dir}" />
         <delete dir="${build-all-in-one.dir}"/>
         <delete dir="${dist-all-in-one.dir}" />
+        <delete dir="${build-light.dir}"/>
+        <delete dir="${dist-light.dir}" />
         <delete dir="${temp.dir}" />
     </target>
 
