@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+                <title>
+                    Experiment with Browser storage system
+                </title>
+		<script type="text/javascript">
+		
+		function init(){
+			//alert("loaded");
+			if(typeof(Storage) !== "undefined"){
+			  // Yes! localStorage and sessionStorage support!
+			  // Some code.....
+			  console.info("Web storage support - Huraaa");
+			}else {
+			  // Sorry! No web storage support..
+			  console.info("No web storage support");
+			}
+		}
+		</script>
+	</head>
+	<body onload="init()">
+	</body>
+</html>
