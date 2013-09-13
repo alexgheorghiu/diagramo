@@ -180,7 +180,7 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
             </fileset>
         </copy>
     </target>
-	
+    
     <target name="release-all-in-one" depends="build-all-in-one">
         <echo>+------------------RELEASE ALL IN ONE-----------------------------+</echo>
         <zip destfile="${all-in-one.release.file}" basedir="${build-all-in-one.dir}" />

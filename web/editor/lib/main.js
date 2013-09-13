@@ -3188,7 +3188,7 @@ function linkMap(){
 /** Save current diagram
  * Save can be triggered in 3 cases:
  *  1 - from menu
- *  2 - from quilc toolbar
+ *  2 - from quick toolbar
  *  3 - from shortcut Ctrl-S (onKeyDown)
  *See:
  *http://www.itnewb.com/renderedCanvasv/Introduction-to-JSON-and-PHP/page3
@@ -3198,7 +3198,7 @@ function save(){
     
     //alert("save triggered! diagramId = " + diagramId  );
     Log.info('Save pressed');
-
+    
     if (state == STATE_TEXT_EDITING) {
         currentTextEditor.destroy();
         currentTextEditor = null;
