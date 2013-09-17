@@ -7,7 +7,7 @@
  * @param {JSONObject} o - the old version file JSON object
  * @returns {JSONObject} the new JSON version
  * */
-function import1(o){
+function importFile(o){
     //initially we did not have Containers
     
     if('s' in o){ // 's' stands for Stack

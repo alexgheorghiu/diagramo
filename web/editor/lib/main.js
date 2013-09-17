@@ -44,6 +44,15 @@ DIAGRAMO.switchDebug = function(value) {
 };
 
 
+/**Describe the file version of the file
+ * This will make easier to make upgrades in the future.
+ * Any time change in file format will be appear this number
+ * must be increased and also update the importer.js
+ * library
+ * */
+DIAGRAMO.fileVersion = 3;
+
+
 /**Activate or deactivate the undo feature
  *@deprecated
  ***/
@@ -3228,7 +3237,7 @@ function save(){
         return;
     }
 
-    var diagram = { c: canvasProps, s:STACK, m:CONNECTOR_MANAGER, p:CONTAINER_MANAGER };
+    var diagram = { c: canvasProps, s:STACK, m:CONNECTOR_MANAGER, p:CONTAINER_MANAGER, v: DIAGRAMO.fileVersion };
     //Log.info('stringify ...');
     var serializedDiagram = JSON.stringify(diagram,  Util.operaReplacer);
     //Log.info('JSON stringify : ' + serializedDiagram);
@@ -3374,7 +3383,11 @@ function load(diagramId){
         function(data){
 //                        alert(data);
             var obj  = eval('(' + data + ')');
-            import1(obj); //import 1st version of Diagramo files
+            
+            if( !('v' in obj) || obj.v != DIAGRAMO.fileVersion){
+                importFile(obj);//import 1st version of Diagramo files
+            }
+            
             STACK = Stack.load(obj['s']);
             canvasProps = CanvasProps.load(obj['c']);
             canvasProps.sync();
@@ -3399,7 +3412,11 @@ function loadTempDiagram(tempDiagramName){
         function(data){
 //                        alert(data);
             var obj  = eval('(' + data + ')');
-            import1(obj);//import 1st version of Diagramo files
+            
+            if( !('v' in obj) || obj.v != DIAGRAMO.fileVersion){
+                importFile(obj);//import 1st version of Diagramo files
+            }
+            
             STACK = Stack.load(obj['s']);
             canvasProps = CanvasProps.load(obj['c']);
             canvasProps.sync();
@@ -3421,7 +3438,7 @@ function saveAs(){
    var dataURL = renderedCanvas();
 
 //                var $diagram = {c:canvas.save(), s:STACK, m:CONNECTOR_MANAGER};
-   var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER, p:CONTAINER_MANAGER };
+   var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER, p:CONTAINER_MANAGER, v: DIAGRAMO.fileVersion };
    $serializedDiagram = JSON.stringify($diagram,  Util.operaReplacer);
    var svgDiagram = toSVG();
 
