@@ -92,6 +92,7 @@ $page = 'editor';
         <script type="text/javascript" src="./lib/text.js"></script>
         <script type="text/javascript" src="./lib/browserReady.js"></script>
         <script type="text/javascript" src="./lib/containers.js"></script>
+        <script type="text/javascript" src="./lib/importer.js"></script>
         <script type="text/javascript" src="./lib/main.js"></script>
         
         <script type="text/javascript" src="./lib/sets/basic/basic.js"></script>

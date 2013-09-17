@@ -3374,6 +3374,7 @@ function load(diagramId){
         function(data){
 //                        alert(data);
             var obj  = eval('(' + data + ')');
+            import1(obj); //import 1st version of Diagramo files
             STACK = Stack.load(obj['s']);
             canvasProps = CanvasProps.load(obj['c']);
             canvasProps.sync();
@@ -3398,12 +3399,13 @@ function loadTempDiagram(tempDiagramName){
         function(data){
 //                        alert(data);
             var obj  = eval('(' + data + ')');
+            import1(obj);//import 1st version of Diagramo files
             STACK = Stack.load(obj['s']);
             canvasProps = CanvasProps.load(obj['c']);
             canvasProps.sync();
             setUpEditPanel(canvasProps);
 
-            CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
+            CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);            
             CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
             draw();
 

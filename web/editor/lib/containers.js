@@ -371,6 +371,14 @@ ContainerFigure.prototype = {
     constructor: ContainerFigure        
 };
 
+
+
+/**Manages the relation between containers and figures.
+ * The figures and containers are stored in {Stack}
+ * but the relationship between them are stored inside {ContainerFigureManager}
+ * @constructor
+ * @this {ContainerFigure}
+ * */
 function ContainerFigureManager() {
     /**An {Array} of [containerId, figureId] */
     this.data = [];            
