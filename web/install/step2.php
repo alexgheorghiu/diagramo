@@ -89,7 +89,7 @@ function loadRequirements(){
             'help' => 'internet_connection'
         ),
         array(
-            'name' => 'Directory permissions: CHMOD 0777 > <b>/editor/data</b>',
+            'name' => 'Directory permissions: <b>/editor/data</b> is writable',
             'wanted' => 'mandatory',
             'type' => 'string',
             'requested' => 'writable',
@@ -97,7 +97,7 @@ function loadRequirements(){
             'help' => 'folder_data'
         ),
         array(            
-            'name' => 'Directory permissions: CHMOD 0777 > <b>/editor/data/diagrams</b>',
+            'name' => 'Directory permissions: <b>/editor/data/diagrams</b> is writable',
             'wanted' => 'mandatory',
             'type' => 'string',
             'requested' => 'writable',
