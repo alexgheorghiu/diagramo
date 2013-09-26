@@ -70,7 +70,7 @@ function loadRequirements(){
             'type' => 'string',
             'requested' => 'installed',
             'current' => (is_numeric(array_search('sqlite3', $extensions))) ? 'installed' : 'not installed',
-            'help' => 'extension_mysql'
+            'help' => 'extension_sqlite'
         ),
         array(
             'name' => 'PHP Extension: PCRE',
