@@ -13,7 +13,7 @@ if (is_numeric($_REQUEST['diagramId'])) {
     $diagram = $d->diagramGetById($_REQUEST['diagramId']);    
     $d->close();
     
-    if (is_numeric($_SESSION['userId']) || $diagram->public) {
+    if ( (isset($_SESSION['userId']) && is_numeric($_SESSION['userId'])) || $diagram->public) {
         $filePath = dirname(__FILE__) . '/data/diagrams/' . $_REQUEST['diagramId'] . '.png';
 
 
