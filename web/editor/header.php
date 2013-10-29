@@ -50,7 +50,7 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
         <!--Help menu-->
         <div class="dropdown_menu"><a href="#" onmouseover="dropdownSpace.menuOpen('help')" onmouseout="dropdownSpace.menuCloseTime()">Help</a>            
             <div class="dropdown_menu_panel" id="help"    onmouseover="dropdownSpace.menuCancelCloseTime()" onmouseout="dropdownSpace.menuCloseTime()" >
-                <a href="https://bitbucket.org/scriptoid/diagramo-script/issues/new" target="new">Report bug</a>
+                <a href="https://bitbucket.org/scriptoid/diagramo/issues/new" target="new">Report bug</a>
                 <a href="javascript:void(0);" onclick="javascript:DIAGRAMO.switchDebug()"><img id="iconDebug"  src="./assets/images/icon_debug_false.gif" style="vertical-align: middle;"/> Debug</a>
                 <a href="./license.php">License</a>
             </div>                        
