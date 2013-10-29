@@ -2,13 +2,13 @@
 $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
 ?>
 <div id="header">    
-    <div id="dropdown">
-        <!--Logo menu-->
-        <div class="dropdown_menu">
-            <img src="./assets/images/logo-36x36.png"/>
-        </div>
-        <!-- /File menu-->
+    <!--Logo menu-->
+    <div class="dropdown_menu">
+        <a style="padding: 0;" href="http://diagramo.com" target="blank"><img src="./assets/images/logo-36x36.png"/></a>
+    </div>
+    <!-- /File menu-->
         
+    <div id="dropdown">
         
         <!--File menu-->
         <div class="dropdown_menu"><a href="#" onmouseover="dropdownSpace.menuOpen('file')" onmouseout="dropdownSpace.menuCloseTime()">File</a>
@@ -52,7 +52,7 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
             <div class="dropdown_menu_panel" id="help"    onmouseover="dropdownSpace.menuCancelCloseTime()" onmouseout="dropdownSpace.menuCloseTime()" >
                 <a href="https://bitbucket.org/scriptoid/diagramo/issues/new" target="new">Report bug</a>
                 <a href="javascript:void(0);" onclick="javascript:DIAGRAMO.switchDebug()"><img id="iconDebug"  src="./assets/images/icon_debug_false.gif" style="vertical-align: middle;"/> Debug</a>
-                <a href="./license.php">License</a>
+                <!--<a href="./license.php">License</a>-->
             </div>                        
         </div>
         <!--Help menu-->
