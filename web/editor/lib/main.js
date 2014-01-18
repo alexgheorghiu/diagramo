@@ -1741,7 +1741,13 @@ function onMouseUp(ev){
             }
 
             //add free figures (not belonging to any group) that overlaps with selection region
-            //TODO: From Janis to Alex: Why we are selecting only figures that doesn`t belong to any group, I think we must also add grouped figures
+            /*TODO: 
+             * From Janis to Alex: Why we are selecting only figures that 
+             *  doesn`t belong to any group, I think we must also add grouped 
+             *  figures
+             * From Alex to Janis: We do not support groups in groups neither 
+             *  figures that belong to more than one group
+            */
             for(var i = 0; i < STACK.figures.length; i++){
                 if(STACK.figures[i].groupId == -1){ //we only want ungrouped items
                     var points = STACK.figures[i].getPoints();
