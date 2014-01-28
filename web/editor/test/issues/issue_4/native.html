@@ -31,22 +31,67 @@ and my research
                 };
             }
             
+            if(!CanvasRenderingContext2D.prototype.hasOwnProperty("getLineDash")){
+                CanvasRenderingContext2D.prototype.getLineDash = function() {
+                    var _dash = null;
+                    
+                    //check if is a Mozilla variant
+                    if(CanvasRenderingContext2D.prototype.hasOwnProperty("mozDash")){
+                        _dash = this.mozDash;
+                    }
+                    else{
+                        console.info("no setLineDash");
+                        /**You are more than welcome to offer a fallback implementation. */
+                    }
+                    
+                    return _dash;
+                };
+            }
+            
+            CanvasRenderingContext2D.prototype.setLineDashOffset  = function() {
+                if(CanvasRenderingContext2D.prototype.hasOwnProperty('lineDashOffset')){
+                    this.lineDashOffset = arguments[0];
+                }
+                else if(hasOwnProperty('mozDashOffset')){
+                    this.mozDashOffset = arguments[0];
+                }
+                else{
+                    //do nothing
+                }
+            }
+            
             function paintQuilt(){
                 var quilt = document.getElementById("quilt");
                 var ctx = quilt.getContext('2d');
                 ctx.save();
-                ctx.setLineDash([5]);
+                ctx.setLineDash([1,10]); //
+//                ctx.setLineDashOffset(4);
+//                ctx.setLineDash([1,2]);
+                ctx.lineWidth = 6;
+                ctx.lineCap = 'round';
+//                ctx.lineCap = 'bevel';
+//                ctx.lineCap = 'miter';
+                
+                console.info("Line dash = " + ctx.getLineDash());
 //                ctx.mozDash = [5];
 //                ctx.translate(0.5, 0.5);
+                
+                
+                //first line
                 ctx.beginPath();
                 ctx.moveTo(10,10);
-                ctx.lineTo(100, 10);
+                ctx.lineTo(50, 10);
+                ctx.lineTo(100, 50);
                 ctx.lineTo(100, 100);
-                
-                ctx.moveTo(10,200.5);
-                ctx.lineTo(100, 200.5);
-                
                 ctx.stroke();
+                
+                //circle
+                ctx.beginPath();
+//                ctx.moveTo(50, 150);
+                ctx.arc(50, 150, 40, 0, 2 * Math.PI, false);                
+//                ctx.arc(65,65,50,0,2 * Math.PI,false);                
+                ctx.stroke();
+                
                 ctx.restore();
             }
             

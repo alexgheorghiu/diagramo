@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+Explore native properties 
+Mainly based on http://stackoverflow.com/questions/3208571/create-javascript-property-like-c-sharp-property
+and my research
+-->
+<html>
+    <head>
+        <title>On-the-fly object properties</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script type="text/javascript">
+
+            var obj = {};
+
+
+
+            function pageLoaded() {
+                console.info("Loaded");
+
+                Object.defineProperty(obj, "value", {
+                    get: function() {
+                        console.info("Value get");
+                        return this.val;
+                    },
+                    set: function(val) {
+                        console.info("Value set");
+                        this.val = val;
+                    }
+                });
+                
+                obj.value = "ola";
+                
+                var x = obj.value;
+            }
+
+            window.addEventListener("load", pageLoaded, false);
+        </script>
+    </head>
+    <body>
+        <div>
+            <canvas id="quilt" width="300" height="300"></canvas>
+        </div>
+    </body>
+</html>
