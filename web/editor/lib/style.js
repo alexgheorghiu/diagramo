@@ -18,7 +18,7 @@ function Style(){
     this.strokeStyle = null;
     
     /**Fill style. Can be specified as '#FF3010' or 'rgb(200, 0, 0)'*/
-    this.fillStyle = null
+    this.fillStyle = null;
     
     /**Alpha/transparency value*/
     this.globalAlpha = null;

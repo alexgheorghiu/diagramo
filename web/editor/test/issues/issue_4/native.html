@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<!--
+Explore native dotted/dashed line support in <canvas>
+Mainly based on http://www.rgraph.net/blog/2013/january/html5-canvas-dashed-lines.html#introduction
+and my research
+-->
+<html>
+    <head>
+        <title>Native dotted/dashed line</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script type="text/javascript">
+            function pageLoaded(){
+                console.info("Loaded");
+                
+                paintQuilt();
+            }
+            
+            //patch Canvas context
+            if(!CanvasRenderingContext2D.prototype.hasOwnProperty("setLineDash")){
+                CanvasRenderingContext2D.prototype.setLineDash = function() {
+                    
+                    //check if is a Mozilla variant
+                    if(CanvasRenderingContext2D.prototype.hasOwnProperty("mozDash")){
+                        this.mozDash = arguments[0];
+                    }
+                    else{
+                        console.info("no setLineDash");
+                        /**You are more than welcome to offer a fallback implementation. */
+                    }
+                };
+            }
+            
+            function paintQuilt(){
+                var quilt = document.getElementById("quilt");
+                var ctx = quilt.getContext('2d');
+                ctx.save();
+                ctx.setLineDash([5]);
+//                ctx.mozDash = [5];
+//                ctx.translate(0.5, 0.5);
+                ctx.beginPath();
+                ctx.moveTo(10,10);
+                ctx.lineTo(100, 10);
+                ctx.lineTo(100, 100);
+                
+                ctx.moveTo(10,200.5);
+                ctx.lineTo(100, 200.5);
+                
+                ctx.stroke();
+                ctx.restore();
+            }
+            
+            window.addEventListener("load", pageLoaded, false);
+        </script>
+    </head>
+    <body>
+        <div>
+            <canvas id="quilt" width="300" height="300"></canvas>
+        </div>
+    </body>
+</html>

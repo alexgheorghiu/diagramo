@@ -1,199 +1,200 @@
+<!DOCTYPE html>
 <html>
-	<head>
-		<script type="text/javascript">
-			/*
-			TODO: dot patterns = 1  crash the algorithm
-			*/
-			
-			function info(msg){
-				//console.info(msg);
-			}
-			
-			function group(name){
-				//console.group(name);
-			}
-			
-			function groupEnd(){
-				//console.groupEnd();
-			}
-		
-			/*
-			* A pseudo JS to draw a pattern (dashed, dotted, etc) along a set of point
-			* points = [p1, p2,p3]
-			* pt = [10,2,2 4,7] /*the pattern 10 dotts, 2 spaces, 2 dots, 7 spaces, etc
-			*/
-			function draw(ctx, points, pt){
-				
-				var t0 = (new Date).getMilliseconds();
-				/**Computes distance between 2 points*/
-				function distance(p1, p2){
-					//info("p1 = " + p1 + " p2 = " + p2);
-					return Math.sqrt(Math.pow(p1[0] - p2[0] , 2) + Math.pow(p1[1] - p2[1], 2) );		
-				}
-				
-				/**Find the location of a point located on segment [p1,p2] at a certain distance from p1*/
-				function point_on_segment(p1, p2, distance_from_p1){
-					var d = distance(p1, p2);
-					var Xm = p1[0]  + distance_from_p1 / d * (p2[0] - p1[0]);
-					var Ym = p1[1]  + distance_from_p1 / d * (p2[1] - p1[1]);
-					
-					return [Xm, Ym];
-				}
-				
-				function lineTo(p){
-					ctx.lineTo(p[0], p[1]);
-				}
-				
-				function moveTo(p){
-					ctx.moveTo(p[0], p[1]);
-				}
-				
-				current_point = points[0];
-				//path = 0
-				i = 0
-				pt_i = 0 //index position in pattern
-				pt_left = pt[0] // spaces or dotts left to paint from current index position in pattern
-				
-				moveTo(current_point);
-				
-				
-				
-				while (i < points.length - 1) {
-					//inside [Pi, Pi+1] segment
-					segment_path = 0
-					
-					group("Paint segment " + i);
-					info("i = " + i + " current_point = " + current_point + " pt_i = " + pt_i + " pt_left = " + pt_left + " segment_path = " + segment_path );
-					
-					if(pt_left < 0){
-						break;
-					}
-					
-					
-					//paint previous/left part of pattern
-					if ( pt_left > 0 ){
-						group("Paint rest of pattern");
-						info("Pattern left,  pt_left : " + pt_left + " pt_i : " + pt_i);
-						
-						//are we about to cross to another segment?
-						if ( pt_left > distance(current_point, points[i+1]) ) { //we exceed current segment
-							info("We exceed current segment");
-							
-							//paint what is left and move to next segment
-							if ( pt_i % 2 == 0 ) { //dots?
-								lineTo(points[i+1]) 					
-							}
-							else{ //space
-								moveTo(points[i+1])
-							}
-							
-							//store what was left unpainted
-							segment_path += distance(current_point,  points[i+1]);
-							pt_left = pt_left - distance(current_point, points[i+1])	
-							current_point = points[i+1]
-							i++; //move to next segment
-							groupEnd();
-							continue;
-						}			
-						else{ //still inside segment
-							info("Painting from rest path pt_i = " + pt_i + " current_segment = " + segment_path);
-							newP = point_on_segment(current_point, points[i+1], pt_left) //translate on current_point with pt_left from Pi to Pi+1
-							info("\t newP = " + newP);
-							if ( pt_i % 2 == 0 ) { //dots?
-								lineTo(newP) 					
-							}
-							else{ //space
-								moveTo(newP)
-							}
-							
-							segment_path += distance(current_point,  newP);	
-							current_point = newP
-							pt_left = 0
-							pt_i = (pt_i + 1) % pt.length;
-						}
-						groupEnd();
-					}
-					
-					
-					
-					/*We should have:
-						pt_i >= 0
-						pt_left = 0;
-					*/
-					group('No rest left, normal paint');
-					info("We should have (pt_i >= 0) and (pt_left = 0) AND WE HAVE " + "pt_i = " + pt_i + " pt_left = " + pt_left);
-					
-					
-					//nothing left from previous segment
-					while(segment_path < distance(points[i], points[i+1])){
-						info("Distance between " + i + " and " + (i + 1) + " = " + distance(points[i], points[i+1]));
-						
+    <head>
+        <script type="text/javascript">
+            /*
+             TODO: dot patterns = 1  crash the algorithm
+             */
 
-						info("...painting path pt_i = " + pt_i + " dot/space length = " + pt[pt_i] + " current_segment = " + segment_path);
-						if(segment_path + pt[pt_i] <= distance(points[i], points[i+1])){ //still inside segment
-							group("Still inside segment");
-							newP = point_on_segment(current_point, points[i+1], pt[pt_i]) //translate on current segment with pt[pt_i] from Pi to Pi+1
-							info("\t newP = " + newP);
-							if(pt_i % 2 == 0) {
-								lineTo(newP);
-							}
-							else{
-								moveTo(newP);
-							}
-							pt_left = 0
-							segment_path += pt[pt_i];
-							current_point = newP;
-							pt_i = (pt_i + 1) % pt.length;
-							groupEnd();
-						}
-						else{ //segment exceeded
-							group("Exceed segment");
-							if(pt_i % 2 == 0) {
-								lineTo(points[i+1]);
-							}
-							else{
-								moveTo(points[i+1]);
-							}
-							pt_left = distance(current_point, points[i+1])
-							segment_path += distance(current_point,  points[i+1]);
-							current_point = points[i+1];
-							info("...pt_left = " + pt_left + " current_segment = " + segment_path + " current_point = " + current_point);
-							//move to next segment							
-							groupEnd(); //end inner group							
-							break;
-							
-						}
-						
-						
-					}
-					groupEnd();
-					
-					
-					++i;
-					
-					groupEnd();
-				}
-				
-				var t1 = (new Date).getMilliseconds();
-				console.info("Took " + (t1 - t0) + " ms");
-				ctx.stroke();
-			}
-			
-			function init(){
-				var eQuilt = document.getElementById('quilt');
-				var ctx = eQuilt.getContext('2d');
-				
-				var points = [[10,10],[40, 10],[40, 40],[100, 40], [120, 60], [150, 10], [200, 250]];
-				//var pattern = [5,3,1,3];
-				var pattern = [40,2, 40,2];
-				var pattern = [3, 3];
-				draw(ctx, points, pattern);
-			}
-		
-			window.addEventListener('load', init);
-		</script>
-	</head>
-	<body>
-		<canvas style="border: 1px solid red;" width="300" height="300" id="quilt"></canvas>		
-	</body>
+            function info(msg) {
+                //console.info(msg);
+            }
+
+            function group(name) {
+                //console.group(name);
+            }
+
+            function groupEnd() {
+                //console.groupEnd();
+            }
+
+            /*
+             * A pseudo JS to draw a pattern (dashed, dotted, etc) along a set of point
+             * points = [p1, p2,p3]
+             * pt = [10,2,2 4,7] /*the pattern 10 dotts, 2 spaces, 2 dots, 7 spaces, etc
+             */
+            function draw(ctx, points, pt) {
+
+                var t0 = (new Date).getMilliseconds();
+                /**Computes distance between 2 points*/
+                function distance(p1, p2) {
+                    //info("p1 = " + p1 + " p2 = " + p2);
+                    return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2));
+                }
+
+                /**Find the location of a point located on segment [p1,p2] at a certain distance from p1*/
+                function point_on_segment(p1, p2, distance_from_p1) {
+                    var d = distance(p1, p2);
+                    var Xm = p1[0] + distance_from_p1 / d * (p2[0] - p1[0]);
+                    var Ym = p1[1] + distance_from_p1 / d * (p2[1] - p1[1]);
+
+                    return [Xm, Ym];
+                }
+
+                function lineTo(p) {
+                    ctx.lineTo(p[0], p[1]);
+                }
+
+                function moveTo(p) {
+                    ctx.moveTo(p[0], p[1]);
+                }
+
+                current_point = points[0];
+                //path = 0
+                i = 0
+                pt_i = 0 //index position in pattern
+                pt_left = pt[0] // spaces or dotts left to paint from current index position in pattern
+
+                moveTo(current_point);
+
+
+
+                while (i < points.length - 1) {
+                    //inside [Pi, Pi+1] segment
+                    segment_path = 0
+
+                    group("Paint segment " + i);
+                    info("i = " + i + " current_point = " + current_point + " pt_i = " + pt_i + " pt_left = " + pt_left + " segment_path = " + segment_path);
+
+                    if (pt_left < 0) {
+                        break;
+                    }
+
+
+                    //paint previous/left part of pattern
+                    if (pt_left > 0) {
+                        group("Paint rest of pattern");
+                        info("Pattern left,  pt_left : " + pt_left + " pt_i : " + pt_i);
+
+                        //are we about to cross to another segment?
+                        if (pt_left > distance(current_point, points[i + 1])) { //we exceed current segment
+                            info("We exceeded current segment");
+
+                            //paint what is left and move to next segment
+                            if (pt_i % 2 == 0) { //dots?
+                                lineTo(points[i + 1])
+                            }
+                            else { //space
+                                moveTo(points[i + 1])
+                            }
+
+                            //store what was left unpainted
+                            segment_path += distance(current_point, points[i + 1]);
+                            pt_left = pt_left - distance(current_point, points[i + 1])
+                            current_point = points[i + 1]
+                            i++; //move to next segment
+                            groupEnd();
+                            continue;
+                        }
+                        else { //still inside segment
+                            info("Painting from rest path pt_i = " + pt_i + " current_segment = " + segment_path);
+                            newP = point_on_segment(current_point, points[i + 1], pt_left) //translate on current_point with pt_left from Pi to Pi+1
+                            info("\t newP = " + newP);
+                            if (pt_i % 2 == 0) { //dots?
+                                lineTo(newP)
+                            }
+                            else { //space
+                                moveTo(newP)
+                            }
+
+                            segment_path += distance(current_point, newP);
+                            current_point = newP
+                            pt_left = 0
+                            pt_i = (pt_i + 1) % pt.length;
+                        }
+                        groupEnd();
+                    }
+
+
+
+                    /*We should have:
+                     pt_i >= 0
+                     pt_left = 0;
+                     */
+                    group('No rest left, normal paint');
+                    info("We should have (pt_i >= 0) and (pt_left = 0) AND WE HAVE " + "pt_i = " + pt_i + " pt_left = " + pt_left);
+
+
+                    //nothing left from previous segment
+                    while (segment_path < distance(points[i], points[i + 1])) {
+                        info("Distance between " + i + " and " + (i + 1) + " = " + distance(points[i], points[i + 1]));
+
+
+                        info("...painting path pt_i = " + pt_i + " dot/space length = " + pt[pt_i] + " current_segment = " + segment_path);
+                        if (segment_path + pt[pt_i] <= distance(points[i], points[i + 1])) { //still inside segment
+                            group("Still inside segment");
+                            newP = point_on_segment(current_point, points[i + 1], pt[pt_i]) //translate on current segment with pt[pt_i] from Pi to Pi+1
+                            info("\t newP = " + newP);
+                            if (pt_i % 2 == 0) {
+                                lineTo(newP);
+                            }
+                            else {
+                                moveTo(newP);
+                            }
+                            pt_left = 0
+                            segment_path += pt[pt_i];
+                            current_point = newP;
+                            pt_i = (pt_i + 1) % pt.length;
+                            groupEnd();
+                        }
+                        else { //segment exceeded
+                            group("Exceed segment");
+                            if (pt_i % 2 == 0) {
+                                lineTo(points[i + 1]);
+                            }
+                            else {
+                                moveTo(points[i + 1]);
+                            }
+                            pt_left = distance(current_point, points[i + 1])
+                            segment_path += distance(current_point, points[i + 1]);
+                            current_point = points[i + 1];
+                            info("...pt_left = " + pt_left + " current_segment = " + segment_path + " current_point = " + current_point);
+                            //move to next segment							
+                            groupEnd(); //end inner group							
+                            break;
+
+                        }
+
+
+                    }
+                    groupEnd();
+
+
+                    ++i;
+
+                    groupEnd();
+                }
+
+                var t1 = (new Date).getMilliseconds();
+                console.info("Took " + (t1 - t0) + " ms");
+                ctx.stroke();
+            }
+
+            function init() {
+                var eQuilt = document.getElementById('quilt');
+                var ctx = eQuilt.getContext('2d');
+
+                var points = [[10, 10], [40, 10], [40, 40], [100, 40], [120, 60], [150, 10], [200, 250]];
+                //var pattern = [5,3,1,3];
+                var pattern = [40, 2, 40, 2];
+                var pattern = [3, 3];
+                draw(ctx, points, pattern);
+            }
+
+            window.addEventListener('load', init);
+        </script>
+    </head>
+    <body>
+        <canvas style="border: 1px solid red;" width="300" height="300" id="quilt"></canvas>		
+    </body>
 </html>

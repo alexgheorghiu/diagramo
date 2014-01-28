@@ -820,8 +820,8 @@ function DottedPolygon(pattern){
     /**The {@link Style} of the polygon*/
     this.style = new Style();
 	
-	/**An {Array} of {Integer}s*/
-	this.pattern = pattern;
+    /**An {Array} of {Integer}s*/
+    this.pattern = pattern;
     
     /**Serialization type*/
     this.oType = 'DottedPolygon'; //object type used for JSON deserialization
@@ -858,35 +858,35 @@ DottedPolygon.prototype = {
 
     paint:function(context){
 				
-		if(this.style != null){
-			this.style.setupContext(context);
-		}
+        if(this.style != null){
+            this.style.setupContext(context);
+        }
 
-		//simply ignore anything that don't have at least 2 points
-		if(this.points.length < 2){
-			return;
-		}
-	   
-		var clonnedPoints = Point.cloneArray(this.points);		
-		
-		//first fill
-		if(this.style.fillStyle != null && this.style.fillStyle != ""){			
-			context.beginPath();
-			context.moveTo(clonnedPoints[0].x, clonnedPoints[0].y);
-			for(i=1;i<clonnedPoints.length; i++){
-				context.lineTo(clonnedPoints[i].x, clonnedPoints[i].y);
-			}
-			context.fill();
-		}
+        //simply ignore anything that don't have at least 2 points
+        if(this.points.length < 2){
+            return;
+        }
 
-		//then stroke
-		if(this.style.strokeStyle != null && this.style.strokeStyle != ""){	
-			context.beginPath(); //begin a new path
-			Util.decorate(context, clonnedPoints, this.pattern);
-			context.stroke();
-		}
-		
-		//context.restore();
+        var clonnedPoints = Point.cloneArray(this.points);		
+
+        //first fill
+        if(this.style.fillStyle != null && this.style.fillStyle != ""){			
+            context.beginPath();
+            context.moveTo(clonnedPoints[0].x, clonnedPoints[0].y);
+            for(i=1;i<clonnedPoints.length; i++){
+                    context.lineTo(clonnedPoints[i].x, clonnedPoints[i].y);
+            }
+            context.fill();
+        }
+
+        //then stroke
+        if(this.style.strokeStyle != null && this.style.strokeStyle != ""){	
+            context.beginPath(); //begin a new path
+            Util.decorate(context, clonnedPoints, this.pattern);
+            context.stroke();
+        }
+
+        //context.restore();
     },
 
 
@@ -966,19 +966,19 @@ DottedPolygon.prototype = {
     },
 
     transform:function(matrix){
-		if(this.style != null){
-			this.style.transform(matrix);
-		}
-		for(var i=0; i < this.points.length; i++){
-			this.points[i].transform(matrix);
-		}
+        if(this.style != null){
+                this.style.transform(matrix);
+        }
+        for(var i=0; i < this.points.length; i++){
+                this.points[i].transform(matrix);
+        }
     },
 
     toString:function(){
         var result = 'dottedpolygon(';
-		for(var i=0; i < this.points.length; i++){
-			result += this.points[i].toString() + ' ';
-		}
+        for(var i=0; i < this.points.length; i++){
+                result += this.points[i].toString() + ' ';
+        }
         result += ')';
         return result;
     },
