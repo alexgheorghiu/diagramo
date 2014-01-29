@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <!--
-Explore native properties 
+Explore on-the-fly properties similar to C#
 Mainly based on http://stackoverflow.com/questions/3208571/create-javascript-property-like-c-sharp-property
-and my research
+and my research.
+
+Research not fully done as it becomes very complicated for what we need but "properties" look promissing.
+
+Links for further readin:
+    @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
+    @see http://ejohn.org/blog/ecmascript-5-objects-and-properties/#postcomment
 -->
 <html>
     <head>
@@ -11,13 +17,31 @@ and my research
         <meta name="viewport" content="width=device-width">
         <script type="text/javascript">
 
-            var obj = {};
-
-
-
-            function pageLoaded() {
-                console.info("Loaded");
-
+            //Class property. Trying to add a property to an object
+            function A() {
+                
+            }
+            
+            A.prototype = {
+                constructor: A             
+            };
+            
+            //Attach a property to class A
+            Object.defineProperty(A.prototype, "lineDashOffset", {
+                    get: function() {
+                        console.info("lineDashOffset get");
+                        return this.val;
+                    },
+                    set: function(val) {
+                        console.info("lineDashOffset set");
+                        this.val = val;
+                    }
+            });
+            
+            
+            function testPropertyForInstance(){
+                //Instance property. Add a property to an object's instance
+                var obj = {};
                 Object.defineProperty(obj, "value", {
                     get: function() {
                         console.info("Value get");
@@ -29,10 +53,27 @@ and my research
                     }
                 });
                 
-                obj.value = "ola";
-                
+                obj.value = "ola";                
                 var x = obj.value;
             }
+            
+            
+            function testPropertyForClass(){
+                //Test class property
+                var a = new A();
+                a.lineDashOffset = 5;
+                var v = a.lineDashOffset;
+            }
+
+            function pageLoaded() {
+                console.info("Loaded");
+
+                
+                testPropertyForClass();
+                
+            }
+            
+            
 
             window.addEventListener("load", pageLoaded, false);
         </script>

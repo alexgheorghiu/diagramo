@@ -9,65 +9,96 @@ and my research
         <title>Native dotted/dashed line</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <script type="text/javascript" src="./context_dotted.js"></script>
         <script type="text/javascript">
             function pageLoaded(){
-                console.info("Loaded");
+                console.info("Page Loaded");
+                
+                paintGrid();
+                
+                enhanceContext();
+                
+//                repaint();
+                testMozilla();
+            }
+            
+            function enhanceContext(){
+
+            }
+            
+            
+            var i = 0;
+            function repaint(){
+                var quilt = document.getElementById("quilt");
+                var ctx = quilt.getContext('2d');
+                
+                
+                
                 
                 paintQuilt();
+                
+                
+//                setTimeout(repaint, 1000);
             }
             
-            //patch Canvas context
-            if(!CanvasRenderingContext2D.prototype.hasOwnProperty("setLineDash")){
-                CanvasRenderingContext2D.prototype.setLineDash = function() {
-                    
-                    //check if is a Mozilla variant
-                    if(CanvasRenderingContext2D.prototype.hasOwnProperty("mozDash")){
-                        this.mozDash = arguments[0];
-                    }
-                    else{
-                        console.info("no setLineDash");
-                        /**You are more than welcome to offer a fallback implementation. */
-                    }
-                };
+            function testMozilla(){
+                var quilt = document.getElementById("quilt");
+                var ctx = quilt.getContext('2d');
+                
+                ctx.lineDashOffset = 5;
+//                ctx.mozDashOffset = 5;
+//                ctx.mozLineDash = [2,4];
+                ctx.setLineDash([10,10]);
+//                ctx.setLineDashOffset(10);
+                
+                ctx.beginPath();
+                ctx.moveTo(0,0);
+                ctx.lineTo(150, 150);
+                ctx.stroke();
+                
+                console.info("   ")
             }
             
-            if(!CanvasRenderingContext2D.prototype.hasOwnProperty("getLineDash")){
-                CanvasRenderingContext2D.prototype.getLineDash = function() {
-                    var _dash = null;
-                    
-                    //check if is a Mozilla variant
-                    if(CanvasRenderingContext2D.prototype.hasOwnProperty("mozDash")){
-                        _dash = this.mozDash;
-                    }
-                    else{
-                        console.info("no setLineDash");
-                        /**You are more than welcome to offer a fallback implementation. */
-                    }
-                    
-                    return _dash;
-                };
-            }
-            
-            CanvasRenderingContext2D.prototype.setLineDashOffset  = function() {
-                if(CanvasRenderingContext2D.prototype.hasOwnProperty('lineDashOffset')){
-                    this.lineDashOffset = arguments[0];
+            function paintGrid(){
+                var quilt = document.getElementById("quilt");
+                var ctx = quilt.getContext('2d');
+                
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(10,10,10,0.1)';
+                
+                //columns
+                for(var i=0;i<quilt.width;i+=20){
+                    ctx.moveTo(i, 0);
+                    ctx.lineTo(i, quilt.height);
                 }
-                else if(hasOwnProperty('mozDashOffset')){
-                    this.mozDashOffset = arguments[0];
+                
+                //rows
+                for(var i=0;i<quilt.height;i+=20){
+                    ctx.moveTo(0, i);
+                    ctx.lineTo(quilt.width, i);
                 }
-                else{
-                    //do nothing
-                }
+                ctx.stroke();
+                
+                ctx.restore();
             }
             
             function paintQuilt(){
                 var quilt = document.getElementById("quilt");
+                //quilt.width = quilt.width;
+                
                 var ctx = quilt.getContext('2d');
                 ctx.save();
-                ctx.setLineDash([1,10]); //
-//                ctx.setLineDashOffset(4);
+                ctx.fillStyle = '#FFFFFF';
+                ctx.fillRect(0,0,quilt.width, quilt.height);
+                
+                
+//                i = (i + 1) % 2;
+                ctx.mozDashOffset = 1;
+                ctx.mozLineDash = [2,4];
+//                ctx.setLineDash([2,4]); //                
 //                ctx.setLineDash([1,2]);
-                ctx.lineWidth = 6;
+//                ctx.lineWidth = 6;
                 ctx.lineCap = 'round';
 //                ctx.lineCap = 'bevel';
 //                ctx.lineCap = 'miter';
@@ -100,7 +131,7 @@ and my research
     </head>
     <body>
         <div>
-            <canvas id="quilt" width="300" height="300"></canvas>
+            <canvas style="border: 1px solid red;" id="quilt" width="300" height="300"></canvas>
         </div>
     </body>
 </html>
