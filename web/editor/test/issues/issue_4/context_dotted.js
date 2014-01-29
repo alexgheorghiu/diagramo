@@ -35,18 +35,22 @@ if (!CanvasRenderingContext2D.prototype.hasOwnProperty("setLineDash")) {
 
 /**Attach a property to class mozDashOffset. 
  * TODO: It does not seem to work as for Firefox "mozDashOffset" does not get updated :(*/
-Object.defineProperty(CanvasRenderingContext2D.prototype, "lineDashOffset", {
-        get: function() {
-            console.info("mozDashOffset get");
-            return this.mozDashOffset;
-        },
-        set: function(val) {            
-            this.mozDashOffset = val;
-            console.info("mozDashOffset set");
-        },
-        enumerable : true
-});
-
+if(!CanvasRenderingContext2D.prototype.hasOwnProperty("lineDashOffset")){
+    if(CanvasRenderingContext2D.prototype.hasOwnProperty("mozDashOffset")){ //Mozilla
+        Object.defineProperty(CanvasRenderingContext2D.prototype, "lineDashOffset", {
+                get: function() {
+                    console.info("mozDashOffset get");
+                    return this.mozDashOffset;
+                },
+                set: function(val) {            
+                    this.mozDashOffset = val;
+                    console.info("mozDashOffset set");
+                    throw "It does not seem to work as for Firefox mozDashOffset does not get updated ";
+                },
+                enumerable : true
+        });
+    }
+}
 
 
 //Add getLineDash(...) to Canvas context
