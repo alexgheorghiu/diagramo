@@ -2,42 +2,49 @@
 <!--
 Explore Firefox's mozDashOffset in <canvas>
 Mainly based on http://www.rgraph.net/blog/2013/january/html5-canvas-dashed-lines.html#introduction
-and my research
+and my research.
+
+!!!!Incredible....you need to setup mozDash so that mozDashOffset to work. Damn...took a few hours to figure.
 -->
 <html>
     <head>
         <title>Native dotted/dashed line</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script type="text/javascript" src="./context_dotted.js"></script>
+        <script type="text/javascript" src="./dashed.js" la></script>
         <script type="text/javascript">
             function pageLoaded() {
                 console.info("Page Loaded");
 
+                
                 test();
 
             }
 
-            CanvasRenderingContext2D.prototype.setDashLineOffset = function() {                
-                this.mozDashOffset = arguments[0];
-            };
-            
             function test() {
                 var quilt = document.getElementById("quilt");
                 //quilt.width = quilt.width;
 
                 var ctx = quilt.getContext('2d');
-                
-//                //1st try
+
+                //1st try
+//                ctx.mozDash = [20,10];
 //                ctx.mozDashOffset = 2;
 //                if (ctx.mozDashOffset !== 2) {
 //                    throw "mozDashOffset not set. Set to " + 2 + " but found " + ctx.mozDashOffset;
 //                }
-                
+//                else{
+//                    console.info("mozDashOffset set to " + ctx.mozDashOffset);
+//                }
+
                 //2nd try
-                ctx.setDashLineOffset(3);
+                ctx.setLineDash([20,10]);
+                ctx.lineDashOffset = 3;
                 if (ctx.mozDashOffset !== 3) {
                     throw "mozDashOffset not set. Set to " + 3 + " but found " + ctx.mozDashOffset;
+                }
+                else{
+                    console.info("mozDashOffset set to " + ctx.mozDashOffset);
                 }
             }
 

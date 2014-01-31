@@ -9,17 +9,12 @@ and my research
         <title>Native dotted/dashed line</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script type="text/javascript" src="./context_dotted.js"></script>
+        <script type="text/javascript" src="./dashed.js"></script>
         <script type="text/javascript">
             function pageLoaded(){
                 console.info("Page Loaded");
                 
-                paintGrid();
-                
-                enhanceContext();
-                
-//                repaint();
-                testMozilla();
+                repaint();
             }
             
             function enhanceContext(){
@@ -29,35 +24,13 @@ and my research
             
             var i = 0;
             function repaint(){
-                var quilt = document.getElementById("quilt");
-                var ctx = quilt.getContext('2d');
-                
-                
-                
-                
                 paintQuilt();
                 
+                i = (i + 2) % 10;
                 
-//                setTimeout(repaint, 1000);
+//                setTimeout(repaint, 500);
             }
-            
-            function testMozilla(){
-                var quilt = document.getElementById("quilt");
-                var ctx = quilt.getContext('2d');
-                
-                ctx.lineDashOffset = 5;
-//                ctx.mozDashOffset = 5;
-//                ctx.mozLineDash = [2,4];
-                ctx.setLineDash([10,10]);
-//                ctx.setLineDashOffset(10);
-                
-                ctx.beginPath();
-                ctx.moveTo(0,0);
-                ctx.lineTo(150, 150);
-                ctx.stroke();
-                
-                console.info("   ")
-            }
+
             
             function paintGrid(){
                 var quilt = document.getElementById("quilt");
@@ -83,37 +56,33 @@ and my research
                 ctx.restore();
             }
             
+            
             function paintQuilt(){
                 var quilt = document.getElementById("quilt");
-                //quilt.width = quilt.width;
                 
                 var ctx = quilt.getContext('2d');
                 ctx.save();
                 ctx.fillStyle = '#FFFFFF';
                 ctx.fillRect(0,0,quilt.width, quilt.height);
                 
+                paintGrid();
                 
-//                i = (i + 1) % 2;
-                ctx.mozDashOffset = 1;
-                ctx.mozLineDash = [2,4];
-//                ctx.setLineDash([2,4]); //                
-//                ctx.setLineDash([1,2]);
-//                ctx.lineWidth = 6;
+                ctx.setLineDash([10,10]); //     
+                ctx.lineDashOffset = 5;
+                ctx.lineWidth = 2;
                 ctx.lineCap = 'round';
 //                ctx.lineCap = 'bevel';
 //                ctx.lineCap = 'miter';
                 
                 console.info("Line dash = " + ctx.getLineDash());
-//                ctx.mozDash = [5];
-//                ctx.translate(0.5, 0.5);
                 
                 
                 //first line
                 ctx.beginPath();
-                ctx.moveTo(10,10);
-                ctx.lineTo(50, 10);
-                ctx.lineTo(100, 50);
-                ctx.lineTo(100, 100);
+                ctx.moveTo(0,0);
+                ctx.lineTo(80, 80);
+                ctx.lineTo(140, 80);
+                ctx.lineTo(140, 140);
                 ctx.stroke();
                 
                 //circle
