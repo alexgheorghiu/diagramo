@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<!--
+Explore Firefox's mozDashOffset in <canvas>
+Mainly based on http://www.rgraph.net/blog/2013/january/html5-canvas-dashed-lines.html#introduction
+and my research
+-->
+<html>
+    <head>
+        <title>Native dotted/dashed line</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script type="text/javascript" src="./context_dotted.js"></script>
+        <script type="text/javascript">
+            function pageLoaded() {
+                console.info("Page Loaded");
+
+                test();
+
+            }
+
+            CanvasRenderingContext2D.prototype.setDashLineOffset = function() {                
+                this.mozDashOffset = arguments[0];
+            };
+            
+            function test() {
+                var quilt = document.getElementById("quilt");
+                //quilt.width = quilt.width;
+
+                var ctx = quilt.getContext('2d');
+                
+//                //1st try
+//                ctx.mozDashOffset = 2;
+//                if (ctx.mozDashOffset !== 2) {
+//                    throw "mozDashOffset not set. Set to " + 2 + " but found " + ctx.mozDashOffset;
+//                }
+                
+                //2nd try
+                ctx.setDashLineOffset(3);
+                if (ctx.mozDashOffset !== 3) {
+                    throw "mozDashOffset not set. Set to " + 3 + " but found " + ctx.mozDashOffset;
+                }
+            }
+
+            window.addEventListener("load", pageLoaded, false);
+        </script>
+    </head>
+    <body>
+        <div>
+            <canvas style="border: 1px solid red;" id="quilt" width="300" height="300"></canvas>
+        </div>
+    </body>
+</html>
