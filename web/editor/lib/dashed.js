@@ -15,7 +15,7 @@
 
     /*Add setLineDash(...) to Canvas context
      * */
-    if (!CanvasRenderingContext2D.prototype.hasOwnProperty("setLineDash")) {
+    if (typeof CanvasRenderingContext2D.prototype.setLineDash !== 'function') {
         CanvasRenderingContext2D.prototype.setLineDash = function() {
 
             if (CanvasRenderingContext2D.prototype.hasOwnProperty("mozDash")) { //Mozilla
@@ -31,7 +31,7 @@
 
 
     /*Add getLineDash(...) to Canvas context*/
-    if (!CanvasRenderingContext2D.prototype.hasOwnProperty("getLineDash")) {
+    if (typeof CanvasRenderingContext2D.prototype.getLineDash  !== 'function') {
         CanvasRenderingContext2D.prototype.getLineDash = function() {
             var _dash = null;
 
@@ -79,4 +79,6 @@
     }    
 
     console.info("Context enhanced with dotted line");
+    
+    dashSupport = true;
 })();
