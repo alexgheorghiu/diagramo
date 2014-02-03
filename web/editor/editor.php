@@ -10,16 +10,22 @@ require_once dirname(__FILE__) . '/common/rememberme.php';
 
 $delegate = new Delegate();
 
-$loggedUser = $delegate->userGetById($_SESSION['userId']);
 
 #print_r($_SESSION['userId']);
 
 //start diagram guardian
 if(isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId'])){
-    if(!is_object($loggedUser)){
+    if( !isset($_SESSION['userId']) ){
         print "Not allocated to this diagram";
         exit();
-    }        
+    }
+    else{
+        $loggedUser = $delegate->userGetById($_SESSION['userId']);
+        if(!is_object($loggedUser)){
+            print "Not allocated to this diagram";
+            exit();
+        }    
+    }
 }
 //end diagram guardian
 
