@@ -272,6 +272,9 @@ BuilderProperty.TYPE_BOOLEAN = 'Boolean';
 /**Line width property type*/
 BuilderProperty.TYPE_LINE_WIDTH = 'LineWidth';
 
+/**Line width property style*/
+BuilderProperty.TYPE_LINE_STYLE = 'LineStyle';
+
 /**Image Fill type*/
 BuilderProperty.TYPE_IMAGE_FILL = 'ImageFill';
 

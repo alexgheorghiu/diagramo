@@ -9,22 +9,55 @@ and my research
         <title>Native dotted/dashed line</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
-        <script type="text/javascript" src="./dashed.js"></script>
+        <script type="text/javascript" src="../../../lib/dashed.js"></script>
         <script type="text/javascript">
             function pageLoaded(){
                 console.info("Page Loaded");
                 
+                var quilt = document.getElementById("quilt");
+                
+                var ctx = quilt.getContext('2d');
+                
                 repaint();
+                
+                testSaveRestore(ctx);
             }
-            
-            function enhanceContext(){
 
+            /**
+             * Test against context save() and restore()
+             * @param {CanvasRenderingContext2D} ctx the context to test
+             **/
+            function testSaveRestore(ctx){
+                
+                var dashPattern = [10,10];
+                var dashOffset = 15;
+                ctx.setLineDash(dashPattern);
+                ctx.lineDashOffset = dashOffset;
+                
+                if(dashPattern.toString() !== ctx.getLineDash().toString()){
+                    console.info("Huo");
+                }
+                
+                ctx.save();
+                ctx.setLineDash([20,20]);
+                ctx.lineDashOffset = 20;
+                ctx.restore();
+                if(dashPattern.toString() !== ctx.getLineDash().toString()){
+                    console.info("Huo setLineDash(...)");
+                }
+                
+                if(dashOffset !== ctx.lineDashOffset){
+                    console.info("Huo lineDashOffset");
+                }
             }
             
             
             var i = 0;
             function repaint(){
                 paintQuilt();
+                paintDotted(3);
+                paintDashed(3);
+                paintPattern(3);
                 
                 i = (i + 2) % 10;
                 
@@ -94,6 +127,77 @@ and my research
                 
                 ctx.restore();
             }
+            
+            function paintDotted(size){
+                var quilt = document.getElementById("quilt");                
+                var ctx = quilt.getContext('2d');
+                
+                ctx.save();
+                ctx.beginPath();
+                //propert pattern
+                ctx.lineWidth = size;
+                ctx.setLineDash([1,size * 2]);
+                
+                /**@see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Applying_styles_and_colors#A_lineCap_example*/
+                ctx.lineCap = 'round';
+//                ctx.lineCap = 'square';   
+//                ctx.lineJoin = 
+                
+                ctx.moveTo(0, 250);
+                ctx.lineTo(250, 250);
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+            
+            
+            function paintDashed(size){
+                var quilt = document.getElementById("quilt");                
+                var ctx = quilt.getContext('2d');
+                
+                ctx.save();
+                ctx.beginPath();
+                //propert pattern
+                ctx.lineWidth = size;
+//                ctx.setLineDash([size * 3,size * 3]);
+                ctx.setLineDash([size * 3,size * 3]);
+                
+                /**@see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Applying_styles_and_colors#A_lineCap_example*/
+                ctx.lineCap = 'round';
+//                ctx.lineCap = 'square';   
+//                ctx.lineJoin = 
+                
+                ctx.moveTo(0, 270);
+                ctx.lineTo(270, 270);
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+            
+            
+            function paintPattern(size){
+                var quilt = document.getElementById("quilt");                
+                var ctx = quilt.getContext('2d');
+                
+                ctx.save();
+                ctx.beginPath();
+                //propert pattern
+                ctx.lineWidth = size;
+//                ctx.setLineDash([size * 3,size * 3]);
+                ctx.setLineDash([size * 3,size * 3, size, size * 3]);
+                
+                /**@see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Applying_styles_and_colors#A_lineCap_example*/
+                ctx.lineCap = 'round';
+//                ctx.lineCap = 'square';   
+//                ctx.lineJoin = 
+                
+                ctx.moveTo(0, 290);
+                ctx.lineTo(290, 290);
+                ctx.stroke();
+                
+                ctx.restore();
+            }
+            
             
             window.addEventListener("load", pageLoaded, false);
         </script>

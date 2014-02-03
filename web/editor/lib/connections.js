@@ -48,6 +48,7 @@ function Connector(startPoint,endPoint,type, id){
     this.properties.push(new BuilderProperty("Start Style", "startStyle", BuilderProperty.TYPE_CONNECTOR_END));
     this.properties.push(new BuilderProperty("End Style", "endStyle",  BuilderProperty.TYPE_CONNECTOR_END));
     this.properties.push(new BuilderProperty('Line Width','style.lineWidth', BuilderProperty.TYPE_LINE_WIDTH));
+    this.properties.push(new BuilderProperty('Line Style','style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
     this.properties.push(new BuilderProperty('Color','style.strokeStyle', BuilderProperty.TYPE_COLOR));
     this.properties.push(new BuilderProperty('Text','middleText.str', BuilderProperty.TYPE_TEXT));
     this.properties.push(new BuilderProperty('Text Size ', 'middleText.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));

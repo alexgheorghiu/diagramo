@@ -71,8 +71,21 @@ function Style(){
     /**An {Array} used in gradients*/
     this.linearGradient = [];
     
-    /**Dash length used for dashed styles*/
+    /**Dash length used for dashed styles
+     * @deprecated Trying to use setLineDash and lineDashOffset
+     * */
     this.dashLength = 0;
+    
+    /**@see http://msdn.microsoft.com/en-us/library/ie/dn265060%28v=vs.85%29.aspx*/
+    this.lineDashOffset = 0;
+    
+    /**
+     * An {Array} which defines a series of segments and gaps
+     * Ex: [2,3] = segment of 2, gap of 3 and then repeat pattern
+     * Used by setLineDash() to set the dash pattern
+     * @see https://developer.mozilla.org/en/docs/Web/API/CanvasRenderingContext2D#setLineDash%28%29
+     * */
+    this.lineDash = [];
     
     /**Image used*/
     this.image = null;
@@ -87,7 +100,7 @@ Style.load = function(o){
     var newStyle = new Style();
 
     newStyle.strokeStyle = o.strokeStyle;
-    newStyle.fillStyle = o.fillStyle
+    newStyle.fillStyle = o.fillStyle;
     newStyle.globalAlpha = o.globalAlpha;
     newStyle.globalCompositeOperation = o.globalCompositeOperation;
     newStyle.lineWidth = o.lineWidth;
@@ -100,10 +113,12 @@ Style.load = function(o){
     newStyle.addColorStop = o.addColorStop;
     newStyle.linearGradient = o.linearGradient;
     newStyle.dashLength = o.dashLength;
+    newStyle.lineDashOffset = o.lineDashOffset;
+    newStyle.lineDash = o.lineDash;
     newStyle.image = o.image;
 
     return newStyle;
-}
+};
 
 Style.prototype={
     /**Round join*/
@@ -148,6 +163,17 @@ Style.prototype={
             context.fillStyle = lin;
             this.fillStyle = lin;
         }
+        
+        
+        //Setup the dashed policy
+        if(this.lineDash != null && this.lineDash instanceof Array && this.lineDash.length >0){
+            context.setLineDash(this.lineDash);
+        }
+        
+        if(this.lineDashOffset != null && this.lineDashOffset > 0 ){
+            context.lineDashOffset = this.lineDashOffset;
+        }
+        
 
         if(this.image != null && IE){
             var ptrn = context.createPattern(this.image,'no-repeat');

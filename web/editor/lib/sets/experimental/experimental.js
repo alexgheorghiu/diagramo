@@ -14,7 +14,8 @@ figureSets["experimental"] = {
         {figureFunction: "3Figures", image: "page.png"},
         {figureFunction: "3FiguresNoSize", image: "page.png"},
         {figureFunction: "Polyline", image: "page.png"},
-        {figureFunction: "PatternLine", image: "dotted.png"}
+        {figureFunction: "PatternLine", image: "dotted.png"},
+        {figureFunction: "NativeDash", image: "dotted_native.png"}
     ]
 }
 
@@ -37,6 +38,34 @@ function figure_PatternLine(x, y)
     p.addPoint(new Point(x + 100, y + 100));
     f.addPrimitive(p);
     f.finalise();
+    return f;
+}
+
+
+/**Figure to test new native support
+ * @see https://bitbucket.org/scriptoid/diagramo/issue/4/dotted-dashed-line-support
+ * */
+function figure_NativeDash(x, y)
+{
+    var f = new Figure("PatternLine");
+    f.style.fillStyle = figure_defaultFillStyle;
+    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.lineWidth = 4;
+    f.style.strokeStyle = '#000000';
+    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
+    f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
+    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
+
+    var p = new Polygon([1,1]);
+    p.style.lineDash = [4,4];
+    p.addPoint(new Point(x, y));
+    p.addPoint(new Point(x+50, y));
+    p.addPoint(new Point(x+50, y+50));
+    p.addPoint(new Point(x + 100, y+50));
+    p.addPoint(new Point(x + 100, y + 100));
+    f.addPrimitive(p);
+    f.finalise();
+
     return f;
 }
 

@@ -78,7 +78,8 @@ $page = 'editor';
             }
         </script>
         
-        <script type="text/javascript" src="./lib/canvasprops.js"></script>
+        <script type="text/javascript" src="./lib/dashed.js"></script>
+        <script type="text/javascript" src="./lib/canvasprops.js"></script>        
         <script type="text/javascript" src="./lib/style.js"></script>
         <script type="text/javascript" src="./lib/primitives.js"></script>
         <script type="text/javascript" src="./lib/ImageFrame.js"></script>

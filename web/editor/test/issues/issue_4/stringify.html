@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+
+-->
+<html>
+    <head>
+        <title>On-the-fly object properties</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script type="text/javascript">
+
+            
+
+            function pageLoaded() {
+                console.info("Loaded");
+
+                var o = {};
+                o.v = [1,2];
+                var data = JSON.stringify(o);
+                var eo = eval('(' + data + ')');
+                console.info("Eval data = " + eo.v);
+            }
+            
+            
+
+            window.addEventListener("load", pageLoaded, false);
+        </script>
+    </head>
+    <body>
+        <div>
+            <canvas id="quilt" width="300" height="300"></canvas>
+        </div>
+    </body>
+</html>
