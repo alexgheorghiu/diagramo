@@ -24,8 +24,8 @@
     test("Test setLineDash(...) support", function () {        
         ok(typeof ctx.setLineDash == 'function', "Context has no setLineDash() support");
         
-        var pattern = [1,2];
-        ctx.setLineDash(pattern);
+//        var pattern = [1,2];
+//        ctx.setLineDash(pattern);
         
     });
 
@@ -40,8 +40,28 @@
      * Test for lineDashOffset
      */
     test("Test lineDashOffset property support", function () {        
-        ok(ctx.hasOwnProperty('lineDashOffset'), "Context has no lineDashOffset support");        
+        ok('lineDashOffset' in ctx, "Context has no lineDashOffset support");        
     });
 
+    test("Test set/get/LineDash(...) functionality", function () {        
+        
+        var pattern = [1,2];
+        ctx.setLineDash(pattern);
+        ok(pattern.toString() === ctx.getLineDash().toString(), "Line dash operation failed")
+    });
+    
+    
+    test("Test lineDashOffset functionality", function () {        
+        
+        var offset = 4;
+        
+        //NOTE: without calling setLineDash(...) lineDashOffset is not available
+        var pattern = [1,2];
+        ctx.setLineDash(pattern);
+        
+        ctx.lineDashOffset = offset;
+        
+        ok(ctx.lineDashOffset === offset, "lineDashOffset setup failed")
+    });
 
 })();

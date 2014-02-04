@@ -9,6 +9,14 @@ Research not fully done as it becomes very complicated for what we need but "pro
 Links for further readin:
     @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty
     @see http://ejohn.org/blog/ecmascript-5-objects-and-properties/#postcomment
+
+Conclusions:
+    1. If property added with defineProperty()/classic on prototype:
+        - hasOwnProperty() returns false
+        - "in" returns true
+    2. If property added with defineProperty()/classic on instance:
+        - hasOwnProperty() returns true
+        - "in" returns true
 -->
 <html>
     <head>
@@ -19,11 +27,12 @@ Links for further readin:
 
             //Class property. Trying to add a property to an object
             function A() {
-                
+                this.prop0 = 9;
             }
             
             A.prototype = {
-                constructor: A             
+                constructor: A,
+//                prop0: 'zero'
             };
             
             //Attach a property to class A
@@ -64,13 +73,76 @@ Links for further readin:
                 a.lineDashOffset = 5;
                 var v = a.lineDashOffset;
             }
+            
+            function testAddedProp(){
+                
+                //add 1st property - Added to prototype
+                Object.defineProperty(A.prototype, 'prop1',{
+                    set : function(val){
+                        
+                    },
+                    
+                    get : function(){
+                        
+                    },
+                    
+                    enumerable :true
+                });
+                
+                //add 2nd property
+                Object.defineProperty(A.prototype, 'prop2', 
+                        {
+                            value: 7,
+                            writable: true
+                        }
+                );
+                  
+                  
+                //add 2nd property - Added to object  
+                var a = new A();               
+                Object.defineProperty(a, 'prop3', 
+                        {
+                            value: 3,
+                            writable: true
+                        }
+                );
+        
+                //added to object - the old way
+                a.prop4 = "4";
+                
+                //added to prototype - the old way
+                A.prototype.prop5 = "5";
+                
+               console.info("a owns prop0: " + a.hasOwnProperty('prop0'));
+               console.info("a has prop0: " + ('prop0' in a));
+               
+               console.info("a owns prop1: " + a.hasOwnProperty('prop1'));
+               console.info("a has prop1: " + ('prop1' in a));
+               
+               console.info("a owns prop2: " + a.hasOwnProperty('prop2'));
+               console.info("a has prop2: " + ('prop2' in a));
+               
+               console.info("a owns prop3: " + a.hasOwnProperty('prop3'));
+               console.info("a has prop3: " + ('prop3' in a));
+               
+               console.info("a owns prop4: " + a.hasOwnProperty('prop4'));
+               console.info("a has prop4: " + ('prop4' in a));
+               
+               console.info("a owns prop5: " + a.hasOwnProperty('prop5'));
+               console.info("a has prop5: " + ('prop5' in a));
+            }
 
             function pageLoaded() {
                 console.info("Loaded");
 
                 
-                testPropertyForClass();
+                //testPropertyForClass();
                 
+//                var o = {};
+//                o.name = 'Nisa';
+//                console.info("O object has 'name' as property: " + o.hasOwnProperty('name'))
+//                console.info("O object has 'toString' as property: " + o.hasOwnProperty('toString'))
+                testAddedProp();
             }
             
             
