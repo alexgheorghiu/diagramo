@@ -3245,9 +3245,10 @@ function save(){
 
     var diagram = { c: canvasProps, s:STACK, m:CONNECTOR_MANAGER, p:CONTAINER_MANAGER, v: DIAGRAMO.fileVersion };
     //Log.info('stringify ...');
-    var serializedDiagram = JSON.stringify(diagram,  Util.operaReplacer);
-    throw "Using Util.operaReplacer() somehow break the serialization. o[1,2] \n\
-        is transformed into o.['1','2']... so the serialization is broken"
+//    var serializedDiagram = JSON.stringify(diagram,  Util.operaReplacer);
+    var serializedDiagram = JSON.stringify(diagram);
+//    Log.error("Using Util.operaReplacer() somehow break the serialization. o[1,2] \n\
+//        is transformed into o.['1','2']... so the serialization is broken");
 //    var serializedDiagram = JSON.stringify(diagram);
     //Log.info('JSON stringify : ' + serializedDiagram);
 
@@ -3448,7 +3449,8 @@ function saveAs(){
 
 //                var $diagram = {c:canvas.save(), s:STACK, m:CONNECTOR_MANAGER};
    var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER, p:CONTAINER_MANAGER, v: DIAGRAMO.fileVersion };
-   $serializedDiagram = JSON.stringify($diagram,  Util.operaReplacer);
+   $serializedDiagram = JSON.stringify($diagram);
+//   $serializedDiagram = JSON.stringify($diagram,  Util.operaReplacer);
    var svgDiagram = toSVG();
 
    //save the URLs of figures as a CSV 

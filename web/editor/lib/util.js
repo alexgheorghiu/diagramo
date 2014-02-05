@@ -915,6 +915,7 @@ var Util = {
      * @see https://developer.mozilla.org/en-US/docs/Using_native_JSON#The_replacer_parameter
      * @see https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Number/toFixed
      * @author Artyom, Alex
+     * @deprecated Since Opera 19.0.1326.47 problem dissapeared. So 0.8999999999999999.toString() no longer returns "0.9"
      * */
     operaReplacer : function (key, val) {
         if (typeof(val) !== 'undefined' && val !== null) {

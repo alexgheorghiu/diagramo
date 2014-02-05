@@ -19,6 +19,8 @@
         CanvasRenderingContext2D.prototype.setLineDash = function() {
 
             if (CanvasRenderingContext2D.prototype.hasOwnProperty("mozDash")) { //Mozilla
+                /*If you got an error "NS_ERROR_ILLEGAL_VALUE:" this is because 
+                 * Util.operaReplacer from main.js->save() breaks serialization*/
                 this.mozDash = arguments[0];
             }
             else { //others

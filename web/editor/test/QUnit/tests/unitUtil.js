@@ -1,4 +1,4 @@
-module( "Text misc. utilities" );
+module( "Util.js");
 
 test("Util.lineIntersectsLine", function () {
     var l1 = new Line(new Point(10, 10), new Point(100, 100));
@@ -122,3 +122,24 @@ test("Util.areBoundsInBounds", function () {
     var wrongInner = [100, 100, 110, 110];    
     strictEqual( Util.areBoundsInBounds(wrongInner, outer), false, 'wrong inner bounds : ' + wrongInner +  ' should not be inside outer bounds: ' + outer);
 });
+
+//
+//test("Util.operaReplacer", function () {
+//    var s = "Diagramo";
+//    var i = 20;
+//    var is = [1,2,3];
+//    
+//    //String testing
+//    var s1 = JSON.stringify(s,  Util.operaReplacer);
+//    var s2 = JSON.stringify(s);
+//    ok(s1 === s2, "String replacement not ok");
+//
+//    //Integer testing
+//    var i1 = JSON.stringify(i,  Util.operaReplacer);
+//    var i2 = JSON.stringify(i);
+//    ok(i1 === i2, "Integer replacement not ok");   
+//    
+//    var is1 = JSON.stringify(is,  Util.operaReplacer);
+//    var is2 = JSON.stringify(is);
+//    ok(is1 === is2, "Arrays of integer replacement not ok");   
+//});
