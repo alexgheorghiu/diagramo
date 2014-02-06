@@ -70,7 +70,7 @@ Builder.constructPropertiesPanel = function(DOMObject, shape){
             shape.properties[i].injectInputArea(DOMObject, shape.id);
         }
     }
-}
+};
 
 /**
  *Creates the property panel for a Text primitive of shape {Figure} and returns it
@@ -87,7 +87,7 @@ Builder.constructTextPropertiesPanel = function(textEditor, textEditorTools, sha
     textEditor.init();
 
     return textEditor;
-}
+};
 
 /**
  *Creates the properties for main CanvasProps
