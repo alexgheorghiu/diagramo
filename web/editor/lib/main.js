@@ -4,7 +4,7 @@
  *ALL VARIABLES DEFINED HERE WILL BE VISIBLE IN ALL OTHER MODULES AND INSIDE INDEX.PHP
  *SO TAKE CARE!
  **/
-
+"use strict";
 
 /**Diagramo namespace. We must place as much "global application" variables in here to avoid
  * connflict and better management*/
@@ -3570,6 +3570,9 @@ function init(diagramId){
     window.addEventListener("mouseup", documentOnMouseUp, false);
 }
 
+/**Flag to inform if to drew or not the diagram. Similar to "Dirty pattern" */
+var redraw = false;
+
 /**
  *Dispatch actions. Detect the action needed and trigger it.
  *@param {String} action - the action name
@@ -4023,8 +4026,8 @@ function documentOnMouseMove(evt){
                     return;
                 }
 
-                x = coords[0];
-                y = coords[1];
+                var x = coords[0];
+                var y = coords[1];
                 switch(state){                                
                     case STATE_FIGURE_CREATE:
                         Log.info("draggingFigure>onMouseUp() + STATE_FIGURE_CREATE");
@@ -4098,7 +4101,7 @@ function documentOnMouseUp(evt){
 function linkMap(){
     var csvBounds = '';
     var first = true;
-    for(f in STACK.figures){
+    for(var f in STACK.figures){
         var figure = STACK.figures[f];
         if(figure.url != ''){
             var bounds = figure.getBounds();

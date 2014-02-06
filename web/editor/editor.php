@@ -57,6 +57,7 @@ $page = 'editor';
         
         
         <script type="text/javascript">
+            "use strict";
             /*Option 1:
              *We can use window.location like this:
              * url = window.location.protocol + window.location.hostname + ":" + window.location.port + ....
