@@ -84,7 +84,7 @@ function Style(){
      * I think it would be nice to group a dash style under 
      * a single name (like: continuous, dotted or dashed)    
      * */
-    this.lineStyle = null;
+    this.lineStyle = null; //set to null so it can be inherited from parents
     
     /**Image used*/
     this.image = null;

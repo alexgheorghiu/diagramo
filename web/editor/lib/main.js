@@ -403,6 +403,7 @@ function updateShape(shapeId, property, newValue, skipCommand, previousValue){
             }
             //Log.info('updateShape() : call setXXX on object: ' +  propSet + " new value: " + newValue);
             //            obj[propSet](figure,newValue);
+            //TODO: Do we really need this anymore?
             obj[propSet](newValue);
     }
     else{

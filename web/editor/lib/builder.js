@@ -24,6 +24,9 @@ Builder.IMAGE_STROKE_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-stroke.png
 /**Path to line width icon image*/
 Builder.IMAGE_LINEWIDTH_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-linewidth.png' ;
 
+/**Line (dashed) style icon image*/
+Builder.IMAGE_LINESTYLE_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-linestyle.png' ;
+
 /**Path to start style icon image*/
 Builder.IMAGE_STARTSTYLE_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-startstyle.png' ;
 
@@ -621,6 +624,12 @@ BuilderProperty.prototype = {
                 icon.src = Builder.IMAGE_ENDSTYLE_ICON_PATH;
                 labelDiv.appendChild(icon);
                 break;
+            case "lineStyle":
+                icon = new Image();
+                icon.className = 'prop-icon';
+                icon.src = Builder.IMAGE_LINESTYLE_ICON_PATH;
+                labelDiv.appendChild(icon);
+                break;                 
         }
 
         div.appendChild(labelDiv);
