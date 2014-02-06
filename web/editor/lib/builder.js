@@ -302,9 +302,9 @@ BuilderProperty.LINE_WIDTHS = [
 
 /**Line styles*/
 BuilderProperty.LINE_STYLES = [
-    {Text: 'Continous', Value: '[]'},
-    {Text: 'Dotted', Value: '[1,1]'},
-    {Text: 'Dashed',Value: '[4,4]'}
+    {Text: 'Continous', Value: 'continuous'},
+    {Text: 'Dotted', Value: 'dotted'},
+    {Text: 'Dashed',Value: 'dashed'}
 ];
 
 /**Font sizes*/

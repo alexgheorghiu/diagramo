@@ -75,17 +75,16 @@ function Style(){
      * @deprecated Trying to use setLineDash and lineDashOffset
      * */
     this.dashLength = 0;
-    
-    /**@see http://msdn.microsoft.com/en-us/library/ie/dn265060%28v=vs.85%29.aspx*/
-    this.lineDashOffset = 0;
-    
+        
     /**
-     * An {Array} which defines a series of segments and gaps
-     * Ex: [2,3] = segment of 2, gap of 3 and then repeat pattern
-     * Used by setLineDash() to set the dash pattern
-     * @see https://developer.mozilla.org/en/docs/Web/API/CanvasRenderingContext2D#setLineDash%28%29
+     * Describe the dash style. It contains a whole policy of dash styles.
+     * As this is a composite property made by 
+     * setDashLine (@see https://developer.mozilla.org/en/docs/Web/API/CanvasRenderingContext2D#setLineDash%28%29)
+     * and dashLineOffset (@see http://msdn.microsoft.com/en-us/library/ie/dn265060%28v=vs.85%29.aspx)
+     * I think it would be nice to group a dash style under 
+     * a single name (like: continuous, dotted or dashed)    
      * */
-    this.lineDash = [];
+    this.lineStyle = null;
     
     /**Image used*/
     this.image = null;
@@ -93,6 +92,17 @@ function Style(){
     /**Serialization type*/
     this.oType = "Style";
 }
+
+Style.LINE_STYLE_CONTINOUS = 'continuous';
+Style.LINE_STYLE_DOTTED = 'dotted';
+Style.LINE_STYLE_DASHED = 'dashed';
+
+/**Contains all lines styles*/
+Style.LINE_STYLES = {
+    'continuous' : {'lineDash' : [], 'lineDashOffset': 0, 'lineCap' : 'round'},
+    'dotted' : {'lineDash' : [1,2], 'lineDashOffset': 0, 'lineCap' : 'round'},
+    'dashed' : {'lineDash' : [4,4], 'lineDashOffset': 0, 'lineCap' : 'round'}
+};
 
 /**Loads a style from a JSONObject
  **/
@@ -113,8 +123,7 @@ Style.load = function(o){
     newStyle.addColorStop = o.addColorStop;
     newStyle.linearGradient = o.linearGradient;
     newStyle.dashLength = o.dashLength;
-    newStyle.lineDashOffset = o.lineDashOffset;
-    newStyle.lineDash = o.lineDash;
+    newStyle.lineStyle = o.lineStyle;
     newStyle.image = o.image;
 
     return newStyle;
@@ -166,13 +175,49 @@ Style.prototype={
         
         
         //Setup the dashed policy
-        if(this.lineDash != null && this.lineDash instanceof Array && this.lineDash.length >0){
-            context.setLineDash(this.lineDash);
+        if(this.lineStyle != null){
+            var lineStyle = Style.LINE_STYLES[this.lineStyle];
+            var lineDash = lineStyle['lineDash'];
+            
+            /**Now that we have the lineDash we need to scale it according to
+             * lineWidth. As each dash style must scale differently we need to
+             * treat each case separatly*/
+            var scalledLineDash = [];
+            
+            switch(this.lineStyle){
+                case Style.LINE_STYLE_CONTINOUS:
+                    //do nothing 
+                    scalledLineDash = lineDash;
+                    break;
+                    
+                case Style.LINE_STYLE_DOTTED:
+                    //Scale all pieces of a pattern except first dot
+                    for(var i=0;i<lineDash.length; i++){                        
+                        if(i==0){
+                            scalledLineDash.push(lineDash[i]);
+                        }
+                        else{
+                            scalledLineDash.push(lineDash[i] * context.lineWidth);
+                        }                        
+                    }
+                    break;
+                    
+                case Style.LINE_STYLE_DASHED:
+                    //Scale all pieces of a pattern 
+                    for(var i=0;i<lineDash.length; i++){
+                        scalledLineDash.push(lineDash[i] * context.lineWidth);
+                    }
+                    break;    
+            }
+            
+            context.setLineDash(scalledLineDash);
+            context.lineCap = lineStyle['lineCap'];
+            this.lineCap = lineStyle['lineCap'];
         }
         
-        if(this.lineDashOffset != null && this.lineDashOffset > 0 ){
-            context.lineDashOffset = this.lineDashOffset;
-        }
+//        if(this.lineDashOffset != null && this.lineDashOffset > 0 ){
+//            context.lineDashOffset = this.lineDashOffset;
+//        }
         
 
         if(this.image != null && IE){

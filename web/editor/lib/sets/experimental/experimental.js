@@ -52,10 +52,11 @@ function figure_NativeDash(x, y)
     f.style.strokeStyle = figure_defaultStrokeStyle;
     f.style.lineWidth = 4;
     f.style.strokeStyle = '#000000';
+    f.style.lineStyle = Style.LINE_STYLE_DASHED;
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
-    f.properties.push(new BuilderProperty('Line Style', 'style.lineDash',BuilderProperty.TYPE_LINE_STYLE));
+    f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle',BuilderProperty.TYPE_LINE_STYLE));
 
     var p = new Polygon([1,1]);
     p.style.lineDash = [4,4];

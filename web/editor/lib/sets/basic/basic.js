@@ -569,6 +569,7 @@ function figure_RoundedRectangle(x,y)
     f.style.fillStyle = figure_defaultFillStyle;
     f.style.strokeStyle = figure_defaultStrokeStyle;
     f.style.lineWidth = 2;
+    f.style.lineStyle = Style.LINE_STYLE_CONTINOUS;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
@@ -580,6 +581,7 @@ function figure_RoundedRectangle(x,y)
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
+    f.properties.push(new BuilderProperty('Line Style', 'style.lineStyle',BuilderProperty.TYPE_LINE_STYLE));
 
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
