@@ -299,6 +299,14 @@ BuilderProperty.LINE_WIDTHS = [
     {Text: '7px',Value: '7'},{Text: '8px',Value: '8'},{Text: '9px',Value: '9'},
     {Text: '10px',Value: '10'}];
 
+
+/**Line styles*/
+BuilderProperty.LINE_STYLES = [
+    {Text: 'Continous', Value: '[]'},
+    {Text: 'Dotted', Value: '[1,1]'},
+    {Text: 'Dashed',Value: '[4,4]'}
+];
+
 /**Font sizes*/
 BuilderProperty.FONT_SIZES = [];
 for(var i=0; i<73; i++){
@@ -390,6 +398,9 @@ BuilderProperty.prototype = {
         }
         else if(this.type == BuilderProperty.TYPE_LINE_WIDTH){
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.LINE_WIDTHS);
+        }
+        else if(this.type == BuilderProperty.TYPE_LINE_STYLE){
+            this.generateArrayCode(DOMObject,figureId, BuilderProperty.LINE_STYLES);
         }
         else if(this.type == BuilderProperty.TYPE_URL){
             this.generateURLCode(DOMObject,figureId);

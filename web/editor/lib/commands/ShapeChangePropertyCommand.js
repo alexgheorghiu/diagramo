@@ -152,7 +152,13 @@ ShapeChangePropertyCommand.prototype = {
             propertyObject["set"+propertyAccessors[propertyAccessors.length -1]](value);
         }
         else{
-            propertyObject[propertyAccessors[propertyAccessors.length -1]] = value;
+            if(propertyAccessors[propertyAccessors.length -1] === 'lineDash'){
+                propertyObject[propertyAccessors[propertyAccessors.length -1]] = eval( '(' + value + ')' );
+                console.info("dumb line");
+            }
+            else{                            
+                propertyObject[propertyAccessors[propertyAccessors.length -1]] = value;                
+            }
         }  
     },
 

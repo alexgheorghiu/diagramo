@@ -227,4 +227,3 @@ if($_REQUEST['action'] == 'init'){
 <?
 sqlite_close($dbhandle);
 ?>
-

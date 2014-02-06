@@ -2571,7 +2571,7 @@ function Figure(name) {
     /**An {Array} of {@link BuilderProperty} objects*/
     this.properties = []; 
     
-    /**The {@link Style} use to draw tis figure*/
+    /**The {@link Style} use to draw this figure*/
     this.style = new Style();
 
     /**We keep the figure position by having different points
