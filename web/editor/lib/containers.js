@@ -21,6 +21,7 @@ function Container(id, topLeft, bottomRight) {
     this.style = new Style();
     this.style.strokeStyle = "#000000";
     this.style.fillStyle = "#F9F8F6";
+    this.style.lineStyle = Style.LINE_STYLE_CONTINOUS;
     
     this.topLeft = topLeft.clone();
     this.bottomRight = bottomRight.clone();        
