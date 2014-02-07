@@ -1699,12 +1699,12 @@ Arc.prototype = {
         }
 
         //first fill
-        if(style.fillStyle!=null && this.style.fillStyle!=""){
+        if(this.style.fillStyle!=null && this.style.fillStyle!=""){
             context.fill();
         }
 
         //then stroke
-        if(style.strokeStyle!=null && this.style.strokeStyle!=""){
+        if(this.style.strokeStyle!=null && this.style.strokeStyle!=""){
             context.stroke();
         }
 
