@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  *  Copyright 2010 Scriptoid s.r.l
  **/

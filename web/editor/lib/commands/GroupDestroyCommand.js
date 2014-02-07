@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Object that is used to undo actions when figures are grouped or ungrouped
  * @this {GroupDestroyCommand} 

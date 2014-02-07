@@ -1,3 +1,5 @@
+"use strict";
+
 module( "Util.js");
 
 test("Util.lineIntersectsLine", function () {

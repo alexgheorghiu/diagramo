@@ -1,3 +1,5 @@
+"use strict";
+
 // analog for onload event of body tag
 document.addEventListener("DOMContentLoaded", function() {
     init('');

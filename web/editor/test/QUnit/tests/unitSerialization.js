@@ -1,3 +1,5 @@
+"use strict";
+
 module( "Tests serialization of data" );
 
 test("test arc", function () {

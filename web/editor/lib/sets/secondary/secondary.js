@@ -1,3 +1,5 @@
+"use strict";
+
 figureSets["secondary"] = {
     name : 'Secondary',
     description : 'The second basic set of figures',

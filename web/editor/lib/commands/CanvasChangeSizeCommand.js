@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Used to do/undo actions when the canvas changes his size
  * @this {CanvasChangeSizeCommand}

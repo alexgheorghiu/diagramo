@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Small library to smooth the dashed line support in <canvas>
  * Dotted line is made available through:
@@ -11,6 +13,8 @@
  * @see http://www.rgraph.net/blog/2013/january/html5-canvas-dashed-lines.html
  * */
 
+
+var dashSupport = false;
 (function() {
 
     /*Add setLineDash(...) to Canvas context

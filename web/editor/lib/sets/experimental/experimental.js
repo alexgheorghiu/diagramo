@@ -1,3 +1,5 @@
+"use strict";
+
 figureSets["experimental"] = {
     name : 'Experimental',
     description : 'An experimental set of figures. Use it on your own risk',

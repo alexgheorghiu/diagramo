@@ -1,3 +1,5 @@
+"use strict";
+
 figureSets["network"] = { 
     name : 'Network',
     description : 'A tiny set of network related figures',

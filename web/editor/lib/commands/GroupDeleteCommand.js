@@ -1,3 +1,5 @@
+"use strict";
+
 /* 
  * This is triggered when you delete a Group.
  * When you do that it will trigger many FigureDeleteCommands so

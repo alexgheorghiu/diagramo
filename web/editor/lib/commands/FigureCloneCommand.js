@@ -1,3 +1,5 @@
+"use strict";
+
 /** 
  * This command just clones an existing {Figure}. All it needs is an id of
  * cloned {Figure}

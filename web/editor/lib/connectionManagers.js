@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * It manages all the Connectors on a diagram
  * 

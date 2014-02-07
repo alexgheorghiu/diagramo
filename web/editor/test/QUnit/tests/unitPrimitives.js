@@ -1,3 +1,5 @@
+"use strict";
+
 module( "Primitive.Point tests" );
 
 test("primitive.Point.constructor [Depends on Style.constructor, Style.equals]", function () {

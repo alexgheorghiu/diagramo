@@ -1,3 +1,5 @@
+"use strict";
+
 /* 
  * This is triggered when you delete a connector
  * @this {ConnectorDeleteCommand} 

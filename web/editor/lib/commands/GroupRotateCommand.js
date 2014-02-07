@@ -1,3 +1,5 @@
+"use strict";
+
 /* 
  * This is triggered when a group was rotated
  * @this {GroupRotateCommand} 

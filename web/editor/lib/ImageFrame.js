@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  *This class offers support to add images to Diagramo engine
  *It supports PNG, GIF, PNG and SVG support. 

@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Object that is used to undo actions when the property editor is used
  * @this {ShapeChangePropertyCommand} 

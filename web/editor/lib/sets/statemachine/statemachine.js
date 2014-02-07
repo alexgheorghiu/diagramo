@@ -1,3 +1,5 @@
+"use strict";
+
 figureSets["statemachine"] = {
     name : 'UML: State machine',
     description : 'A set of figures needed to draw state diagrams',

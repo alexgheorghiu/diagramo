@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * This object is responsable for creating and updating the properties for figures
  *

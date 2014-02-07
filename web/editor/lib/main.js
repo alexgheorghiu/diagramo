@@ -1,10 +1,11 @@
+"use strict";
+
 /**This is the main JavaScript module.
  *We move it here so it will not clutter the index.php with a lot of JavaScript
  *
  *ALL VARIABLES DEFINED HERE WILL BE VISIBLE IN ALL OTHER MODULES AND INSIDE INDEX.PHP
  *SO TAKE CARE!
  **/
-"use strict";
 
 /**Diagramo namespace. We must place as much "global application" variables in here to avoid
  * connflict and better management*/

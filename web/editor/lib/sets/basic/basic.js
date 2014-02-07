@@ -1,3 +1,5 @@
+"use strict";
+
 /**Figure set declaration*/
 figureSets["basic"] = {
     name: 'Basic',

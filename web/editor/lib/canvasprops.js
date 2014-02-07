@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * A wrapper for canvas element. This should only used to save / store canvas' properties
  * 

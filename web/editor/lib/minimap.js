@@ -1,3 +1,5 @@
+"use strict";
+
 /** Creates a minimap for the big canvas
  *
 * @constructor

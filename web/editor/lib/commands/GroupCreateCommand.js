@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * It will group a set of figures
  * @this {GroupCreateCommand} 

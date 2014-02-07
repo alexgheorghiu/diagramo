@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * An facade to add Commands, undo and redo them.
  * It keeps a STACK of commands and can trigger undo actions in the system.

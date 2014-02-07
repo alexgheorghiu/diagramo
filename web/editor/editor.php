@@ -254,6 +254,7 @@ $page = 'editor';
             <div id="figures">
                 <select style="width: 120px;" onchange="setFigureSet(this.options[this.selectedIndex].value);">
                     <script>
+                        "use strict";
                         for(var setName in figureSets){
                             var set = figureSets[setName];
                             document.write('<option value="' + setName + '">' + set['name'] + '</option>');
@@ -262,6 +263,7 @@ $page = 'editor';
                 </select>
                 
                 <script>
+                    "use strict";
                     /**Builds the figure panel*/
                     function buildPanel(){
                         //var first = true;
@@ -440,6 +442,7 @@ $page = 'editor';
         <iframe id="upload_target" name="upload_target" style="width:0;height:0;border:0px;"></iframe>
 
         <script type="text/javascript">
+            "use strict";
             function loadFill(check){
                 if(check.checked === true){
                     if($('#colorpickerHolder3').css('display') === 'none'){

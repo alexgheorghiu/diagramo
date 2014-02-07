@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Used to undo actions when the canvas changes his color
  * @this {CanvasChangeColorCommand}

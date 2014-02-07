@@ -1,3 +1,5 @@
+"use strict";
+
 /* 
  * This is triggered when a figure was rotated
  * @this {FigureRotateCommand} 

@@ -369,13 +369,13 @@ Line.prototype = {
         }
 
 
-        startX = Math.min(this.endPoint.x,this.startPoint.x);
-        startY = Math.min(this.endPoint.y,this.startPoint.y);
-        endX = Math.max(this.endPoint.x,this.startPoint.x);
-        endY = Math.max(this.endPoint.y,this.startPoint.y);
+        var startX = Math.min(this.endPoint.x,this.startPoint.x);
+        var startY = Math.min(this.endPoint.y,this.startPoint.y);
+        var endX = Math.max(this.endPoint.x,this.startPoint.x);
+        var endY = Math.max(this.endPoint.y,this.startPoint.y);
 
         m = (this.endPoint.y-this.startPoint.y)/(this.endPoint.x-this.startPoint.x);
-        b = -1;
+        var b = -1;
         //get the intercept
         var c = this.startPoint.y-m*this.startPoint.x;
 

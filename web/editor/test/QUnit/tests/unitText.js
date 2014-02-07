@@ -1,3 +1,5 @@
+"use strict";
+
 module( "Test text outside canvas" );
 
 test("Equal two the same texts", function () {

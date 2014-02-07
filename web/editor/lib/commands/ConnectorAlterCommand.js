@@ -1,3 +1,5 @@
+"use strict";
+
 /** 
  * Created once the Connector changed one of the edges ( {ConnectionPoint} )
  * 

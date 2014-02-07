@@ -1,3 +1,5 @@
+"use strict";
+
 /** Container holds one or more figure into a visual (and probably conceptual)
  * unit
  * 

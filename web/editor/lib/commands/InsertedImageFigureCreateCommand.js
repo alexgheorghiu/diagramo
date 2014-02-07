@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * An 'interface' for undoable actions, implemented by classes that specify
  * how to handle action

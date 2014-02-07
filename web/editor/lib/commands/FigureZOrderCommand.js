@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * Object that is used to undo actions when figures are moved from front to back
  * @this {FigureZOrderCommand} 

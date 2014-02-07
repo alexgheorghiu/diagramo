@@ -1,3 +1,5 @@
+"use strict";
+
 module( "Tests if browser supports necessary features" );
 
 test("isBrowserReady()", function () {

@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  *This functions detects if a browser supports
  *  - <canvas> tag (tests to see if baasic drawing features are supported)

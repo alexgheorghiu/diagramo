@@ -1,3 +1,4 @@
+"use strict";
 /* 
  * This is triggered when a container was scaled/expanded
  * @this {ContainerScaleCommand} 

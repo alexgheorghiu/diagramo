@@ -1,3 +1,5 @@
+"use strict";
+
 /* 
  * This is a small library the will help import from older version
  * of Diagramo

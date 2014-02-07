@@ -1,3 +1,4 @@
+"use strict";
 /* 
  * This is triggered when you delete a Container
  * @this {ContainerDeleteCommand} 

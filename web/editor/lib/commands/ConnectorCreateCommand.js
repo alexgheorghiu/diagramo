@@ -1,3 +1,5 @@
+"use strict";
+
 /** 
  * As Connector is not a single action command
  * we will store only the "already ready" made connector. (IT will take place when
