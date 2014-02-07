@@ -360,7 +360,7 @@ Line.prototype = {
         if(this.endPoint.x == this.startPoint.x){
             return ( (this.startPoint.y-radius<=y && this.endPoint.y+radius>=y) 
                     || (this.endPoint.y-radius<=y && this.startPoint.y+radius>=y))
-            && x>startPoint.x-radius && x<startPoint.x+radius ;
+            && x > this.startPoint.x - radius && x < this.startPoint.x + radius ;
         }
         if(this.startPoint.y == this.endPoint.y){
             return ( (this.startPoint.x - radius<=x && this.endPoint.x+radius>=x) 
