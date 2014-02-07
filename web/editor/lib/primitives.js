@@ -20,6 +20,7 @@
  *  - toSVG():String - return the SVG representation (fragment) of the shape
  */
 
+"use strict";
 
 
 
@@ -354,37 +355,37 @@ Line.prototype = {
      *TODO: review not made
      **/
     near:function(x,y,radius){
-        with(this){
-            //get the slope of the line
-            var m;
-            if(endPoint.x==startPoint.x){
-                return ( (startPoint.y-radius<=y && endPoint.y+radius>=y) || (endPoint.y-radius<=y && startPoint.y+radius>=y))
-                && x>startPoint.x-radius && x<startPoint.x+radius ;
-            }
-            if(startPoint.y==endPoint.y){
-                return ( (startPoint.x-radius<=x && endPoint.x+radius>=x) || (endPoint.x-radius<=x && startPoint.x+radius>=x))
-                && y>startPoint.y-radius && y<startPoint.y+radius ;
-            }
+        //get the slope of the line
+        var m;
+        if(this.endPoint.x == this.startPoint.x){
+            return ( (this.startPoint.y-radius<=y && this.endPoint.y+radius>=y) 
+                    || (this.endPoint.y-radius<=y && this.startPoint.y+radius>=y))
+            && x>startPoint.x-radius && x<startPoint.x+radius ;
+        }
+        if(this.startPoint.y == this.endPoint.y){
+            return ( (this.startPoint.x - radius<=x && this.endPoint.x+radius>=x) 
+                    || (this.endPoint.x-radius<=x && this.startPoint.x+radius>=x))
+                    && y>this.startPoint.y-radius && y<this.startPoint.y+radius ;
+        }
 
 
-            startX = Math.min(endPoint.x,startPoint.x);
-            startY = Math.min(endPoint.y,startPoint.y);
-            endX = Math.max(endPoint.x,startPoint.x);
-            endY = Math.max(endPoint.y,startPoint.y);
+        startX = Math.min(this.endPoint.x,this.startPoint.x);
+        startY = Math.min(this.endPoint.y,this.startPoint.y);
+        endX = Math.max(this.endPoint.x,this.startPoint.x);
+        endY = Math.max(this.endPoint.y,this.startPoint.y);
 
-            m = (endPoint.y-startPoint.y)/(endPoint.x-startPoint.x);
-            b = -1;
-            //get the intercept
-            var c = startPoint.y-m*startPoint.x;
+        m = (this.endPoint.y-this.startPoint.y)/(this.endPoint.x-this.startPoint.x);
+        b = -1;
+        //get the intercept
+        var c = this.startPoint.y-m*this.startPoint.x;
 
-            //get the radius
-            var d = (m*x+(b*y)+c)/Math.sqrt(Math.pow(m,2)+Math.pow(b,2));
-            if(d < 0){
-                d = 0 - d;
-            }
-            return (d<=radius && endX>=x && x>=startX && endY>=y && y>=startY)
-            || startPoint.near(x,y,radius) || endPoint.near(x,y,radius);
-            }
+        //get the radius
+        var d = (m*x+(b*y)+c)/Math.sqrt(Math.pow(m,2)+Math.pow(b,2));
+        if(d < 0){
+            d = 0 - d;
+        }
+        return (d<=radius && endX>=x && x>=startX && endY>=y && y>=startY)
+        || this.startPoint.near(x,y,radius) || this.endPoint.near(x,y,radius);
 
     },
 
@@ -469,14 +470,12 @@ Polyline.prototype = {
         this.points.push(point);
     },
     transform:function(matrix){
-        with(this){
-            if(style!=null){
-                style.transform(matrix);
-            }
-            for(var i=0; i<points.length; i++){
-                points[i].transform(matrix);
-            }
-            }
+        if(this.style!=null){
+            this.style.transform(matrix);
+        }
+        for(var i=0; i<points.length; i++){
+            this.points[i].transform(matrix);
+        }
     },
 	
     getPoints:function(){
@@ -493,11 +492,9 @@ Polyline.prototype = {
 
     clone:function(){
         var ret=new Polyline();
-        with(this){
-            for(var i=0; i<points.length; i++){
-                ret.addPoint(points[i].clone());
-            }
-            }
+        for(var i=0; i<this.points.length; i++){
+            ret.addPoint(this.points[i].clone());
+        }
         ret.style=this.style.clone();
         return ret;
     },
@@ -578,11 +575,9 @@ Polyline.prototype = {
 
     toString:function(){
         var result = 'polyline(';
-        with(this){
-            for(var i=0; i < points.length; i++){
-                result += points[i].toString() + ' ';
-            }
-            }
+        for(var i=0; i < this.points.length; i++){
+            result += this.points[i].toString() + ' ';
+        }
         result += ')';
         return result;
     },
@@ -648,29 +643,27 @@ Polygon.prototype = {
 
 
     paint:function(context){
-        with(context){
-            beginPath();
-            if(this.style!=null){
-                this.style.setupContext(context);
+        context.beginPath();
+        if(this.style!=null){
+            this.style.setupContext(context);
+        }
+        if(this.points.length > 1){
+            context.moveTo(this.points[0].x, this.points[0].y);
+            for(var i=1; i<this.points.length; i++){
+                context.lineTo(this.points[i].x, this.points[i].y)
             }
-            if(this.points.length > 1){
-                moveTo(this.points[0].x, this.points[0].y);
-                for(var i=1; i<this.points.length; i++){
-                    lineTo(this.points[i].x, this.points[i].y)
-                }
-            }
-            closePath();
+        }
+        context.closePath();
 
-            //fill current path
-            if(this.style.fillStyle != null && this.style.fillStyle != ""){
-                fill();
-            }
+        //fill current path
+        if(this.style.fillStyle != null && this.style.fillStyle != ""){
+            context.fill();
+        }
 
-            //stroke current path 
-            if(this.style.strokeStyle != null && this.style.strokeStyle != ""){
-                stroke();
-            }
-		}
+        //stroke current path 
+        if(this.style.strokeStyle != null && this.style.strokeStyle != ""){
+            context.stroke();
+        }
     },
 
 
@@ -691,34 +684,30 @@ Polygon.prototype = {
     },
 
     fill:function(context,color){
-        with(this){
-            context.fillStyle=color;
-            context.beginPath();
-            context.moveTo(points[0].x,points[0].y);
-            for(var i=1; i<points.length; i++){
-                context.lineTo(points[i].x,points[i].y);
-            }
-            context.lineTo(points[0].x,points[0].y);
-            context.closePath();
-            context.fill();
-            }
+        context.fillStyle=color;
+        context.beginPath();
+        context.moveTo(this.points[0].x, this.points[0].y);
+        for(var i=1; i<this.points.length; i++){
+            context.lineTo(this.points[i].x, this.points[i].y);
+        }
+        context.lineTo(this.points[0].x, this.points[0].y);
+        context.closePath();
+        context.fill();
     },
 
     near:function(x,y,radius){
-        with(this){
-            var i=0;
-            for(i=0; i< points.length-1; i++){
-                var l=new Line(points[i],points[i+1]);
-                if(l.near(x,y,radius)){
-                    return true;
-                }
-            }
-            l=new Line(points[i],points[0]);
+        var i=0;
+        for(i=0; i< this.points.length-1; i++){
+            var l = new Line(this.points[i], this.points[i+1]);
             if(l.near(x,y,radius)){
                 return true;
             }
-            return false;
-            }
+        }
+        l=new Line(this.points[i], this.points[0]);
+        if(l.near(x,y,radius)){
+            return true;
+        }
+        return false;
     },
 	
 	
@@ -726,27 +715,24 @@ Polygon.prototype = {
         if(!anotherPolygon instanceof Polygon){
             return false;
         }
-        with(this){
-            if(anotherPolygon.points.length == points.length){
-                for(var i=0; i<points.length; i++){
-                    if(!points[i].equals(anotherPolygon.points[i])){
-                        return false;
-                    }
+        if(anotherPolygon.points.length == this.points.length){
+            for(var i=0; i<this.points.length; i++){
+                if(!this.points[i].equals(anotherPolygon.points[i])){
+                    return false;
                 }
             }
-            //TODO: test for all Polygon members
-            }
+        }
+        //TODO: test for all Polygon members
         return true;
     },
 
     clone:function(){
         var ret=new Polygon();
-        with(this){
-            for(var i=0; i<points.length; i++){
-                ret.addPoint(points[i].clone());
-            }
-            }
-        ret.style=this.style.clone();
+        for(var i=0; i<this.points.length; i++){
+            ret.addPoint(this.points[i].clone());
+        }
+        ret.style = this.style.clone();
+        
         return ret;
     },
 
@@ -765,23 +751,19 @@ Polygon.prototype = {
     },
 
     transform:function(matrix){
-        with(this){
-            if(style!=null){
-                style.transform(matrix);
-            }
-            for(var i=0; i < points.length; i++){
-                points[i].transform(matrix);
-            }
-            }
+        if(this.style!=null){
+            this.style.transform(matrix);
+        }
+        for(var i=0; i < this.points.length; i++){
+            this.points[i].transform(matrix);
+        }
     },
 
     toString:function(){
         var result = 'polygon(';
-        with(this){
-            for(var i=0; i < points.length; i++){
-                result += points[i].toString() + ' ';
-            }
-            }
+        for(var i=0; i < this.points.length; i++){
+            result += this.points[i].toString() + ' ';
+        }
         result += ')';
         return result;
     },
@@ -908,20 +890,18 @@ DottedPolygon.prototype = {
 
 
     near:function(x,y,radius){
-        with(this){
-            var i=0;
-            for(i=0; i< points.length-1; i++){
-                var l=new Line(points[i],points[i+1]);
-                if(l.near(x,y,radius)){
-                    return true;
-                }
-            }
-            l=new Line(points[i],points[0]);
+        var i=0;
+        for(i=0; i< this.points.length-1; i++){
+            var l=new Line(this.points[i], this.points[i+1]);
             if(l.near(x,y,radius)){
                 return true;
             }
-            return false;
-            }
+        }
+        l = new Line(this.points[i], this.points[0]);
+        if(l.near(x,y,radius)){
+            return true;
+        }
+        return false;
     },
 	
 	
@@ -929,27 +909,23 @@ DottedPolygon.prototype = {
         if(!anotherPolygon instanceof DottedPolygon){
             return false;
         }
-        with(this){
-            if(anotherPolygon.points.length == points.length){
-                for(var i=0; i<points.length; i++){
-                    if(!points[i].equals(anotherPolygon.points[i])){
-                        return false;
-                    }
+        if(anotherPolygon.points.length == this.points.length){
+            for(var i=0; i<this.points.length; i++){
+                if(!this.points[i].equals(anotherPolygon.points[i])){
+                    return false;
                 }
             }
-            //TODO: test for all DottedPolygon's pattern
-            }
+        }
+        //TODO: test for all DottedPolygon's pattern
         return true;
     },
 
 
     clone:function(){
         var ret = new DottedPolygon();
-        with(this){
-            for(var i=0; i<points.length; i++){
-                ret.addPoint(points[i].clone());
-            }
-            }
+        for(var i=0; i<this.points.length; i++){
+            ret.addPoint(this.points[i].clone());
+        }
         ret.style=this.style.clone();
         return ret;
     },
@@ -1075,27 +1051,25 @@ QuadCurve.prototype = {
 
 
     paint:function(context){
-		context.beginPath();
+        context.beginPath();
 		
-        with(context){
-            if(this.style!=null){
-                this.style.setupContext(context);
-            }
-            with(this){
-                moveTo(startPoint.x,startPoint.y);
-                quadraticCurveTo(controlPoint.x, controlPoint.y, endPoint.x, endPoint.y);
-                //first fill
-                if(style.fillStyle!=null && this.style.fillStyle!=""){
-                    context.fill();
-                }
+        if(this.style!=null){
+            this.style.setupContext(context);
+        }
+        
+        context.moveTo(this.startPoint.x, this.startPoint.y);
+        context.quadraticCurveTo(this.controlPoint.x, this.controlPoint.y, this.endPoint.x, this.endPoint.y);
 
-                //then stroke
-                if(style.strokeStyle!=null && this.style.strokeStyle!=""){
-                    stroke();
-                }
+        //first fill
+        if(this.style.fillStyle!=null && this.style.fillStyle!=""){
+            context.fill();
+        }
 
-                }
-            }
+        //then stroke
+        if(this.style.strokeStyle!=null && this.style.strokeStyle!=""){
+            context.stroke();
+        }
+
     },
 
     /*
@@ -1103,45 +1077,44 @@ QuadCurve.prototype = {
      *@see <a href="http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic">http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic</a>
      */
     near:function(x, y, radius){
-        with(this){
-            var polls=100;
-            if(!Util.isPointInside(new Point(x,y), [startPoint,controlPoint,endPoint]) && !startPoint.near(x,y,radius) && ! endPoint.near(x,y,radius)){
-                return false;//not inside the control points, so can't be near the line
+        var polls=100;
+        if(!Util.isPointInside(new Point(x,y), [this.startPoint, this.controlPoint, this.endPoint]) 
+                && !this.startPoint.near(x,y,radius) && ! this.endPoint.near(x,y,radius)){
+            return false;//not inside the control points, so can't be near the line
+        }
+        var low=0;
+        var high=polls;
+        var i=(high-low)/2;
+        while(i >= low && i <= high && high-low>0.01){//high-low indicates>0.01 stops us from taking increasingly tiny steps
+            i=low+(high-low)/2 //we want the mid point
+
+            //don't fully understand this
+            var t = i / polls;
+            var fromEnd = Math.pow((1.0 - t), 2); //get how far from end we are and square it
+            var a = 2.0 * t * (1.0 - t);
+            var fromStart = Math.pow(t, 2); //get how far from start we are and square it
+            var newX = fromEnd * this.startPoint.x + a * this.controlPoint.x + this.fromStart * this.endPoint.x;//?
+            var newY = fromEnd * this.startPoint.y + a * this.controlPoint.y + this.fromStart * this.endPoint.y;//?
+            p = new Point(newX,newY);
+            if(p.near(x, y, radius)){
+                return true;
             }
-            var low=0;
-            var high=polls;
-            var i=(high-low)/2;
-            while(i >= low && i <= high && high-low>0.01){//high-low indicates>0.01 stops us from taking increasingly tiny steps
-                i=low+(high-low)/2 //we want the mid point
 
-                //dont fully understand this
-                var t = i / polls;
-                var fromEnd = Math.pow((1.0 - t), 2); //get how far from end we are and square it
-                var a = 2.0 * t * (1.0 - t);
-                var fromStart = Math.pow(t, 2); //get how far from start we are and square it
-                var newX = fromEnd * startPoint.x + a * controlPoint.x + fromStart * endPoint.x;//?
-                var newY = fromEnd * startPoint.y + a * controlPoint.y + fromStart * endPoint.y;//?
-                p=new Point(newX,newY);
-                if(p.near(x,y,radius)){
-                    return true;
-                }
+            //get distance between start and the point we are looking for, and the current point on line
+            pToStart=Math.sqrt(Math.pow(this.startPoint.x-p.x,2)+Math.pow(this.startPoint.y-p.y,2));
+            myToStart=Math.sqrt(Math.pow(this.startPoint.x-x,2)+Math.pow(this.startPoint.y-y,2));
 
-                //get distance between start and the point we are looking for, and the current point on line
-                pToStart=Math.sqrt(Math.pow(startPoint.x-p.x,2)+Math.pow(startPoint.y-p.y,2));
-                myToStart=Math.sqrt(Math.pow(startPoint.x-x,2)+Math.pow(startPoint.y-y,2));
-
-                //if our point is closer to start, we know that our cursor must be between start and where we are
-                if(myToStart<pToStart){
-                    high=i;
-                }
-                else if(myToStart!=pToStart){
-                    low=i;
-                }
-                else{
-                    return false;//their distance is the same but the point is not near, return false.
-                }
-                return startPoint.near(x,y,radius)|| endPoint.near(x,y,radius);
+            //if our point is closer to start, we know that our cursor must be between start and where we are
+            if(myToStart<pToStart){
+                high=i;
             }
+            else if(myToStart!=pToStart){
+                low=i;
+            }
+            else{
+                return false;//their distance is the same but the point is not near, return false.
+            }
+            return this.startPoint.near(x,y,radius)|| this.endPoint.near(x,y,radius);
             }
     },
 
@@ -1686,68 +1659,64 @@ Arc.prototype = {
          * scale - ok
          * skew - NOT ok (i do not know how to preserve points, angles...etc- maybe a Cola :)
          **/
-        with(this){
-            //transform the style
-            if(style!=null){
-                style.transform(matrix);
-            }
+        
+        //transform the style
+        if(this.style != null){
+            this.style.transform(matrix);
+        }
 
-            //transform the center of the circle
-            middle.transform(matrix);
+        //transform the center of the circle
+        this.middle.transform(matrix);
 
-            //transform each curve
-            for(var i=0; i<curves.length; i++){
-                curves[i].transform(matrix);
-            }
+        //transform each curve
+        for(var i=0; i<this.curves.length; i++){
+            this.curves[i].transform(matrix);
         }
     },
 
 
     paint:function(context){
-		context.beginPath();
+        context.beginPath();
 		
-        with(this){
-            if(style!=null){
-                style.setupContext(context);
-            }
-            context.lineWidth = style.lineWidth;
-            //context.arc(x,y,radius,(Math.PI/180)*startAngle,(Math.PI/180)*endAngle,direction);                        
-            context.moveTo(curves[0].startPoint.x,curves[0].startPoint.y);
-            for(var i=0; i<curves.length; i++){
-                context.quadraticCurveTo(curves[i].controlPoint.x,curves[i].controlPoint.y,curves[i].endPoint.x,curves[i].endPoint.y)
-            //curves[i].paint(context);
-            }
+        if(this.style!=null){
+            this.style.setupContext(context);
+        }
+        context.lineWidth = this.style.lineWidth;
+        //context.arc(x,y,radius,(Math.PI/180)*startAngle,(Math.PI/180)*endAngle,direction);                        
+        context.moveTo(this.curves[0].startPoint.x, this.curves[0].startPoint.y);
+        for(var i=0; i<this.curves.length; i++){
+            context.quadraticCurveTo(this.curves[i].controlPoint.x, this.curves[i].controlPoint.y
+                ,this.curves[i].endPoint.x, this.curves[i].endPoint.y);
+        //curves[i].paint(context);
+        }
 
-            if(styleFlag == 1){
-                context.closePath();
-            }
-            else if(styleFlag == 2){
-                context.lineTo(this.middle.x,this.middle.y);
-                context.closePath();
-            }
+        if(this.styleFlag == 1){
+            context.closePath();
+        }
+        else if(this.styleFlag == 2){
+            context.lineTo(this.middle.x, this.middle.y);
+            context.closePath();
+        }
 
-            //first fill
-            if(style.fillStyle!=null && this.style.fillStyle!=""){
-                context.fill();
-            }
+        //first fill
+        if(style.fillStyle!=null && this.style.fillStyle!=""){
+            context.fill();
+        }
 
-            //then stroke
-            if(style.strokeStyle!=null && this.style.strokeStyle!=""){
-                context.stroke();
-            }
+        //then stroke
+        if(style.strokeStyle!=null && this.style.strokeStyle!=""){
+            context.stroke();
+        }
 
-		}
     },
 
     clone:function(){
-        with(this){
-            var ret = new Arc(middle.x,middle.y,radius,startAngle,endAngle,direction,styleFlag);
-            for (var i=0; i< this.curves.length; i++){
-                ret.curves[i]=this.curves[i].clone();
-            }
-            ret.style=this.style.clone();
-            return ret;
-            }
+        var ret = new Arc(this.middle.x, this.middle.y, this.radius, this.startAngle, this.endAngle, this.direction, this.styleFlag);
+        for (var i=0; i< this.curves.length; i++){
+            ret.curves[i]=this.curves[i].clone();
+        }
+        ret.style=this.style.clone();
+        return ret;
     },
 
     equals:function(anotherArc){
@@ -1775,23 +1744,19 @@ Arc.prototype = {
     },
 
     near:function(thex,they,theradius){
-        with(this){
-            for(var i=0; i<curves.length; i++){
-                if(curves[i].near(thex,they,theradius)){
-                    return true;
-                }
+        for(var i=0; i<this.curves.length; i++){
+            if(this.curves[i].near(thex,they,theradius)){
+                return true;
             }
-            //return (distance && angle) || finishLine || startLine || new Point(x,y).near(thex,they,theradius);
-            }
+        }
+        //return (distance && angle) || finishLine || startLine || new Point(x,y).near(thex,they,theradius);
 
         return false;
     },
 
     contains: function(thex,they){
-        with(this){
-            var p = getPoints();
-            return Util.isPointInside((new Point(thex,they)), p);
-            }
+        var p = this.getPoints();
+        return Util.isPointInside((new Point(thex,they)), p);
 
     },
 
@@ -1931,44 +1896,51 @@ Ellipse.prototype = {
     },
 
     paint:function(context){
-        with(context){
-            with(this){
-                if(style!=null){
-                    style.setupContext(context);
-                }
-                beginPath();
-                moveTo(topLeftCurve.startPoint.x,topLeftCurve.startPoint.y);
-                bezierCurveTo(topLeftCurve.controlPoint1.x,topLeftCurve.controlPoint1.y,topLeftCurve.controlPoint2.x,topLeftCurve.controlPoint2.y,topLeftCurve.endPoint.x,topLeftCurve.endPoint.y);
-                bezierCurveTo(topRightCurve.controlPoint1.x,topRightCurve.controlPoint1.y,topRightCurve.controlPoint2.x,topRightCurve.controlPoint2.y,topRightCurve.endPoint.x,topRightCurve.endPoint.y);
-                bezierCurveTo(bottomRightCurve.controlPoint1.x,bottomRightCurve.controlPoint1.y,bottomRightCurve.controlPoint2.x,bottomRightCurve.controlPoint2.y,bottomRightCurve.endPoint.x,bottomRightCurve.endPoint.y);
-                bezierCurveTo(bottomLeftCurve.controlPoint1.x,bottomLeftCurve.controlPoint1.y,bottomLeftCurve.controlPoint2.x,bottomLeftCurve.controlPoint2.y,bottomLeftCurve.endPoint.x,bottomLeftCurve.endPoint.y);
-                //first fill
-                if(style.fillStyle!=null && this.style.fillStyle!=""){
-                    fill();
-                }
+        if(this.style!=null){
+            this.style.setupContext(context);
+        }
+        context.beginPath();
+        context.moveTo(this.topLeftCurve.startPoint.x, this.topLeftCurve.startPoint.y);
+        context.bezierCurveTo(this.topLeftCurve.controlPoint1.x, 
+            this.topLeftCurve.controlPoint1.y, this.topLeftCurve.controlPoint2.x, 
+            this.topLeftCurve.controlPoint2.y, this.topLeftCurve.endPoint.x, 
+            this.topLeftCurve.endPoint.y);
+        context.bezierCurveTo(this.topRightCurve.controlPoint1.x, 
+            this.topRightCurve.controlPoint1.y, this.topRightCurve.controlPoint2.x, 
+            this.topRightCurve.controlPoint2.y, this.topRightCurve.endPoint.x, 
+            this.topRightCurve.endPoint.y);
+        context.bezierCurveTo(this.bottomRightCurve.controlPoint1.x, 
+            this.bottomRightCurve.controlPoint1.y, this.bottomRightCurve.controlPoint2.x, 
+            this.bottomRightCurve.controlPoint2.y, this.bottomRightCurve.endPoint.x, 
+            this.bottomRightCurve.endPoint.y);
+        context.bezierCurveTo(this.bottomLeftCurve.controlPoint1.x, 
+            this.bottomLeftCurve.controlPoint1.y, this.bottomLeftCurve.controlPoint2.x,
+            this.bottomLeftCurve.controlPoint2.y, this.bottomLeftCurve.endPoint.x, 
+            this.bottomLeftCurve.endPoint.y);
 
-                //then stroke
-                if(style.strokeStyle!=null && this.style.strokeStyle!=""){
-                    stroke();
-                }
+        //first fill
+        if(this.style.fillStyle!=null && this.style.fillStyle!=""){
+            context.fill();
+        }
 
-			}
-		}
+        //then stroke
+        if(this.style.strokeStyle!=null && this.style.strokeStyle!=""){
+            context.stroke();
+        }
+
     },
 
     contains:function(x,y){
-        with(this){
-            var points = topLeftCurve.getPoints();
-            curves = [topRightCurve, bottomRightCurve, bottomLeftCurve];
-            for(var i=0; i<curves.length; i++){
-                curPoints = curves[i].getPoints();
+        var points = this.topLeftCurve.getPoints();
+        var curves = [this.topRightCurve, this.bottomRightCurve, this.bottomLeftCurve];
+        for(var i=0; i<curves.length; i++){
+            var curPoints = curves[i].getPoints();
 
-                for(var a=0; a<curPoints.length; a++){
-                    points.push(curPoints[a]);
-                }
+            for(var a=0; a<curPoints.length; a++){
+                points.push(curPoints[a]);
             }
-            return Util.isPointInside(new Point(x,y), points);
-            }
+        }
+        return Util.isPointInside(new Point(x,y), points);
 
         return false;
     },
@@ -2290,31 +2262,27 @@ Path.prototype = {
         this.primitives.push(primitive);
     },
 
-    contains:function(x,y){
-        with(this){
-            var points=[];
-            for(var i=0; i<primitives.length; i++){
-                if(primitives[i].contains(x,y)){
-                    return true;
-                }
-                var curPoints=primitives[i].getPoints();
-                for(var a=0; a<curPoints.length; a++){
-                    points.push(curPoints[a]);
-                }
+    contains: function(x,y){
+        var points = [];
+        for(var i=0; i<this.primitives.length; i++){
+            if(this.primitives[i].contains(x,y)){
+                return true;
             }
+            var curPoints = this.primitives[i].getPoints();
+            for(var a=0; a<curPoints.length; a++){
+                points.push(curPoints[a]);
             }
+        }
         return Util.isPointInside(new Point(x,y),points);
     },
 
     near: function(x,y,radius){
-        with(this){
-            var points=[];
-            for(var i=0; i<primitives.length; i++){
-                if(primitives[i].near(x,y,radius)){
-                    return true;
-                }
+        var points = [];
+        for(var i=0; i<this.primitives.length; i++){
+            if(this.primitives[i].near(x,y,radius)){
+                return true;
             }
-            }
+        }
         return false;
     },
 
@@ -3310,7 +3278,7 @@ NURBS.prototype = {
  *
  *@see <a href="http://en.wikipedia.org/wiki/Rotation_matrix">http://en.wikipedia.org/wiki/Rotation_matrix</a>
  */ 
-R90 = [
+var R90 = [
     [Math.cos(0.0872664626),-Math.sin(0.0872664626), 0],
     [Math.sin(0.0872664626),  Math.cos(0.0872664626), 0],
     [0,  0, 1]
@@ -3321,7 +3289,7 @@ R90 = [
  *
  *@see <a href="http://en.wikipedia.org/wiki/Rotation_matrix">http://en.wikipedia.org/wiki/Rotation_matrix</a>
  */     
-R90A = [
+var R90A = [
     [Math.cos(0.0872664626), Math.sin(0.0872664626), 0],
     [-Math.sin(0.0872664626),  Math.cos(0.0872664626), 0],
     [0,  0, 1]
@@ -3331,7 +3299,7 @@ R90A = [
  * The identity matrix
  */      
 
-IDENTITY=[[1,0,1],[0,1,0],[0,0,1]];
+var IDENTITY=[[1,0,1],[0,1,0],[0,0,1]];
 
 
 if(typeof(document) == 'undefined'){ //test only from console
