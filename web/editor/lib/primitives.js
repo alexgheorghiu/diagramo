@@ -391,7 +391,7 @@ Line.prototype = {
 
     /**we need to create a new array each time, or we will affect the actual shape*/
     getPoints:function(){
-        points = [];
+        var points = [];
         points.push(this.startPoint);
         points.push(this.endPoint);
         return points;
