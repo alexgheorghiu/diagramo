@@ -49,7 +49,7 @@ $page = 'editor';
         <link rel="stylesheet" media="screen" type="text/css" href="./assets/css/minimap.css" />
         
         <script type="text/javascript" src="./assets/javascript/json2.js"></script>
-        <script type="text/javascript" src="./assets/javascript/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="./assets/javascript/jquery-1.11.0.min.js"></script>
         <script type="text/javascript" src="./assets/javascript/ajaxfileupload.js"></script>
         
         <link type='text/css' href='./assets/simplemodal/css/diagramo.css' rel='stylesheet' media='screen' />
