@@ -3172,6 +3172,7 @@ function renderedCanvas(){
    tempCanvas.setAttribute('width', canvas.width);
    tempCanvas.setAttribute('height', canvas.height);
    reset(tempCanvas);
+   addBackground(tempCanvas);
    STACK.paint(tempCanvas.getContext('2d'), true);
    //end render
 
@@ -3451,7 +3452,7 @@ function saveAs(){
 
 //                var $diagram = {c:canvas.save(), s:STACK, m:CONNECTOR_MANAGER};
    var $diagram = {c:canvasProps, s:STACK, m:CONNECTOR_MANAGER, p:CONTAINER_MANAGER, v: DIAGRAMO.fileVersion };
-   $serializedDiagram = JSON.stringify($diagram);
+   var $serializedDiagram = JSON.stringify($diagram);
 //   $serializedDiagram = JSON.stringify($diagram,  Util.operaReplacer);
    var svgDiagram = toSVG();
 
