@@ -12,11 +12,11 @@
  */
 function Container(id, topLeft, bottomRight) {
     /**Group's id*/
-    if( isNaN(id)){
-        this.id = id;
+    if(id == null){
+        this.id = STACK.generateId();        
     }
     else{
-        this.id = STACK.generateId();
+        this.id = id;
     }
     
     /**The {@link Style} of the polygon*/
