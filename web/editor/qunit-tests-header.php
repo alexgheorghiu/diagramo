@@ -7,7 +7,7 @@
     <script type="text/javascript" src="test/QUnit/lib/qunit-result.js"></script>
     <!-- End Custom files for a result label -->
 
-    <script type="text/javascript" src="assets/javascript/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="assets/javascript/jquery-1.11.0.min.js"></script>
     <script type="text/javascript" src="assets/javascript/json2.js"></script>
     <script type="text/javascript" src="assets/javascript/colorPicker_new.js"></script>
 
