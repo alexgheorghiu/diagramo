@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--
+Explore better coloring of figures 
+@see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Applying_styles_and_colors
+@see #72 https://bitbucket.org/scriptoid/diagramo/issue/72/beautiful-colors
+-->
+<html>
+    <head>
+        <title>Color</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script type="text/javascript">
+            function pageLoaded(){
+                console.info("Page Loaded");
+                
+                var quilt = document.getElementById("quilt");
+                
+                var ctx = quilt.getContext('2d');
+                
+                paint(ctx);
+            }
+            
+            /***/
+            function paint(ctx){
+                
+                rectangle(ctx, 10,10, 100, 100);
+                
+            }
+            
+            function rectangle(ctx, x, y, width, height){
+                //paint shadows underneath
+                ctx.save();
+                //                ctx.shadowOffsetX = 2;                
+                ctx.shadowOffsetY = 2;
+                ctx.shadowBlur = 2;
+                ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
+                ctx.fillRect(x, y, width, height);
+                ctx.restore();
+                
+
+                //paint gradient
+                var lineargradient = ctx.createLinearGradient(x + width / 2, y, x + width / 2, y + height);                
+                lineargradient.addColorStop(0, '#FFFFCC');
+                lineargradient.addColorStop(0.6, '#CCFF99');
+                lineargradient.addColorStop(1, '#CCFF99');
+                                
+                ctx.fillStyle = lineargradient;
+                ctx.fillRect(x, y, width, height);
+                
+                //paint contour
+                ctx.strokeStyle = '#99CC66';
+                ctx.strokeRect(x, y, width, height);
+            }
+            
+            window.addEventListener("load", pageLoaded, false);
+        </script>
+    </head>
+    <body>
+        <div>
+            <canvas style="border: 1px solid #ccc;" id="quilt" width="600" height="400"></canvas>
+        </div>
+    </body>
+</html>
