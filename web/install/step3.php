@@ -34,6 +34,37 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
         $passed = false;
     }
     
+    //Create folder structure
+    //Create [diagrams] folder
+    if( mkdir('../editor/data/diagrams', 0777, true) ){
+        if(!copy('../editor/data/.htaccess', '../editor/data/diagrams/.htaccess')){
+            $errors[] = "Could not copy .htaccess to [diagrams] folder";
+            $passed = false;
+        }
+    }
+    else{
+        $errors[] = "Could not create [diagrams] folder";
+        $passed = false;
+    }
+    
+    //Create [import] folder
+    if( mkdir('../editor/data/import', 0777, true) ){
+        if(!copy('../editor/data/.htaccess', '../editor/data/import/.htaccess')){
+            $errors[] = "Could not copy .htaccess to [import] folder";
+            $passed = false;
+        }
+    }
+    else{
+        $errors[] = "Could not create [import] folder";
+        $passed = false;
+    }
+    
+    
+    //is_writable('../editor/data')
+    //is_writable('../editor/data/diagrams')
+    
+    //End create folder structure
+    
     
     
     

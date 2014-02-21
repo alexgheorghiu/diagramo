@@ -95,15 +95,16 @@ function loadRequirements(){
             'requested' => 'writable',
             'current' => (@is_writable('../editor/data')) ? 'writable' : 'not writable',
             'help' => 'folder_data'
-        ),
-        array(            
-            'name' => 'Directory permissions: CHMOD 0777 > <b>/editor/data/diagrams</b>',
-            'wanted' => 'mandatory',
-            'type' => 'string',
-            'requested' => 'writable',
-            'current' => (@is_writable('../editor/data/diagrams')) ? 'writable' : 'not writable',
-            'help' => 'folder_diagrams'
         )
+//        ,
+//        array(            
+//            'name' => 'Directory permissions: CHMOD 0777 > <b>/editor/data/diagrams</b>',
+//            'wanted' => 'mandatory',
+//            'type' => 'string',
+//            'requested' => 'writable',
+//            'current' => (@is_writable('../editor/data/diagrams')) ? 'writable' : 'not writable',
+//            'help' => 'folder_diagrams'
+//        )
     );
     
     return $requirements;
