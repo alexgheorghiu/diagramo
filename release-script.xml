@@ -55,12 +55,10 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
                 <exclude name="editor/common/settings.php"/>
 
                 <exclude name="editor/test/"/>
-                <exclude name="editor/data/diagrams/*.dia"/>
-                <exclude name="editor/data/diagrams/*.svg"/>
-                <exclude name="editor/data/diagrams/*.png"/>
-                <exclude name="editor/data/diagrams/*.jpg"/>
+                <exclude name="editor/data/diagrams/"/>
+                <exclude name="editor/data/import/"/>
+                                                
                 <exclude name="editor/data/diagramo.db"/>
-                
 
                 <exclude name="editor/exporter/*.png"/>
                 <exclude name="editor/exporter/*.svg"/>
