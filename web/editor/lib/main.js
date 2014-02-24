@@ -71,7 +71,7 @@ var currentCloud = [];
 
 // disables rendering of currentCloud
 // TODO: remove it after further details will be decided
-var visualMagnet = false;
+var visualMagnet = true;
 
 /**The width of grid cell. 
  *Must be an odd number.

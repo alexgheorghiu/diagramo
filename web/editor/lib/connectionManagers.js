@@ -29,8 +29,8 @@ function ConnectorManager(){
 }
 
 // defines current cloud's paint details
-ConnectorManager.CLOUD_RADIUS = 15;
-ConnectorManager.CLOUD_LINEWIDTH = 4;
+ConnectorManager.CLOUD_RADIUS = 12;
+ConnectorManager.CLOUD_LINEWIDTH = 3;
 ConnectorManager.CLOUD_STROKE_STYLE = "rgba(255, 153, 0, 0.8)"; //orange
 
 /**Creates a {ConnectorManager} out of JSON parsed object
