@@ -17,7 +17,11 @@ var DIAGRAMO = {
             
     /**Keeps temporary connector solution.
      * TODO: move to CONNECTION_MANAGE?!*/
-    debugSolutions : []
+    debugSolutions : [],
+
+    /** enables/disables rendering of currentCloud
+    * TODO: in further can be used for option like "Show Cloud" or "Highlight about to connect points" */
+    visualMagnet : true
 };
 
 
@@ -68,10 +72,6 @@ var CONTAINER_MANAGER = new ContainerFigureManager();
 /**An currentCloud - {Array} of 2 {ConnectionPoint} ids.
  * Cloud highlights 2 {ConnectionPoint}s whose are able to connect. */
 var currentCloud = [];
-
-// disables rendering of currentCloud
-// TODO: remove it after further details will be decided
-var visualMagnet = true;
 
 /**The width of grid cell. 
  *Must be an odd number.
@@ -1460,7 +1460,6 @@ function onMouseDown(ev){
             var start = cps[0];
             var end = cps[1];
             var figureConnectionPointId;
-            var figureConnectionPoint;
 
             //did we click any of the connection points?
             if(start.point.near(x, y, 3)){
@@ -1476,7 +1475,6 @@ function onMouseDown(ev){
                 // check if current cloud for connection point
                 figureConnectionPointId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, end);
                 if (figureConnectionPointId !== -1) {
-                    figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(figureConnectionPointId);
                     currentCloud = [selectedConnectionPointId, figureConnectionPointId];
                 }
             }
@@ -1493,7 +1491,6 @@ function onMouseDown(ev){
                 // check if current cloud for connection point
                 figureConnectionPointId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, start);
                 if (figureConnectionPointId !== -1) {
-                    figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(figureConnectionPointId);
                     currentCloud = [selectedConnectionPointId, figureConnectionPointId];
                 }
             }
@@ -2673,13 +2670,13 @@ function connectorPickSecond(x, y, ev){
     //recreate new glues and currentCloud if available
     var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
     if(fCpId != -1){ //we are over a figure's cp
+        /*TODO: why not to use fCpId directly?*/
         var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);        
         var g = CONNECTOR_MANAGER.glueCreate(fCp.id, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id);
     } else {
         fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
         if(fCpId !== -1){
-            fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
-            currentCloud = [fCp.id, secConPoint.id];
+            currentCloud = [fCpId, secConPoint.id];
         }
     }
     
@@ -2780,13 +2777,13 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         //recreate new glues and currentCloud if available
         var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
         if(fCpId != -1){ //we are over a figure's cp
+            /*TODO: why not to use fCpId directly?*/
             var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);        
             var g = CONNECTOR_MANAGER.glueCreate(fCp.id, firstConPoint.id);
         } else {
             fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, secondConPoint);
             if(fCpId !== -1){
-                fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
-                currentCloud = [fCp.id, firstConPoint.id];
+                currentCloud = [fCpId, firstConPoint.id];
             }
         }
     }     
@@ -2834,13 +2831,13 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         //recreate new glues and currentCloud if available
         var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
         if(fCpId != -1){ //we are over a figure's cp
-            var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);        
+            /*TODO: why not to use fCpId directly?*/
+            var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
             var g = CONNECTOR_MANAGER.glueCreate(fCp.id, secondConPoint.id);
         } else {
             fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
             if(fCpId !== -1){
-                fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
-                currentCloud = [fCp.id, secondConPoint.id];
+                currentCloud = [fCpId, secondConPoint.id];
             }
         }
     } else{

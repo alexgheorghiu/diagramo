@@ -1359,7 +1359,7 @@ ConnectorManager.prototype = {
      *TODO: maybe use drawArc or something less computer intensive and with native support
      **/
     connectionCloudPaint: function(context) {
-        if (visualMagnet) {
+        if (DIAGRAMO.visualMagnet) {
             var conPoint1;
             var conPoint2;
             var centerX;
