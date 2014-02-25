@@ -3133,6 +3133,7 @@ NURBS.prototype = {
          */
         var k = [0,0,0];                
 
+        var j;
         for(j=0;j<=n-3;j++){
             k.push(j);
         }
