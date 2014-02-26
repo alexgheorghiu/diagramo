@@ -70,16 +70,16 @@ function loadRequirements(){
             'type' => 'string',
             'requested' => 'installed',
             'current' => (is_numeric(array_search('sqlite3', $extensions))) ? 'installed' : 'not installed',
-            'help' => 'extension_mysql'
+            'help' => 'extension_sqlite'
         ),
-        array(
-            'name' => 'PHP Extension: PCRE',
-            'wanted' => 'mandatory',
-            'type' => 'string',
-            'requested' => 'installed',
-            'current' => (is_numeric(array_search('pcre', $extensions))) ? 'installed' : 'not installed',
-            'help' => 'extension_pcre'
-        ),
+//        array(
+//            'name' => 'PHP Extension: PCRE',
+//            'wanted' => 'mandatory',
+//            'type' => 'string',
+//            'requested' => 'installed',
+//            'current' => (is_numeric(array_search('pcre', $extensions))) ? 'installed' : 'not installed',
+//            'help' => 'extension_pcre'
+//        ),
         array(
             'name' => 'Internet connection',
             'wanted' => 'mandatory',
@@ -89,7 +89,7 @@ function loadRequirements(){
             'help' => 'internet_connection'
         ),
         array(
-            'name' => 'Directory permissions: CHMOD 0777 > <b>/editor/data</b>',
+            'name' => 'Directory permissions: <b>/editor/data</b> is writable',
             'wanted' => 'mandatory',
             'type' => 'string',
             'requested' => 'writable',
