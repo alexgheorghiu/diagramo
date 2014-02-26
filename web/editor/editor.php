@@ -12,19 +12,16 @@ $delegate = new Delegate();
 
 
 #print_r($_SESSION['userId']);
+$loggedUser = null;
+if(isset($_SESSION['userId']) && is_numeric($_SESSION['userId'])){
+    $loggedUser = $delegate->userGetById($_SESSION['userId']);
+}
 
 //start diagram guardian
 if(isset($_REQUEST['diagramId']) && is_numeric($_REQUEST['diagramId'])){
     if( !isset($_SESSION['userId']) ){
         print "Not allocated to this diagram";
         exit();
-    }
-    else{
-        $loggedUser = $delegate->userGetById($_SESSION['userId']);
-        if(!is_object($loggedUser)){
-            print "Not allocated to this diagram";
-            exit();
-        }    
     }
 }
 //end diagram guardian
