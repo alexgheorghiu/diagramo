@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comparison demo</title>
+    <script>
+        /*** FUNCTIONS DEFINITION ***/
+        function drawEllipseByBezierCurves(ctx, x, y, radiusX, radiusY, rotationAngle) {
+            var width_two_thirds = radiusX * 4 / 3;
+
+            var dx1 = Math.sin(rotationAngle) * radiusY;
+            var dy1 = Math.cos(rotationAngle) * radiusY;
+            var dx2 = Math.cos(rotationAngle) * width_two_thirds;
+            var dy2 = Math.sin(rotationAngle) * width_two_thirds;
+
+            var topCenterX = x - dx1;
+            var topCenterY = y + dy1;
+            var topRightX = topCenterX + dx2;
+            var topRightY = topCenterY + dy2;
+            var topLeftX = topCenterX - dx2;
+            var topLeftY = topCenterY - dy2;
+
+            var bottomCenterX = x + dx1;
+            var bottomCenterY = y - dy1;
+            var bottomRightX = bottomCenterX + dx2;
+            var bottomRightY = bottomCenterY + dy2;
+            var bottomLeftX = bottomCenterX - dx2;
+            var bottomLeftY = bottomCenterY - dy2;
+
+            ctx.beginPath();
+            ctx.moveTo(bottomCenterX, bottomCenterY);
+            ctx.bezierCurveTo(bottomRightX, bottomRightY, topRightX, topRightY, topCenterX, topCenterY);
+            ctx.bezierCurveTo(topLeftX, topLeftY, bottomLeftX, bottomLeftY, bottomCenterX, bottomCenterY);
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        function drawEllipseByNative(ctx, x, y, radiusX, radiusY, rotationAngle) {
+            if (ctx.ellipse) {
+                ctx.beginPath();
+                ctx.ellipse(x, y, radiusX, radiusY, rotationAngle, 0, 2 * Math.PI, false);
+                ctx.closePath();
+                ctx.stroke();
+            }
+        }
+
+
+        /*** EXECUTION CODE ***/
+        window.onload = function () {
+            var canvas = document.getElementsByTagName('canvas')[0];
+            var canvasWidth = canvas.width;
+            var canvasHeight = canvas.height;
+            var context = canvas.getContext('2d');
+            var radiusX = 50;
+            var radiusY = 75;
+            var rotationAngle = 0;
+
+
+            setInterval(function(){
+                context.clearRect(0, 0, canvasWidth, canvasHeight);
+                drawEllipseByBezierCurves(context, 100, 100, radiusX, radiusY, rotationAngle);
+                drawEllipseByNative(context, 270, 100, radiusX, radiusY, rotationAngle);
+
+                rotationAngle += Math.PI / 100;
+            }, 20);
+        }
+    </script>
+    <style>
+        p {
+            margin: 3px 0;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .header-label {
+            width: 350px;
+        }
+
+        .bezier-label {
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <p class="header-label">Drawn with</p>
+    <div>
+        <p class="bezier-label">Bezier Curves</p>
+        <p>Native ellipse() function</p>
+    </div>
+    <canvas width="375" height="300" />
+</body>
+</html>
