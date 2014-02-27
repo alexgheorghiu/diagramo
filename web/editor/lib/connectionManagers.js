@@ -1381,7 +1381,9 @@ ConnectorManager.prototype = {
                     context.ellipse(centerX, centerY, radiusX, radiusY, rotationAngle, 0, 2 * Math.PI, false);
                 } else { // TODO: when ellipse will be implemented in all browsers - remove it
                     /*We will construct an ellipse by 2 Bezier curves
-                    * Algorithm described on https://bitbucket.org/scriptoid/diagramo/issue/3/highlight-about-to-connect-connection#comment-8643442*/
+                    * Algorithm described in /web/editor/test/issues/3/Demo.html
+                    * and on a Bitbucket (if it still alive :)) https://bitbucket.org/scriptoid/diagramo/issue/3/highlight-about-to-connect-connection#comment-8643442
+                    * */
                     var width_two_thirds = radiusX * 4 / 3;
 
                     var dx1 = Math.sin(rotationAngle) * radiusY;

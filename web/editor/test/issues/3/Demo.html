@@ -65,27 +65,73 @@
         }
     </script>
     <style>
+        body {
+            color: #5E5E5E;
+        }
         p {
-            margin: 3px 0;
+            margin: 5px 0 3px 0;
             display: inline-block;
             text-align: center;
         }
-
+        .formula-separator {
+            margin-top: 15px;
+        }
         .header-label {
             width: 350px;
         }
-
         .bezier-label {
             width: 200px;
+        }
+        img {
+            display: block;
+        }
+        ol {
+            margin: 2px 0;
         }
     </style>
 </head>
 <body>
+    <!--DEMO PART-->
     <p class="header-label">Drawn with</p>
     <div>
         <p class="bezier-label">Bezier Curves</p>
         <p>Native ellipse() function</p>
     </div>
-    <canvas width="375" height="300" />
+    <canvas width="375" height="200"></canvas>
+
+    <!--DESCRIPTION PART-->
+    <h3>Algorithm description</h3>
+    <p>Let's watch initial oval with rotation angle = 0: </p>
+    <img width="500" src="./img/Initial.png">
+    <p>You can see here:</p>
+    <ul>
+        <li>Rx and Ry - horizontal and vertical radiuses of oval.</li>
+        <li>h - half of distance between points P1 and P2. Equal to Ry.</li>
+        <li>w - half of distance between points P1 and P5, equal to distance between P1 and P6. Equal to Rx * 4/3. Not equal to Rx because of Bezier curve behaviour.</li>
+        <li>Pc - center oval point.</li>
+        <li>P1-P6 - around oval point for Bezier curve formulas.</li>
+    </ul>
+    <p>Looks easy to calculate P1-P6 coordinates in this situation. Problems come with rotation angle:</p>
+    <img width="500" src="./img/Oval%20rotated.png">
+    <p>Here we come with our additional calculations:</p>
+    <img width="500" src="./img/Oval%20rotated%20with%20dx%20and%20dy.png">
+    <p>We can get rotation angle (&alpha;) using <a href="">wikipedia description</a> like that:</p>
+    <img src="./img/Rotation%20angle%20formula.PNG">
+    <p class="formula-separator">Then we can easy find dx1-2 and dy1-2:</p>
+    <img src="./img/dx%20and%20dy%201-2%20formulas.PNG">
+    <p class="formula-separator">Final step - find points coordinates. Easy to see that we can get P3 from Pc:</p>
+    <img src="./img/P3%20coordinats%20formula.PNG">
+    <p class="formula-separator">Then - P2 from P3:</p>
+    <img src="./img/P2%20coordinats%20formula.PNG">
+    <p class="formula-separator">And P4 from P3:</p>
+    <img src="./img/P4%20coordinats%20formula.PNG">
+    <p class="formula-separator">The same we will have for bottom part:</p>
+    <img src="./img/P1,%20P5,%20P6%20coordinats%20formulas.PNG">
+    <p class="formula-separator">Oval consists of 2 cubic curves: </p>
+    <ol>
+        <li>first one has P1 start point, P2 control point and P3 as end point.</li>
+        <li>second one has P4 start point, P5 control point and P6 as end point.</li>
+    </ol>
+    <p>That's all.</p>
 </body>
 </html>
