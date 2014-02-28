@@ -1391,23 +1391,23 @@ ConnectorManager.prototype = {
                     var dx2 = Math.cos(rotationAngle) * width_two_thirds;
                     var dy2 = Math.sin(rotationAngle) * width_two_thirds;
 
-                    var topCenterX = centerX - dx1;
-                    var topCenterY = centerY + dy1;
-                    var topRightX = topCenterX + dx2;
-                    var topRightY = topCenterY + dy2;
-                    var topLeftX = topCenterX - dx2;
-                    var topLeftY = topCenterY - dy2;
+                    var P3x = centerX - dx1;
+                    var P3y = centerY + dy1;
+                    var P2x = P3x + dx2;
+                    var P2y = P3y + dy2;
+                    var P4x = P3x - dx2;
+                    var P4y = P3y - dy2;
 
-                    var bottomCenterX = centerX + dx1;
-                    var bottomCenterY = centerY - dy1;
-                    var bottomRightX = bottomCenterX + dx2;
-                    var bottomRightY = bottomCenterY + dy2;
-                    var bottomLeftX = bottomCenterX - dx2;
-                    var bottomLeftY = bottomCenterY - dy2;
+                    var P6x = centerX + dx1;
+                    var P6y = centerY - dy1;
+                    var P1x = P6x + dx2;
+                    var P1y = P6y + dy2;
+                    var P5x = P6x - dx2;
+                    var P5y = P6y - dy2;
 
-                    context.moveTo(bottomCenterX, bottomCenterY);
-                    context.bezierCurveTo(bottomRightX, bottomRightY, topRightX, topRightY, topCenterX, topCenterY);
-                    context.bezierCurveTo(topLeftX, topLeftY, bottomLeftX, bottomLeftY, bottomCenterX, bottomCenterY);
+                    context.moveTo(P6x, P6y);
+                    context.bezierCurveTo(P1x, P1y, P2x, P2y, P3x, P3y);
+                    context.bezierCurveTo(P4x, P4y, P5x, P5y, P6x, P6y);
                  }
 
                 context.lineWidth = ConnectorManager.CLOUD_LINEWIDTH;
