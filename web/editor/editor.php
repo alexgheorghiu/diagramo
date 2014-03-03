@@ -222,7 +222,7 @@ $page = 'editor';
 
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
-            <a href="javascript:createFigure(figure_Text);"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
+            <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
             <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="/editor/assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
