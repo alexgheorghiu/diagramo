@@ -29,6 +29,7 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
 //$svgLink = $WEBADDRESS . '/editor/raster.php?type=svg&diagramId=' . $diagram->id;
 $pngLink = $WEBADDRESS . '/editor/png.php?type=png&diagramId=' . $diagram->id;
 //$jpgLink = $WEBADDRESS . '/editor/raster.php?type=jpg&diagramId=' . $diagram->id;
+$dmoLink = $WEBADDRESS . '/editor/dmo.php?diagramId=' . $diagram->id;
 
 $page = 'export';
 
@@ -87,7 +88,7 @@ if(strpos($currentHost, ':')){
                 
                 <?if(false && !$l->checkLicense() ){ ?>    
                     <div>
-                        This feature (export as PNG) is disable in free version. 
+                        This feature (export as PNG and as DMO) is disable in free version.
                         <p/>
                         Please <a href="./license.php"><img style="vertical-align: middle;" src="assets/images/upgrade-button.png" /></a> to be enable these feature.
                     </div>            
@@ -105,8 +106,13 @@ if(strpos($currentHost, ':')){
                     -->
 
                     <h3>As PNG</h3>
-                    <input type="text" value="<?=$pngLink?>" style="width: 400px;"/><br/>
-                    <a href="<?=$pngLink?>" target="_blank"><?=$pngLink?></a>
+                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?=$pngLink?>" style="width: 348px;" readonly="readonly"/><br/>
+                    <a href="<?=$pngLink?>" target="_blank">Download PNG</a>
+                    <p/>
+
+                    <h3>As DMO</h3>
+                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?=$dmoLink?>" style="width: 289px;" readonly="readonly"/><br/>
+                    <a href="<?=$dmoLink?>" target="_blank">Download DMO</a>
                     <p/>
 
                     <!--
