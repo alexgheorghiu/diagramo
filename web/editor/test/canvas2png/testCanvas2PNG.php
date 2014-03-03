@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title></title>
-        <script type="text/javascript" src="../../assets/javascript/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="../../assets/javascript/jquery-1.11.0.min.js"></script>
         <script type="text/javascript">
             var canvas; 
             var ctx;
@@ -16,8 +16,8 @@
                 ctx = canvas.getContext('2d');
                 
 				var img = new Image();
-//				img.src = './svg.php?file=arcs.svg';
-				img.src = './svg.php?file=duck.jpg';
+				img.src = './svg.php?file=arcs.svg';
+//				img.src = './svg.php?file=duck.jpg';
 				//img.src = './duck.jpg';
 				img.onload = function (){
 					ctx.drawImage(img, 0, 0);
@@ -30,7 +30,7 @@
                 
                 ctx.moveTo(10,10);
                 ctx.lineTo(200, 200);
-                ctx.stroke();   
+                ctx.stroke();
                 
                 canvas.addEventListener('click', point, false);
             }
