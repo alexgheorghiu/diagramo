@@ -106,12 +106,12 @@ if(strpos($currentHost, ':')){
                     -->
 
                     <h3>As PNG</h3>
-                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?=$pngLink?>" style="width: 400px;" readonly="readonly"/><br/>
+                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?=$pngLink?>" style="width: 348px;" readonly="readonly"/><br/>
                     <a href="<?=$pngLink?>" target="_blank">Download PNG</a>
                     <p/>
 
                     <h3>As DMO</h3>
-                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?=$dmoLink?>" style="width: 400px;" readonly="readonly"/><br/>
+                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?=$dmoLink?>" style="width: 289px;" readonly="readonly"/><br/>
                     <a href="<?=$dmoLink?>" target="_blank">Download DMO</a>
                     <p/>
 
