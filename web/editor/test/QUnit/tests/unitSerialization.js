@@ -185,7 +185,7 @@ test("test Connector", function () {
 });
 
 test("test Glue", function () {
-    var glue = new Glue(34, 178);
+    var glue = new Glue(34, 178, false);
     glue.type1 = 'figure';
     glue.type2 = 'figure';
 
@@ -240,7 +240,7 @@ test("test ConnectionManager", function () {
     var cp1 = conMan.connectionPointCreate(23, new Point(20,34), 11, ConnectionPoint.TYPE_FIGURE);
     var cp2 = conMan.connectionPointCreate(cId1, new Point(20,34), 12, ConnectionPoint.TYPE_CONNECTOR);
 
-    var g1 = conMan.glueCreate(cp1.id, cp2.id);
+    var g1 = conMan.glueCreate(cp1.id, cp2.id, false);
 
 
     var ser = JSON.stringify(conMan);

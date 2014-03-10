@@ -291,7 +291,7 @@ ConnectorManager.prototype = {
 
         //are these connectionPoints already connected, if not connect them now?
         if(!this.connectionPointIsConnected(nonFigurePoint.id,figurePoint.id)){
-            this.glueCreate(nonFigurePoint.id,figurePoint.id);
+            this.glueCreate(nonFigurePoint.id,figurePoint.id, false);
         }
         
         //if we are now connected at two places, make the line jagged.
@@ -1285,8 +1285,8 @@ ConnectorManager.prototype = {
      *@return {Glue} - the newly created Glue
      *@author Alex Gheorghiu <alex@scriptoid.com>
      **/
-    glueCreate:function(firstId, secondId){
-        var glue = new Glue(firstId, secondId);
+    glueCreate:function(firstId, secondId, automatic){
+        var glue = new Glue(firstId, secondId, automatic);
 
         this.glues.push(glue);
 

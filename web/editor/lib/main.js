@@ -2566,7 +2566,7 @@ function connectorPickFirst(x, y, ev){
         con.turningPoints[0].x = fCp.point.x;
         con.turningPoints[0].y = fCp.point.y;
 
-        var g = CONNECTOR_MANAGER.glueCreate(fCp.id, conCps[0].id);
+        var g = CONNECTOR_MANAGER.glueCreate(fCp.id, conCps[0].id, false);
         Log.info("First glue created : " + g);
         //alert('First glue ' + g);
     }
@@ -2672,7 +2672,7 @@ function connectorPickSecond(x, y, ev){
     if(fCpId != -1){ //we are over a figure's cp
         /*TODO: why not to use fCpId directly?*/
         var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);        
-        var g = CONNECTOR_MANAGER.glueCreate(fCp.id, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id);
+        var g = CONNECTOR_MANAGER.glueCreate(fCp.id, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, false);
     } else {
         fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
         if(fCpId !== -1){
@@ -2779,7 +2779,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         if(fCpId != -1){ //we are over a figure's cp
             /*TODO: why not to use fCpId directly?*/
             var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);        
-            var g = CONNECTOR_MANAGER.glueCreate(fCp.id, firstConPoint.id);
+            var g = CONNECTOR_MANAGER.glueCreate(fCp.id, firstConPoint.id, false);
         } else {
             fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, secondConPoint);
             if(fCpId !== -1){
@@ -2833,7 +2833,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         if(fCpId != -1){ //we are over a figure's cp
             /*TODO: why not to use fCpId directly?*/
             var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
-            var g = CONNECTOR_MANAGER.glueCreate(fCp.id, secondConPoint.id);
+            var g = CONNECTOR_MANAGER.glueCreate(fCp.id, secondConPoint.id, false);
         } else {
             fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
             if(fCpId !== -1){
