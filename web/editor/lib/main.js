@@ -2553,10 +2553,12 @@ function connectorPickFirst(x, y, ev){
     //1.get CP of the connector
     var conCps = CONNECTOR_MANAGER.connectionPointGetAllByParent(conId);
 
+    //get figure id if over it
+    var fOverId = STACK.figureGetByXY(x,y);
     //see if we can snap to a figure
-    var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
-    if(fCpId != -1){
-        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
+    var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
+    if(fCpOverId != -1){
+        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
 
         //update connector' cp
         conCps[0].point.x = fCp.point.x;
@@ -2569,6 +2571,17 @@ function connectorPickFirst(x, y, ev){
         var g = CONNECTOR_MANAGER.glueCreate(fCp.id, conCps[0].id, false);
         Log.info("First glue created : " + g);
         //alert('First glue ' + g);
+    } else if (fOverId != -1) {
+        //update connector' cp
+        conCps[0].point.x = x;
+        conCps[0].point.y = y;
+
+        //update connector's turning point
+        con.turningPoints[0].x = x;
+        con.turningPoints[0].y = y;
+
+        var g = CONNECTOR_MANAGER.glueCreate(fOverId, conCps[0].id, true);
+        Log.info("First glue created : " + g);
     }
     state = STATE_CONNECTOR_PICK_SECOND;
     Log.groupEnd();
@@ -2586,7 +2599,12 @@ function connectorPickSecond(x, y, ev){
     //current connector
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId); //it should be the last one
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
-    
+
+    // get figure's connection point if over it
+    var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
+    // get figure id if over it
+    var fOverId = STACK.figureGetByXY(x,y);
+
     //TODO: remove 
     //play with algorithm
     {
@@ -2603,19 +2621,24 @@ function connectorPickSecond(x, y, ev){
         //end point
         var rEndPoint = new Point(x, y);
         var rEndFigure = null;
-        
-        var r_fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP at (x,y)
-        if(r_fCpId != -1){            
-            var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(r_fCpId);
-            Log.info("End Figure's ConnectionPoint present id = " + r_fCpId);
+
+        if(fCpOverId != -1){
+            var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
+            Log.info("End Figure's ConnectionPoint present id = " + fCpOverId);
             
             //As we found the connection point by a vicinity (so not exactly x,y match) we will adjust the end point too
             rEndPoint = r_figureConnectionPoint.point.clone();
             
             rEndFigure = STACK.figureGetById(r_figureConnectionPoint.parentId);
             Log.info(":) WE HAVE AN END FIGURE id = " + rEndFigure.id);
-        }
-        else{
+        } else if (fOverId != -1) {  //we are over figure
+            Log.info("End Figure connected as automatic");
+
+            rEndPoint = new Point(x,y);
+
+            rEndFigure = STACK.figureGetById(fOverId);
+            Log.info(":) WE HAVE AN END FIGURE id = " + rEndFigure.id);
+        } else{
             Log.info(":( WE DO NOT HAVE AN END FIGURE " );
         }
         
@@ -2629,13 +2652,11 @@ function connectorPickSecond(x, y, ev){
 
     //COLOR MANAGEMENT FOR {ConnectionPoint} 
     //Find any {ConnectionPoint} from a figure at (x,y). Change FCP (figure connection points) color
-    var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
-
-    if(fCpId != -1){
-        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
+    if(fCpOverId != -1){
+        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
         fCp.color = ConnectionPoint.OVER_COLOR;
         cps[1].color = ConnectionPoint.OVER_COLOR;
-        selectedConnectionPointId = fCpId;
+        selectedConnectionPointId = fCpOverId;
     }
     else{//change back old connection point to normal color
         if(selectedConnectionPointId != -1){
@@ -2666,17 +2687,16 @@ function connectorPickSecond(x, y, ev){
     //GLUES MANAGEMENT
     //remove all previous glues to {Connector}'s second {ConnectionPoint}
     CONNECTOR_MANAGER.glueRemoveAllBySecondId(secConPoint.id);
-    
+
     //recreate new glues and currentCloud if available
-    var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
-    if(fCpId != -1){ //we are over a figure's cp
-        /*TODO: why not to use fCpId directly?*/
-        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);        
-        var g = CONNECTOR_MANAGER.glueCreate(fCp.id, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, false);
+    if(fCpOverId != -1){ //we are over a figure's cp
+        CONNECTOR_MANAGER.glueCreate(fCpOverId, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, false);
+    } else if(fOverId != -1){ //we are over figure
+        CONNECTOR_MANAGER.glueCreate(fOverId, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, true);
     } else {
-        fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
-        if(fCpId !== -1){
-            currentCloud = [fCpId, secConPoint.id];
+        fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
+        if(fCpOverId !== -1){
+            currentCloud = [fCpOverId, secConPoint.id];
         }
     }
     
