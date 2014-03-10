@@ -942,7 +942,7 @@ ConnectorManager.prototype = {
      * It will pick the first one that matches the criteria
      *@param {Number} x - the x coordinates of the point
      *@param {Number} y - the y coordinates of the point
-     *@param {Boolean} type - the type of connector to select. Can be 'connector'(ConnectionPoint.TYPE_CONNECTOR)
+     *@param {String} type - the type of connector to select. Can be 'connector'(ConnectionPoint.TYPE_CONNECTOR)
      *  or 'figure' (ConnectionPoint.TYPE_FIGURE)
      *@author Alex Gheorghiu <alex@scriptoid.com>
      */
@@ -964,7 +964,7 @@ ConnectorManager.prototype = {
      *@param {Number} x - the x coordinates of the point
      *@param {Number} y - the y coordinates of the point
      *@param {Number} radius - max distance from (x,y) point
-     *@param {Boolean} type - the type of connector to select. Can be 'connector'(ConnectionPoint.TYPE_CONNECTOR)
+     *@param {String} type - the type of connector to select. Can be 'connector'(ConnectionPoint.TYPE_CONNECTOR)
      *  or 'figure' (ConnectionPoint.TYPE_FIGURE)
      *@param {ConnectionPoint} ignoreConPoint - the ConnectionPoint to ignore in search
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
