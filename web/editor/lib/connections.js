@@ -1422,6 +1422,9 @@ ConnectionPoint.prototype = {
  *@this {Glue}
  *@param {Number} cp1Id - the id of the first {ConnectionPoint} (usually from a {Figure})
  *@param {Number} cp2Id - the id of the second {ConnectionPoint} (usualy from a {Connector})
+ *@param {Boolean} automatic - type of connection connector to a figure:
+ * if true - {Connector} connects a {Figure} itself
+ * else - {Connector} connects specific {ConnectionPoint} of {Figure}
  **/
 function Glue(cp1Id,cp2Id,automatic){
     /**First shape's id (usually from a {Figure})*/
