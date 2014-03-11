@@ -1268,8 +1268,8 @@ ConnectorManager.prototype = {
      *@author Alex Gheorghiu <alex@scriptoid.com>
      */
     glueGetByFirstConnectionPointId:function(pointId){
-        var collectedGlues = [],
-            currentGlue;
+        var collectedGlues = [];
+        var currentGlue;
         for(var i=0; i<this.glues.length; i++){
             currentGlue = this.glues[i];
             if(currentGlue.id1 == pointId && !currentGlue.automatic){
@@ -1301,11 +1301,11 @@ ConnectorManager.prototype = {
      * means the first Id equals with a certain id value
      *@param {Number} figureId - {Figure}'s id
      *@return {Array}{Glue}s
-     *@author Alex Gheorghiu <alex@scriptoid.com>
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      */
     glueGetByFigureId:function(figureId){
-        var collectedGlues = [],
-            currentGlue;
+        var collectedGlues = [];
+        var currentGlue;
         for(var i=0; i<this.glues.length; i++){
             currentGlue = this.glues[i];
             if(currentGlue.id1 == figureId && currentGlue.automatic){
