@@ -1186,10 +1186,12 @@ ConnectorManager.prototype = {
 
             //get all glues for current connection point
             var glues = this.glueGetByFirstConnectionPointId(fCps[i].id);
-            //Log.info("\tConnectionManager: connectionPointTransform()" + fCps[i].id + " glues = " + glues.length);
-            for(var j=0; j<glues.length; j++){
+            var gluesLength = glues.length;
+            //Log.info("\tConnectionManager: connectionPointTransform()" + fCps[i].id + " glues = " + gluesLength);
+            for(var j = 0; j < gluesLength; j++){
                 //get the ConnectionPoint from other side of the glue (from the connector)
-                var conCp = this.connectionPointGetById( glues[j].id2);
+                var conCpId = glues[j].id2;
+                var conCp = this.connectionPointGetById(glues[j].id2);
                 //Log.info("\t\tConnectionManager: connectionPointTransform() - connector's point " + conCp);
                 conCp.transform(matrix);
 
@@ -1198,11 +1200,28 @@ ConnectorManager.prototype = {
 
                 //adjust attached Connector through the ConnectionPoint
 //                con.adjust(matrix, conCp.point.clone());
-                this.connectorAdjustByConnectionPoint(glues[j].id2 /*, x, y*/)
-            //Log.info("ConnectionManager: connectionPointTransform()...");
+                this.connectorAdjustByConnectionPoint(glues[j].id2 /*, x, y*/);
             }
+
+
         }
-    //alert("look ma!");
+
+        //get all shape's automatic glues
+        var automaticGlues = this.glueGetByFigureId(fId);
+        var automaticGluesLength = automaticGlues.length;
+        //transform all {ConnectionPoint}s and {Connector}s in automatic connection
+        for(j = 0; j < automaticGluesLength; j++){
+            //get the ConnectionPoint from other side of the glue (from the connector)
+            var conCpId = automaticGlues[j].id2;
+            var conCp = this.connectionPointGetById(conCpId);
+            //Log.info("\t\tConnectionManager: connectionPointTransform() - connector's point " + conCp);
+            conCp.transform(matrix);
+
+            //adjust attached Connector through the ConnectionPoint
+            this.connectorAdjustByConnectionPoint(conCpId);
+        }
+
+        //Log.info("ConnectionManager: connectionPointTransform()...");
     },
 
 
@@ -1244,22 +1263,24 @@ ConnectorManager.prototype = {
     /****************************************************************/
 
     /** Returns all {Glue}s that have the first Id equals with a certain id value
-     *@param {Number} pointId - {Figure}'s id
+     *@param {Number} pointId - {Figure}'s {ConnectionPoint} id
      *@return {Array}{Glue}s
      *@author Alex Gheorghiu <alex@scriptoid.com>
      */
     glueGetByFirstConnectionPointId:function(pointId){
-        var collectedGlues = [];
+        var collectedGlues = [],
+            currentGlue;
         for(var i=0; i<this.glues.length; i++){
-            if(this.glues[i].id1 == pointId){
-                collectedGlues.push(this.glues[i]);
+            currentGlue = this.glues[i];
+            if(currentGlue.id1 == pointId && !currentGlue.automatic){
+                collectedGlues.push(currentGlue);
             }
         }
         return collectedGlues;
     },
 
     /** Returns all {Glue}s that have the second Id equals with a certain id value
-     *@param {Number} pointId - {ConnectionPoint}'s id
+     *@param {Number} pointId - {Connector}'s {ConnectionPoint} id
      *@return {Array}{Glue}s
      *@author Alex Gheorghiu <alex@scriptoid.com>
      *TODO: as second id is usually connector AND a Connector can not be connected to more than one Figure
@@ -1270,6 +1291,25 @@ ConnectorManager.prototype = {
         for(var i=0; i<this.glues.length; i++){
             if(this.glues[i].id2 == pointId){
                 collectedGlues.push(this.glues[i]);
+            }
+        }
+        return collectedGlues;
+    },
+
+
+    /** Returns all {Glue}s that have automatic connection to target figureId
+     * means the first Id equals with a certain id value
+     *@param {Number} figureId - {Figure}'s id
+     *@return {Array}{Glue}s
+     *@author Alex Gheorghiu <alex@scriptoid.com>
+     */
+    glueGetByFigureId:function(figureId){
+        var collectedGlues = [],
+            currentGlue;
+        for(var i=0; i<this.glues.length; i++){
+            currentGlue = this.glues[i];
+            if(currentGlue.id1 == figureId && currentGlue.automatic){
+                collectedGlues.push(currentGlue);
             }
         }
         return collectedGlues;
