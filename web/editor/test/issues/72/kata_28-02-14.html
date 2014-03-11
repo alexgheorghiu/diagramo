@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<!--
+Explore better coloring of figures 
+@see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Applying_styles_and_colors
+@see #72 https://bitbucket.org/scriptoid/diagramo/issue/72/beautiful-colors
+-->
+<html>
+    <head>
+        <title>Color</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script type="text/javascript">
+
+            function pageLoaded(){
+                console.info("Page Loaded");
+
+                var quilt = document.getElementById("quilt");
+                var ctx = quilt.getContext('2d');
+
+                paint(ctx);
+            }
+
+            function paint(ctx){
+
+                rectangle(ctx,  10, 10, 70, 80, '#e3eeff', '#a6c7ff', '#85a6db');
+                rectangle(ctx, 100, 10, 70, 80, '#ffdddd', '#ffabaa', '#d88d8a');
+                rectangle(ctx, 190, 10, 70, 80, '#effcdc', '#c8e897', '#9ab755');
+                rectangle(ctx, 280, 10, 70, 80, '#ffebdb', '#ffc38e', '#df9d66');
+
+                arrow(ctx, 10, 110, 200, 20, '#3776c1', '#2d62a0');
+                arrow(ctx, 10, 150, 200, 20, '#c33936', '#b2322f');
+                arrow(ctx, 10, 190, 200, 20, '#9ac445', '#779734');
+                arrow(ctx, 10, 230, 200, 20, '#fb8e2e', '#de771f');
+
+            }
+
+            function rectangle(ctx, x, y, width, height, color1, color2, color3){
+
+                // paint shadows underneath
+                ctx.save();
+
+                ctx.shadowBlur = 3;
+                ctx.shadowOffsetY = 1;
+                ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+                ctx.fillRect(x, y, width, height);
+
+                ctx.restore();
+
+                // paint gradient
+                var lineargradient = ctx.createLinearGradient(x, y, x, y + height);
+                lineargradient.addColorStop(0, color1);
+                lineargradient.addColorStop(1, color2);
+
+                ctx.fillStyle = lineargradient;
+                ctx.fillRect(x, y, width, height);
+
+                // crisp lines, offset 0.5 px
+                x = x - 0.5;
+                y = y - 0.5;
+                width = width + 1;
+                height = height + 1;
+
+                // paint inner highlight
+                var lingrad2 = ctx.createLinearGradient(x, y, x, y + height);
+                lingrad2.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+                lingrad2.addColorStop(1, 'rgba(255, 255, 255, 0)');
+                ctx.strokeStyle = lingrad2;
+                ctx.strokeRect(x + 1, y + 1, width - 2, height - 2);
+
+                // paint contour
+                ctx.strokeStyle = color3;
+                ctx.strokeRect(x, y, width, height);
+
+            }
+
+            function arrow(ctx, x, y, width, height, color1, color2){
+
+                // paint shadows underneath
+                ctx.save();
+
+                ctx.shadowBlur = 3;
+                ctx.shadowOffsetY = 1;
+                ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+                ctx.fillRect(x, y, width, height);
+
+                ctx.restore();
+
+                // paint gradient
+                var lineargradient = ctx.createLinearGradient(x, y, x, y + height);
+                lineargradient.addColorStop(0, color1);
+                lineargradient.addColorStop(1, color2);
+
+                ctx.fillStyle = lineargradient;
+                ctx.fillRect(x, y, width, height);
+
+            }
+
+            window.addEventListener("load", pageLoaded, false);
+
+        </script>
+
+        <style>
+
+            @import url(http://fonts.googleapis.com/css?family=Open+Sans:600);
+
+            p {
+                font: 13px/15px 'Open Sans';
+                font-weight: 600;
+                text-align: center;
+                position: absolute;
+                top: 30px;
+                left: 219px;
+            }
+
+        </style>
+
+    </head>
+    <body>
+        <div>
+            <canvas style="border: 1px solid #ccc;" id="quilt" width="600" height="400"></canvas>
+            <p>Milk<br>Juice</p>
+        </div>
+    </body>
+</html>
