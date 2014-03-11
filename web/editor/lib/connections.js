@@ -1464,7 +1464,7 @@ Glue.load = function(o){
     newGlue.id2 = o.id2;
     newGlue.type1 = o.type1;
     newGlue.type2 = o.type2;
-    newGlue.automatic = o.automatic === 'true';
+    newGlue.automatic = o.automatic ? o.automatic : false;
 
     return newGlue;
 }
@@ -1519,6 +1519,7 @@ Glue.prototype = {
 
         return this.id1 == anotherGlue.id1
         && this.id2 == anotherGlue.id2
+        && this.automatic == anotherGlue.automatic
         && this.type1 == anotherGlue.type1
         && this.type2 == anotherGlue.type2;
     },
@@ -1527,6 +1528,6 @@ Glue.prototype = {
      *@return {String} - the representation
      **/
     toString:function(){
-        return 'Glue : (' + this.id1 + ', ' + this.id2 + ')';
+        return 'Glue : (' + this.id1 + ', ' + this.id2 + ', ' + this.automatic + ')';
     }
 }
