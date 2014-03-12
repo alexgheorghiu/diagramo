@@ -2684,24 +2684,11 @@ function connectorPickSecond(x, y, ev){
     //end remove block
 
     //COLOR MANAGEMENT FOR {ConnectionPoint}
-    //change back old connection point to normal color
-    if(selectedConnectionPointId != -1){
-        var oldCp = CONNECTOR_MANAGER.connectionPointGetById(selectedConnectionPointId);
-        oldCp.color = ConnectionPoint.NORMAL_COLOR;
-        cps[1].color = ConnectionPoint.NORMAL_COLOR;
-        selectedConnectionPointId = -1;
-    }
     //Find any {ConnectionPoint} from a figure at (x,y). Change FCP (figure connection points) color
-    if(fCpOverId != -1){
-        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
-        fCp.color = ConnectionPoint.OVER_COLOR;
+    if (fCpOverId != -1 || fOverId != -1) {
         cps[1].color = ConnectionPoint.OVER_COLOR;
-        selectedConnectionPointId = fCpOverId;
-    } else if (fOverId != -1) {
-        var fCp = CONNECTOR_MANAGER.connectionPointGetById(closestSolutions[3]);
-        fCp.color = ConnectionPoint.OVER_COLOR;
-        cps[1].color = ConnectionPoint.OVER_COLOR;
-        selectedConnectionPointId = closestSolutions[3];
+    } else {
+        cps[1].color = ConnectionPoint.NORMAL_COLOR;
     }
 
     
