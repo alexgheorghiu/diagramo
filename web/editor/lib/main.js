@@ -2646,9 +2646,8 @@ function connectorPickSecond(x, y, ev){
         var rStartBounds = rStartFigure ? rStartFigure.getBounds() : null;
         var rEndBounds = rEndFigure ? rEndFigure.getBounds() : null;
 
-        // define connection type
-        var connectionType;
 
+        /** define connection type **/
         // if start point has automatic glue -> connection has automatic start
         var automaticStart = rStartGlues.length && rStartGlues[0].automatic;
 
@@ -2657,18 +2656,8 @@ function connectorPickSecond(x, y, ev){
         //      else -> connection has no automatic end
         var automaticEnd = fCpOverId != -1 ? false : fOverId != -1;
 
-        if (!automaticStart && !automaticEnd) {
-            connectionType = ConnectionType.NO_AUTOMATIC;
-        }
-        if (automaticStart && !automaticEnd) {
-            connectionType = ConnectionType.START_AUTOMATIC;
-        }
-        if (!automaticStart && automaticEnd) {
-            connectionType = ConnectionType.END_AUTOMATIC;
-        }
-        if (automaticStart && automaticEnd) {
-            connectionType = ConnectionType.BOTH_AUTOMATIC;
-        }
+        // get connection type
+        var connectionType = CONNECTOR_MANAGER.getConnectionType(automaticStart, automaticEnd);
 
         var closestPoints = CONNECTOR_MANAGER.getClosestPointsOfConnection(
             connectionType,

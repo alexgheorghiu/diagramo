@@ -476,6 +476,29 @@ ConnectorManager.prototype = {
     },
 
 
+    /**This function returns connectionType for defined automatic start and automatic end flags
+     *@param {Boolean} automaticStart - flag define if start of connection isautomatic
+     *@param {Boolean} automaticEnd - flag define if end of connection isautomatic
+    *
+    *@retun {String} - valid ConnectionType
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    getConnectionType: function(automaticStart, automaticEnd) {
+        if (!automaticStart && !automaticEnd) {
+            return ConnectionType.NO_AUTOMATIC;
+        }
+        if (automaticStart && !automaticEnd) {
+            return ConnectionType.START_AUTOMATIC;
+        }
+        if (!automaticStart && automaticEnd) {
+            return ConnectionType.END_AUTOMATIC;
+        }
+        if (automaticStart && automaticEnd) {
+            return ConnectionType.BOTH_AUTOMATIC;
+        }
+    },
+
+
     /**This function returns array of 2 points whose situated at 2 closest {ConnectionPoint}s' position
      *@param {String} connectionType - one of predefined {ConnectionType} values
      *@param {Number} startFId - id value of start {Figure}, in case: connectionType == ConnectionType.START_AUTOMATIC
@@ -555,7 +578,7 @@ ConnectorManager.prototype = {
                     endFCpLength = endFCps.length,
                     curEndPoint,
                     closestEndPoint = endFCps[0].point,
-                    minDistance = Util.distance(curStartPoint,curEndPoint),
+                    minDistance = Util.distance(closestStartPoint,closestEndPoint),
                     curDistance;
 
                 // find closest to endPoint
