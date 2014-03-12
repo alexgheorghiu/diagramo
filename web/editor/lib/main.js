@@ -2572,15 +2572,26 @@ function connectorPickFirst(x, y, ev){
         Log.info("First glue created : " + g);
         //alert('First glue ' + g);
     } else if (fOverId != -1) {
+        var point = new Point(x,y);
+        var closestSolutions = CONNECTOR_MANAGER.getClosestPointsOfConnection(
+            ConnectionType.BOTH_AUTOMATIC,  // as we are over figure, start and end points are connected to one figure
+            fOverId,
+            point,
+            fOverId,
+            point
+        );
+
+        var connectionPoint = closestSolutions[0];
+
         //update connector' cp
-        conCps[0].point.x = x;
-        conCps[0].point.y = y;
+        conCps[0].point.x = conCps[1].point.x = connectionPoint.x;
+        conCps[0].point.y = conCps[1].point.y = connectionPoint.y;
 
         //update connector's turning point
-        con.turningPoints[0].x = x;
-        con.turningPoints[0].y = y;
+        con.turningPoints[0].x = con.turningPoints[1].x = connectionPoint.x;
+        con.turningPoints[0].y = con.turningPoints[1].y = connectionPoint.y;
 
-        var g = CONNECTOR_MANAGER.glueCreate(fOverId, conCps[0].id, true);
+        var g = CONNECTOR_MANAGER.glueCreate(closestSolutions[2], conCps[0].id, true);
         Log.info("First glue created : " + g);
     }
     state = STATE_CONNECTOR_PICK_SECOND;
@@ -2701,6 +2712,7 @@ function connectorPickSecond(x, y, ev){
     
     con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
     //CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId).point = con.turningPoints[0].clone();
+    firstConPoint.point = con.turningPoints[0].clone();
     secConPoint.point = con.turningPoints[con.turningPoints.length-1].clone();
 
     // MANAGE TEXT
@@ -2718,7 +2730,7 @@ function connectorPickSecond(x, y, ev){
     if(fCpOverId != -1){ //we are over a figure's cp
         CONNECTOR_MANAGER.glueCreate(fCpOverId, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, false);
     } else if(fOverId != -1){ //we are over figure
-        CONNECTOR_MANAGER.glueCreate(fOverId, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, true);
+        CONNECTOR_MANAGER.glueCreate(closestSolutions[3], CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, true);
     } else {
         fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
         if(fCpOverId !== -1){

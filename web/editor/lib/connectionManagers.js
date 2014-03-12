@@ -533,7 +533,7 @@ ConnectorManager.prototype = {
                     curDistance;
 
                 // find closest to endPoint
-                for(var i = 1 ; i < fCpLength; i++){
+                for(var i = 1; i < fCpLength; i++){
                     curPoint = fCps[i].point;
                     curDistance = Util.distance(curPoint, endPoint);
                     if (curDistance < minDistance) {
@@ -559,7 +559,7 @@ ConnectorManager.prototype = {
                     curDistance;
 
                 // find closest to startPoint
-                for(var i = 1 ; i < fCpLength; i++){
+                for(var i = 1; i < fCpLength; i++){
                     curPoint = fCps[i].point;
                     curDistance = Util.distance(startPoint, curPoint);
                     if (curDistance < minDistance) {
@@ -574,6 +574,16 @@ ConnectorManager.prototype = {
             // start and end points have locked position:
             // we taking both as position of closest {ConnectionPoint} connected with start and end point
             case ConnectionType.BOTH_AUTOMATIC:
+                // special case when figure is connected to itself
+                if (startFId == endFId) {
+                    // we will find closest to end point (mouse coordinates)
+                    // this means solutions will be the same as connecting to end point as START_AUTOMATIC where start and end connection point match
+                    solutions = this.getClosestPointsOfConnection(ConnectionType.START_AUTOMATIC, startFId, startPoint, endFId, endPoint);
+                    solutions[1] = solutions[0];
+                    solutions[3] = solutions[2];
+                    break;
+                }
+
                 //get all connection points of start figure
                 var startFCps = this.connectionPointGetAllByParent(startFId),
                     startFCpLength = startFCps.length,
@@ -589,9 +599,9 @@ ConnectorManager.prototype = {
                     curDistance;
 
                 // find closest to endPoint
-                for(var i = 0 ; i < startFCpLength; i++){
+                for(var i = 0; i < startFCpLength; i++){
                     curStartPoint = startFCps[i].point;
-                    for(var j = 0 ; j < endFCpLength; j++){
+                    for(var j = 0; j < endFCpLength; j++){
                         curEndPoint = endFCps[j].point;
                         curDistance = Util.distance(curStartPoint, curEndPoint);
                         if (curDistance < minDistance) {

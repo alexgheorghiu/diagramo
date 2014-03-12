@@ -391,10 +391,8 @@ Stack.prototype = {
         Log.group("STACK: figureGetAsFirstFigureForConnector");
         
         /*Algorithm
-         *Connector -> first Connector's ConnectionPoint-> Glue:
-          *     is automatic? -> Figure
-          *     else -> Figure's ConnectionPoint -> Figure
-         **/        
+         *Connector -> first Connector's ConnectionPoint-> Glue -> Figure's ConnectionPoint -> Figure
+         **/
         var figure = null;
         
         //var connector = CONNECTOR_MANAGER.connectorGetById(connectorId);        
@@ -407,14 +405,10 @@ Stack.prototype = {
         if(startGlue){
             Log.debug("Glue id1 = (" + startGlue.id1 + ", " + startGlue.id2 + ')');
 
-            if (startGlue.automatic) {
-                figure = this.figureGetById(startGlue.id1);
-            } else {
-                var figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(startGlue.id1);
-                Log.debug("Figure's ConnectionPoint id = " + figureConnectionPoint.id);
+            var figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(startGlue.id1);
+            Log.debug("Figure's ConnectionPoint id = " + figureConnectionPoint.id);
 
-                figure = this.figureGetById(figureConnectionPoint.parentId);
-            }
+            figure = this.figureGetById(figureConnectionPoint.parentId);
         }
         else{
             Log.debug("no glue");
@@ -435,9 +429,7 @@ Stack.prototype = {
         Log.group("STACK: figureGetAsSecondFigureForConnector");
         
         /*Algorithm
-         *Connector -> first Connector's ConnectionPoint-> Glue:
-         *     is automatic? -> Figure
-         *     else -> Figure's ConnectionPoint -> Figure
+         *Connector -> first Connector's ConnectionPoint-> Glue -> Figure's ConnectionPoint -> Figure
          **/
         var figure = null;
         
@@ -451,14 +443,10 @@ Stack.prototype = {
         if(startGlue){
             Log.debug("Glue id1 = (" + startGlue.id1 + ", " + startGlue.id2 + ')');
 
-            if (startGlue.automatic) {
-                figure = this.figureGetById(startGlue.id1);
-            } else {
-                var figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(startGlue.id1);
-                Log.debug("Figure's ConnectionPoint id = " + figureConnectionPoint.id);
+            var figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(startGlue.id1);
+            Log.debug("Figure's ConnectionPoint id = " + figureConnectionPoint.id);
 
-                figure = this.figureGetById(figureConnectionPoint.parentId);
-            }
+            figure = this.figureGetById(figureConnectionPoint.parentId);
         }
         else{
             Log.debug("no glue");
