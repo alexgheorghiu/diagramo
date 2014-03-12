@@ -2659,7 +2659,7 @@ function connectorPickSecond(x, y, ev){
         // get connection type
         var connectionType = CONNECTOR_MANAGER.getConnectionType(automaticStart, automaticEnd);
 
-        var closestPoints = CONNECTOR_MANAGER.getClosestPointsOfConnection(
+        var closestSolutions = CONNECTOR_MANAGER.getClosestPointsOfConnection(
             connectionType,
             rStartFigure ? rStartFigure.id : -1,
             rStartPoint,
@@ -2667,26 +2667,30 @@ function connectorPickSecond(x, y, ev){
             rEndPoint
             );
         
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, closestPoints[0], closestPoints[1], rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, closestSolutions[0], closestSolutions[1], rStartBounds, rEndBounds);
     }
     
     //end remove block
 
-    //COLOR MANAGEMENT FOR {ConnectionPoint} 
+    //COLOR MANAGEMENT FOR {ConnectionPoint}
+    //change back old connection point to normal color
+    if(selectedConnectionPointId != -1){
+        var oldCp = CONNECTOR_MANAGER.connectionPointGetById(selectedConnectionPointId);
+        oldCp.color = ConnectionPoint.NORMAL_COLOR;
+        cps[1].color = ConnectionPoint.NORMAL_COLOR;
+        selectedConnectionPointId = -1;
+    }
     //Find any {ConnectionPoint} from a figure at (x,y). Change FCP (figure connection points) color
     if(fCpOverId != -1){
         var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
         fCp.color = ConnectionPoint.OVER_COLOR;
         cps[1].color = ConnectionPoint.OVER_COLOR;
         selectedConnectionPointId = fCpOverId;
-    }
-    else{//change back old connection point to normal color
-        if(selectedConnectionPointId != -1){
-            var oldCp = CONNECTOR_MANAGER.connectionPointGetById(selectedConnectionPointId);
-            oldCp.color = ConnectionPoint.NORMAL_COLOR;
-            cps[1].color = ConnectionPoint.NORMAL_COLOR;
-            selectedConnectionPointId = -1;
-        }
+    } else if (fOverId != -1) {
+        var fCp = CONNECTOR_MANAGER.connectionPointGetById(closestSolutions[3]);
+        fCp.color = ConnectionPoint.OVER_COLOR;
+        cps[1].color = ConnectionPoint.OVER_COLOR;
+        selectedConnectionPointId = closestSolutions[3];
     }
 
     

@@ -507,15 +507,16 @@ ConnectorManager.prototype = {
      *@param {Point} endPoint - end {Point} of connection, in case: connectionType == ConnectionType.START_AUTOMATIC or connectionType == ConnectionType.NO_AUTOMATIC
      *
      *@retun {Array} of 2 {Point}s - [point1, point2]
+     *@retun {Array} - in a form ([startPoint, endPoint, startConnectionPointId, endConnectionPointId])
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     getClosestPointsOfConnection: function(connectionType, startFId, startPoint, endFId, endPoint) {
-        var pointsArray = [];
+        var solutions = [];
         switch (connectionType) {
             // both points have locked position
             // we taking defined {Point}s of connection
             case ConnectionType.NO_AUTOMATIC:
-                pointsArray = [startPoint, endPoint];
+                solutions = [startPoint, endPoint, -1, -1];
                 break;
 
             // end point has locked position:
@@ -526,6 +527,7 @@ ConnectorManager.prototype = {
                 var fCps = this.connectionPointGetAllByParent(startFId),
                     fCpLength = fCps.length,
                     closestPoint = fCps[0].point,
+                    closestConnectionPointId = fCps[0].id,
                     minDistance = Util.distance(closestPoint, endPoint),
                     curPoint,
                     curDistance;
@@ -537,9 +539,10 @@ ConnectorManager.prototype = {
                     if (curDistance < minDistance) {
                         minDistance = curDistance;
                         closestPoint = curPoint;
+                        closestConnectionPointId = fCps[i].id;
                     }
                 }
-                pointsArray = [closestPoint.clone(), endPoint];
+                solutions = [closestPoint.clone(), endPoint, closestConnectionPointId, -1];
                 break;
 
             // start point has locked position:
@@ -550,6 +553,7 @@ ConnectorManager.prototype = {
                 var fCps = this.connectionPointGetAllByParent(endFId),
                     fCpLength = fCps.length,
                     closestPoint = fCps[0].point,
+                    closestConnectionPointId = fCps[0].id,
                     minDistance = Util.distance(startPoint, closestPoint),
                     curPoint,
                     curDistance;
@@ -561,9 +565,10 @@ ConnectorManager.prototype = {
                     if (curDistance < minDistance) {
                         minDistance = curDistance;
                         closestPoint = curPoint;
+                        closestConnectionPointId = fCps[i].id;
                     }
                 }
-                pointsArray = [startPoint, closestPoint.clone()];
+                solutions = [startPoint, closestPoint.clone(), -1, closestConnectionPointId];
                 break;
 
             // start and end points have locked position:
@@ -574,10 +579,12 @@ ConnectorManager.prototype = {
                     startFCpLength = startFCps.length,
                     curStartPoint,
                     closestStartPoint = startFCps[0].point,
+                    closestStartConnectionPointId = startFCps[0].id,
                     endFCps = this.connectionPointGetAllByParent(endFId),
                     endFCpLength = endFCps.length,
                     curEndPoint,
                     closestEndPoint = endFCps[0].point,
+                    closestEndConnectionPointId = endFCps[0].id,
                     minDistance = Util.distance(closestStartPoint,closestEndPoint),
                     curDistance;
 
@@ -589,16 +596,20 @@ ConnectorManager.prototype = {
                         curDistance = Util.distance(curStartPoint, curEndPoint);
                         if (curDistance < minDistance) {
                             minDistance = curDistance;
+
                             closestStartPoint = curStartPoint;
+                            closestStartConnectionPointId = startFCps[i].id;
+
                             closestEndPoint = curEndPoint;
+                            closestEndConnectionPointId = endFCps[j].id;
                         }
                     }
                 }
 
-                pointsArray = [closestStartPoint.clone(), closestEndPoint.clone()];
+                solutions = [closestStartPoint.clone(), closestEndPoint.clone(), closestStartConnectionPointId, closestEndConnectionPointId];
                 break;
         }
-        return pointsArray;
+        return solutions;
     },
 
 
