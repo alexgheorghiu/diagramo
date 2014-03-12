@@ -478,25 +478,104 @@ ConnectorManager.prototype = {
 
     /**This function returns array of 2 points whose situated at 2 closest {ConnectionPoint}s' position
      *@param {String} connectionType - one of predefined {ConnectionType} values
-     *@param {Number} fId1 - id value of start {Figure}, in case: connectionType == ConnectionType.START_AUTOMATIC
-     *@param {ConnectionPoint} cp1 - start {ConnectionPoint}, in case: connectionType == ConnectionType.END_AUTOMATIC or connectionType == ConnectionType.NO_AUTOMATIC
-     *@param {Number} fId2 - id value of end {Figure}, in case: connectionType == ConnectionType.END_AUTOMATIC
-     *@param {ConnectionPoint} cp2 - end {ConnectionPoint}, in case: connectionType == ConnectionType.START_AUTOMATIC or connectionType == ConnectionType.NO_AUTOMATIC
+     *@param {Number} startFId - id value of start {Figure}, in case: connectionType == ConnectionType.START_AUTOMATIC
+     *@param {Point} startPoint - start {Point} of connection, in case: connectionType == ConnectionType.END_AUTOMATIC or connectionType == ConnectionType.NO_AUTOMATIC
+     *@param {Number} endFId - id value of end {Figure}, in case: connectionType == ConnectionType.END_AUTOMATIC
+     *@param {Point} endPoint - end {Point} of connection, in case: connectionType == ConnectionType.START_AUTOMATIC or connectionType == ConnectionType.NO_AUTOMATIC
      *
      *@retun {Array} of 2 {Point}s - [point1, point2]
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
-    getClosestPointsOfConnection: function(connectionType, fId1, cp1, fId2, cp2) {
+    getClosestPointsOfConnection: function(connectionType, startFId, startPoint, endFId, endPoint) {
+        var pointsArray = [];
         switch (connectionType) {
+            // both points have locked position
+            // we taking defined {Point}s of connection
             case ConnectionType.NO_AUTOMATIC:
+                pointsArray = [startPoint, endPoint];
                 break;
+
+            // end point has locked position:
+            // we taking 1 point as position of closest {ConnectionPoint} connected with start point
+            // and 2 point as end {ConnectionPoint}
             case ConnectionType.START_AUTOMATIC:
+                //get all connection points of start figure
+                var fCps = this.connectionPointGetAllByParent(startFId),
+                    fCpLength = fCps.length,
+                    closestPoint = fCps[0].point,
+                    minDistance = Util.distance(closestPoint, endPoint),
+                    curPoint,
+                    curDistance;
+
+                // find closest to endPoint
+                for(var i = 1 ; i < fCpLength; i++){
+                    curPoint = fCps[i].point;
+                    curDistance = Util.distance(curPoint, endPoint);
+                    if (curDistance < minDistance) {
+                        minDistance = curDistance;
+                        closestPoint = curPoint;
+                    }
+                }
+                pointsArray = [closestPoint.clone(), endPoint];
                 break;
+
+            // start point has locked position:
+            // we taking 1 point as clone of {ConnectionPoint}
+            // and 2 point as position of closest {ConnectionPoint} connected with end point
             case ConnectionType.END_AUTOMATIC:
+                //get all connection points of end figure
+                var fCps = this.connectionPointGetAllByParent(endFId),
+                    fCpLength = fCps.length,
+                    closestPoint = fCps[0].point,
+                    minDistance = Util.distance(startPoint, closestPoint),
+                    curPoint,
+                    curDistance;
+
+                // find closest to startPoint
+                for(var i = 1 ; i < fCpLength; i++){
+                    curPoint = fCps[i].point;
+                    curDistance = Util.distance(startPoint, curPoint);
+                    if (curDistance < minDistance) {
+                        minDistance = curDistance;
+                        closestPoint = curPoint;
+                    }
+                }
+                pointsArray = [startPoint, closestPoint.clone()];
                 break;
+
+            // start and end points have locked position:
+            // we taking both as position of closest {ConnectionPoint} connected with start and end point
             case ConnectionType.BOTH_AUTOMATIC:
+                //get all connection points of start figure
+                var startFCps = this.connectionPointGetAllByParent(startFId),
+                    startFCpLength = startFCps.length,
+                    curStartPoint,
+                    closestStartPoint = startFCps[0].point,
+                    endFCps = this.connectionPointGetAllByParent(endFId),
+                    endFCpLength = endFCps.length,
+                    curEndPoint,
+                    closestEndPoint = endFCps[0].point,
+                    minDistance = Util.distance(curStartPoint,curEndPoint),
+                    curDistance;
+
+                // find closest to endPoint
+                for(var i = 0 ; i < startFCpLength; i++){
+                    curStartPoint = startFCps[i].point;
+                    for(var j = 0 ; j < endFCpLength; j++){
+                        curEndPoint = endFCps[j].point;
+                        curDistance = Util.distance(curStartPoint, curEndPoint);
+                        if (curDistance < minDistance) {
+                            minDistance = curDistance;
+                            closestStartPoint = curStartPoint;
+                            closestEndPoint = curEndPoint;
+                        }
+                    }
+                }
+
+                pointsArray = [closestStartPoint.clone(), closestEndPoint.clone()];
                 break;
         }
+        return pointsArray;
     },
 
 

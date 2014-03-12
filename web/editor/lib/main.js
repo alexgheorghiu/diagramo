@@ -2610,6 +2610,7 @@ function connectorPickSecond(x, y, ev){
     {
         //start point
         var rStartPoint = con.turningPoints[0].clone();
+        var rStartGlues = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(cps[0].id);
         var rStartFigure = STACK.figureGetAsFirstFigureForConnector(con.id);
         if(rStartFigure){
             Log.info(":) WE HAVE A START FIGURE id = " + rStartFigure.id);
@@ -2644,8 +2645,40 @@ function connectorPickSecond(x, y, ev){
         
         var rStartBounds = rStartFigure ? rStartFigure.getBounds() : null;
         var rEndBounds = rEndFigure ? rEndFigure.getBounds() : null;
+
+        // define connection type
+        var connectionType;
+
+        // if start point has automatic glue -> connection has automatic start
+        var automaticStart = rStartGlues.length && rStartGlues[0].automatic;
+
+        // if end point is over figure's connection point -> connection has no automatic end
+        // else if end point is over figure -> connection has automatic end
+        //      else -> connection has no automatic end
+        var automaticEnd = fCpOverId != -1 ? false : fOverId != -1;
+
+        if (!automaticStart && !automaticEnd) {
+            connectionType = ConnectionType.NO_AUTOMATIC;
+        }
+        if (automaticStart && !automaticEnd) {
+            connectionType = ConnectionType.START_AUTOMATIC;
+        }
+        if (!automaticStart && automaticEnd) {
+            connectionType = ConnectionType.END_AUTOMATIC;
+        }
+        if (automaticStart && automaticEnd) {
+            connectionType = ConnectionType.BOTH_AUTOMATIC;
+        }
+
+        var closestPoints = CONNECTOR_MANAGER.getClosestPointsOfConnection(
+            connectionType,
+            rStartFigure ? rStartFigure.id : -1,
+            rStartPoint,
+            rEndFigure ? rEndFigure.id : -1,
+            rEndPoint
+            );
         
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, closestPoints[0], closestPoints[1], rStartBounds, rEndBounds);
     }
     
     //end remove block
