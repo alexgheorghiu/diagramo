@@ -33,6 +33,21 @@ ConnectorManager.CLOUD_RADIUS = 12;
 ConnectorManager.CLOUD_LINEWIDTH = 3;
 ConnectorManager.CLOUD_STROKE_STYLE = "rgba(255, 153, 0, 0.8)"; //orange
 
+// defines connection type of start and end points for {Connector}
+var ConnectionType = {
+    // both points have locked position
+    NO_AUTOMATIC: 'no_automatic',
+    // end point has locked position:
+    // this happens when start point is connected to a figure, not to it's specific {ConnectionPoint}
+    START_AUTOMATIC: 'start_automatic',
+    // start point has locked position
+    // this happens when end point is connected to a figure, not to it's specific {ConnectionPoint}
+    END_AUTOMATIC: 'end_automatic',
+    // both points have locked position
+    // this happens when both start and end points are connected to figures, not to their's specific {ConnectionPoint}
+    BOTH_AUTOMATIC: 'both_automatic'
+};
+
 /**Creates a {ConnectorManager} out of JSON parsed object
  *@param {JSONObject} o - the JSON parsed object
  *@return {ConnectorManager} a newly constructed ConnectorManager
@@ -460,6 +475,29 @@ ConnectorManager.prototype = {
         return this.connectionPointGetAllByParentIdAndType(connectorId, ConnectionPoint.TYPE_CONNECTOR)[1];
     },
 
+
+    /**This function returns array of 2 points whose situated at 2 closest {ConnectionPoint}s' position
+     *@param {String} connectionType - one of predefined {ConnectionType} values
+     *@param {Number} fId1 - id value of start {Figure}, in case: connectionType == ConnectionType.START_AUTOMATIC
+     *@param {ConnectionPoint} cp1 - start {ConnectionPoint}, in case: connectionType == ConnectionType.END_AUTOMATIC or connectionType == ConnectionType.NO_AUTOMATIC
+     *@param {Number} fId2 - id value of end {Figure}, in case: connectionType == ConnectionType.END_AUTOMATIC
+     *@param {ConnectionPoint} cp2 - end {ConnectionPoint}, in case: connectionType == ConnectionType.START_AUTOMATIC or connectionType == ConnectionType.NO_AUTOMATIC
+     *
+     *@retun {Array} of 2 {Point}s - [point1, point2]
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    getClosestPointsOfConnection: function(connectionType, fId1, cp1, fId2, cp2) {
+        switch (connectionType) {
+            case ConnectionType.NO_AUTOMATIC:
+                break;
+            case ConnectionType.START_AUTOMATIC:
+                break;
+            case ConnectionType.END_AUTOMATIC:
+                break;
+            case ConnectionType.BOTH_AUTOMATIC:
+                break;
+        }
+    },
 
 
     /**This function returns a "temp" connector between 2 points
