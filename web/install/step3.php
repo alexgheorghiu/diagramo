@@ -48,11 +48,19 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
     }
     
     //Create [import] folder
-    if( mkdir('../editor/data/import', 0777, true) ){
-        if(!copy('../editor/data/.htaccess', '../editor/data/import/.htaccess')){
-            $errors[] = "Could not copy .htaccess to [import] folder";
+    if (mkdir('../editor/data/import', 0777, true)) {
+
+
+        $htFile = fopen('../editor/data/import/.htaccess', 'w');
+        if(FALSE === $htFile){
+            $errors[] = "Could not open .htaccess from [import] folder";
             $passed = false;
         }
+        else{
+            $htContent = "Allow from all \nOptions -Indexes";
+            fwrite($htFile, $htContent);
+            fclose($htFile);
+        }        
     }
     else{
         $errors[] = "Could not create [import] folder";

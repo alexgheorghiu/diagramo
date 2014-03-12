@@ -5,3 +5,7 @@ documents/sql/*.db3
 web/editor/data/diagramo.db
 web/editor/data/diagrams/*.dia
 web/editor/data/diagrams/*.png
+web/editor/data/imported/*.jpg
+web/editor/data/imported/*.png
+web/editor/data/imported/*.svg
+web/editor/data/imported/*.gif

@@ -5,6 +5,7 @@
 \.conflict\~$
 
 syntax: glob
+web/editor/data/diagrams/.htaccess
 web/editor/data/diagrams/*.dia
 web/editor/data/diagrams/*.dmo
 web/editor/data/diagrams/*.jpg
@@ -17,6 +18,8 @@ web/editor/data/import/*.png
 web/editor/data/import/*.jpg
 web/editor/data/import/*.gif
 web/editor/data/import/*.bmp
+web/editor/data/import/*.svg
+web/editor/data/import/.htaccess
 
 documents/mailserver/*.html
 documents/jsdoc-toolkit/out/
