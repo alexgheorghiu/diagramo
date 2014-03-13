@@ -1366,7 +1366,7 @@ ConnectorManager.prototype = {
 
 
         }
-
+/*
         //get all shape's automatic glues
         var automaticGlues = this.glueGetByFigureId(fId);
         var automaticGluesLength = automaticGlues.length;
@@ -1381,6 +1381,7 @@ ConnectorManager.prototype = {
             //adjust attached Connector through the ConnectionPoint
             this.connectorAdjustByConnectionPoint(conCpId);
         }
+        */
 
         //Log.info("ConnectionManager: connectionPointTransform()...");
     },
@@ -1433,7 +1434,7 @@ ConnectorManager.prototype = {
         var currentGlue;
         for(var i=0; i<this.glues.length; i++){
             currentGlue = this.glues[i];
-            if(currentGlue.id1 == pointId && !currentGlue.automatic){
+            if(currentGlue.id1 == pointId){
                 collectedGlues.push(currentGlue);
             }
         }
@@ -1456,26 +1457,6 @@ ConnectorManager.prototype = {
         }
         return collectedGlues;
     },
-
-
-    /** Returns all {Glue}s that have automatic connection to target figureId
-     * means the first Id equals with a certain id value
-     *@param {Number} figureId - {Figure}'s id
-     *@return {Array}{Glue}s
-     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
-     */
-    glueGetByFigureId:function(figureId){
-        var collectedGlues = [];
-        var currentGlue;
-        for(var i=0; i<this.glues.length; i++){
-            currentGlue = this.glues[i];
-            if(currentGlue.id1 == figureId && currentGlue.automatic){
-                collectedGlues.push(currentGlue);
-            }
-        }
-        return collectedGlues;
-    },
-
 
 
     /**Creates a new {Glue} and store it into the glue database. Use this instead
