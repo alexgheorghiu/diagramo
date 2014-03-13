@@ -8,8 +8,9 @@
 /**Import first first Diagramo file format.
  * @param {JSONObject} o - the old version file JSON object
  * @returns {JSONObject} the new JSON version
+ * Warning: It does modify the original {JSONObject}
  * */
-function importFile(o){
+function importDiagram(o){
     //initially we did not have Containers
     
     if('s' in o){ // 's' stands for Stack

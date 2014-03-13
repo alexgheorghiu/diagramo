@@ -3395,7 +3395,7 @@ function load(diagramId){
             var obj  = eval('(' + data + ')');
             
             if( !('v' in obj) || obj.v != DIAGRAMO.fileVersion){
-                importFile(obj);//import 1st version of Diagramo files
+                importDiagram(obj);//import 1st version of Diagramo files
             }
             
             STACK = Stack.load(obj['s']);
@@ -3424,7 +3424,7 @@ function loadTempDiagram(tempDiagramName){
             var obj  = eval('(' + data + ')');
             
             if( !('v' in obj) || obj.v != DIAGRAMO.fileVersion){
-                importFile(obj);//import 1st version of Diagramo files
+                importDiagram(obj);//import 1st version of Diagramo files
             }
             
             STACK = Stack.load(obj['s']);
