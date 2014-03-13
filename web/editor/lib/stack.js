@@ -388,7 +388,7 @@ Stack.prototype = {
      *@return {Figure} - the figure connected, or null if none 
      **/
     figureGetAsFirstFigureForConnector: function(connectorId){
-        Log.group("STACK: figureGetAsFirstFigureForConnector");
+        Log.group("STACK:figureGetAsFirstFigureForConnector");
         
         /*Algorithm
          *Connector -> first Connector's ConnectionPoint-> Glue -> Figure's ConnectionPoint -> Figure
@@ -426,7 +426,7 @@ Stack.prototype = {
      *@return {Figure} - the figure connected, or null if none 
      **/
     figureGetAsSecondFigureForConnector: function(connectorId){
-        Log.group("STACK: figureGetAsSecondFigureForConnector");
+        Log.group("STACK:figureGetAsSecondFigureForConnector");
         
         /*Algorithm
          *Connector -> first Connector's ConnectionPoint-> Glue -> Figure's ConnectionPoint -> Figure

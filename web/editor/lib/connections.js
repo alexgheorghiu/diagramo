@@ -1528,6 +1528,11 @@ Glue.prototype = {
      *@return {String} - the representation
      **/
     toString:function(){
-        return 'Glue : (' + this.id1 + ', ' + this.id2 + ', ' + this.automatic + ')';
+        return 'Glue : (id1 = ' + this.id1
+            + ', id2 = ' + this.id2
+            + ', type1 = ' + this.type1
+            + ', type2 = ' + this.type2
+            + ', automatic = ' + this.automatic
+            + ')';
     }
 }

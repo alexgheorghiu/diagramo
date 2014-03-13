@@ -428,23 +428,23 @@ ConnectorManager.prototype = {
             con.turningPoints = [start, end];
         }
         else if(con.type == Connector.TYPE_JAGGED || con.type == Connector.TYPE_ORGANIC){
-            //first point
+            //first ConnectionPoint
             var startPoint = conCps[0].point.clone();
             
-            //second point
+            //second ConnectionPoint
             var endPoint = conCps[1].point.clone();
             
-            //first bounds
+            //first bounds (of start figure)
             var sFigure = STACK.figureGetAsFirstFigureForConnector(con.id);
             var sBounds =  sFigure == null ? null : sFigure.getBounds();
-                
-            //second bounds
+
+            //second bounds (of end figure)
             var eFigure = STACK.figureGetAsSecondFigureForConnector(con.id);
             var eBounds = eFigure == null ? null : eFigure.getBounds();
             
             //adjust connector
             var solutions = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
-            var solution = solutions[0][2];
+            var solution = solutions[0][2]; //solution = a vector of turning points
             
             con.turningPoints = solution;
             conCps[0].point = con.turningPoints[0].clone();
@@ -1105,6 +1105,7 @@ ConnectorManager.prototype = {
      *@param {Number} y - the y coordinates of the point
      *@param {String} type - the type of connector to select. Can be 'connector'(ConnectionPoint.TYPE_CONNECTOR)
      *  or 'figure' (ConnectionPoint.TYPE_FIGURE)
+     *@return {Number} the Id of the {ConnectionPoint} or -1 if none found
      *@author Alex Gheorghiu <alex@scriptoid.com>
      */
     connectionPointGetByXY:function(x,y, type){
