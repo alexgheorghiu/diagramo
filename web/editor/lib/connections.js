@@ -1458,7 +1458,7 @@ function Glue(cp1Id,cp2Id,automatic){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 Glue.load = function(o){
-    var newGlue = new Glue(23, 40, false); //fake constructor
+    var newGlue = new Glue(-1, -1, false); //fake constructor
 
     newGlue.id1 = o.id1;
     newGlue.id2 = o.id2;
