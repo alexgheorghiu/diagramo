@@ -1339,6 +1339,13 @@ ConnectorManager.prototype = {
      **/
     connectionPointTransform:function(fId, matrix){
         var fCps = this.connectionPointGetAllByParent(fId);
+
+        /* In case of having connections where first or second ConnectionPoint glued automatically -
+         * current ConnectionPoints can change position to another ConnectionPoints.
+         * Variables used in finding solution of ConnectionPoints. We take position current Figure as startFigure. */
+        var startFigure = STACK.figureGetById(fId);
+        var startBounds = startFigure ? startFigure.getBounds(): null;
+
         //Log.info("ConnectionManager: connectionPointTransform()....1");
         //get all shape's connection points
         for(var i = 0 ; i < fCps.length; i++){
@@ -1346,23 +1353,67 @@ ConnectorManager.prototype = {
             fCps[i].transform(matrix);
             //Log.info("\tConnectionManager: connectionPointTransform()....2");
 
+            /* TODO: can we have more than one Glue for single ConnectionPoint? Do we need this cycle? */
             //get all glues for current connection point
             var glues = this.glueGetByFirstConnectionPointId(fCps[i].id);
             var gluesLength = glues.length;
             //Log.info("\tConnectionManager: connectionPointTransform()" + fCps[i].id + " glues = " + gluesLength);
             for(var j = 0; j < gluesLength; j++){
                 //get the ConnectionPoint from other side of the glue (from the connector)
-                var conCpId = glues[j].id2;
-                var conCp = this.connectionPointGetById(glues[j].id2);
+                var firstCP = this.connectionPointGetById(glues[j].id2);
+
+                // get the Connector - parent of this ConnectionPoint
+                var connector = this.connectorGetById(firstCP.parentId);
+                // get ConnectionPoints of the Connector
+                var cCPs = this.connectionPointGetAllByParent(connector.id);
+                // find secondCP of the Connector
+                var secondCP = cCPs[0].id == firstCP.id ? cCPs[1] : cCPs[0];
+
+                // get Glue of the second ConnectionPoint
+                var endGlue = this.glueGetBySecondConnectionPointId(secondCP.id)[0];
+
+                // get ConnectionPoint of Figure placed on the other end of connection
+                var endFigureCP = endGlue ? this.connectionPointGetById(endGlue.id1) : null;
+
+                /* Variables used in finding solution of ConnectionPoints. We take position current Figure as startFigure. */
+                var endFigure = endFigureCP ? STACK.figureGetById(endFigureCP.parentId) : null;
+                var endBounds = endFigure ? endFigure.getBounds() : null;
+                var endPoint = endFigureCP ? endFigureCP.point : null;
+
+                // if start point has automatic glue -> connection has automatic start
+                var automaticStart = glues[j].automatic;
+                // if end point has automatic glue -> connection has automatic end
+                var automaticEnd = endGlue && endGlue.automatic;
+
+                // get connection type
+                var connectionType = CONNECTOR_MANAGER.getConnectionType(automaticStart, automaticEnd);
+
+                var closestSolutions = CONNECTOR_MANAGER.getClosestPointsOfConnection(
+                    connectionType,
+                    startFigure ? startFigure.id : -1,
+                    firstCP.point,
+                    endFigure ? endFigure.id : -1,
+                    endPoint
+                );
+
+                //solutions
+                DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(connector.type, closestSolutions[0], closestSolutions[1], startBounds, endBounds);
+
+                // update position of Connector's ConnectionPoints
+                connector.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
+                cCPs[0].point = connector.turningPoints[0].clone();
+                cCPs[1].point = connector.turningPoints[connector.turningPoints.length - 1].clone();
+
+
                 //Log.info("\t\tConnectionManager: connectionPointTransform() - connector's point " + conCp);
-                conCp.transform(matrix);
+//                firstCP.transform(matrix);
 
                 //get attached connector
 //                var con = this.connectorGetById(conCp.parentId);
 
                 //adjust attached Connector through the ConnectionPoint
 //                con.adjust(matrix, conCp.point.clone());
-                this.connectorAdjustByConnectionPoint(glues[j].id2 /*, x, y*/);
+//                this.connectorAdjustByConnectionPoint(glues[j].id2 /*, x, y*/);
             }
 
 
