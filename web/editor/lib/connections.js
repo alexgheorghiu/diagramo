@@ -248,6 +248,12 @@ Connector.prototype = {
      *@author Alex, Zack
      **/
     paint:function(context){
+        // are start and end points match?
+        if (this.areStartEndPointsMatch()) {
+            // then not paint Connector at all
+            return;
+        }
+
         context.save();
         
         this.style.setupContext(context);
@@ -964,6 +970,16 @@ Connector.prototype = {
             }
         }
     },
+
+
+    /**Check are start and end members of turningPoints match -
+     * Have the same position
+     *@return {Boolean} - match or not
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    areStartEndPointsMatch: function() {
+        return this.turningPoints[0].equals(this.turningPoints[this.turningPoints.length - 1]);
+    },
     
 
     /**
@@ -1122,7 +1138,6 @@ Connector.prototype = {
         }
         return [minX, minY, maxX, maxY];
     },
-    
     
     /**String representation*/
     toString:function(){
