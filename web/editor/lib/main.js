@@ -2576,7 +2576,8 @@ function connectorPickFirst(x, y, ev){
     } else if (fOverId != -1) { //Are we, at least, over the Figure?
         var point = new Point(x,y);
         var closestSolutions = CONNECTOR_MANAGER.getClosestPointsOfConnection(
-            ConnectionType.BOTH_AUTOMATIC,  // as we are over figure, start and end points are connected to one figure
+            true,   // as we are over figure start and end points
+            true,   // are connected to one figure
             fOverId,
             point,
             fOverId,
@@ -2670,11 +2671,9 @@ function connectorPickSecond(x, y, ev){
         //      else -> connection has no automatic end
         var automaticEnd = fCpOverId != -1 ? false : fOverId != -1;
 
-        // get connection type
-        var connectionType = CONNECTOR_MANAGER.getConnectionType(automaticStart, automaticEnd);
-
         var closestSolutions = CONNECTOR_MANAGER.getClosestPointsOfConnection(
-            connectionType,
+            automaticStart,
+            automaticEnd,
             rStartFigure ? rStartFigure.id : -1,
             rStartPoint,
             rEndFigure ? rEndFigure.id : -1,
@@ -2823,11 +2822,9 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         //      else -> connection has no automatic start
         var automaticStart = fCpOverId != -1 ? false : fOverId != -1;
 
-        // get connection type
-        var connectionType = CONNECTOR_MANAGER.getConnectionType(automaticStart, automaticEnd);
-
         var closestSolutions = CONNECTOR_MANAGER.getClosestPointsOfConnection(
-            connectionType,
+            automaticStart,
+            automaticEnd,
             rStartFigure ? rStartFigure.id : -1,
             rStartPoint,
             rEndFigure ? rEndFigure.id : -1,
@@ -2900,11 +2897,9 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         //      else -> connection has no automatic end
         var automaticEnd = fCpOverId != -1 ? false : fOverId != -1;
 
-        // get connection type
-        var connectionType = CONNECTOR_MANAGER.getConnectionType(automaticStart, automaticEnd);
-
         var closestSolutions = CONNECTOR_MANAGER.getClosestPointsOfConnection(
-            connectionType,
+            automaticStart,
+            automaticEnd,
             rStartFigure ? rStartFigure.id : -1,
             rStartPoint,
             rEndFigure ? rEndFigure.id : -1,
