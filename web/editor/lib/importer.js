@@ -18,6 +18,21 @@ function importDiagram(o){
         if( !('containers' in jsonStack) ){
             jsonStack.containers = []; //add an empty container array
         }
+        if( 'figures' in jsonStack ){   // replace deprecated property value with new one
+            var deprecatedPropertyValue = 'textSize';
+            var deprecatedReplacer = 'size';
+            var figures = jsonStack.figures;
+            var figureLength = figures.length;
+            for (var i = 0; i < figureLength; i++) {
+                var properties = figures[i].properties;
+                var propertiesLength = properties.length;
+                for (var j = 0; j < propertiesLength; j++) {
+                    if (properties[j].property && properties[j].property.indexOf(deprecatedPropertyValue) != -1) {
+                        properties[j].property = properties[j].property.replace(deprecatedPropertyValue, deprecatedReplacer);
+                    }
+                }
+            }
+        }
     }
     
     if( !('p' in o) ){ // 'p' stands for ContainerFigureManager
