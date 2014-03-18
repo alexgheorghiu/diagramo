@@ -54,7 +54,7 @@ function Connector(startPoint,endPoint,type, id){
     this.properties.push(new BuilderProperty('Line Style','style.lineStyle', BuilderProperty.TYPE_LINE_STYLE));
     this.properties.push(new BuilderProperty('Color','style.strokeStyle', BuilderProperty.TYPE_COLOR));
     this.properties.push(new BuilderProperty('Text','middleText.str', BuilderProperty.TYPE_TEXT));
-    this.properties.push(new BuilderProperty('Text Size ', 'middleText.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
+    this.properties.push(new BuilderProperty('Text Size', 'middleText.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     this.properties.push(new BuilderProperty('Font', 'middleText.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     this.properties.push(new BuilderProperty('Alignment', 'middleText.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
     this.properties.push(new BuilderProperty('Text Color', 'middleText.style.fillStyle', BuilderProperty.TYPE_COLOR));
