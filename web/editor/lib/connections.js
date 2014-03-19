@@ -245,10 +245,10 @@ Connector.prototype = {
     
     /**Paints the connector
      *@param {Context} context - the 2D context of the canvas
-     *@author Alex, Zack
+     *@author Alex, Zack, Artyom
      **/
     paint:function(context){
-        // are start and end points match?
+        //Do the start and end point match?
         if (this.areStartEndPointsMatch()) {
             // then not paint Connector at all
             return;
@@ -972,8 +972,7 @@ Connector.prototype = {
     },
 
 
-    /**Check are start and end members of turningPoints match -
-     * Have the same position
+    /**Check if start and end members of turningPoints match/are the same.
      *@return {Boolean} - match or not
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
