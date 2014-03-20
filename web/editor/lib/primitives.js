@@ -1525,7 +1525,7 @@ function Arc(x, y, radius, startAngle, endAngle, direction, styleFlag){
     this.middle = new Point(x,y); 
     
     /**The radius of the circle*/
-    this.radius = radius 
+    this.radius = radius;
     
     /**An {Array} of {@link QuadCurve}s used to draw the arc*/
     this.curves = [];

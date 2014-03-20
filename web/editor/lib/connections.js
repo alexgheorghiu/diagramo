@@ -245,9 +245,15 @@ Connector.prototype = {
     
     /**Paints the connector
      *@param {Context} context - the 2D context of the canvas
-     *@author Alex, Zack
+     *@author Alex, Zack, Artyom
      **/
     paint:function(context){
+        //Do the start and end point match?
+        if (this.areStartEndPointsMatch()) {
+            // then not paint Connector at all
+            return;
+        }
+
         context.save();
         
         this.style.setupContext(context);
@@ -964,6 +970,15 @@ Connector.prototype = {
             }
         }
     },
+
+
+    /**Check if start and end members of turningPoints match/are the same.
+     *@return {Boolean} - match or not
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    areStartEndPointsMatch: function() {
+        return this.turningPoints[0].equals(this.turningPoints[this.turningPoints.length - 1]);
+    },
     
 
     /**
@@ -1122,7 +1137,6 @@ Connector.prototype = {
         }
         return [minX, minY, maxX, maxY];
     },
-    
     
     /**String representation*/
     toString:function(){
@@ -1422,8 +1436,11 @@ ConnectionPoint.prototype = {
  *@this {Glue}
  *@param {Number} cp1Id - the id of the first {ConnectionPoint} (usually from a {Figure})
  *@param {Number} cp2Id - the id of the second {ConnectionPoint} (usualy from a {Connector})
+ *@param {Boolean} automatic - type of connection connector to a figure:
+ * if true - {Connector} connects a {Figure} itself
+ * else - {Connector} connects specific {ConnectionPoint} of {Figure}
  **/
-function Glue(cp1Id,cp2Id){
+function Glue(cp1Id,cp2Id,automatic){
     /**First shape's id (usually from a {Figure})*/
     this.id1 = cp1Id;    
     
@@ -1440,7 +1457,13 @@ function Glue(cp1Id,cp2Id){
     this.type2 = 'connector';
     
     /**object type used for JSON deserialization*/
-    this.oType = 'Glue'; 
+    this.oType = 'Glue';
+
+    /**Type of connector's behaviour:
+     * if it's true - connector connects the whole figure and touches it's optimum connection point
+     * if it's false - connector connects one fixed connection point of the figure
+     * */
+    this.automatic = automatic;
 }
 
 /**Creates a {Glue} out of JSON parsed object
@@ -1449,12 +1472,13 @@ function Glue(cp1Id,cp2Id){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 Glue.load = function(o){
-    var newGlue = new Glue(23, 40); //fake constructor
+    var newGlue = new Glue(-1, -1, false); //fake constructor
 
     newGlue.id1 = o.id1;
     newGlue.id2 = o.id2;
     newGlue.type1 = o.type1;
     newGlue.type2 = o.type2;
+    newGlue.automatic = o.automatic ? o.automatic : false;
 
     return newGlue;
 }
@@ -1495,7 +1519,7 @@ Glue.prototype = {
     /**Clone current {Glue}
      **/
     clone: function(){
-        return new Glue(this.id1, this.id2);
+        return new Glue(this.id1, this.id2, this.automatic);
     },
     
     /**Compares to another Glue
@@ -1509,6 +1533,7 @@ Glue.prototype = {
 
         return this.id1 == anotherGlue.id1
         && this.id2 == anotherGlue.id2
+        && this.automatic == anotherGlue.automatic
         && this.type1 == anotherGlue.type1
         && this.type2 == anotherGlue.type2;
     },
@@ -1517,6 +1542,11 @@ Glue.prototype = {
      *@return {String} - the representation
      **/
     toString:function(){
-        return 'Glue : (' + this.id1 + ', ' + this.id2 + ')';
+        return 'Glue : (id1 = ' + this.id1
+            + ', id2 = ' + this.id2
+            + ', type1 = ' + this.type1
+            + ', type2 = ' + this.type2
+            + ', automatic = ' + this.automatic
+            + ')';
     }
 }

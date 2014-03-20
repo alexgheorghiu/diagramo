@@ -388,28 +388,26 @@ Stack.prototype = {
      *@return {Figure} - the figure connected, or null if none 
      **/
     figureGetAsFirstFigureForConnector: function(connectorId){
-        Log.group("STACK: figureGetAsFirstFigureForConnector");
+        Log.group("Stack:figureGetAsFirstFigureForConnector");
         
         /*Algorithm
-         *Connector -> first Connector's ConnectionPoint-> Glue -> Figure's ConnectionPoint -> Figure        
-         **/        
+         *Connector -> first Connector's ConnectionPoint-> Glue -> Figure's ConnectionPoint -> Figure
+         **/
         var figure = null;
         
         //var connector = CONNECTOR_MANAGER.connectorGetById(connectorId);        
         Log.debug("Connector id = " + connectorId);
         
         var startConnectionPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(connectorId);
-        Log.debug("ConnectionPoint id = " + startConnectionPoint.id)
+        Log.debug("ConnectionPoint id = " + startConnectionPoint.id);
         
         var startGlue = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(startConnectionPoint.id)[0];
-        
-        
         if(startGlue){
-            Log.debug("Glue id1 = (" + startGlue.id1 + ", " + startGlue.id2 + ')')
-            
+            Log.debug("Glue id1 = (" + startGlue.id1 + ", " + startGlue.id2 + ')');
+
             var figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(startGlue.id1);
             Log.debug("Figure's ConnectionPoint id = " + figureConnectionPoint.id);
-        
+
             figure = this.figureGetById(figureConnectionPoint.parentId);
         }
         else{
@@ -428,28 +426,26 @@ Stack.prototype = {
      *@return {Figure} - the figure connected, or null if none 
      **/
     figureGetAsSecondFigureForConnector: function(connectorId){
-        Log.group("STACK: figureGetAsSecondFigureForConnector");
+        Log.group("Stack:figureGetAsSecondFigureForConnector");
         
         /*Algorithm
-         *Connector -> first Connector's ConnectionPoint-> Glue -> Figure's ConnectionPoint -> Figure        
-         **/        
+         *Connector -> first Connector's ConnectionPoint-> Glue -> Figure's ConnectionPoint -> Figure
+         **/
         var figure = null;
         
         //var connector = CONNECTOR_MANAGER.connectorGetById(connectorId);        
         Log.debug("Connector id = " + connectorId);
         
         var endConnectionPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(connectorId);
-        Log.debug("ConnectionPoint id = " + endConnectionPoint.id)
+        Log.debug("ConnectionPoint id = " + endConnectionPoint.id);
         
         var startGlue = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(endConnectionPoint.id)[0];
-        
-        
         if(startGlue){
-            Log.debug("Glue id1 = (" + startGlue.id1 + ", " + startGlue.id2 + ')')
-            
+            Log.debug("Glue id1 = (" + startGlue.id1 + ", " + startGlue.id2 + ')');
+
             var figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(startGlue.id1);
             Log.debug("Figure's ConnectionPoint id = " + figureConnectionPoint.id);
-        
+
             figure = this.figureGetById(figureConnectionPoint.parentId);
         }
         else{

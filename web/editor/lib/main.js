@@ -2540,6 +2540,7 @@ function onDblClick(ev) {
  *@param {Number} x - the x position 
  *@param {Number} y - the y position 
  *@param {Event} ev - the event triggered
+ *@author Alex, Artyom
  **/
 function connectorPickFirst(x, y, ev){
     Log.group("connectorPickFirst");
@@ -2553,10 +2554,14 @@ function connectorPickFirst(x, y, ev){
     //1.get CP of the connector
     var conCps = CONNECTOR_MANAGER.connectionPointGetAllByParent(conId);
 
+    //get Figure's id if over it
+    var fOverId = STACK.figureGetByXY(x,y);
+    //get the ConnectionPoint's id if we are over it (and belonging to a figure)
+    var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
+
     //see if we can snap to a figure
-    var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
-    if(fCpId != -1){
-        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
+    if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
+        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
 
         //update connector' cp
         conCps[0].point.x = fCp.point.x;
@@ -2566,9 +2571,35 @@ function connectorPickFirst(x, y, ev){
         con.turningPoints[0].x = fCp.point.x;
         con.turningPoints[0].y = fCp.point.y;
 
-        var g = CONNECTOR_MANAGER.glueCreate(fCp.id, conCps[0].id);
+        var g = CONNECTOR_MANAGER.glueCreate(fCp.id, conCps[0].id, false);
         Log.info("First glue created : " + g);
         //alert('First glue ' + g);
+    } else if (fOverId !== -1) { //Are we, at least, over the {Figure}?
+        
+        /*As we are over a {Figure} but not over a {ConnectionPoint} we will switch
+         * to automatic connection*/
+        var point = new Point(x,y);
+        var candidate = CONNECTOR_MANAGER.getClosestPointsOfConnection(
+            true,    // automatic start
+            true,    // automatic end 
+            fOverId, //start figure's id
+            point,   //start point 
+            fOverId, //end figure's id
+            point    //end point
+        );
+
+        var connectionPoint = candidate[0];
+
+        //update connector' cp
+        conCps[0].point.x = conCps[1].point.x = connectionPoint.x;
+        conCps[0].point.y = conCps[1].point.y = connectionPoint.y;
+
+        //update connector's turning point
+        con.turningPoints[0].x = con.turningPoints[1].x = connectionPoint.x;
+        con.turningPoints[0].y = con.turningPoints[1].y = connectionPoint.y;
+
+        var g = CONNECTOR_MANAGER.glueCreate(candidate[2], conCps[0].id, true);
+        Log.info("First glue created : " + g);
     }
     state = STATE_CONNECTOR_PICK_SECOND;
     Log.groupEnd();
@@ -2586,12 +2617,19 @@ function connectorPickSecond(x, y, ev){
     //current connector
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId); //it should be the last one
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
-    
+
+    //get the ConnectionPoint's id if we are over it (and belonging to a figure)
+    var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
+    //get Figure's id if over it
+    var fOverId = STACK.figureGetByXY(x,y);
+
     //TODO: remove 
     //play with algorithm
     {
+        //We will try to find the startFigure, endFigure, startPoint, endPoint, etc
         //start point
         var rStartPoint = con.turningPoints[0].clone();
+        var rStartGlues = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(cps[0].id);
         var rStartFigure = STACK.figureGetAsFirstFigureForConnector(con.id);
         if(rStartFigure){
             Log.info(":) WE HAVE A START FIGURE id = " + rStartFigure.id);
@@ -2603,47 +2641,65 @@ function connectorPickSecond(x, y, ev){
         //end point
         var rEndPoint = new Point(x, y);
         var rEndFigure = null;
-        
-        var r_fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP at (x,y)
-        if(r_fCpId != -1){            
-            var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(r_fCpId);
-            Log.info("End Figure's ConnectionPoint present id = " + r_fCpId);
+
+        if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
+            var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
+            Log.info("End Figure's ConnectionPoint present id = " + fCpOverId);
             
             //As we found the connection point by a vicinity (so not exactly x,y match) we will adjust the end point too
             rEndPoint = r_figureConnectionPoint.point.clone();
             
             rEndFigure = STACK.figureGetById(r_figureConnectionPoint.parentId);
             Log.info(":) WE HAVE AN END FIGURE id = " + rEndFigure.id);
-        }
-        else{
+        } else if (fOverId != -1) {  //Are we, at least, over a Figure?
+            Log.info("End Figure connected as automatic");
+
+            rEndPoint = new Point(x,y);
+
+            rEndFigure = STACK.figureGetById(fOverId);
+            Log.info(":) WE HAVE AN END FIGURE id = " + rEndFigure.id);
+        } else{
             Log.info(":( WE DO NOT HAVE AN END FIGURE " );
         }
         
         var rStartBounds = rStartFigure ? rStartFigure.getBounds() : null;
         var rEndBounds = rEndFigure ? rEndFigure.getBounds() : null;
+
+
+        // if start point has automatic glue => connection has automatic start
+        var automaticStart = rStartGlues.length > 0 && rStartGlues[0].automatic;
+
+        // if end point is over a {Figure}'s {ConnectionPoint} => connection is not automatic
+        // else if end point is over a {Figure} -> connection has automatic end
+        //      else -> connection has no automatic end
+        var automaticEnd = fCpOverId != -1 ? false : fOverId != -1;
+
+        var candidate = CONNECTOR_MANAGER.getClosestPointsOfConnection(
+            automaticStart, //start automatic
+            automaticEnd, //end automatic
+            rStartFigure ? rStartFigure.id : -1, //start figure's id
+            rStartPoint, //start figure's point
+            rEndFigure ? rEndFigure.id : -1, //end figure's id
+            rEndPoint //end figure's point
+            );
         
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(
+            con.type, 
+            candidate[0], /*Start point*/
+            candidate[1], /*End point*/
+            rStartBounds, 
+            rEndBounds
+        );
     }
     
     //end remove block
 
-    //COLOR MANAGEMENT FOR {ConnectionPoint} 
+    //COLOR MANAGEMENT FOR {ConnectionPoint}
     //Find any {ConnectionPoint} from a figure at (x,y). Change FCP (figure connection points) color
-    var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
-
-    if(fCpId != -1){
-        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
-        fCp.color = ConnectionPoint.OVER_COLOR;
+    if (fCpOverId != -1 || fOverId != -1) { //Are we over a ConnectionPoint from a Figure or over a Figure?
         cps[1].color = ConnectionPoint.OVER_COLOR;
-        selectedConnectionPointId = fCpId;
-    }
-    else{//change back old connection point to normal color
-        if(selectedConnectionPointId != -1){
-            var oldCp = CONNECTOR_MANAGER.connectionPointGetById(selectedConnectionPointId);
-            oldCp.color = ConnectionPoint.NORMAL_COLOR;
-            cps[1].color = ConnectionPoint.NORMAL_COLOR;
-            selectedConnectionPointId = -1;
-        }
+    } else {
+        cps[1].color = ConnectionPoint.NORMAL_COLOR;
     }
 
     
@@ -2654,6 +2710,7 @@ function connectorPickSecond(x, y, ev){
     
     con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
     //CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId).point = con.turningPoints[0].clone();
+    firstConPoint.point = con.turningPoints[0].clone();
     secConPoint.point = con.turningPoints[con.turningPoints.length-1].clone();
 
     // MANAGE TEXT
@@ -2666,17 +2723,16 @@ function connectorPickSecond(x, y, ev){
     //GLUES MANAGEMENT
     //remove all previous glues to {Connector}'s second {ConnectionPoint}
     CONNECTOR_MANAGER.glueRemoveAllBySecondId(secConPoint.id);
-    
+
     //recreate new glues and currentCloud if available
-    var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
-    if(fCpId != -1){ //we are over a figure's cp
-        /*TODO: why not to use fCpId directly?*/
-        var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);        
-        var g = CONNECTOR_MANAGER.glueCreate(fCp.id, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id);
-    } else {
-        fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
-        if(fCpId !== -1){
-            currentCloud = [fCpId, secConPoint.id];
+    if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
+        CONNECTOR_MANAGER.glueCreate(fCpOverId, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, false);
+    } else if(fOverId != -1){ //Are we, at least, over a Figure?
+        CONNECTOR_MANAGER.glueCreate(candidate[3]/*end Figure's ConnectionPoint Id*/, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, true);
+    } else { //No ConnectionPoint, no Figure (I'm lonely)
+        fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
+        if(fCpOverId !== -1){
+            currentCloud = [fCpOverId, secConPoint.id];
         }
     }
     
@@ -2699,14 +2755,19 @@ function connectorMovePoint(connectionPointId, x, y, ev){
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
 
+    //get the ConnectionPoint's id if we are over it (and belonging to a figure)
+    var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x,y, ConnectionPoint.TYPE_FIGURE);
+
+    //get Figure's id if over it
+    var fOverId = STACK.figureGetByXY(x,y);
+
     // MANAGE TEXT
     // update position of connector's text
     con.updateMiddleText();
     
     //MANAGE COLOR
     //update cursor if over a figure's cp
-    var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x,y, ConnectionPoint.TYPE_FIGURE);
-    if(fCpId != -1){
+    if(fCpOverId != -1 || fOverId != -1){ //Are we over a ConnectionPoint from a Figure or over a Figure?
         //canvas.style.cursor = 'default';
         if(cps[0].id == selectedConnectionPointId){
             cps[0].color = ConnectionPoint.OVER_COLOR;
@@ -2724,26 +2785,33 @@ function connectorMovePoint(connectionPointId, x, y, ev){
             cps[1].color = ConnectionPoint.NORMAL_COLOR;
         }
     }
-    
-    //variables used in finding solution
+
+    /*Variables used in finding solution. As we only know the ConnectionPoint's id
+     * (connectionPointId) and the location of event (x,y) we need to find
+     * who is the start Figure, end Figure, starting Glue, ending Glue, etc*/
     var rStartPoint = con.turningPoints[0].clone();
-    var rStartFigure = null;
+    var rStartFigure = null; //starting figure (it can be null - as no Figure)
     var rEndPoint = con.turningPoints[con.turningPoints.length-1].clone();
-    var rEndFigure = null;
+    var rEndFigure = null; //ending figure (it can be null - as no Figure)
+    var rStartGlues = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(cps[0].id);
+    var rEndGlues = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(cps[1].id);
 
     // before solution we reset currentCloud
     currentCloud = [];
     
     if(cps[0].id == connectionPointId){ //FIRST POINT
-        var figCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP at (x,y)
-        if(figCpId != -1){            
-            var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(figCpId);
+        if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
+            var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
                 
             //start point and figure
             rStartPoint = r_figureConnectionPoint.point.clone();                
             rStartFigure = STACK.figureGetById(r_figureConnectionPoint.parentId);
         }     
-        else{
+        else if (fOverId != -1) { //Are we, at least, over a Figure?
+            //start point and figure
+            rStartPoint = new Point(x, y);
+            rStartFigure = STACK.figureGetById(fOverId);
+        } else {
             rStartPoint = new Point(x, y);
         }
          
@@ -2754,8 +2822,26 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         var rStartBounds = rStartFigure ? rStartFigure.getBounds() : null;
         var rEndBounds = rEndFigure ? rEndFigure.getBounds() : null;
 
+        /** define connection type **/
+        // if end point has automatic glue -> connection has automatic end
+        var automaticEnd = rEndGlues.length && rEndGlues[0].automatic;
+
+        // if start point is over figure's connection point -> connection has no automatic start
+        // else if start point is over figure -> connection has automatic start
+        //      else -> connection has no automatic start
+        var automaticStart = fCpOverId != -1 ? false : fOverId != -1;
+
+        var candidate = CONNECTOR_MANAGER.getClosestPointsOfConnection(
+            automaticStart, //start automatic
+            automaticEnd, //end automatic
+            rStartFigure ? rStartFigure.id : -1, //start figure's id
+            rStartPoint, //start figure's point
+            rEndFigure ? rEndFigure.id : -1, //end figure's id
+            rEndPoint //end figure's point
+        );
+
         //solutions
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
 
 
         //UPDATE CONNECTOR 
@@ -2767,6 +2853,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
         
         firstConPoint.point = con.turningPoints[0].clone();
+        secondConPoint.point = con.turningPoints[con.turningPoints.length - 1].clone();
 
 
 
@@ -2775,28 +2862,30 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         CONNECTOR_MANAGER.glueRemoveAllBySecondId(firstConPoint.id);
 
         //recreate new glues and currentCloud if available
-        var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
-        if(fCpId != -1){ //we are over a figure's cp
-            /*TODO: why not to use fCpId directly?*/
-            var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);        
-            var g = CONNECTOR_MANAGER.glueCreate(fCp.id, firstConPoint.id);
+        if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
+            CONNECTOR_MANAGER.glueCreate(fCpOverId, firstConPoint.id, false);
+        } else if(fOverId != -1){ //Are we, at least, over a Figure?
+            CONNECTOR_MANAGER.glueCreate(candidate[2], firstConPoint.id, true);
         } else {
-            fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, secondConPoint);
-            if(fCpId !== -1){
-                currentCloud = [fCpId, firstConPoint.id];
+            fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, secondConPoint);
+            if(fCpOverId !== -1){
+                currentCloud = [fCpOverId, firstConPoint.id];
             }
         }
     }     
     else if (cps[1].id == connectionPointId){ //SECOND POINT
-        var figCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP at (x,y)
-        if(figCpId != -1){            
-            var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(figCpId);
+        if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
+            var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
                 
-            //start point and figure
+            //end point and figure
             rEndPoint = r_figureConnectionPoint.point.clone();                
             rEndFigure = STACK.figureGetById(r_figureConnectionPoint.parentId);
-        }     
-        else{
+        }
+        else if (fOverId != -1) { //Are we, at least, over a Figure?
+            //end point and figure
+            rEndPoint = new Point(x, y);
+            rEndFigure = STACK.figureGetById(fOverId);
+        } else {
             rEndPoint = new Point(x, y);
         }
          
@@ -2807,8 +2896,27 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         var rStartBounds = rStartFigure ? rStartFigure.getBounds() : null;
         var rEndBounds = rEndFigure ? rEndFigure.getBounds() : null;
 
+
+        /** define connection type **/
+        // if start point has automatic glue -> connection has automatic start
+        var automaticStart = rStartGlues.length && rStartGlues[0].automatic;
+
+        // if end point is over figure's connection point -> connection has no automatic end
+        // else if end point is over figure -> connection has automatic end
+        //      else -> connection has no automatic end
+        var automaticEnd = fCpOverId != -1 ? false : fOverId != -1;
+
+        var candidate = CONNECTOR_MANAGER.getClosestPointsOfConnection(
+            automaticStart, //start automatic
+            automaticEnd, //end automatic
+            rStartFigure ? rStartFigure.id : -1, //start figure's id
+            rStartPoint, //start figure's point
+            rEndFigure ? rEndFigure.id : -1, //end figure's id
+            rEndPoint //end figure point
+        );
+
         //solutions
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, rStartPoint, rEndPoint, rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
 
 
         //UPDATE CONNECTOR
@@ -2819,9 +2927,8 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
 
         con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
-        
+        firstConPoint.point = con.turningPoints[0].clone();
         secondConPoint.point = con.turningPoints[con.turningPoints.length - 1].clone();
-
 
 
         //GLUES MANAGEMENT
@@ -2829,15 +2936,14 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         CONNECTOR_MANAGER.glueRemoveAllBySecondId(secondConPoint.id);
 
         //recreate new glues and currentCloud if available
-        var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
-        if(fCpId != -1){ //we are over a figure's cp
-            /*TODO: why not to use fCpId directly?*/
-            var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpId);
-            var g = CONNECTOR_MANAGER.glueCreate(fCp.id, secondConPoint.id);
+        if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
+            CONNECTOR_MANAGER.glueCreate(fCpOverId, secondConPoint.id, false);
+        } else if(fOverId != -1){ //Are we, at least, over a Figure?
+            CONNECTOR_MANAGER.glueCreate(candidate[3], secondConPoint.id, true);
         } else {
-            fCpId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
-            if(fCpId !== -1){
-                currentCloud = [fCpId, secondConPoint.id];
+            fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
+            if(fCpOverId !== -1){
+                currentCloud = [fCpOverId, secondConPoint.id];
             }
         }
     } else{
