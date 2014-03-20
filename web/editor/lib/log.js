@@ -4,23 +4,6 @@
  *  Copyright 2010 Scriptoid s.r.l
  */
 
-/**no debug at all*/
-var LOG_LEVEL_NONE  = 0;
-
-/**show only errors*/
-var LOG_LEVEL_ERROR = 1;
-
-/**show all up to (and including) info
- *Setting the log level at info level will slow your browser a lot....so use it carefully
- **/
-var LOG_LEVEL_INFO  = 2;
-
-/**show even the debug messages*/
-var LOG_LEVEL_DEBUG = 3;
-
-
-
-
 /**
  * A singleton object used to log all messages in Diagramo.
  * It will adjust to any know (by us) browser and try to behave nice :)
@@ -36,8 +19,22 @@ var LOG_LEVEL_DEBUG = 3;
  * @see For IE9  <a href="http://msdn.microsoft.com/en-us/library/dd565625%28v=vs.85%29.aspx#consolelogging">http://msdn.microsoft.com/en-us/library/dd565625%28v=vs.85%29.aspx#consolelogging</a>
  **/
 var Log  = {
+    /**no debug at all*/
+    LOG_LEVEL_NONE  : 0,
+
+    /**show even the debug messages*/
+    LOG_LEVEL_DEBUG : 1,
+
+    /**show all up to (and including) info
+     *Setting the log level at info level will slow your browser a lot....so use it carefully
+     **/
+    LOG_LEVEL_INFO : 2,
+
+    /**show only errors*/
+    LOG_LEVEL_ERROR : 3,
+
     /**It will keep the log level (anything above this level will be printed)*/
-    level : LOG_LEVEL_ERROR,
+    level : this.LOG_LEVEL_ERROR,
     
     /**
     * The less important of all messages
@@ -45,10 +42,15 @@ var Log  = {
     **/
     debug: function (message){
         if(typeof console !== 'undefined'){
-            if(this.level >= LOG_LEVEL_DEBUG){
-                //TODO: in IE is log
+            if(this.level <= this.LOG_LEVEL_DEBUG){
+                
                 //in FF is debug
-                //console.debug(message);
+                if(typeof console.debug == 'function'){
+                    console.debug(message);
+                }
+                else{//TODO: in IE is log
+//                    console.info(message);
+                }
             }
         }
     },
@@ -60,7 +62,7 @@ var Log  = {
     **/
     info : function (message){
         if(typeof console !== 'undefined'){
-            if(this.level >= LOG_LEVEL_INFO){
+            if(this.level <= this.LOG_LEVEL_INFO){
                 console.info(message);
             }
         }
@@ -72,7 +74,7 @@ var Log  = {
     **/
     error : function (message){
         if(typeof console !== 'undefined'){
-            if(this.level >= LOG_LEVEL_ERROR){
+            if(this.level <= this.LOG_LEVEL_ERROR){
                 console.error(message);
             }
         }
@@ -84,8 +86,8 @@ var Log  = {
      *@see <a href="http://getfirebug.com/logging">http://getfirebug.com/logging</a>
      **/
     group : function(title){
-        if(typeof console !== 'undefined'){
-            if(this.level >= LOG_LEVEL_ERROR){
+        if(this.level <= this.LOG_LEVEL_INFO){ //ignore group if level not debug or info
+            if(typeof console !== 'undefined'){           
                 /**If we do not test for group() function you will get an error in Opera
                  *as Opera has it's own console...which does not have a group() function*/
                 if(typeof console.group === 'function'){
@@ -97,8 +99,8 @@ var Log  = {
 
     /**Ends current message grouping*/
     groupEnd : function(){
-        if(typeof console !== 'undefined'){
-            if(this.level >= LOG_LEVEL_ERROR){
+        if(this.level <= this.LOG_LEVEL_INFO){ //ignore group if level not debug or info
+            if(typeof console !== 'undefined'){
                 /**If we do not test for groupEnd() function you will get an error in Opera
                  *as Opera has it's own console...which does not have a group() function*/
                 if(typeof console.groupEnd === 'function'){
@@ -111,7 +113,8 @@ var Log  = {
 }
 
 /*Set the log level*/
-Log.level = LOG_LEVEL_INFO; 
-//Log.level = LOG_LEVEL_ERROR;
-//Log.level = LOG_LEVEL_NONE;
+//Log.level = Log.LOG_LEVEL_DEBUG; 
+Log.level = Log.LOG_LEVEL_INFO; 
+//Log.level = Log.LOG_LEVEL_ERROR;
+//Log.level = Log.LOG_LEVEL_NONE;
 
