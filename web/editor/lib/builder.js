@@ -237,7 +237,11 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
 
 
-/** The stucture that will hold any changable property of a shape
+/** The stucture that will declare any visible and changable property of a shape.
+ * 
+ *  Note:  A {BuilderProperty} DOES NOT STORE THE VALUE OF THE PROPERTY but only
+ * describe what properties of a {Style} are exposed and how the {Builder} will
+ * create interface (fragments) for user in properties panel. 
  *
  * @constructor
  * @this {Builder}
