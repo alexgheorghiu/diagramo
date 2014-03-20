@@ -5,14 +5,52 @@
  * of Diagramo
  */
 
-/**Import first first Diagramo file format.
+var Importer = {};
+
+
+/**Contains description of all versions an main changes they brought to Diagramo
+ * file format*/
+Importer.fileVersions = {
+    1: "This version did not have any version number. \n\
+        Originally used on Diagramo.com\n\
+        File extension named .dia",
+    
+    2: "This version did not have any version number.\n\
+        Originally used on version 2.3beta\n\
+        ",
+    
+    3: "Stated to be used beginning with version 2.3 final"
+};
+
+/**Import previous Diagramo file format.
  * @param {JSONObject} o - the old version file JSON object
  * @returns {JSONObject} the new JSON version
  * Warning: It does modify the original {JSONObject}
  * */
-function importDiagram(o){
-    //initially we did not have Containers
+Importer.importDiagram = function(o){
+    if( !('v' in o) ){
+        this.patch3(o);
+    }
     
+    /*As now we should have the o.v present
+    we will allow bigger patches than 3 to be applied*/
+    
+    //apply all patches until the fileVersion reaches latest version
+    for(var i = o.v + 1; i <= DIAGRAMO.fileVersion; i++){
+        this['patch' + i](o);       
+    }
+    
+    return o;
+};
+
+/**
+ * Apply patch no. 3 to file structure
+ * @param {JSONObject} o - the old version file JSON object
+ * @returns {JSONObject} the new JSON version
+ * Warning: It does modify the original {JSONObject}
+ * */
+Importer.patch3 = function(o){
+    //initially we did not have Containers    
     if('s' in o){ // 's' stands for Stack
         var jsonStack = o.s;
         if( !('containers' in jsonStack) ){
@@ -109,6 +147,23 @@ function importDiagram(o){
             }
         }
     }
+    
+    o.v = 3;
+    
+    return o;
+}
+
+
+/**
+ * Apply patch no. 4 to file structure
+ * @param {JSONObject} o - the old version file JSON object
+ * @returns {JSONObject} the new JSON version
+ * Warning: It does modify the original {JSONObject}
+ * */
+Importer.patch4 = function(o){
+    o.v = 4;
+    
+    //Add code here
     
     return o;
 }
