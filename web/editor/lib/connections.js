@@ -38,7 +38,7 @@ function Connector(startPoint,endPoint,type, id){
      * Structure of instance:
      * - align: 'v' for vertical and 'h' for horizontal
      * - delta: user defined offset from default position
-     * - index: index of turning point which is changed ([index - 1] is changed the same)*/
+     * - index: index of turning point which is changed*/
     this.userChanges = [];
 
     /**Solution of connector's shape calculated with ConnectionManager.connector2Points.
@@ -116,6 +116,12 @@ Connector.ARROW_SIZE = 15;
 /**End connector arrow angle*/
 Connector.ARROW_ANGLE = 30;
 
+
+/**User change horizontal align*/
+Connector.USER_CHANGE_HORIZONTAL_ALIGN = 'h';
+
+/**User change vertical align*/
+Connector.USER_CHANGE_VERTICAL_ALIGN = 'v';
 
 
 /**Creates a {Connector} out of JSON parsed object

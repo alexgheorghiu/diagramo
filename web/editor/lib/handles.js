@@ -374,9 +374,24 @@ Handle.prototype = {
                         index = i;
                     }
                 }
-                //Pick turning points neighbours and translate them on Oy
-                HandleManager.shape.turningPoints[index-1].transform( Matrix.translationMatrix(0, newY - lastMove[1]) );
-                HandleManager.shape.turningPoints[index].transform( Matrix.translationMatrix(0, newY - lastMove[1]) );
+                var deltaY = newY - lastMove[1];    //Take changes on Oy
+                var translationMatrix = Matrix.translationMatrix(0, deltaY);    //Generate translation matrix
+
+                //Pick turning points neighbours and translate them
+                HandleManager.shape.turningPoints[index-1].transform(translationMatrix);
+                HandleManager.shape.turningPoints[index].transform(translationMatrix);
+
+                // save changes in {Connector}
+                HandleManager.shape.userChanges.push({
+                    align: Connector.USER_CHANGE_VERTICAL_ALIGN,
+                    delta: deltaY,
+                    index: index - 1
+                });
+                HandleManager.shape.userChanges.push({
+                    align: Connector.USER_CHANGE_VERTICAL_ALIGN,
+                    delta: deltaY,
+                    index: index
+                });
                 break;
 
             case 'h':
@@ -391,9 +406,24 @@ Handle.prototype = {
                         index = i;
                     }
                 }
-                //Pick turning points neighbours and translate them on Ox
-                HandleManager.shape.turningPoints[index-1].transform( Matrix.translationMatrix(newX-lastMove[0],0) );
-                HandleManager.shape.turningPoints[index].transform( Matrix.translationMatrix(newX-lastMove[0],0) );
+                var deltaX = newX-lastMove[0];    //Take changes on Ox
+                var translationMatrix = Matrix.translationMatrix(deltaX, 0);    //Generate translation matrix
+
+                //Pick turning points neighbours and translate them
+                HandleManager.shape.turningPoints[index-1].transform(translationMatrix);
+                HandleManager.shape.turningPoints[index].transform(translationMatrix);
+
+                // save changes in {Connector}
+                HandleManager.shape.userChanges.push({
+                    align: Connector.USER_CHANGE_HORIZONTAL_ALIGN,
+                    delta: deltaX,
+                    index: index - 1
+                });
+                HandleManager.shape.userChanges.push({
+                    align: Connector.USER_CHANGE_HORIZONTAL_ALIGN,
+                    delta: deltaX,
+                    index: index
+                });
                 break;
         }
         HandleManager.shape.updateMiddleText();
