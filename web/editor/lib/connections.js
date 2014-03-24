@@ -42,7 +42,7 @@ function Connector(startPoint,endPoint,type, id){
     this.userChanges = [];
 
     /**Solution of connector's shape calculated with ConnectionManager.connector2Points.
-     * It can be one of: 's0', 's1' or 's2' */
+     * It can be one of: 's0', 's1_1', 's2_2', etc. */
     this.solution = '';
     
     /**The {Style} this connector will have*/
@@ -998,7 +998,7 @@ Connector.prototype = {
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     applySolution: function(solution) {
-        // general category solution: 's0', 's1' or 's2'
+        // solution category: 's0', 's1_1', 's2_2', etc.
         var solutionCategory = solution[0][1];
 
         if (!this.solution || this.solution != solutionCategory) {  // Did category changed?
