@@ -993,6 +993,51 @@ Connector.prototype = {
     },
 
 
+    /**Applies solution from ConnectionManager.connector2Points() method.
+     *@param {Array} solution - value returned from ConnectionManager.connector2Points()
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    applySolution: function(solution) {
+        // general category solution: 's0', 's1' or 's2'
+        var solutionCategory = solution[0][0];
+
+        if (!this.solution || this.solution != solutionCategory) {  // Did category changed?
+            this.solution = solutionCategory;   // update solution
+            this.userChanges = [];  // clear user changes
+        } else {
+            this.turningPoints = solution[0][2];    // get turning points from solution
+            this.applyUserChanges();    // apply user changes to turning points
+        }
+
+        solution[0][2] = Point.cloneArray(this.turningPoints);  // update turning points in solution (used further in debug)
+        this.updateMiddleText();    // update position of middle text
+    },
+
+
+    /**Applies user changes to turning points.
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    applyUserChanges: function() {
+        var changesLength = this.userChanges.length;
+        var currentChange;
+        var translationMatrix;
+
+        // go through and apply all changes
+        for (var i = 0; i < changesLength; i++) {
+            currentChange = this.userChanges[i];
+
+            // generate translation matrix
+            if (currentChange.align == Connector.USER_CHANGE_HORIZONTAL_ALIGN) {    // Do we have horizontal change?
+                translationMatrix = Matrix.translationMatrix(currentChange.delta, 0);   // apply horizontal delta
+            } else if (currentChange.align == Connector.USER_CHANGE_VERTICAL_ALIGN) {       // Do we have vertical change?
+                translationMatrix = Matrix.translationMatrix(0, currentChange.delta);   // apply vertical delta
+            }
+            // apply change
+            this.turningPoints[currentChange.index].transform(translationMatrix);
+        }
+    },
+
+
     /**Check if start and end members of turningPoints match/are the same.
      *@return {Boolean} - match or not
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
