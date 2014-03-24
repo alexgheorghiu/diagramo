@@ -38,3 +38,4 @@ build-all-in-one/
 build-light
 dist/
 temp/
+.idea/
