@@ -20,13 +20,13 @@ var connector_defaultConnectorTextBgStyle = "#ffffff";
  *@param {Point} startPoint - the start of the line, where a ConnectionPoint will be added
  *@param {Point} endPoint - the end of the line, where a ConnectionPoint will be added
  *@param {String} type - the type of the Connector. It can be 'straight' or 'jagged'
- *@param {Number} id - the unique (at least among other Connectors) id this connnector will have
+ *@param {Number} id - the unique (at least among other Connectors) id this connector will have
  *@author Zack Newsham <zack_newsham@yahoo.co.uk>
  *@author Alex Gheorghiu <alex@scriptoid.com>
 */
 function Connector(startPoint,endPoint,type, id){
     /**Connector's id*/
-    this.id = id
+    this.id = id;
     
     /**An {Array} of {Point}s. They will be used to draw the connector*/
     this.turningPoints = [startPoint,endPoint];
@@ -91,13 +91,13 @@ Connector.TYPE_ORGANIC = 'organic';
 Connector.STYLE_NORMAL = "Normal";
 
 /**Arrow like end connector style*/
-Connector.STYLE_ARROW = "Arrow"
+Connector.STYLE_ARROW = "Arrow";
 
 /**Empty triangle end connector style*/
-Connector.STYLE_EMPTY_TRIANGLE = "Empty"
+Connector.STYLE_EMPTY_TRIANGLE = "Empty";
 
 /**Filled triangle end connector style*/
-Connector.STYLE_FILLED_TRIANGLE = "Filled"
+Connector.STYLE_FILLED_TRIANGLE = "Filled";
 
 /**End connector arrow size*/
 Connector.ARROW_SIZE = 15;
@@ -567,7 +567,7 @@ Connector.prototype = {
         var startConnectionFigureId = CONNECTOR_MANAGER.connectionPointGet(glue.id1 == startConnectionPoint.id ? glue.id2 : glue.id1).parentId;
         var startConnectionFigure = STACK.figureGetById(startConnectionFigureId);
         
-        var startCenterPoint
+        var startCenterPoint;
         if(startConnectionFigure){
             startCenterPoint = startConnectionFigure.rotationCoords[0];
         }
@@ -580,7 +580,7 @@ Connector.prototype = {
         glue  = CONNECTOR_MANAGER.glueGetByConnectionPointId(endCon.id)[0];//there will only be one for this
         var endConnectionFigure=CONNECTOR_MANAGER.connectionPointGet(glue.id1==endCon.id ? glue.id2 : glue.id1).parentId;
         endConnectionFigure=STACK.figureGetById(endConnectionFigure);
-        var endCenterPoint
+        var endCenterPoint;
         if(endConnectionFigure){
             endCenterPoint = endConnectionFigure.rotationCoords[0];
         }
