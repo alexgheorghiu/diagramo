@@ -999,17 +999,18 @@ Connector.prototype = {
      **/
     applySolution: function(solution) {
         // general category solution: 's0', 's1' or 's2'
-        var solutionCategory = solution[0][0];
+        var solutionCategory = solution[0][1];
 
         if (!this.solution || this.solution != solutionCategory) {  // Did category changed?
             this.solution = solutionCategory;   // update solution
-            this.userChanges = [];  // clear user changes
+            this.clearUserChanges();  // clear user changes
+            this.turningPoints = Point.cloneArray(solution[0][2]);  // update turning points
         } else {
             this.turningPoints = solution[0][2];    // get turning points from solution
             this.applyUserChanges();    // apply user changes to turning points
+            solution[0][2] = Point.cloneArray(this.turningPoints);  // update turning points of solution (used further in debug)
         }
 
-        solution[0][2] = Point.cloneArray(this.turningPoints);  // update turning points in solution (used further in debug)
         this.updateMiddleText();    // update position of middle text
     },
 
@@ -1052,13 +1053,21 @@ Connector.prototype = {
 
             // Do we have change with such align and index?
             if (currentChange.align == userChange.align && currentChange.index == userChange.index) {
-                currentChange.delta = userChange.delta; // update delta of previous change
+                currentChange.delta += userChange.delta; // update delta of previous change
                 return; // work is done - exit function
             }
         }
 
         // we have new change and add it to array
         this.userChanges.push(userChange);
+    },
+
+
+    /**Clears user changes.
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    clearUserChanges: function() {
+        this.userChanges = [];
     },
 
 

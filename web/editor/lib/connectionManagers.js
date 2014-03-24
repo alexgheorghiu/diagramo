@@ -1474,11 +1474,12 @@ ConnectorManager.prototype = {
                 //solutions
                 DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(connector.type, candidate[0], candidate[1], startBounds, endBounds);
 
-                // update position of Connector's ConnectionPoints and it's middle text
-                connector.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
+                // apply solution to Connector
+                connector.applySolution(DIAGRAMO.debugSolutions);
+
+                // update position of Connector's ConnectionPoints
                 cCPs[0].point = connector.turningPoints[0].clone();
                 cCPs[1].point = connector.turningPoints[connector.turningPoints.length - 1].clone();
-                connector.updateMiddleText();
 
 
                 //Log.info("\t\tConnectionManager: connectionPointTransform() - connector's point " + conCp);
