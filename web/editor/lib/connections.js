@@ -1038,6 +1038,30 @@ Connector.prototype = {
     },
 
 
+    /**Adds user change.
+     *@param {Object} userChange - user change to add
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    addUserChange: function(userChange) {
+        var changesLength = this.userChanges.length;
+        var currentChange;
+
+        // go through all changes
+        for (var i = 0; i < changesLength; i++) {
+            currentChange = this.userChanges[i];
+
+            // Do we have change with such align and index?
+            if (currentChange.align == userChange.align && currentChange.index == userChange.index) {
+                currentChange.delta = userChange.delta; // update delta of previous change
+                return; // work is done - exit function
+            }
+        }
+
+        // we have new change and add it to array
+        this.userChanges.push(userChange);
+    },
+
+
     /**Check if start and end members of turningPoints match/are the same.
      *@return {Boolean} - match or not
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>

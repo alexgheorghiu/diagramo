@@ -381,13 +381,13 @@ Handle.prototype = {
                 HandleManager.shape.turningPoints[index-1].transform(translationMatrix);
                 HandleManager.shape.turningPoints[index].transform(translationMatrix);
 
-                // save changes in {Connector}
-                HandleManager.shape.userChanges.push({
+                // add new changes in {Connector}
+                HandleManager.shape.addUserChange({
                     align: Connector.USER_CHANGE_VERTICAL_ALIGN,
                     delta: deltaY,
                     index: index - 1
                 });
-                HandleManager.shape.userChanges.push({
+                HandleManager.shape.addUserChange({
                     align: Connector.USER_CHANGE_VERTICAL_ALIGN,
                     delta: deltaY,
                     index: index
@@ -413,13 +413,13 @@ Handle.prototype = {
                 HandleManager.shape.turningPoints[index-1].transform(translationMatrix);
                 HandleManager.shape.turningPoints[index].transform(translationMatrix);
 
-                // save changes in {Connector}
-                HandleManager.shape.userChanges.push({
+                // add new changes in {Connector}
+                HandleManager.shape.addUserChange({
                     align: Connector.USER_CHANGE_HORIZONTAL_ALIGN,
                     delta: deltaX,
                     index: index - 1
                 });
-                HandleManager.shape.userChanges.push({
+                HandleManager.shape.addUserChange({
                     align: Connector.USER_CHANGE_HORIZONTAL_ALIGN,
                     delta: deltaX,
                     index: index
