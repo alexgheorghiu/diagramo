@@ -429,14 +429,13 @@ ConnectorManager.prototype = {
             
             //adjust connector
             var solutions = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
-            var solution = solutions[0][2]; //solution = a vector of turning points
-            
-            con.turningPoints = solution;
+
+            // apply solution to Connector
+            con.applySolution(solutions);
+
             conCps[0].point = con.turningPoints[0].clone();
             conCps[1].point = con.turningPoints[con.turningPoints.length - 1].clone();
-        }        
-        
-        con.updateMiddleText();
+        }
     },
     
     

@@ -2691,7 +2691,6 @@ function connectorPickSecond(x, y, ev){
             rEndBounds
         );
     }
-    
     //end remove block
 
     //COLOR MANAGEMENT FOR {ConnectionPoint}
@@ -2702,14 +2701,14 @@ function connectorPickSecond(x, y, ev){
         cps[1].color = ConnectionPoint.NORMAL_COLOR;
     }
 
+    // apply solution to Connector
+    con.applySolution(DIAGRAMO.debugSolutions);
+
+    Log.info("connectorPickSecond() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
     
     var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
     var secConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
-    //adjust connector
-    Log.info("connectorPickSecond() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
-    
-    con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
-    //CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId).point = con.turningPoints[0].clone();
+
     firstConPoint.point = con.turningPoints[0].clone();
     secConPoint.point = con.turningPoints[con.turningPoints.length-1].clone();
 
@@ -2843,18 +2842,17 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         //solutions
         DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
 
+        // apply solution to Connector
+        con.applySolution(DIAGRAMO.debugSolutions);
+
+        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
 
         //UPDATE CONNECTOR 
         var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
         var secondConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
-        //adjust connector
-        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
-
-        con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
         
         firstConPoint.point = con.turningPoints[0].clone();
         secondConPoint.point = con.turningPoints[con.turningPoints.length - 1].clone();
-
 
 
         //GLUES MANAGEMENT
@@ -2918,15 +2916,15 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         //solutions
         DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
 
+        // apply solution to Connector
+        con.applySolution(DIAGRAMO.debugSolutions);
+
+        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
 
         //UPDATE CONNECTOR
         var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
         var secondConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
         
-        //adjust connector
-        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
-
-        con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
         firstConPoint.point = con.turningPoints[0].clone();
         secondConPoint.point = con.turningPoints[con.turningPoints.length - 1].clone();
 
