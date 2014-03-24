@@ -33,6 +33,17 @@ function Connector(startPoint,endPoint,type, id){
     
     /**Type of connector. Ex. TYPE_STRAIGHT*/
     this.type = type;
+
+    /**An {Array} of {Object}s. Stores set of user manual changes to connector's shape.
+     * Structure of instance:
+     * - align: 'v' for vertical and 'h' for horizontal
+     * - delta: user defined offset from default position
+     * - index: index of turning point which is changed ([index - 1] is changed the same)*/
+    this.userChanges = [];
+
+    /**Solution of connector's shape calculated with ConnectionManager.connector2Points.
+     * It can be one of: 's0', 's1' or 's2' */
+    this.solution = '';
     
     /**The {Style} this connector will have*/
     this.style = new Style();
@@ -118,6 +129,8 @@ Connector.load = function(o){
     newConnector.id = o.id;
     newConnector.turningPoints = Point.loadArray(o.turningPoints);
     newConnector.type = o.type;
+    newConnector.userChanges = o.userChanges;
+    newConnector.solution = o.solution;
     newConnector.style = Style.load(o.style);
 
     newConnector.middleText = Text.load(o.middleText);
@@ -178,6 +191,8 @@ Connector.prototype = {
 
         if(this.id != anotherConnector.id
             || this.type != anotherConnector.type
+            || this.userChanges != anotherConnector.userChanges
+            || this.solution != anotherConnector.solution
             || !this.middleText.equals(anotherConnector.middleText)
             || this.startStyle != anotherConnector.startStyle
             || this.endStyle != anotherConnector.endStyle
@@ -1140,7 +1155,15 @@ Connector.prototype = {
     
     /**String representation*/
     toString:function(){
-        return "Connector id = " + this.id + ' ' + this.type  + '[' +this.turningPoints+ ']' + ' active cp = ' + this.activeConnectionPointId+")";
+        return 'Connector : (id = ' + this.id
+            + ', type = ' + this.type
+            + ', turningPoints = [' + this.turningPoints + ']'
+            + ', userChanges = [' + this.userChanges + ']'
+            + ', solution = ' + this.solution
+            + ', startStyle = ' + this.startStyle
+            + ', endStyle = ' + this.endStyle
+            + ', activeConnectionPointId = ' + this.activeConnectionPointId
+            + ')';
     },
 
 
