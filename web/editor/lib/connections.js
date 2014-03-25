@@ -195,9 +195,17 @@ Connector.prototype = {
             }
         }
 
+        //test user changes
+        for(var i=0; i<this.userChanges.length; i++){
+            if(this.userChanges[i].align != anotherConnector.userChanges[i].align
+                || this.userChanges[i].index != anotherConnector.userChanges[i].index
+                || this.userChanges[i].delta != anotherConnector.userChanges[i].delta){
+                return false;
+            }
+        }
+
         if(this.id != anotherConnector.id
             || this.type != anotherConnector.type
-            || this.userChanges != anotherConnector.userChanges
             || this.solution != anotherConnector.solution
             || !this.middleText.equals(anotherConnector.middleText)
             || this.startStyle != anotherConnector.startStyle
@@ -1056,7 +1064,10 @@ Connector.prototype = {
 
             // Do we have change with such align and index?
             if (currentChange.align == userChange.align && currentChange.index == userChange.index) {
-                currentChange.delta += userChange.delta; // update delta of previous change
+                /* update delta of previous change
+                 * we should accumulate delta value, not replace
+                 * because current step here based on previous*/
+                currentChange.delta += userChange.delta;
                 return; // work is done - exit function
             }
         }
