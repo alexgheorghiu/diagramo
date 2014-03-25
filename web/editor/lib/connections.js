@@ -1085,6 +1085,30 @@ Connector.prototype = {
     },
 
 
+    /**Clones array of user changes.
+     *@return {Array} - array containing current user changes
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    cloneUserChanges: function() {
+        var clonedArray = [];
+        var changesLength = this.userChanges.length;
+
+        // go through and clone all user changes
+        for (var i = 0; i < changesLength; i++) {
+            // create new instance of user changes
+            // set values equal to current user change
+            // push new instance in result array with cloned user changes
+            clonedArray.push({
+                align: this.userChanges[i].align,
+                index: this.userChanges[i].index,
+                delta: this.userChanges[i].delta
+            });
+        }
+
+        return clonedArray;
+    },
+
+
     /**Check if start and end members of turningPoints match/are the same.
      *@return {Boolean} - match or not
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
