@@ -2357,6 +2357,7 @@ function onMouseMove(ev){
                 }
 
 
+                /*TODO: Do we still need this difference? It's not used further. */
                 //see if old turning points are the same as the new turning points
                 var difference = false;
                 for(var k=0;k<newTurns.length; k++){
