@@ -377,6 +377,9 @@ Handle.prototype = {
                 var deltaY = newY - lastMove[1];    //Take changes on Oy
                 var translationMatrix = Matrix.translationMatrix(0, deltaY);    //Generate translation matrix
 
+                /*TODO: make changes to DIAGRAMO.debugSolutions here
+                 * because, otherwise, those changes are not reflected in debug painting of Connector
+                 */
                 //Pick turning points neighbours and translate them
                 HandleManager.shape.turningPoints[index-1].transform(translationMatrix);
                 HandleManager.shape.turningPoints[index].transform(translationMatrix);
@@ -409,6 +412,9 @@ Handle.prototype = {
                 var deltaX = newX-lastMove[0];    //Take changes on Ox
                 var translationMatrix = Matrix.translationMatrix(deltaX, 0);    //Generate translation matrix
 
+                /*TODO: make changes to DIAGRAMO.debugSolutions here
+                 * because, otherwise, those changes are not reflected in debug painting of Connector
+                 */
                 //Pick turning points neighbours and translate them
                 HandleManager.shape.turningPoints[index-1].transform(translationMatrix);
                 HandleManager.shape.turningPoints[index].transform(translationMatrix);
