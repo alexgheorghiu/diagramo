@@ -1001,7 +1001,10 @@ Connector.prototype = {
         // solution category: 's0', 's1_1', 's2_2', etc.
         var solutionCategory = solution[0][1];
 
-        if (!this.solution || this.solution != solutionCategory) {  // Did category changed?
+        /*We should check if solution changed from previous.
+        * Solution determined by it's category (s1_2, s2_1) and number of turning points.*/
+        if (!this.solution || this.solution != solutionCategory   // Did category changed?
+                || this.turningPoints.length != solution[0][2].length) {   // Did number of turning points changed?
             this.solution = solutionCategory;   // update solution
             this.clearUserChanges();  // clear user changes
             this.turningPoints = Point.cloneArray(solution[0][2]);  // update turning points
