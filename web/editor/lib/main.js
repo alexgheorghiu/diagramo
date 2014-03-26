@@ -17,7 +17,7 @@ var DIAGRAMO = {
             
     /**Keeps temporary connector solution.
      * TODO: move to CONNECTION_MANAGE?!*/
-    debugSolutions : [],
+    debugSolution : [],
 
     /** enables/disables rendering of currentCloud
     * TODO: in further can be used for option like "Show Cloud" or "Highlight about to connect points" */
@@ -2357,14 +2357,14 @@ function onMouseMove(ev){
                 }
 
 
-                /*TODO: Do we still need this difference? It's not used further. */
-                //see if old turning points are the same as the new turning points
-                var difference = false;
-                for(var k=0;k<newTurns.length; k++){
-                    if(! newTurns[k].equals(oldTurns[k])){
-                        difference = true;
-                    }
-                }
+//                /*TODO: Do we still need this difference? It's not used further. */
+//                //see if old turning points are the same as the new turning points
+//                var difference = false;
+//                for(var k=0;k<newTurns.length; k++){
+//                    if(! newTurns[k].equals(oldTurns[k])){
+//                        difference = true;
+//                    }
+//                }
 
 //                //store the Command in History
 //                if(difference && doUndo){
@@ -2684,7 +2684,7 @@ function connectorPickSecond(x, y, ev){
             rEndPoint //end figure's point
             );
         
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(
+        DIAGRAMO.debugSolution = CONNECTOR_MANAGER.connector2Points(
             con.type, 
             candidate[0], /*Start point*/
             candidate[1], /*End point*/
@@ -2703,9 +2703,9 @@ function connectorPickSecond(x, y, ev){
     }
 
     // apply solution to Connector
-    con.applySolution(DIAGRAMO.debugSolutions);
+    con.applySolution(DIAGRAMO.debugSolution);
 
-    Log.info("connectorPickSecond() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
+    Log.info("connectorPickSecond() -> Solution: " + DIAGRAMO.debugSolution[0][2]);
     
     var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
     var secConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
@@ -2841,12 +2841,12 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         );
 
         //solutions
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolution = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
 
         // apply solution to Connector
-        con.applySolution(DIAGRAMO.debugSolutions);
+        con.applySolution(DIAGRAMO.debugSolution);
 
-        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
+        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolution[0][2]);
 
         //UPDATE CONNECTOR 
         var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
@@ -2915,12 +2915,12 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         );
 
         //solutions
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
+        DIAGRAMO.debugSolution = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
 
         // apply solution to Connector
-        con.applySolution(DIAGRAMO.debugSolutions);
+        con.applySolution(DIAGRAMO.debugSolution);
 
-        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
+        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolution[0][2]);
 
         //UPDATE CONNECTOR
         var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);

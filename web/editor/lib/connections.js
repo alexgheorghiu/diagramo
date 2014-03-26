@@ -38,7 +38,10 @@ function Connector(startPoint,endPoint,type, id){
      * Structure of instance:
      * - align: 'v' for vertical and 'h' for horizontal
      * - delta: user defined offset from default position
-     * - index: index of turning point which is changed*/
+     * - index: index of turning point which is changed
+     * Note: the changes are not store in the order of the turning points, but
+     * the correspondence is made by 'index' field
+     * */
     this.userChanges = [];
 
     /**Solution of connector's shape calculated with ConnectionManager.connector2Points.
@@ -1051,14 +1054,21 @@ Connector.prototype = {
 
 
     /**Adds user change.
-     *@param {Object} userChange - user change to add
+     *@param {Object} userChange - user change to add. It's form is
+     * {align : '', delta: '', index: ''} where 
+     *  align:  Connector.USER_CHANGE_VERTICAL_ALIGN | Connector.USER_CHANGE_HORIZONTAL_ALIGN
+     *  delta: Numeric
+     *  index : the index of turning point     
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     addUserChange: function(userChange) {
         var changesLength = this.userChanges.length;
         var currentChange;
+        
+        /*First seach if we need to merge current change with existing one,
+         * if no existing one present we will simply add it.*/
 
-        // go through all changes
+        // Go through all changes (Merge option)
         for (var i = 0; i < changesLength; i++) {
             currentChange = this.userChanges[i];
 
@@ -1072,7 +1082,7 @@ Connector.prototype = {
             }
         }
 
-        // we have new change and add it to array
+        // we have new change and add it to array (new change)
         this.userChanges.push(userChange);
     },
 
