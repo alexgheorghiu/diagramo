@@ -503,7 +503,7 @@ ContainerFigureManager.prototype = {
         }
 
         // test data
-        if(this.data.length == anotherManager.data.length){
+        if(this.data.length === anotherManager.data.length){
             for(var i = 0; i < this.data.length; i++){
                 if(this.data[i][0] !== anotherManager.data[i][0]
                 || this.data[i][1] !== anotherManager.data[i][1]){
@@ -528,8 +528,12 @@ ContainerFigureManager.prototype = {
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 ContainerFigureManager.load = function(o){
-    var containerFigureManager = new ContainerFigureManager(); //empty constructor
+//    alert("ContainerFigureManager.load o = " + o 
+//            + " typeof 'o' = " + typeof o
+//            + " o.data = " + o['data']);
     
+    var containerFigureManager = new ContainerFigureManager(); //empty constructor
+        
     //TODO: it should work....not tested
     containerFigureManager.data = [];
 

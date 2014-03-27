@@ -37,7 +37,12 @@ Importer.importDiagram = function(o){
     
     //apply all patches until the fileVersion reaches latest version
     for(var i = o.v + 1; i <= DIAGRAMO.fileVersion; i++){
-        this['patch' + i](o);       
+        try{
+            this['patch' + i](o);       
+        } catch(error){
+            Log.error("Importer.importDiagram exception: " + error)
+            alert("Importer.importDiagram exception: " + error);
+        }
     }
     
     return o;
@@ -53,9 +58,12 @@ Importer.patch3 = function(o){
     //initially we did not have Containers    
     if('s' in o){ // 's' stands for Stack
         var jsonStack = o.s;
+        
+        //If not containers array present
         if( !('containers' in jsonStack) ){
             jsonStack.containers = []; //add an empty container array
-        }
+        }                        
+        
         if( 'figures' in jsonStack ){   // replace deprecated property value with new one
             var deprecatedPropertyValue = 'textSize';
             var deprecatedReplacer = 'size';
@@ -74,7 +82,8 @@ Importer.patch3 = function(o){
     }
     
     if( !('p' in o) ){ // 'p' stands for ContainerFigureManager
-        o.p = new ContainerFigureManager() ; //empty ContainerFigureManager
+        o.p = {data : []} ; //empty ContainerFigureManager
+//        alert("wow " + o.p);
     }
 
     if( 'm' in o ){ // 'm' stands for ConnectorManager

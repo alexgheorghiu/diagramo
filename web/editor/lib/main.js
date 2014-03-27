@@ -3494,26 +3494,38 @@ function exportCanvas(){
  **/
 function load(diagramId){
     //alert("load diagram [" + diagramId + ']');
+    
+    /**@see http://stackoverflow.com/questions/10197895/ipad-javascript-error-not-helpful*/
+    window.onerror = function (desc, page, line, chr){
+        alert('Description: ' + desc
+                + ' Page: ' + page
+                + ' Line: '+ line
+                + ' Position: '+ chr
+        ); 
+    };
 
     $.post("./common/controller.php", {action: 'load', diagramId: diagramId},
         function(data){
 //                        alert(data);
-            var obj  = eval('(' + data + ')');
-            
-            if( !('v' in obj) || obj.v != DIAGRAMO.fileVersion){
-                Importer.importDiagram(obj);//import 1st version of Diagramo files
-            }
-            
-            STACK = Stack.load(obj['s']);
-            canvasProps = CanvasProps.load(obj['c']);
-            canvasProps.sync();
-            setUpEditPanel(canvasProps);
+//            try{
+                var obj  = eval('(' + data + ')');
+                if( !('v' in obj) || obj.v != DIAGRAMO.fileVersion){
+                    Importer.importDiagram(obj);//import 1st version of Diagramo files
+                }
 
-            CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
-            CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
-            draw();
+                STACK = Stack.load(obj['s']);
+                canvasProps = CanvasProps.load(obj['c']);
+                canvasProps.sync();
+                setUpEditPanel(canvasProps);
 
-            //alert("loaded");
+                CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
+                CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
+                draw();
+
+                //alert("loaded");
+//            } catch(error) {
+//                alert("main.js:load() Exception: " + error);
+//            }
         }
     );
 }

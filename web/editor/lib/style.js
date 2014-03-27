@@ -157,9 +157,17 @@ Style.prototype={
      **/
     setupContext:function(context){
         for(var propertyName in this){
-            if(propertyName != "linearGradient" && propertyName != "addColorStop" && propertyName != "image"){
+            if(propertyName !== "linearGradient" 
+                    && propertyName !== "addColorStop" 
+                    && propertyName !== "image"
+                    && propertyName !== "constructor" //iPad's Safari is very picky about this and for a reason :)
+                ){
                 if(this[propertyName] != null && propertyName != undefined){
-                    context[propertyName] = this[propertyName];
+                    try{
+                        context[propertyName] = this[propertyName];
+                    } catch(error){
+                        alert("Style:setupContext() Error trying to setup context's property: ["  + propertyName + '] details = [' + error + "]\n");
+                    }
                 }
             }
         }
