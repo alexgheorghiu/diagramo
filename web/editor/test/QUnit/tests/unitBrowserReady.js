@@ -29,97 +29,48 @@ test("primitive.Point.contains [Depends on Point.constructor]", function () {
 
 
     test("get canvas context", function () {
-
-        ok(true);
+        var r = testContext instanceof CanvasRenderingContext2D;
+        ok(r, "No CanvasRenderingContext2D ?");
     });
 
+
     /**
-     * In time of developing this test ("letters metrix") passes in Firefox, Chrome & Safari, but fails in IE9 and IE10.
-     * From the point of view of official
-     * @see <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">HTML5 Canvas documentation</a>
-     * we are doing everything correct: use the same font-family, font-size and the same method
-     * CanvasRenderingContext2D :: TextMetrics measureText(DOMString text)
-     *
-     * Our discovering of this issue documented
-     * @see <a href="https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9">here</a>
+     * Check if we do have measureText
     **/
-//    test("letters metrix", function () {
-//        var r = true;
-//        var letters = "ABCDEFGHIJKLMNOPQRSTUVXYZabcdefghijklnopqrstuvwxyz";
-//        var l_width = "78998799368799989987977777767737733637777473759555";
-//        for(var i = 0; i < letters.length; i++){
-//            var metrics = testContext.measureText(letters.charAt(i));
-//            var letterR = metrics.width == parseInt(l_width.charAt(i));
-//            ok(letterR, 'Char: ' + letters.charAt(i) + ' expected ' + parseInt(l_width.charAt(i)) + ' type:' + typeof (parseInt(l_width.charAt(i))) + ' got: ' + metrics.width + ' type: ' + typeof (metrics.width) );
-//            r &= letterR;
-//        }
-//        r &= testContext.measureText('m').width === 11;
-//        r &= testContext.measureText('W').width === 11;
-//
-//        ok(r);
-//    });
+    test("2d Context's measureText(...)", function () {
+        var r = typeof testContext.measureText === 'function';
 
-    test("digit metrix", function () {
-        var r = true;
-        for(var i = 0; i < 10; i++){
-            var metrics = testContext.measureText(i);
-            r &= metrics.width == 7;
-        }
-
-        ok(r);
+        ok(r, "No context's measureText(...) method ? ");
     });
 
+
     /**
-     * In time of developing this test ("letters metrix") passes in Firefox, Chrome & Safari, but fails in IE9 and IE10.
+     * WARNING: If you run this page @see http://www.w3schools.com/tags/canvas_measuretext.asp
+     * you will see that width is not the same across browses, thus making current
+     * test irelevant 
+     * 
+     * Our discovering of this issue documented
+     * @see <a href="https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9">here</a>    
+     * In time of developing this test ("letters metrix") passes in Firefox, Chrome & Safari, IE11
+     * but fails in IE9 and IE10.
+     * 
      * From the point of view of official
      * @see <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">HTML5 Canvas documentation</a>
      * we are doing everything correct: use the same font-family, font-size and the same method
      * CanvasRenderingContext2D :: TextMetrics measureText(DOMString text)
      *
-     * Our discovering of this issue documented
-     * @see <a href="https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9">here</a>
      **/
-//    test("symbol metrix", function () {
-//        var r = true;
-//        var symbols = "* '`!#$^&*()[]{};:,.<>?";
-//        var s_width = "53243775854433443333777";
-//        for(var i = 0; i < symbols.length; i++){
-//            var metrics = testContext.measureText(symbols.charAt(i));
-//            r &= metrics.width == s_width.charAt(i);
-//        }
-//        r &= testContext.measureText('@').width == 12;
-//        r &= testContext.measureText('%').width == 11;
-//        r &= testContext.measureText('"').width == 4;
-//        r &= testContext.measureText('\\').width == 3;
-//
-//        ok(r);
-//    });
-
     test("digit metrix", function () {
+        var EXPECTED_VALUE = 7;
         var r = true;
         for(var i = 0; i < 10; i++){
             var metrics = testContext.measureText(i);
-            r &= metrics.width == 7;
+            r &= metrics.width === EXPECTED_VALUE;
         }
 
-        ok(r);
+        ok(r, 'Wrong metrics mesurement. It should be ' + EXPECTED_VALUE 
+                + " but found " +  metrics.width);
     });
 
-    /**
-     * In time of developing this test ("letters metrix") passes in Firefox, Chrome & Safari, but fails in IE9 and IE10.
-     * From the point of view of official
-     * @see <a href="http://www.whatwg.org/specs/web-apps/current-work/multipage/the-canvas-element.html">HTML5 Canvas documentation</a>
-     * we are doing everything correct: use the same font-family, font-size and the same method
-     * CanvasRenderingContext2D :: TextMetrics measureText(DOMString text)
-     *
-     * Our discovering of this issue documented
-     * @see <a href="https://bitbucket.org/scriptoid/diagramo/issue/36/text-units-fails-on-ie9">here</a>
-     **/
-//    test("word metrix", function () {
-//        var r = testContext.measureText('Alex').width == 7 + 3 + 7 + 5;
-//        r &= testContext.measureText('Max').width == 9 + 7 + 5;
-//
-//        ok(r);
-//    });
 
 })();
