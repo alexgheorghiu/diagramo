@@ -97,7 +97,7 @@ Importer.patch3 = function(o){
             var connectors = jsonConnectorManager.connectors;
             var connectorLength = connectors.length;
             for (var i = 0; i < connectorLength; i++) {
-                // old version has fillStyle underfined
+                // old version has fillStyle undefined
                 if (!connectors[i].middleText.style.fillStyle) {
                     connectors[i].middleText.style.fillStyle = connector_defaultConnectorTextFillStyle;
                 }

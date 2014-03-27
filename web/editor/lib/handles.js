@@ -721,7 +721,7 @@ HandleManager.shapeSet = function(shape){
                     h.y = (HandleManager.shape.turningPoints[i].y + HandleManager.shape.turningPoints[i+1].y) / 2;
 
                 }
-                else{ // same horizontal
+                else if(shape.turningPoints[i].y == shape.turningPoints[i+1].y){ // same horizontal
                     h = new Handle("v");
                     h.x = (HandleManager.shape.turningPoints[i].x +  HandleManager.shape.turningPoints[i+1].x) / 2;
                     h.y = HandleManager.shape.turningPoints[i].y;
