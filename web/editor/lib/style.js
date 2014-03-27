@@ -160,7 +160,9 @@ Style.prototype={
             if(propertyName !== "linearGradient" 
                     && propertyName !== "addColorStop" 
                     && propertyName !== "image"
-                    && propertyName !== "constructor" //iPad's Safari is very picky about this and for a reason :)
+                    
+                    //iPad's Safari is very picky about this and for a reason (see #118)
+                    && propertyName !== "constructor" 
                 ){
                 if(this[propertyName] != null && propertyName != undefined){
                     try{

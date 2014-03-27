@@ -49,6 +49,23 @@ DIAGRAMO.switchDebug = function(value) {
 };
 
 
+/*Activate the bellow block of code if anything else fails
+ *Helped me a lot on a remote iPad (https://bitbucket.org/scriptoid/diagramo/issue/118)
+ *with no available OSX around.
+ *TODO: Could be added as normal lister into a future verbosity option
+ **/
+if(false){
+    /**@see http://stackoverflow.com/questions/10197895/ipad-javascript-error-not-helpful*/
+    window.onerror = function (desc, page, line, chr){
+        alert('Description: ' + desc
+                + ' Page: ' + page
+                + ' Line: '+ line
+                + ' Position: '+ chr
+        ); 
+    };
+}
+
+
 /**Describe the file version of the file
  * This will make easier to make upgrades in the future.
  * Any time change in file format will be appear this number
@@ -3495,19 +3512,10 @@ function exportCanvas(){
 function load(diagramId){
     //alert("load diagram [" + diagramId + ']');
     
-    /**@see http://stackoverflow.com/questions/10197895/ipad-javascript-error-not-helpful*/
-    window.onerror = function (desc, page, line, chr){
-        alert('Description: ' + desc
-                + ' Page: ' + page
-                + ' Line: '+ line
-                + ' Position: '+ chr
-        ); 
-    };
-
     $.post("./common/controller.php", {action: 'load', diagramId: diagramId},
         function(data){
 //                        alert(data);
-//            try{
+            try{
                 var obj  = eval('(' + data + ')');
                 if( !('v' in obj) || obj.v != DIAGRAMO.fileVersion){
                     Importer.importDiagram(obj);//import 1st version of Diagramo files
@@ -3523,9 +3531,9 @@ function load(diagramId){
                 draw();
 
                 //alert("loaded");
-//            } catch(error) {
-//                alert("main.js:load() Exception: " + error);
-//            }
+            } catch(error) {
+                alert("main.js:load() Exception: " + error);
+            }
         }
     );
 }
@@ -3539,22 +3547,26 @@ function loadTempDiagram(tempDiagramName){
     $.post("./common/controller.php", {action: 'loadTemp', tempName: tempDiagramName},
         function(data){
 //                        alert(data);
-            var obj  = eval('(' + data + ')');
-            
-            if( !('v' in obj) || obj.v != DIAGRAMO.fileVersion){
-                Importer.importDiagram(obj);//import 1st version of Diagramo files
+            try{
+                var obj  = eval('(' + data + ')');
+
+                if( !('v' in obj) || obj.v != DIAGRAMO.fileVersion){
+                    Importer.importDiagram(obj);//import 1st version of Diagramo files
+                }
+
+                STACK = Stack.load(obj['s']);
+                canvasProps = CanvasProps.load(obj['c']);
+                canvasProps.sync();
+                setUpEditPanel(canvasProps);
+
+                CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);            
+                CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
+                draw();
+
+                //alert("loaded");
+            } catch(error) {
+                alert("main.js:load() Exception: " + error);
             }
-            
-            STACK = Stack.load(obj['s']);
-            canvasProps = CanvasProps.load(obj['c']);
-            canvasProps.sync();
-            setUpEditPanel(canvasProps);
-
-            CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);            
-            CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
-            draw();
-
-            //alert("loaded");
         }
     );
 }

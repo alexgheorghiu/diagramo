@@ -528,9 +528,6 @@ ContainerFigureManager.prototype = {
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 ContainerFigureManager.load = function(o){
-//    alert("ContainerFigureManager.load o = " + o 
-//            + " typeof 'o' = " + typeof o
-//            + " o.data = " + o['data']);
     
     var containerFigureManager = new ContainerFigureManager(); //empty constructor
         

@@ -41,7 +41,7 @@ Importer.importDiagram = function(o){
             this['patch' + i](o);       
         } catch(error){
             Log.error("Importer.importDiagram exception: " + error)
-            alert("Importer.importDiagram exception: " + error);
+//            alert("Importer.importDiagram exception: " + error);
         }
     }
     
@@ -82,8 +82,7 @@ Importer.patch3 = function(o){
     }
     
     if( !('p' in o) ){ // 'p' stands for ContainerFigureManager
-        o.p = {data : []} ; //empty ContainerFigureManager
-//        alert("wow " + o.p);
+        o.p = new ContainerFigureManager() ; //empty ContainerFigureManager
     }
 
     if( 'm' in o ){ // 'm' stands for ConnectorManager
