@@ -726,8 +726,10 @@ HandleManager.shapeSet = function(shape){
                     h.x = (HandleManager.shape.turningPoints[i].x +  HandleManager.shape.turningPoints[i+1].x) / 2;
                     h.y = HandleManager.shape.turningPoints[i].y;
                 }
-                h.visible = true;
-                HandleManager.handles.push(h);
+                if (h) {    // Did we created a Handle?
+                    h.visible = true;   // make it visible
+                    HandleManager.handles.push(h);  // add it to HandleManager
+                }
             }
         }
     }
