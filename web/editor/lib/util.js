@@ -489,16 +489,54 @@ var Util = {
      *@param {Point} p3 - third point
      *@return {Boolean} - true if coliniar and false if not
      *@author Alex
+     *@deprecated
      **/
-    collinearity: function(p1, p2, p3){
+    deprecated_collinearity: function(p1, p2, p3){
+        //Check if 2 points coincide. If they do we automatically have collinearity
+        if(p1.x === p2.x  && p1.y === p2.y){
+            return true;
+        }
+        
+        if(p1.x === p3.x  && p1.y === p3.y){
+            return true;
+        }
+        
+        if(p2.x === p3.x  && p2.y === p3.y){
+            return true;
+        }
+            
         // check for vertical line
-        if (p1.x == p2.x) {
-            return p3.x == p1.x;
+        if (p1.x === p2.x) {
+            return p3.x === p1.x;
         } else { // usual (not vertical) line can be represented as y = a * x + b
             var a = (p2.y - p1.y) / (p2.x - p1.x);
             var b = p1.y - a * p1.x;
-            return p3.y == a * p3.x + b;
+            return p3.y === a * p3.x + b;
         }
+    },
+    
+    
+    /**Tests if 3 points are coliniar with matrix determinants.
+     * If the determinat of matrix 
+     * /         \
+     * | x1 y1 1 |
+     * | x2 y2 1 |
+     * | x3 y3 1 |
+     * \         /
+     * is zero it means that the points are colinear
+     *@param {Point} p1 - first point
+     *@param {Point} p2 - second point
+     *@param {Point} p3 - third point
+     *@return {Boolean} - true if coliniar and false if not
+     *@author Alex
+     *@see http://en.wikipedia.org/wiki/Determinant
+     *@see https://people.richland.edu/james/lecture/m116/matrices/applications.html
+     **/
+    collinearity: function(p1, p2, p3){
+        var determinant = (p1.x * p2.y + p1.y * p3.x + p2.x * p3.y) 
+                - (p2.y * p3.x + p1.y * p2.x + p1.x * p3.y);
+        
+        return determinant === 0;
     },
 
 

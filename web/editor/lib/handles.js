@@ -698,30 +698,36 @@ HandleManager.shapeSet = function(shape){
              *Create a new handle ONLY if previous, current and next turning points are not colinear
              **/
             if( 
-                /*Previous points are not colinear and next points are either non colinear or last 2 coincide (this case appear when dragging)*/
+                /*Previous points are not collinear and next points are either 
+                 * non colinear or last 2 coincide (this case appears when dragging). 
+                 * 
+                 * Basically ensure the segment [i, i+1] is not on same line with
+                 * [i-1, i] or [i+1, i+2]*/
                 (
-                    ! Util.collinearity(HandleManager.shape.turningPoints[i-1], HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1])
+                    !Util.collinearity(HandleManager.shape.turningPoints[i-1], HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1])
                     && 
                     ( !Util.collinearity(HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1], HandleManager.shape.turningPoints[i+2])
-                        || HandleManager.shape.turningPoints[i+1].equals(HandleManager.shape.turningPoints[i+2]) )
+                        || HandleManager.shape.turningPoints[i+1].equals(HandleManager.shape.turningPoints[i+2])  /*Next two coincide? TODO: Do we really need this? Explain*/
                     )
+                )
             
                 ||
-                /*Previous points are non colinear or last 2 of them coincide and next points are not colinear*/
+                /*Previous points are non colinear or first 2 of them coincide and next points are not colinear*/
                 (
                     (! Util.collinearity(HandleManager.shape.turningPoints[i-1], HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1])
-                        || HandleManager.shape.turningPoints[i-1].equals(HandleManager.shape.turningPoints[i]) )
+                        || HandleManager.shape.turningPoints[i-1].equals(HandleManager.shape.turningPoints[i]) /*Previous two coincide?  TODO: Do we really need this? Explain*/ )
                     && 
                     !Util.collinearity(HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1], HandleManager.shape.turningPoints[i+2])
-                    )
+                )
+                
                 ){
-                if(shape.turningPoints[i].x == shape.turningPoints[i+1].x){ //same vertical
+                if(shape.turningPoints[i].x === shape.turningPoints[i+1].x){ //same vertical
                     h = new Handle("h");
                     h.x = HandleManager.shape.turningPoints[i].x;
                     h.y = (HandleManager.shape.turningPoints[i].y + HandleManager.shape.turningPoints[i+1].y) / 2;
 
                 }
-                else if(shape.turningPoints[i].y == shape.turningPoints[i+1].y){ // same horizontal
+                else if(shape.turningPoints[i].y === shape.turningPoints[i+1].y){ // same horizontal
                     h = new Handle("v");
                     h.x = (HandleManager.shape.turningPoints[i].x +  HandleManager.shape.turningPoints[i+1].x) / 2;
                     h.y = HandleManager.shape.turningPoints[i].y;
