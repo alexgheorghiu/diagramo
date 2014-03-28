@@ -102,6 +102,69 @@ test("Util.Min/Max", function () {
     ok(Util.max(v) == 68, 'max of a vector');
 });
 
+
+test("Util.collinearity", function () {
+    var p1 = {x:10, y:10};
+    var p2 = {x:10, y:10};
+    var p3 = {x:10, y:10};
+    
+    //3 points coincide
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 1 failed');
+    
+    //only first 2 points coincide
+    p3.x = 100;
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 2 failed');
+    p3.x = 10;
+    
+    //colinear on [Ox but do not coincide
+    p2.x = 5;
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 3 failed');
+    p2.x = 10;
+    
+    //first 2 coincide again 
+    p1.x = p2.x = p3.x = 10; //reset back
+    p3.y =  100;
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 4 failed');
+    p3.y = 10;
+    
+    //colinear on [Oy 
+    p1.y = 5;
+    p3.y = 20;
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 5 failed');
+
+});
+
+test("Util.collinearity2", function () {
+    var p1 = {x:10, y:10};
+    var p2 = {x:10, y:10};
+    var p3 = {x:10, y:10};
+    
+    //3 points coincide
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 1 failed');
+    
+    //only first 2 points coincide
+    p3.x = 100;
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 2 failed');
+    p3.x = 10;
+    
+    //colinear on [Ox but do not coincide
+    p2.x = 5;
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 3 failed');
+    p3.x = 10;
+    
+    //first 2 coincide again 
+    p1.x = p2.x = p3.x = 10; //reset back
+    p3.y =  100;
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 4 failed');
+    p3.y = 10;
+    
+    //colinear on [Oy 
+    p1.y = 5;
+    p3.y = 20;
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 5 failed');
+
+});
+
 test("Util.miscelaneus", function () {
     var v = [new Point(10,10), new Point(100,10), new Point(100,100), new Point(10,100)];
     var p = new Point(20,10);
