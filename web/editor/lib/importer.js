@@ -102,6 +102,15 @@ Importer.patch3 = function(o){
                     connectors[i].middleText.style.fillStyle = connector_defaultConnectorTextFillStyle;
                 }
 
+                // old version has userChanges undefined
+                if (!connectors[i].userChanges) {
+                    connectors[i].userChanges = [];
+                }
+                // old version has solution undefined
+                if (!connectors[i].solution) {
+                    connectors[i].solution = '';
+                }
+
                 lineStylePropertyDefined = false;
                 textSizePropertyDefined = false;
                 fontPropertyDefined = false;
