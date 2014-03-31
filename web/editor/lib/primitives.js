@@ -384,7 +384,7 @@ Line.prototype = {
         if(d < 0){
             d = 0 - d;
         }
-        return (d<=radius && endX>=x && x>=startX && endY>=y && y>=startY)
+        return ( d<=radius && ((endX>=x && x>=startX) || (endY>=y && y>=startY)) )
         || this.startPoint.near(x,y,radius) || this.endPoint.near(x,y,radius);
 
     },
