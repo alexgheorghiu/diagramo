@@ -532,11 +532,18 @@ var Util = {
      *@see http://en.wikipedia.org/wiki/Determinant
      *@see https://people.richland.edu/james/lecture/m116/matrices/applications.html
      **/
-    collinearity: function(p1, p2, p3){
+    collinearity: function(p1, p2, p3, precission){
         var determinant = (p1.x * p2.y + p1.y * p3.x + p2.x * p3.y) 
                 - (p2.y * p3.x + p1.y * p2.x + p1.x * p3.y);
         
-        return determinant === 0;
+        if(precission){
+            return Math.abs(determinant) <= precission;
+        }
+        else{
+            return determinant === 0;
+        }
+        
+        
     },
 
 
