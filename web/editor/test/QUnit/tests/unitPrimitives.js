@@ -185,6 +185,56 @@ test("primitive.Line.contains [Depends on Point.constructor, Line.constructor]",
     ok(!new Line(new Point(50, 10), new Point(50, 60)).contains(50, 70), "point on the \"infinite\" vertical line out of bounds");
 });
 
+test("primitive.Line.near [Depends on Point.constructor, Point.near, Line.constructor]", function () {
+    var line = new Line(new Point(10, 10), new Point(110, 10)); // horizontal line
+    var pX = 30;
+    var pY = 10;
+    var radius = 3;
+
+    ok(line.near(pX, pY, radius), "point on the horizontal line");
+
+    pY = 9;
+    ok(line.near(pX, pY, radius), "point is 1 point higher than horizontal line");
+
+    pX = 1;
+    ok(!line.near(pX, pY, radius), "point is shifted to left from horizontal line");
+
+    pX = 8;
+    ok(line.near(pX, pY, radius), "point is near start point");
+
+
+    line = new Line(new Point(10, 10), new Point(10, 110));
+    pX = 10;
+    pY = 30;
+    ok(line.near(pX, pY, radius), "point on the vertical line");
+
+    pX = 9;
+    ok(line.near(pX, pY, radius), "point is moved 1 point to the left from vertical line");
+
+    pY = 170;
+    ok(!line.near(pX, pY, radius), "point is shifted to bottom from vertical line");
+
+    pY = 111;
+    ok(line.near(pX, pY, radius), "point is near end point");
+
+
+    line = new Line(new Point(10, 10), new Point(30, 30));
+    pX = 20;
+    pY = 20;
+    ok(line.near(pX, pY, radius), "point on the inclined line");
+
+    pX = 21;
+    ok(line.near(pX, pY, radius), "point is moved 1 point to the right from inclined line");
+
+    pY = 22;
+    ok(line.near(pX, pY, radius), "point is moved 1 point to the bottom from inclined line");
+
+
+    line = new Line(new Point(10, 10), new Point(300, 11));
+    pX = 100;
+    pY = 12;
+    ok(line.near(pX, pY, radius), "point is higher than max Y of line, but is closer than radius.");
+});
 
 //module( "SVG Export tests" );
 //
