@@ -203,7 +203,7 @@ test("primitive.Line.near [Depends on Point.constructor, Point.near, Line.constr
     ok(line.near(pX, pY, radius), "point is near start point");
 
 
-    line = new Line(new Point(10, 10), new Point(10, 110));
+    line = new Line(new Point(10, 10), new Point(10, 110)); //vertical line
     pX = 10;
     pY = 30;
     ok(line.near(pX, pY, radius), "point on the vertical line");
