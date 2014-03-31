@@ -234,6 +234,12 @@ test("primitive.Line.near [Depends on Point.constructor, Point.near, Line.constr
     pX = 100;
     pY = 12;
     ok(line.near(pX, pY, radius), "point is higher than max Y of line, but is closer than radius.");
+
+
+    line = new Line(new Point(10, 10), new Point(11, 300));
+    pX = 12;
+    pY = 100;
+    ok(line.near(pX, pY, radius), "point has X bigger than max X of line, but is closer than radius.");
 });
 
 //module( "SVG Export tests" );
