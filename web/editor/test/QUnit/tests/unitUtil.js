@@ -139,7 +139,7 @@ test("Util.collinearity", function () {
     var p4 = {x:355.06265, y:97.35912};
 
     // p1 and p2 are collinear on Ox, p2 and p3 are collinear on Oy
-    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 6 failed');
+    ok(!Util.collinearity(p1, p2, p3), 'Collinearity test 6 failed');
     // p2, p3 and p4 are collinear on Oy
     ok(Util.collinearity(p2, p3, p4), 'Collinearity test 7 failed');
 });
