@@ -428,15 +428,14 @@ ConnectorManager.prototype = {
             var eBounds = eFigure == null ? null : eFigure.getBounds();
             
             //adjust connector
-            var solutions = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
-            var solution = solutions[0][2]; //solution = a vector of turning points
-            
-            con.turningPoints = solution;
+            var solution = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
+
+            // apply solution to Connector
+            con.applySolution(solution);
+
             conCps[0].point = con.turningPoints[0].clone();
             conCps[1].point = con.turningPoints[con.turningPoints.length - 1].clone();
-        }        
-        
-        con.updateMiddleText();
+        }
     },
     
     
@@ -666,7 +665,9 @@ ConnectorManager.prototype = {
      *@param {Array} sBounds - the starting bounds (of a Figure) as [left, top, right, bottom] - area we should avoid
      *@param {Array} eBounds - the ending bounds (of a Figure) as [left, top, right, bottom] - area we shoudl avoid
      *
-     *@retun {Array} - in a form ('general case', 'solution', [point1, point2, ...])
+     *@return {Array} solution - in a form ('generic solution name', 'specific solution name', [point1, point2, ...])
+     *Example: ['s1', 's1_1', [point1, point2, point3, ...]] where 's1 - is the generic solution name,
+     * s1_1 - the specific solution name (Case 1 of Solution 1)
      *@author Alex Gheorghiu <alex@scriptoid.com>
      **/
     connector2Points: function(type,  startPoint, endPoint, sBounds, eBounds ){
@@ -1472,13 +1473,14 @@ ConnectorManager.prototype = {
                 );
 
                 //solutions
-                DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(connector.type, candidate[0], candidate[1], startBounds, endBounds);
+                DIAGRAMO.debugSolution = CONNECTOR_MANAGER.connector2Points(connector.type, candidate[0], candidate[1], startBounds, endBounds);
 
-                // update position of Connector's ConnectionPoints and it's middle text
-                connector.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
+                // apply solution to Connector
+                connector.applySolution(DIAGRAMO.debugSolution);
+
+                // update position of Connector's ConnectionPoints
                 cCPs[0].point = connector.turningPoints[0].clone();
                 cCPs[1].point = connector.turningPoints[connector.turningPoints.length - 1].clone();
-                connector.updateMiddleText();
 
 
                 //Log.info("\t\tConnectionManager: connectionPointTransform() - connector's point " + conCp);

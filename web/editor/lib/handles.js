@@ -374,9 +374,27 @@ Handle.prototype = {
                         index = i;
                     }
                 }
-                //Pick turning points neighbours and translate them on Oy
-                HandleManager.shape.turningPoints[index-1].transform( Matrix.translationMatrix(0, newY - lastMove[1]) );
-                HandleManager.shape.turningPoints[index].transform( Matrix.translationMatrix(0, newY - lastMove[1]) );
+                var deltaY = newY - lastMove[1];    //Take changes on Oy
+                var translationMatrix = Matrix.translationMatrix(0, deltaY);    //Generate translation matrix
+
+                /*TODO: make changes to DIAGRAMO.debugSolution here
+                 * because, otherwise, those changes are not reflected in debug painting of Connector
+                 */
+                //Pick turning points neighbours and translate them
+                HandleManager.shape.turningPoints[index-1].transform(translationMatrix);
+                HandleManager.shape.turningPoints[index].transform(translationMatrix);
+
+                // add new changes in {Connector}
+                HandleManager.shape.addUserChange({
+                    align: Connector.USER_CHANGE_VERTICAL_ALIGN,
+                    delta: deltaY,
+                    index: index - 1
+                });
+                HandleManager.shape.addUserChange({
+                    align: Connector.USER_CHANGE_VERTICAL_ALIGN,
+                    delta: deltaY,
+                    index: index
+                });
                 break;
 
             case 'h':
@@ -391,9 +409,27 @@ Handle.prototype = {
                         index = i;
                     }
                 }
-                //Pick turning points neighbours and translate them on Ox
-                HandleManager.shape.turningPoints[index-1].transform( Matrix.translationMatrix(newX-lastMove[0],0) );
-                HandleManager.shape.turningPoints[index].transform( Matrix.translationMatrix(newX-lastMove[0],0) );
+                var deltaX = newX-lastMove[0];    //Take changes on Ox
+                var translationMatrix = Matrix.translationMatrix(deltaX, 0);    //Generate translation matrix
+
+                /*TODO: make changes to DIAGRAMO.debugSolution here
+                 * because, otherwise, those changes are not reflected in debug painting of Connector
+                 */
+                //Pick turning points neighbours and translate them
+                HandleManager.shape.turningPoints[index-1].transform(translationMatrix);
+                HandleManager.shape.turningPoints[index].transform(translationMatrix);
+
+                // add new changes in {Connector}
+                HandleManager.shape.addUserChange({
+                    align: Connector.USER_CHANGE_HORIZONTAL_ALIGN,
+                    delta: deltaX,
+                    index: index - 1
+                });
+                HandleManager.shape.addUserChange({
+                    align: Connector.USER_CHANGE_HORIZONTAL_ALIGN,
+                    delta: deltaX,
+                    index: index
+                });
                 break;
         }
         HandleManager.shape.updateMiddleText();
@@ -662,36 +698,44 @@ HandleManager.shapeSet = function(shape){
              *Create a new handle ONLY if previous, current and next turning points are not colinear
              **/
             if( 
-                /*Previous points are not colinear and next points are either non colinear or last 2 coincide (this case appear when dragging)*/
+                /*Previous points are not collinear and next points are either 
+                 * non colinear or last 2 coincide (this case appears when dragging). 
+                 * 
+                 * Basically ensure the segment [i, i+1] is not on same line with
+                 * [i-1, i] or [i+1, i+2]*/
                 (
-                    ! Util.collinearity(HandleManager.shape.turningPoints[i-1], HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1])
+                    !Util.collinearity(HandleManager.shape.turningPoints[i-1], HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1])
                     && 
                     ( !Util.collinearity(HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1], HandleManager.shape.turningPoints[i+2])
-                        || HandleManager.shape.turningPoints[i+1].equals(HandleManager.shape.turningPoints[i+2]) )
+                        || HandleManager.shape.turningPoints[i+1].equals(HandleManager.shape.turningPoints[i+2])  /*Next two coincide? TODO: Do we really need this? Explain*/
                     )
+                )
             
                 ||
-                /*Previous points are non colinear or last 2 of them coincide and next points are not colinear*/
+                /*Previous points are non colinear or first 2 of them coincide and next points are not colinear*/
                 (
                     (! Util.collinearity(HandleManager.shape.turningPoints[i-1], HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1])
-                        || HandleManager.shape.turningPoints[i-1].equals(HandleManager.shape.turningPoints[i]) )
+                        || HandleManager.shape.turningPoints[i-1].equals(HandleManager.shape.turningPoints[i]) /*Previous two coincide?  TODO: Do we really need this? Explain*/ )
                     && 
                     !Util.collinearity(HandleManager.shape.turningPoints[i], HandleManager.shape.turningPoints[i+1], HandleManager.shape.turningPoints[i+2])
-                    )
+                )
+                
                 ){
-                if(shape.turningPoints[i].x == shape.turningPoints[i+1].x){ //same vertical
+                if(shape.turningPoints[i].x === shape.turningPoints[i+1].x){ //same vertical
                     h = new Handle("h");
                     h.x = HandleManager.shape.turningPoints[i].x;
                     h.y = (HandleManager.shape.turningPoints[i].y + HandleManager.shape.turningPoints[i+1].y) / 2;
 
                 }
-                else{ // same horizontal
+                else if(shape.turningPoints[i].y === shape.turningPoints[i+1].y){ // same horizontal
                     h = new Handle("v");
                     h.x = (HandleManager.shape.turningPoints[i].x +  HandleManager.shape.turningPoints[i+1].x) / 2;
                     h.y = HandleManager.shape.turningPoints[i].y;
                 }
-                h.visible = true;
-                HandleManager.handles.push(h);
+                if (h) {    // Did we created a Handle?
+                    h.visible = true;   // make it visible
+                    HandleManager.handles.push(h);  // add it to HandleManager
+                }
             }
         }
     }

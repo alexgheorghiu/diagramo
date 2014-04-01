@@ -24,8 +24,9 @@ function ConnectorAlterCommand(connectorId){
     
     //-------------------store previous state-------------------------------
     
-    //TODO: totally inneficient (massive storage) - we should store deltas
+    //TODO: totally inefficient (massive storage) - we should store deltas
     this.turningPoints = Point.cloneArray(con.turningPoints);
+    this.userChanges = con.cloneUserChanges();
     this.glues = Glue.cloneArray(CONNECTOR_MANAGER.glues);
     this.connectionPoints = ConnectionPoint.cloneArray(CONNECTOR_MANAGER.connectionPoints);            
     
@@ -43,6 +44,10 @@ ConnectorAlterCommand.prototype = {
     undo : function(){ 
         var con = CONNECTOR_MANAGER.connectorGetById(this.connectorId);
         con.turningPoints = this.turningPoints;
+        con.userChanges = this.userChanges;
+        /*TODO: make changes to DIAGRAMO.debugSolution here
+         * because, otherwise, those changes are not reflected in debug painting of Connector
+         */
         CONNECTOR_MANAGER.glues = this.glues;
         CONNECTOR_MANAGER.connectionPoints = this.connectionPoints;
         

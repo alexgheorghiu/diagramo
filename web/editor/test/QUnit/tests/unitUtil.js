@@ -102,6 +102,81 @@ test("Util.Min/Max", function () {
     ok(Util.max(v) == 68, 'max of a vector');
 });
 
+
+test("Util.collinearity", function () {
+    var p1 = {x:10, y:10};
+    var p2 = {x:10, y:10};
+    var p3 = {x:10, y:10};
+    
+    //3 points coincide
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 1 failed');
+    
+    //only first 2 points coincide
+    p3.x = 100;
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 2 failed');
+    p3.x = 10;
+    
+    //colinear on [Ox but do not coincide
+    p2.x = 5;
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 3 failed');
+    p2.x = 10;
+    
+    //first 2 coincide again 
+    p1.x = p2.x = p3.x = 10; //reset back
+    p3.y =  100;
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 4 failed');
+    p3.y = 10;
+    
+    //colinear on [Oy 
+    p1.y = 5;
+    p3.y = 20;
+    ok(Util.collinearity(p1, p2, p3), 'Collinearity test 5 failed');
+
+    //collinear with decimals
+    p1 = {x:513, y:287};
+    p2 = {x:513, y:97.35912};
+    p3 = {x:385.06265, y:97.35912};
+    var p4 = {x:355.06265, y:97.35912};
+
+    // p1 and p2 are collinear on Ox, p2 and p3 are collinear on Oy
+    ok(!Util.collinearity(p1, p2, p3), 'Collinearity test 6 failed');
+    
+    // p2, p3 and p4 are collinear on Oy
+    ok(Util.collinearity(p2, p3, p4, 0.0001), 'Collinearity test 7 failed');
+});
+
+test("Util.collinearity2", function () {
+    var p1 = {x:10, y:10};
+    var p2 = {x:10, y:10};
+    var p3 = {x:10, y:10};
+    
+    //3 points coincide
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 1 failed');
+    
+    //only first 2 points coincide
+    p3.x = 100;
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 2 failed');
+    p3.x = 10;
+    
+    //colinear on [Ox but do not coincide
+    p2.x = 5;
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 3 failed');
+    p3.x = 10;
+    
+    //first 2 coincide again 
+    p1.x = p2.x = p3.x = 10; //reset back
+    p3.y =  100;
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 4 failed');
+    p3.y = 10;
+    
+    //colinear on [Oy 
+    p1.y = 5;
+    p3.y = 20;
+    ok(Util.deprecated_collinearity(p1, p2, p3), 'deprecated_collinearity test 5 failed');
+
+});
+
+
 test("Util.miscelaneus", function () {
     var v = [new Point(10,10), new Point(100,10), new Point(100,100), new Point(10,100)];
     var p = new Point(20,10);

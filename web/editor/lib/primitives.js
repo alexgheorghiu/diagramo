@@ -204,7 +204,8 @@ Point.prototype = {
 
 
 /**
-  * Creates an instance of a Line
+  * Creates an instance of a Line. A Line is actually a segment and not a pure
+  * geometrical Line
   *
   * @constructor
   * @this {Line}
@@ -349,20 +350,21 @@ Line.prototype = {
      *@param {Number} x - the x coordinates
      *@param {Number} y - the y coordinates
      *@param {Number} radius - the radius to search for
+     *@see http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+     *@see "Mathematics for Computer Graphics, 2nd Ed., by John Vice, page 227"
      *@author Zack Newsham <zack_newsham@yahoo.co.uk>
-     *@see <a href="http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html">http://mathworld.wolfram.com/Point-LineDistance2-Dimensional.html</a>
-     *@see <a href="http://www.worsleyschool.net/science/files/linepoint/distance.html">http://www.worsleyschool.net/science/files/linepoint/distance.html </a> (see method 5)
-     *TODO: review not made
+     *@author Arty
+     *@author Alex
      **/
     near:function(x,y,radius){
-        //get the slope of the line
-        var m;
-        if(this.endPoint.x == this.startPoint.x){
+        
+        if(this.endPoint.x === this.startPoint.x){ //Vertical line, so the vicinity area is a rectangle
             return ( (this.startPoint.y-radius<=y && this.endPoint.y+radius>=y) 
                     || (this.endPoint.y-radius<=y && this.startPoint.y+radius>=y))
             && x > this.startPoint.x - radius && x < this.startPoint.x + radius ;
         }
-        if(this.startPoint.y == this.endPoint.y){
+        
+        if(this.startPoint.y === this.endPoint.y){ //Horizontal line, so the vicinity area is a rectangle
             return ( (this.startPoint.x - radius<=x && this.endPoint.x+radius>=x) 
                     || (this.endPoint.x-radius<=x && this.startPoint.x+radius>=x))
                     && y>this.startPoint.y-radius && y<this.startPoint.y+radius ;
@@ -373,19 +375,29 @@ Line.prototype = {
         var startY = Math.min(this.endPoint.y,this.startPoint.y);
         var endX = Math.max(this.endPoint.x,this.startPoint.x);
         var endY = Math.max(this.endPoint.y,this.startPoint.y);
+        
+        /*We will compute the distance from point to the line
+         * by using the algorithm from 
+         * http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+         * */
 
-        m = (this.endPoint.y-this.startPoint.y)/(this.endPoint.x-this.startPoint.x);
-        var b = -1;
-        //get the intercept
-        var c = this.startPoint.y-m*this.startPoint.x;
+        //First we need to find a,b,c of the line equation ax + by + c = 0
+        var a = this.endPoint.y - this.startPoint.y;
+        var b = this.startPoint.x - this.endPoint.x;        
+        var c = -(this.startPoint.x * this.endPoint.y - this.endPoint.x * this.startPoint.y);
 
-        //get the radius
-        var d = (m*x+(b*y)+c)/Math.sqrt(Math.pow(m,2)+Math.pow(b,2));
-        if(d < 0){
-            d = 0 - d;
-        }
-        return (d<=radius && endX>=x && x>=startX && endY>=y && y>=startY)
-        || this.startPoint.near(x,y,radius) || this.endPoint.near(x,y,radius);
+        //Secondly we get the distance "Mathematics for Computer Graphics, 2nd Ed., by John Vice, page 227"
+        var d = Math.abs( (a*x + b*y + c) / Math.sqrt(Math.pow(a,2) + Math.pow(b,2)) );
+
+        //Thirdly we get coordinates of closest line's point to target point
+        //http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Cartesian_coordinates
+        var closestX = (b * (b*x - a*y) - a*c) / ( Math.pow(a,2) + Math.pow(b,2) );
+        var closestY = (a * (-b*x + a*y) - b*c) / ( Math.pow(a,2) + Math.pow(b,2) );
+
+        var r = ( d <= radius && endX>=closestX && closestX>=startX && endY>=closestY && closestY>=startY ) //the projection of the point falls INSIDE of the segment
+            || this.startPoint.near(x,y,radius) || this.endPoint.near(x,y,radius); //the projection of the point falls OUTSIDE of the segment 
+
+        return  r;
 
     },
 

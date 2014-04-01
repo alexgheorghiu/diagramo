@@ -33,6 +33,20 @@ function Connector(startPoint,endPoint,type, id){
     
     /**Type of connector. Ex. TYPE_STRAIGHT*/
     this.type = type;
+
+    /**An {Array} of {Object}s. Stores set of user manual changes to connector's shape.
+     * Structure of instance:
+     * - align: 'v' for vertical and 'h' for horizontal
+     * - delta: user defined offset from default position
+     * - index: index of turning point which is changed
+     * Note: the changes are not store in the order of the turning points, but
+     * the correspondence is made by 'index' field
+     * */
+    this.userChanges = [];
+
+    /**Solution of connector's shape calculated with ConnectionManager.connector2Points.
+     * It can be one of: 's0', 's1_1', 's2_2', etc. */
+    this.solution = '';
     
     /**The {Style} this connector will have*/
     this.style = new Style();
@@ -106,6 +120,12 @@ Connector.ARROW_SIZE = 15;
 Connector.ARROW_ANGLE = 30;
 
 
+/**User change horizontal align*/
+Connector.USER_CHANGE_HORIZONTAL_ALIGN = 'h';
+
+/**User change vertical align*/
+Connector.USER_CHANGE_VERTICAL_ALIGN = 'v';
+
 
 /**Creates a {Connector} out of JSON parsed object
  *@param {JSONObject} o - the JSON parsed object
@@ -118,6 +138,8 @@ Connector.load = function(o){
     newConnector.id = o.id;
     newConnector.turningPoints = Point.loadArray(o.turningPoints);
     newConnector.type = o.type;
+    newConnector.userChanges = o.userChanges;
+    newConnector.solution = o.solution;
     newConnector.style = Style.load(o.style);
 
     newConnector.middleText = Text.load(o.middleText);
@@ -176,8 +198,18 @@ Connector.prototype = {
             }
         }
 
+        //test user changes
+        for(var i=0; i<this.userChanges.length; i++){
+            if(this.userChanges[i].align != anotherConnector.userChanges[i].align
+                || this.userChanges[i].index != anotherConnector.userChanges[i].index
+                || this.userChanges[i].delta != anotherConnector.userChanges[i].delta){
+                return false;
+            }
+        }
+
         if(this.id != anotherConnector.id
             || this.type != anotherConnector.type
+            || this.solution != anotherConnector.solution
             || !this.middleText.equals(anotherConnector.middleText)
             || this.startStyle != anotherConnector.startStyle
             || this.endStyle != anotherConnector.endStyle
@@ -972,6 +1004,121 @@ Connector.prototype = {
     },
 
 
+    /**Applies solution from ConnectionManager.connector2Points() method.
+     *@param {Array} solution - value returned from ConnectionManager.connector2Points()
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    applySolution: function(solution) {
+        // solution category: 's0', 's1_1', 's2_2', etc.
+        var solutionCategory = solution[0][1];
+
+        /*We should check if solution changed from previous.
+        * Solution determined by it's category (s1_2, s2_1) and number of turning points.*/
+        if (!this.solution || this.solution != solutionCategory   // Did category changed?
+                || this.turningPoints.length != solution[0][2].length) {   // Did number of turning points changed?
+            this.solution = solutionCategory;   // update solution
+            this.clearUserChanges();  // clear user changes
+            this.turningPoints = Point.cloneArray(solution[0][2]);  // update turning points
+        } else {
+            this.turningPoints = solution[0][2];    // get turning points from solution
+            this.applyUserChanges();    // apply user changes to turning points
+            solution[0][2] = Point.cloneArray(this.turningPoints);  // update turning points of solution (used further in debug)
+        }
+
+        this.updateMiddleText();    // update position of middle text
+    },
+
+
+    /**Applies user changes to turning points.
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    applyUserChanges: function() {
+        var changesLength = this.userChanges.length;
+        var currentChange;
+        var translationMatrix;
+
+        // go through and apply all changes
+        for (var i = 0; i < changesLength; i++) {
+            currentChange = this.userChanges[i];
+
+            // generate translation matrix
+            if (currentChange.align == Connector.USER_CHANGE_HORIZONTAL_ALIGN) {    // Do we have horizontal change?
+                translationMatrix = Matrix.translationMatrix(currentChange.delta, 0);   // apply horizontal delta
+            } else if (currentChange.align == Connector.USER_CHANGE_VERTICAL_ALIGN) {       // Do we have vertical change?
+                translationMatrix = Matrix.translationMatrix(0, currentChange.delta);   // apply vertical delta
+            }
+            // apply change
+            this.turningPoints[currentChange.index].transform(translationMatrix);
+        }
+    },
+
+
+    /**Adds user change.
+     *@param {Object} userChange - user change to add. It's form is
+     * {align : '', delta: '', index: ''} where 
+     *  align:  Connector.USER_CHANGE_VERTICAL_ALIGN | Connector.USER_CHANGE_HORIZONTAL_ALIGN
+     *  delta: Numeric
+     *  index : the index of turning point     
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    addUserChange: function(userChange) {
+        var changesLength = this.userChanges.length;
+        var currentChange;
+        
+        /*First seach if we need to merge current change with existing one,
+         * if no existing one present we will simply add it.*/
+
+        // Go through all changes (Merge option)
+        for (var i = 0; i < changesLength; i++) {
+            currentChange = this.userChanges[i];
+
+            // Do we have change with such align and index?
+            if (currentChange.align == userChange.align && currentChange.index == userChange.index) {
+                /* update delta of previous change
+                 * we should accumulate delta value, not replace
+                 * because current step here based on previous*/
+                currentChange.delta += userChange.delta;
+                return; // work is done - exit function
+            }
+        }
+
+        // we have new change and add it to array (new change)
+        this.userChanges.push(userChange);
+    },
+
+
+    /**Clears user changes.
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    clearUserChanges: function() {
+        this.userChanges = [];
+    },
+
+
+    /**Clones array of user changes.
+     *@return {Array} - array containing current user changes
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    cloneUserChanges: function() {
+        var clonedArray = [];
+        var changesLength = this.userChanges.length;
+
+        // go through and clone all user changes
+        for (var i = 0; i < changesLength; i++) {
+            // create new instance of user changes
+            // set values equal to current user change
+            // push new instance in result array with cloned user changes
+            clonedArray.push({
+                align: this.userChanges[i].align,
+                index: this.userChanges[i].index,
+                delta: this.userChanges[i].delta
+            });
+        }
+
+        return clonedArray;
+    },
+
+
     /**Check if start and end members of turningPoints match/are the same.
      *@return {Boolean} - match or not
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
@@ -1140,7 +1287,15 @@ Connector.prototype = {
     
     /**String representation*/
     toString:function(){
-        return "Connector id = " + this.id + ' ' + this.type  + '[' +this.turningPoints+ ']' + ' active cp = ' + this.activeConnectionPointId+")";
+        return 'Connector : (id = ' + this.id
+            + ', type = ' + this.type
+            + ', turningPoints = [' + this.turningPoints + ']'
+            + ', userChanges = [' + this.userChanges + ']'
+            + ', solution = ' + this.solution
+            + ', startStyle = ' + this.startStyle
+            + ', endStyle = ' + this.endStyle
+            + ', activeConnectionPointId = ' + this.activeConnectionPointId
+            + ')';
     },
 
 
