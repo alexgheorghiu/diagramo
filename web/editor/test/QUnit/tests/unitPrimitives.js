@@ -229,7 +229,7 @@ test("primitive.Line.near [Depends on Point.constructor, Point.near, Line.constr
     pY = 22;
     ok(line.near(pX, pY, radius), "point is moved 1 point to the bottom from inclined line");
 
-    pX = 33;
+    pX = 33.1;
     pY = 30;
     /* details here:
      * https://bitbucket.org/scriptoid/diagramo/issue/58/minimalistic-alteration-of-connectors-upon#comment-9406088) */
