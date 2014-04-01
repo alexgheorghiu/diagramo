@@ -229,6 +229,12 @@ test("primitive.Line.near [Depends on Point.constructor, Point.near, Line.constr
     pY = 22;
     ok(line.near(pX, pY, radius), "point is moved 1 point to the bottom from inclined line");
 
+    pX = 33;
+    pY = 30;
+    /* details here:
+     * https://bitbucket.org/scriptoid/diagramo/issue/58/minimalistic-alteration-of-connectors-upon#comment-9406088) */
+    ok(!line.near(pX, pY, radius), "blind spot case");
+
 
     line = new Line(new Point(10, 10), new Point(300, 11));
     pX = 100;
