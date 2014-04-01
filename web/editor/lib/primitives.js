@@ -388,10 +388,13 @@ Line.prototype = {
 
         //Secondly we get the distance "Mathematics for Computer Graphics, 2nd Ed., by John Vice, page 227"
         var d = Math.abs( (a*x + b*y + c) / Math.sqrt(Math.pow(a,2) + Math.pow(b,2)) );
-        
-        //TODO: This is wrong see :
-        //https://bitbucket.org/scriptoid/diagramo/issue/58/minimalistic-alteration-of-connectors-upon#comment-9406088)
-        var r = ( d <= radius && ((endX>=x && x>=startX) || (endY>=y && y>=startY)) ) //the projection of the point falls INSIDE of the segment
+
+        //Thirdly we get coordinates of closest line's point to target point
+        //http://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line#Cartesian_coordinates
+        var closestX = (b * (b*x - a*y) - a*c) / ( Math.pow(a,2) + Math.pow(b,2) );
+        var closestY = (a * (-b*x + a*y) - b*c) / ( Math.pow(a,2) + Math.pow(b,2) );
+
+        var r = ( d <= radius && endX>=closestX && closestX>=startX && endY>=closestY && closestY>=startY ) //the projection of the point falls INSIDE of the segment
             || this.startPoint.near(x,y,radius) || this.endPoint.near(x,y,radius); //the projection of the point falls OUTSIDE of the segment 
 
         return  r;
