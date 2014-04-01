@@ -6,31 +6,29 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
 
     <property name="php.dir" value="c:/Tools/php5.4.0"/>    
     <property name="build.dir" value="${basedir}/build"/>    
-    <property name="dist.dir" value="${basedir}/dist"/>
+    <property name="release.dir" value="${basedir}/release"/>
     <property name="docs.dir" value="${basedir}/documents"/>
-    <property name="build-all-in-one.dir" value="${basedir}/build-all-in-one"/>
-    <property name="dist-all-in-one.dir" value="${basedir}/dist-all-in-one"/>
-    <property name="build-light.dir" value="${basedir}/build-light"/>
-    <property name="dist-light.dir" value="${basedir}/dist-light"/>
-    <property name="temp.dir" value="${basedir}/temp"/>
+    
+    <property name="build-base.dir" value="${build.dir}/base"/>
+    <property name="build-lamp.dir" value="${build.dir}/lamp"/>
+    <property name="build-all-in-one.dir" value="${build.dir}/build-all-in-one"/>
+    <property name="build-light.dir" value="${build.dir}/build-light"/>
+           
+    <property name="release-lamp.file" value="${release.dir}/diagramo-lamp.zip"/>
+    <property name="release-all-in-one.file" value="${release.dir}/diagramo-all-in-one.zip"/>
+    <property name="release-light.file" value="${release.dir}/diagramo-light.zip"/>
+
     <property name="web.dir" value="${basedir}/web"/>
     <property name="editor.dir" value="${web.dir}/editor"/>
-    
-    <property name="script.release.file" value="${dist.dir}/diagramo-lamp.zip"/>
-    <property name="all-in-one.release.file" value="${dist.dir}/diagramo-all-in-one.zip"/>
-    <property name="light.release.file" value="${dist.dir}/diagramo-light.zip"/>
-
 
     <target name="list">
         <echo>+---------------------------------------------------+</echo>
         <echo>| Run ant [target]                                  |</echo>
         <echo>| list - prints this help                           |</echo>
-        <echo>| prepare - prepare folder structure                |</echo>
-        <echo>| build-all-in-one - build specific for all-in-one  |</echo>
-        <echo>| js.compress - compress JavaScript                 |</echo>
         <echo>| release-lamp - release LAMP version               |</echo>
         <echo>| release-all-in-one - release all-in-one version   |</echo>
-        <echo>| release - creates ZIP distribution file           |</echo>
+        <echo>| release-light - release light version             |</echo>
+        <echo>| release-all - creates all ZIP distribution files  |</echo>
         <echo>| clean - clean project                             |</echo>
         <echo>+---------------------------------------------------+</echo>
     </target>
@@ -39,15 +37,15 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
     <target name="prepare">
         <echo>+-------------------PREPARE-------------------------+</echo>
         <mkdir dir="${build.dir}"/>
-        <mkdir dir="${dist.dir}"/>
-        <mkdir dir="${temp.dir}"/>
     </target>
 
 
 
     <target name="build-basic" depends="prepare">
         <echo>+------------------BUILD BASIC------------------------------+</echo>
-        <copy todir="${build.dir}">
+        <mkdir dir="${build-base.dir}"/>
+        
+        <copy todir="${build-base.dir}">
             <fileset dir="${web.dir}">
                 <exclude name="editor/common/settings.php"/>
 
@@ -64,10 +62,10 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
             </fileset>            
         </copy>
         
-        <copyfile src="${basedir}/LICENSE.txt" dest="${build.dir}/LICENSE.txt"></copyfile>
-        <copyfile src="${basedir}/gpl-2.0.txt" dest="${build.dir}/gpl-2.0.txt"></copyfile>
+        <copyfile src="${basedir}/LICENSE.txt" dest="${build-base.dir}/LICENSE.txt"></copyfile>
+        <copyfile src="${basedir}/gpl-2.0.txt" dest="${build-base.dir}/gpl-2.0.txt"></copyfile>
 
-        <replace file="${build.dir}/install/umbilicus.php" token="http://diagramo.test" value="http://diagramo.com" />
+        <replace file="${build-base.dir}/install/umbilicus.php" token="http://diagramo.test" value="http://diagramo.com" />
     </target>
 
 
@@ -80,46 +78,44 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
     <target name="js.compress" depends="build-basic">
         <echo>+------------------Compress JavaScript-----------------------------+</echo>
         
-
-
         <echo>Compress connections.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/connections.js"/>
+            <arg value="${build-base.dir}/editor/lib/connections.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/connections.js"/>
+            <arg value="${build-base.dir}/editor/lib/connections.js"/>
         </java>
 
         
         <echo>Compress handles.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/handles.js"/>
+            <arg value="${build-base.dir}/editor/lib/handles.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/handles.js"/>
+            <arg value="${build-base.dir}/editor/lib/handles.js"/>
         </java>
         
         
         
         <echo>Compress stack.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/stack.js"/>
+            <arg value="${build-base.dir}/editor/lib/stack.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/stack.js"/>
+            <arg value="${build-base.dir}/editor/lib/stack.js"/>
         </java>
         
         
         <echo>Compress text.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/text.js"/>
+            <arg value="${build-base.dir}/editor/lib/text.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/text.js"/>
+            <arg value="${build-base.dir}/editor/lib/text.js"/>
         </java>
                 
 
         <echo>Compress main.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/main.js"/>
+            <arg value="${build-base.dir}/editor/lib/main.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/main.js"/>
+            <arg value="${build-base.dir}/editor/lib/main.js"/>
         </java>
         
     </target>
@@ -127,12 +123,20 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
         
     <target name="build-lamp" depends="js.compress">
         <echo>+------------------BUILD LAMP VERSION------------------------------+</echo>
+        <mkdir dir="${build-lamp.dir}"/>
+        
+        <copy todir="${build-lamp.dir}">
+            <fileset dir="${build-base.dir}">
+            </fileset>
+        </copy>
     </target>
 	
     <target name="build-all-in-one" depends="js.compress">
         <echo>+------------------BUILD ALL-IN-ONE VERSION -----------------------+</echo>
+        <mkdir dir="${build-all-in-one.dir}"/>
+        
         <copy todir="${build-all-in-one.dir}">
-            <fileset dir="${build.dir}">
+            <fileset dir="${build-base.dir}">
             </fileset>
         </copy>
 		
@@ -150,8 +154,10 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
     
     <target name="build-light" depends="js.compress">
         <echo>+------------------BUILD LIGHT VERSION-----------------------------+</echo>
+        <mkdir dir="${build-light.dir}"/>
+        
         <copy todir="${build-light.dir}">
-            <fileset dir="${build.dir}">
+            <fileset dir="${build-base.dir}">
                 <exclude name="**/*.php"/>
                 <exclude name="install/"/>
                 <exclude name="assets/"/>
@@ -163,28 +169,30 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
     </target>
     
     
-    <target name="build-all" depends="build-lamp, build-light, build-all-in-one"></target>
+    <target name="build-all" depends="build-lamp, build-light, build-all-in-one">
+        
+    </target>
       
     
     <target name="release-lamp" depends="build-lamp">
         <echo>+------------------RELEASE LAMP-----------------------------+</echo>
-        <zip destfile="${script.release.file}" basedir="${build.dir}" />
+        <zip destfile="${release-lamp.file}" basedir="${build-lamp.dir}" />
     </target>
     
     
     <target name="release-all-in-one" depends="build-all-in-one">
         <echo>+------------------RELEASE ALL IN ONE-----------------------------+</echo>
-        <zip destfile="${all-in-one.release.file}" basedir="${build-all-in-one.dir}" />
+        <zip destfile="${release-all-in-one.file}" basedir="${build-all-in-one.dir}" />
     </target>
     
     
     <target name="release-light" depends="build-light">
         <echo>+------------------RELEASE LIGHT VERSION-----------------------------+</echo>
-        <zip destfile="${light.release.file}" basedir="${build-light.dir}" />
+        <zip destfile="${release-light.file}" basedir="${build-light.dir}" />
     </target>    
     
     
-    <target name="release" depends="release-lamp, release-all-in-one, release-light">
+    <target name="release-all" depends="release-lamp, release-all-in-one, release-light">
         <echo>+------------------RELEASE-----------------------------+</echo>
     </target>
     
@@ -192,12 +200,7 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
     <target name="clean">
         <echo>+------------------SCRIPT CLEAN----------------------------+</echo>
         <delete dir="${build.dir}"/>
-        <delete dir="${dist.dir}" />
-        <delete dir="${build-all-in-one.dir}"/>
-        <delete dir="${dist-all-in-one.dir}" />
-        <delete dir="${build-light.dir}"/>
-        <delete dir="${dist-light.dir}" />
-        <delete dir="${temp.dir}" />
+        <delete dir="${release.dir}" />
     </target>
 
 
