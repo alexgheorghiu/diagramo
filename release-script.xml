@@ -64,8 +64,11 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
                 <exclude name="editor/exporter/*.svg"/>
                 <exclude name="editor/exporter/*.jpg"/>
                 <exclude name="editor/exporter/*.bat"/>
-            </fileset>
+            </fileset>            
         </copy>
+        
+        <copyfile src="${basedir}/LICENSE.txt" dest="${build.dir}/LICENSE.txt"></copyfile>
+        <copyfile src="${basedir}/gpl-2.0.txt" dest="${build.dir}/gpl-2.0.txt"></copyfile>
 
         <replace file="${build.dir}/install/umbilicus.php" token="http://diagramo.test" value="http://diagramo.com" />
     </target>
