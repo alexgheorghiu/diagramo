@@ -131,10 +131,10 @@ switch ($action) {
         break;
     
     
-    /****************LICENSE--------------*/
-    case 'saveLicense':
-        saveLicense();
-        break;
+//    /****************LICENSE--------------*/
+//    case 'saveLicense':
+//        saveLicense();
+//        break;
 }
 
 
@@ -1217,31 +1217,31 @@ function registerExe(){
 
 
 
-function saveLicense(){
-    print_r($_REQUEST);
-    
-    $serial = $_REQUEST['serial'];
-    $host = $_REQUEST['host'];
-    
-    $d = new Delegate();
-    
-    $DIAGRAMO = $d->settingsGetByKeyNative('DIAGRAMO');
-    
-    $url = $DIAGRAMO . "/dcentral/activator.php?serial=$serial&host=$host";
-    #print 'URL: ' . $url;
-    
-    
-    $license = get($url);
-    
-    #print 'License: ' . $license;
-    #exit();
-    
-    $d->settingsSaveNative('LICENSE', $license);
-    
-    addMessage("App activated");
-    redirect('../license.php');
-    exit(0);
-}
+//function saveLicense(){
+//    print_r($_REQUEST);
+//    
+//    $serial = $_REQUEST['serial'];
+//    $host = $_REQUEST['host'];
+//    
+//    $d = new Delegate();
+//    
+//    $DIAGRAMO = $d->settingsGetByKeyNative('DIAGRAMO');
+//    
+//    $url = $DIAGRAMO . "/dcentral/activator.php?serial=$serial&host=$host";
+//    #print 'URL: ' . $url;
+//    
+//    
+//    $license = get($url);
+//    
+//    #print 'License: ' . $license;
+//    #exit();
+//    
+//    $d->settingsSaveNative('LICENSE', $license);
+//    
+//    addMessage("App activated");
+//    redirect('../license.php');
+//    exit(0);
+//}
 
 
 

@@ -6,34 +6,29 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
 
     <property name="php.dir" value="c:/Tools/php5.4.0"/>    
     <property name="build.dir" value="${basedir}/build"/>    
-    <property name="dist.dir" value="${basedir}/dist"/>
+    <property name="release.dir" value="${basedir}/release"/>
     <property name="docs.dir" value="${basedir}/documents"/>
-    <property name="build-all-in-one.dir" value="${basedir}/build-all-in-one"/>
-    <property name="dist-all-in-one.dir" value="${basedir}/dist-all-in-one"/>
-    <property name="build-light.dir" value="${basedir}/build-light"/>
-    <property name="dist-light.dir" value="${basedir}/dist-light"/>
-    <property name="temp.dir" value="${basedir}/temp"/>
+    
+    <property name="build-base.dir" value="${build.dir}/base"/>
+    <property name="build-lamp.dir" value="${build.dir}/lamp"/>
+    <property name="build-all-in-one.dir" value="${build.dir}/build-all-in-one"/>
+    <property name="build-light.dir" value="${build.dir}/build-light"/>
+           
+    <property name="release-lamp.file" value="${release.dir}/diagramo-lamp.zip"/>
+    <property name="release-all-in-one.file" value="${release.dir}/diagramo-all-in-one.zip"/>
+    <property name="release-light.file" value="${release.dir}/diagramo-light.zip"/>
+
     <property name="web.dir" value="${basedir}/web"/>
     <property name="editor.dir" value="${web.dir}/editor"/>
-    
-    <property name="script.release.file" value="${dist.dir}/diagramo-lamp.zip"/>
-    <property name="all-in-one.release.file" value="${dist.dir}/diagramo-all-in-one.zip"/>
-    <property name="light.release.file" value="${dist.dir}/diagramo-light.zip"/>
-
 
     <target name="list">
         <echo>+---------------------------------------------------+</echo>
         <echo>| Run ant [target]                                  |</echo>
         <echo>| list - prints this help                           |</echo>
-        <echo>| prepare - prepare folder structure                |</echo>
-        <echo>| build - build application                         |</echo>
-        <echo>| build-all-in-one - build specific for all-in-one  |</echo>
-        <echo>| obfuscate - obfuscate some parts of it            |</echo>
-        <echo>| js.obfuscate - obfuscate JavaScript               |</echo>
-        <echo>| php.obfuscate - obfuscate PHP                     |</echo>
         <echo>| release-lamp - release LAMP version               |</echo>
         <echo>| release-all-in-one - release all-in-one version   |</echo>
-        <echo>| release - creates ZIP distribution file           |</echo>
+        <echo>| release-light - release light version             |</echo>
+        <echo>| release-all - creates all ZIP distribution files  |</echo>
         <echo>| clean - clean project                             |</echo>
         <echo>+---------------------------------------------------+</echo>
     </target>
@@ -42,15 +37,15 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
     <target name="prepare">
         <echo>+-------------------PREPARE-------------------------+</echo>
         <mkdir dir="${build.dir}"/>
-        <mkdir dir="${dist.dir}"/>
-        <mkdir dir="${temp.dir}"/>
     </target>
 
 
 
-    <target name="build" depends="prepare">
-        <echo>+------------------SCRIPT BUILD-----------------------------+</echo>
-        <copy todir="${build.dir}">
+    <target name="build-basic" depends="prepare">
+        <echo>+------------------BUILD BASIC------------------------------+</echo>
+        <mkdir dir="${build-base.dir}"/>
+        
+        <copy todir="${build-base.dir}">
             <fileset dir="${web.dir}">
                 <exclude name="editor/common/settings.php"/>
 
@@ -64,110 +59,89 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
                 <exclude name="editor/exporter/*.svg"/>
                 <exclude name="editor/exporter/*.jpg"/>
                 <exclude name="editor/exporter/*.bat"/>
-            </fileset>
+            </fileset>            
         </copy>
+        
+        <copyfile src="${basedir}/LICENSE.txt" dest="${build-base.dir}/LICENSE.txt"></copyfile>
+        <copyfile src="${basedir}/gpl-2.0.txt" dest="${build-base.dir}/gpl-2.0.txt"></copyfile>
 
-        <replace file="${build.dir}/install/umbilicus.php" token="http://diagramo.test" value="http://diagramo.com" />
+        <replace file="${build-base.dir}/install/umbilicus.php" token="http://diagramo.test" value="http://diagramo.com" />
+        
+        <!--Set JavaScript's log system level to error-->
+        <concat destfile="${build-base.dir}/editor/lib/log.js" append="true">
+            Log.level = Log.LOG_LEVEL_ERROR;
+        </concat>
     </target>
 
 
 
-    <!-- @see: http://www.julienlecomte.net/blog/2007/09/16/ -->
-    <target name="js.obfuscate" depends="build">
-        <echo>+------------------OBFUSCATE JavaScript-----------------------------+</echo>
+    <!-- 
+    We need to compress JavaScript here as from here it will be copied
+    to different build versions
+    @see: http://www.julienlecomte.net/blog/2007/09/16/ 
+    -->
+    <target name="js.compress" depends="build-basic">
+        <echo>+------------------Compress JavaScript-----------------------------+</echo>
         
-
-
-        <echo>Obfuscate connections.js</echo>
+        <echo>Compress connections.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/connections.js"/>
+            <arg value="${build-base.dir}/editor/lib/connections.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/connections.js"/>
+            <arg value="${build-base.dir}/editor/lib/connections.js"/>
         </java>
 
         
-        <echo>Obfuscate handles.js</echo>
+        <echo>Compress handles.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/handles.js"/>
+            <arg value="${build-base.dir}/editor/lib/handles.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/handles.js"/>
+            <arg value="${build-base.dir}/editor/lib/handles.js"/>
         </java>
         
         
         
-        <echo>Obfuscate stack.js</echo>
+        <echo>Compress stack.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/stack.js"/>
+            <arg value="${build-base.dir}/editor/lib/stack.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/stack.js"/>
+            <arg value="${build-base.dir}/editor/lib/stack.js"/>
         </java>
         
         
-        <echo>Obfuscate text.js</echo>
+        <echo>Compress text.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/text.js"/>
+            <arg value="${build-base.dir}/editor/lib/text.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/text.js"/>
+            <arg value="${build-base.dir}/editor/lib/text.js"/>
         </java>
                 
 
-        <echo>Obfuscate main.js</echo>
+        <echo>Compress main.js</echo>
         <java jar="./documents/compressor/yuicompressor-2.4.2.jar" fork="true">
-            <arg value="${build.dir}/editor/lib/main.js"/>
+            <arg value="${build-base.dir}/editor/lib/main.js"/>
             <arg value="-o"/>
-            <arg value="${build.dir}/editor/lib/main.js"/>
+            <arg value="${build-base.dir}/editor/lib/main.js"/>
         </java>
         
     </target>
-    
-    
-    
-    <target name="php.obfuscate" depends="js.obfuscate">
-        <echo>+------------------OBFUSCATE PHP-----------------------------+</echo>
+	
         
-        <echo>Obfuscate utils.php</echo>
-        <exec executable="php" output="${temp.dir}/encode.output.txt">
-            <arg line="./documents/encoder/encoder.php ${build.dir}/editor/common/utils.php ${build.dir}/editor/common/utils.php"/>
-        </exec>
-
-        <echo>Obfuscate delegate.php</echo>
-        <exec executable="php" output="${temp.dir}/encode.output.txt">
-            <arg line="./documents/encoder/encoder.php ${build.dir}/editor/common/delegate.php ${build.dir}/editor/common/delegate.php"/>
-        </exec>
+    <target name="build-lamp" depends="js.compress">
+        <echo>+------------------BUILD LAMP VERSION------------------------------+</echo>
+        <mkdir dir="${build-lamp.dir}"/>
         
-        <echo>Obfuscate controller.php</echo>
-        <exec executable="php" output="${temp.dir}/encode.output.txt">
-            <arg line="./documents/encoder/encoder.php ${build.dir}/editor/common/controller.php ${build.dir}/editor/common/controller.php"/>
-        </exec>
-        
-        <echo>Obfuscate install/step3</echo>
-        <exec executable="php" output="${temp.dir}/encode.output.txt">
-            <arg line="./documents/encoder/encoder.php ${build.dir}/install/step3.php ${build.dir}/install/step3.php"/>
-        </exec>
-        
-        <echo>Obfuscate install/step4</echo>
-        <exec executable="php" output="${temp.dir}/encode.output.txt">
-            <arg line="./documents/encoder/encoder.php ${build.dir}/install/step4.php ${build.dir}/install/step4.php"/>
-        </exec>
-        
-    </target>
-
-
-    <target name="obfuscate" depends="js.obfuscate, php.obfuscate">
-        <echo>+------------------OBFUSCATE-----------------------------+</echo>
-    </target>
-
-
-    <target name="release-lamp" depends="obfuscate">
-        <echo>+------------------SCRIPT LAMP-----------------------------+</echo>
-        <zip destfile="${script.release.file}" basedir="${build.dir}" />
+        <copy todir="${build-lamp.dir}">
+            <fileset dir="${build-base.dir}">
+            </fileset>
+        </copy>
     </target>
 	
-	
-    <target name="build-all-in-one" depends="obfuscate">
-        <echo>+------------------BUILD ALL IN ONE-----------------------------+</echo>
+    <target name="build-all-in-one" depends="js.compress">
+        <echo>+------------------BUILD ALL-IN-ONE VERSION -----------------------+</echo>
+        <mkdir dir="${build-all-in-one.dir}"/>
+        
         <copy todir="${build-all-in-one.dir}">
-            <fileset dir="${build.dir}">
+            <fileset dir="${build-base.dir}">
             </fileset>
         </copy>
 		
@@ -182,19 +156,13 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
         </copy>
     </target>
     
-    <target name="release-all-in-one" depends="build-all-in-one">
-        <echo>+------------------RELEASE ALL IN ONE-----------------------------+</echo>
-        <zip destfile="${all-in-one.release.file}" basedir="${build-all-in-one.dir}" />
-    </target>
     
-    <target name="release" depends="release-lamp, release-all-in-one">
-        <echo>+------------------RELEASE-----------------------------+</echo>
-    </target>
-    
-    <target name="build-light" depends="obfuscate">
+    <target name="build-light" depends="js.compress">
         <echo>+------------------BUILD LIGHT VERSION-----------------------------+</echo>
+        <mkdir dir="${build-light.dir}"/>
+        
         <copy todir="${build-light.dir}">
-            <fileset dir="${build.dir}">
+            <fileset dir="${build-base.dir}">
                 <exclude name="**/*.php"/>
                 <exclude name="install/"/>
                 <exclude name="assets/"/>
@@ -204,24 +172,41 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
             </fileset>
         </copy>
     </target>
-
-
+    
+    
+    <target name="build-all" depends="build-lamp, build-light, build-all-in-one">
+        
+    </target>
+      
+    
+    <target name="release-lamp" depends="build-lamp">
+        <echo>+------------------RELEASE LAMP-----------------------------+</echo>
+        <zip destfile="${release-lamp.file}" basedir="${build-lamp.dir}" />
+    </target>
+    
+    
+    <target name="release-all-in-one" depends="build-all-in-one">
+        <echo>+------------------RELEASE ALL IN ONE-----------------------------+</echo>
+        <zip destfile="${release-all-in-one.file}" basedir="${build-all-in-one.dir}" />
+    </target>
+    
+    
     <target name="release-light" depends="build-light">
         <echo>+------------------RELEASE LIGHT VERSION-----------------------------+</echo>
-        <zip destfile="${light.release.file}" basedir="${build-light.dir}" />
+        <zip destfile="${release-light.file}" basedir="${build-light.dir}" />
+    </target>    
+    
+    
+    <target name="release-all" depends="release-lamp, release-all-in-one, release-light">
+        <echo>+------------------RELEASE-----------------------------+</echo>
     </target>
+    
 
     <target name="clean">
         <echo>+------------------SCRIPT CLEAN----------------------------+</echo>
         <delete dir="${build.dir}"/>
-        <delete dir="${dist.dir}" />
-        <delete dir="${build-all-in-one.dir}"/>
-        <delete dir="${dist-all-in-one.dir}" />
-        <delete dir="${build-light.dir}"/>
-        <delete dir="${dist-light.dir}" />
-        <delete dir="${temp.dir}" />
+        <delete dir="${release.dir}" />
     </target>
-
 
 
 </project>

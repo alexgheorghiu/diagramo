@@ -9,6 +9,7 @@ require_once dirname(__FILE__) . '/utils.php';
  * LICENSE
  * License Class is not reflected in the Database (it was not generates by SQLarity)
  * To generate a license you need first 8 fields completed
+ * @deprecated
  */
 class License {
     //from client
