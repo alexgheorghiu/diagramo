@@ -66,6 +66,11 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
         <copyfile src="${basedir}/gpl-2.0.txt" dest="${build-base.dir}/gpl-2.0.txt"></copyfile>
 
         <replace file="${build-base.dir}/install/umbilicus.php" token="http://diagramo.test" value="http://diagramo.com" />
+        
+        <!--Set JavaScript's log system level to error-->
+        <concat destfile="${build-base.dir}/editor/lib/log.js" append="true">
+            Log.level = Log.LOG_LEVEL_ERROR;
+        </concat>
     </target>
 
 
