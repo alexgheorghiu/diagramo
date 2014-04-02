@@ -1323,7 +1323,7 @@ function onMouseDown(ev){
              *              
              * - if we clicked on empty space
              *      -  SHIFT _NOT_ pressed
-             *          - current grup is temporary
+             *          - current group is temporary
              *              delete it
              *          - move to state none
              */
@@ -1523,24 +1523,44 @@ function onMouseDown(ev){
                     History.addUndo(undoCmd);
                 }
                 else{
-                    //did we select another connector?
-                    var newConId = CONNECTOR_MANAGER.connectorGetByXY(x, y); //did we picked another connector?
-                    switch(newConId){
-                        case -1: //nothing else selected....deselect all
+                    // get object under cursor
+                    var selectedObject = Util.getObjectByXY(x,y);
+                    switch(selectedObject[1]) {
+                        case 'Connector':
+                            if (selectedObject[0] != selectedConnectorId) { // select another Connector
+                                selectedConnectorId = selectedObject[0];
+                                setUpEditPanel(CONNECTOR_MANAGER.connectorGetById(selectedConnectorId));
+                                redraw = true;
+                            }
+                            break;
+                        case 'Group':
                             selectedConnectorId = -1;
-                            state = STATE_NONE;
-                            setUpEditPanel(canvasProps);
+                            selectedGroupId = selectedObject[0]; // set Group as active element
+                            state = STATE_GROUP_SELECTED;
+                            setUpEditPanel(null);
                             redraw = true;
                             break;
-                        case selectedConnectorId: //same connector...do nothing
+                        case 'Figure':
+                            selectedConnectorId = -1;
+                            selectedFigureId = selectedObject[0]; // set Figure as active element
+                            state = STATE_FIGURE_SELECTED;
+                            setUpEditPanel(STACK.figureGetById(selectedFigureId));
+                            redraw = true;
                             break;
-                        default: //another connector
-                            selectedConnectorId = newConId;
-                            setUpEditPanel(CONNECTOR_MANAGER.connectorGetById(selectedConnectorId));
-                            state = STATE_CONNECTOR_SELECTED;
-                            redraw = true;                            
-                    }//end switch
-                    
+                        case 'Container':
+                            selectedConnectorId = -1;
+                            selectedContainerId = selectedObject[0]; // set Container as active element
+                            state = STATE_CONTAINER_SELECTED;
+                            setUpEditPanel(STACK.containerGetById(selectedContainerId));
+                            redraw = true;
+                            break;
+                        default:    // nothing else selected
+                            selectedConnectorId = -1;
+                            state = STATE_NONE;
+                            setUpEditPanel(canvasProps); // set canvas as active element
+                            redraw = true;
+                            break;
+                    }
                 }                                                    
             }                        
             break; //end case STATE_CONNECTOR_SELECTED 
