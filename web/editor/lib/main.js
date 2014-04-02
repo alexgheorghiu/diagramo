@@ -8,7 +8,7 @@
  **/
 
 /**Diagramo namespace. We must place as much "global application" variables in here to avoid
- * connflict and better management*/
+ * conflict and to achieve better management*/
 var DIAGRAMO = {
     /**Set it on true if you want visual debug clues.
     * Note: See to set the Connector's visualDebug (Connector.visualDebug) to false too
