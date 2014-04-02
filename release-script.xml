@@ -168,7 +168,6 @@ This is the Ant script (see http:/ant.apache.org) to generate builds for Diagram
                 <exclude name="assets/"/>
                 <exclude name="editor/data/"/>
                 <exclude name="editor/common/"/>
-                <exclude name="README.TXT"/>
             </fileset>
         </copy>
     </target>
