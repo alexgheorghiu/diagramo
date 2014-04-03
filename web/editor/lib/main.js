@@ -1294,7 +1294,7 @@ function onMouseDown(ev){
             /*Description:
              * If we have a selected group and we pressed the mouse this can happen:
              * - if we clicked a handle of current selected shape (asset: it should be Group) then just select that Handle
-             * - if we clicked a Connector than that Connector should be selected  (Connectors are more important than Figures 
+             * - if we clicked a Connector or Container than it should be selected  (Connectors and Containers are more important than Figures
              *      or Groups :p) :
              *      - deselect current group
              *      - if current group is temporary (destroy it)
@@ -1338,108 +1338,123 @@ function onMouseDown(ev){
                 redraw = true;
                 Log.info('onMouseDown() + STATE_GROUP_SELECTED  + handle selected => STATE_GROUP_SELECTED');                
             }
-            else if(CONNECTOR_MANAGER.connectorGetByXY(x, y) != -1){ //connector?
-                //destroy current group (if temporary)
-                if(!selectedGroup.permanent){
-                    STACK.groupDestroy(selectedGroupId);
-                }
-                
-                //deselect current group
-                selectedGroupId = -1;
-                
-                selectedConnectorId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
-                state = STATE_CONNECTOR_SELECTED;
-                redraw = true;
-                Log.info('onMouseDown() + STATE_GROUP_SELECTED  + handle selected => STATE_CONNECTOR_SELECTED');
-            }
-            else if(STACK.figureGetByXY(x, y) != -1){
-                var fId = STACK.figureGetByXY(x, y);
-                var fig = STACK.figureGetById(fId);
-                
-                if(fig.groupId == -1){ //lonely figure
-                    if (SHIFT_PRESSED){
-                        var figuresToAdd = [];
-                        var groupFigures = STACK.figureGetByGroupId(selectedGroupId);
-                        for(var i=0; i<groupFigures.length; i++ ){
-                            figuresToAdd.push(groupFigures[i].id);
-                        }
-                        figuresToAdd.push(fId);
-                      
+            else {
+                // get object under cursor
+                var selectedObject = Util.getObjectByXY(x,y);
+                switch(selectedObject.type) {
+                    case 'Connector':
                         //destroy current group (if temporary)
                         if(!selectedGroup.permanent){
                             STACK.groupDestroy(selectedGroupId);
                         }
-                      
-                        selectedGroupId = STACK.groupCreate(figuresToAdd);
-                      
-                        Log.info('onMouseDown() + STATE_GROUP_SELECTED + SHIFT  + add lonely figure to other');
-                    }else{                    
-                        //destroy current group (if temporary)
-                        if(!selectedGroup.permanent){
-                            STACK.groupDestroy(selectedGroupId);
-                        }
-                        
+
                         //deselect current group
                         selectedGroupId = -1;
-                        
-                        state = STATE_FIGURE_SELECTED;
-                        selectedFigureId = fId;
-                        Log.info('onMouseDown() + STATE_GROUP_SELECTED  + lonely figure => STATE_FIGURE_SELECTED');
-                        
-                        setUpEditPanel(fig);
+
+                        selectedConnectorId = selectedObject.id;
+                        state = STATE_CONNECTOR_SELECTED;
                         redraw = true;
-                    }
-                }
-                else{ //group figure
-                    if(fig.groupId != selectedGroupId){
+                        Log.info('onMouseDown() + STATE_GROUP_SELECTED  + handle selected => STATE_CONNECTOR_SELECTED');
+                        break;
+                    case 'Group':
+                        if(selectedObject.id != selectedGroupId){
+                            if (SHIFT_PRESSED){
+                                var figuresToAdd = [];
+
+                                //add figures from current group
+                                var groupFigures = STACK.figureGetByGroupId(selectedGroupId);
+                                for(var i=0; i<groupFigures.length; i++ ){
+                                    figuresToAdd.push(groupFigures[i].id);
+                                }
+
+                                //add figures from clicked group
+                                groupFigures = STACK.figureGetByGroupId(selectedObject.id);
+                                for(var i=0; i<groupFigures.length; i++ ){
+                                    figuresToAdd.push(groupFigures[i].id);
+                                }
+
+                                //destroy current group (if temporary)
+                                if(!selectedGroup.permanent){
+                                    STACK.groupDestroy(selectedGroupId);
+                                }
+
+                                selectedGroupId = STACK.groupCreate(figuresToAdd);
+                            }else{
+                                //destroy current group (if temporary)
+                                if(!selectedGroup.permanent){
+                                    STACK.groupDestroy(selectedGroupId);
+                                }
+
+                                selectedGroupId = selectedObject.id;
+                            }
+
+                            redraw = true;
+                            Log.info('onMouseDown() + STATE_GROUP_SELECTED  + (different) group figure => STATE_GROUP_SELECTED');
+                        }
+                        else{ //figure from same group
+                            //do nothing
+                        }
+                        break;
+                    case 'Figure': //lonely figure
                         if (SHIFT_PRESSED){
                             var figuresToAdd = [];
-                            
-                            //add figures from current group
                             var groupFigures = STACK.figureGetByGroupId(selectedGroupId);
                             for(var i=0; i<groupFigures.length; i++ ){
                                 figuresToAdd.push(groupFigures[i].id);
                             }
-                            
-                            //add figures from clicked group
-                            groupFigures = STACK.figureGetByGroupId(fig.groupId);
-                            for(var i=0; i<groupFigures.length; i++ ){
-                                figuresToAdd.push(groupFigures[i].id);
-                            }
-                          
+                            figuresToAdd.push(selectedObject.id);
+
                             //destroy current group (if temporary)
                             if(!selectedGroup.permanent){
                                 STACK.groupDestroy(selectedGroupId);
                             }
-                          
+
                             selectedGroupId = STACK.groupCreate(figuresToAdd);
+
+                            Log.info('onMouseDown() + STATE_GROUP_SELECTED + SHIFT  + add lonely figure to other');
                         }else{
                             //destroy current group (if temporary)
                             if(!selectedGroup.permanent){
                                 STACK.groupDestroy(selectedGroupId);
                             }
-                            
-                            selectedGroupId = fig.groupId;
+
+                            //deselect current group
+                            selectedGroupId = -1;
+
+                            state = STATE_FIGURE_SELECTED;
+                            selectedFigureId = selectedObject.id;
+                            Log.info('onMouseDown() + STATE_GROUP_SELECTED  + lonely figure => STATE_FIGURE_SELECTED');
+
+                            setUpEditPanel(STACK.figureGetById(selectedFigureId));
+                            redraw = true;
                         }
-                                                
+                        break;
+                    case 'Container':
+                        //destroy current group (if temporary)
+                        if(!selectedGroup.permanent){
+                            STACK.groupDestroy(selectedGroupId);
+                        }
+
+                        //deselect current group
+                        selectedGroupId = -1;
+
+                        state = STATE_CONTAINER_SELECTED;
+                        selectedContainerId = selectedObject.id;
+                        Log.info('onMouseDown() + STATE_GROUP_SELECTED  + container => STATE_CONTAINER_SELECTED');
+
                         redraw = true;
-                        Log.info('onMouseDown() + STATE_GROUP_SELECTED  + (different) group figure => STATE_GROUP_SELECTED');
-                    }
-                    else{ //figure from same group
-                        //do nothing
-                    }
-                }
-            } 
-            else{ //mouse down on empty space
-                if (!SHIFT_PRESSED){ //if Shift isn`t pressed
-                    if(!selectedGroup.permanent){
-                        STACK.groupDestroy(selectedGroupId);                    
-                    }
-                    
-                    selectedGroupId = -1;
-                    state = STATE_NONE;
-                    redraw = true;
-                    Log.info('onMouseDown() + STATE_GROUP_SELECTED  + mouse on empty => STATE_NONE');
+                        break;
+                    default:    //mouse down on empty space
+                        if (!SHIFT_PRESSED){ //if Shift isn`t pressed
+                            if(!selectedGroup.permanent){
+                                STACK.groupDestroy(selectedGroupId);
+                            }
+
+                            selectedGroupId = -1;
+                            state = STATE_NONE;
+                            redraw = true;
+                            Log.info('onMouseDown() + STATE_GROUP_SELECTED  + mouse on empty => STATE_NONE');
+                        }
                 }
             }
             
