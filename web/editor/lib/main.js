@@ -1525,31 +1525,31 @@ function onMouseDown(ev){
                 else{
                     // get object under cursor
                     var selectedObject = Util.getObjectByXY(x,y);
-                    switch(selectedObject[1]) {
+                    switch(selectedObject.type) {
                         case 'Connector':
-                            if (selectedObject[0] != selectedConnectorId) { // select another Connector
-                                selectedConnectorId = selectedObject[0];
+                            if (selectedObject.id != selectedConnectorId) { // select another Connector
+                                selectedConnectorId = selectedObject.id;
                                 setUpEditPanel(CONNECTOR_MANAGER.connectorGetById(selectedConnectorId));
                                 redraw = true;
                             }
                             break;
                         case 'Group':
                             selectedConnectorId = -1;
-                            selectedGroupId = selectedObject[0]; // set Group as active element
+                            selectedGroupId = selectedObject.id; // set Group as active element
                             state = STATE_GROUP_SELECTED;
                             setUpEditPanel(null);
                             redraw = true;
                             break;
                         case 'Figure':
                             selectedConnectorId = -1;
-                            selectedFigureId = selectedObject[0]; // set Figure as active element
+                            selectedFigureId = selectedObject.id; // set Figure as active element
                             state = STATE_FIGURE_SELECTED;
                             setUpEditPanel(STACK.figureGetById(selectedFigureId));
                             redraw = true;
                             break;
                         case 'Container':
                             selectedConnectorId = -1;
-                            selectedContainerId = selectedObject[0]; // set Container as active element
+                            selectedContainerId = selectedObject.id; // set Container as active element
                             state = STATE_CONTAINER_SELECTED;
                             setUpEditPanel(STACK.containerGetById(selectedContainerId));
                             redraw = true;

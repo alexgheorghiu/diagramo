@@ -1046,18 +1046,21 @@ var Util = {
      * it can be one of: Figure, Group, Connector, Container or none.
      * @param {Number} x - the x coordinate
      * @param {Number} y - the y coordinate
-     * @return {Array}- in a form of
-     *  [
+     * @return {Object}- in a form of
+     *  {
      *  id - id of object or -1 if none,
      *  type - type of object, the same as oType or '' if none
-     *  ]
+     *  }
      * @author Arty
      */
     getObjectByXY: function(x, y){
         //find Connector at (x,y)
         var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
         if(cId != -1){ // found a Connector
-            return [cId, 'Connector'];
+            return {
+                id: cId,
+                type: 'Connector'
+            }
         }
 
         //find Figure at (x,y)
@@ -1065,20 +1068,33 @@ var Util = {
         if(fId != -1){ // found a Figure
             var gId = STACK.figureGetById(fId).groupId;
                 if(gId != -1){ // if the Figure belongs to a Group then return that Group
-                    return [gId, 'Group'];
+                    return {
+                        id: gId,
+                        type: 'Group'
+                    }
                 }
                 else{ // lonely Figure
-                    return [fId, 'Figure'];
+                    return {
+                        id: fId,
+                        type: 'Figure'
+                    }
                 }
         }
 
         //find Container at (x,y)
         var contId = STACK.containerGetByXY(x, y);
         if(contId !== -1){ // found a Container
-            return [contId, 'Container'];
+            return {
+                id: contId,
+                type: 'Container'
+            }
         }
 
-        return [-1, '']; // none of above
+        // none of above
+        return {
+            id: -1,
+            type: ''
+        }
     }
 
 };
