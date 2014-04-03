@@ -1093,7 +1093,9 @@ function onMouseDown(ev){
              * - if we clicked a Connector than that Connector should be selected  
              *  (Connectors are more important than Figures :p)
              * - if we clicked a Figure:
-             *      - does current figure belong to a group? If yes, select that group
+             *      - select the Figure
+             * - if we clicked a Group:
+             *      - select the Group
              * - if we clicked a container (Figures more important than container)
              *      - select the container
              * - if we did not clicked anything....
@@ -1101,59 +1103,40 @@ function onMouseDown(ev){
              *      - allow to edit canvas
              *      
              */
-            
-            //find Connector at (x,y)
-            var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
-            if(cId != -1){ //Clicked a Connector
-                selectedConnectorId = cId;
-                state = STATE_CONNECTOR_SELECTED;
-                var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
-                setUpEditPanel(con);
-                Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONNECTOR_SELECTED');
-                redraw = true;
-            } else {                                
-                //find figure at (x,y)
-                var fId = STACK.figureGetByXY(x, y);
-                if(fId != -1){ //Selected a figure
-                    if(STACK.figureGetById(fId).groupId != -1){ //if the figure belongs to a group then select that group
-                        selectedGroupId = STACK.figureGetById(fId).groupId;
-                        var grp = STACK.groupGetById(selectedGroupId);
-                        state = STATE_GROUP_SELECTED;
-//                        if(doUndo){
-//                            currentMoveUndo = new MatrixCommand(selectedGroupId, History.OBJECT_GROUP, History.MATRIX, Matrix.translationMatrix(grp.getBounds()[0],grp.getBounds()[1]), null);
-//                        }
-                        Log.info('onMouseDown() + STATE_NONE + group selected  =>  change to STATE_GROUP_SELECTED');
-                    }
-                    else{ //ok, we will select lonely figure
-                        selectedFigureId = fId;
-                        var f = STACK.figureGetById(fId);
-                        setUpEditPanel(f);
-                        state = STATE_FIGURE_SELECTED;
-//                        if(doUndo){
-//                            currentMoveUndo = new MatrixCommand(fId, History.OBJECT_FIGURE, History.MATRIX, Matrix.translationMatrix(f.getBounds()[0],f.getBounds()[1]), null);
-//                        }
-                        Log.info('onMouseDown() + STATE_NONE + lonely figure => change to STATE_FIGURE_SELECTED');
-                    }
 
+            var selectedObject = Util.getObjectByXY(x,y); // get object under cursor
+            switch(selectedObject.type) {
+                case 'Connector':
+                    selectedConnectorId = selectedObject.id;
+                    state = STATE_CONNECTOR_SELECTED;
+                    setUpEditPanel(CONNECTOR_MANAGER.connectorGetById(selectedConnectorId));
+                    Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONNECTOR_SELECTED');
                     redraw = true;
-                }
-                else{
-                    //find container's id
-                    var contId = STACK.containerGetByXY(x, y);
-//                    throw "main.js->onMouseDown + STATE_NONE: We should detect clicks on edge no inside container";
-                    if(contId !== -1){                    
-                        var container = STACK.containerGetById(contId);
-                        setUpEditPanel(container);
-                        state = STATE_CONTAINER_SELECTED;
-                        selectedContainerId = contId;
-                        Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
-                    }
-                    else{
-                        //DO NOTHING 
-                    }
-                }
+                    break;
+                case 'Group':
+                    selectedGroupId = selectedObject.id;
+                    state = STATE_GROUP_SELECTED;
+                    setUpEditPanel(null);
+                    Log.info('onMouseDown() + STATE_NONE + group selected  =>  change to STATE_GROUP_SELECTED');
+                    break;
+                case 'Figure':
+                    selectedFigureId = selectedObject.id;
+                    state = STATE_FIGURE_SELECTED;
+                    setUpEditPanel(STACK.figureGetById(selectedFigureId));
+                    Log.info('onMouseDown() + STATE_NONE + lonely figure => change to STATE_FIGURE_SELECTED');
+                    redraw = true;
+                    break;
+                case 'Container':
+                    selectedContainerId = selectedObject.id;
+                    state = STATE_CONTAINER_SELECTED;
+                    setUpEditPanel(STACK.containerGetById(selectedContainerId));
+                    Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
+                    redraw = true;
+                    break;
+                default:
+                    //DO NOTHING
+                    break;
             }
-            
             break;
 
 
