@@ -1172,17 +1172,20 @@ function onMouseDown(ev){
             /*Description:
              * If we have a figure selected and we do click here is what can happen:
              * - if we clicked a handle of current selected shape (it should be Figure) then just select that Handle
-             * - if we clicked a Connector than that Connector should be selected  (Connectors are more important than Figures :p)
+             * - if we clicked a Connector or Container than it should be selected  (Connectors and Containers are more important than Figures :p)
              * - if we clicked a Figure:
-             *      - did we click same figure? 
-             *          - does current figure belong to a group? If yes, select that group
+             *      - did we click same figure?
+             *          - do nothing
              *      - did we clicked another figure?
              *          - if SHIFT is pressed
-             *              single figure: create a new group of (selectedFigure + clicked figure)
-             *              belongs to a group: create a new group of (selectedFigure + parent group of clicked figure) 
+             *              create a new group of (selectedFigure + clicked figure)
              *          - else (SHIFT not pressed)
-             *              single figure: select that figure
-             *              belongs to a group: select that group
+             *              select that figure
+             * - if we clicked a Group:
+             *      - if SHIFT is pressed
+             *              create a new group of (selectedFigure + parent group of clicked figure)
+             *      - else (SHIFT not pressed)
+             *              select that group
              * - if we click on nothing -> 
              *      - if SHIFT pressed then State none
              *      - else just keep current state (maybe just missed what we needed)    
@@ -1196,96 +1199,90 @@ function onMouseDown(ev){
                 HandleManager.handleSelectXY(x, y);
             }
             else{ //We did not clicked a handler
+                var selectedObject = Util.getObjectByXY(x,y); // get object under cursor
+                switch(selectedObject.type) {
+                    case 'Connector':
+                        state = STATE_CONNECTOR_SELECTED;
+                        selectedConnectorId = selectedObject.id;
+                        selectedFigureId = -1;
+                        var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
+                        HandleManager.shapeSet(con);
+                        setUpEditPanel(con);
+                        Log.info('onMouseDown() + STATE_FIGURE_SELECTED  - change to STATE_CONNECTOR_SELECTED');
+                        redraw = true;
+                        break;
+                    case 'Group':
+                        if (SHIFT_PRESSED){
+                            var figuresToAdd = [];
+                            /* TODO: for what reason we have this condition in STATE_FIGURE_SELECTED?
+                             * Seems like escaping of bigger problem */
+                            if (selectedFigureId != -1){ //add already selected figure
+                                figuresToAdd.push(selectedFigureId);
+                            }
 
-                var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
+                            var groupFigures = STACK.figureGetByGroupId(selectedObject.id);
+                            for(var i=0; i<groupFigures.length; i++ ){
+                                figuresToAdd.push(groupFigures[i].id);
+                            }
 
-                if(cId != -1){ //Ok, we have a connector
-                    state = STATE_CONNECTOR_SELECTED;
-                    selectedConnectorId = cId;
-                    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
-                    HandleManager.shapeSet(con);                                        
-                    setUpEditPanel(con);
-                    Log.info('onMouseDown() + STATE_FIGURE_SELECTED  - change to STATE_CONNECTOR_SELECTED');
-                    redraw = true;
-                }
-                else{ //No connector
-                    
-                    //find the figure from (x,y)
-                    var fId = STACK.figureGetByXY(x, y);
+                            // create group for current figure joined with clicked group
+                            selectedGroupId = STACK.groupCreate(figuresToAdd);
+                            Log.info('onMouseDown() + STATE_FIGURE_SELECTED + SHIFT + another group => STATE_GROUP_SELECTED');
+                        }else{
+                            selectedGroupId = selectedObject.id;
+                            Log.info('onMouseDown() + STATE_FIGURE_SELECTED + group figure => change to STATE_GROUP_SELECTED');
+                        }
 
-                    if(fId == -1){ //Clicked outside of anything
+                        selectedFigureId = -1;
+                        state = STATE_GROUP_SELECTED;
+                        setUpEditPanel(null);
+                        redraw = true;
+                        break;
+                    case 'Figure': //lonely figure
+                        if (SHIFT_PRESSED){
+                            var figuresToAdd = [];
+                            /* TODO: for what reason we have this condition in STATE_FIGURE_SELECTED?
+                             * Seems like escaping of bigger problem */
+                            if (selectedFigureId != -1){ //add already selected figure
+                                figuresToAdd.push(selectedFigureId);
+                            }
+
+                            figuresToAdd.push(selectedObject.id); //add ONLY clicked selected figure
+
+                            selectedFigureId = -1;
+                            // we have two figures, create a group
+                            selectedGroupId = STACK.groupCreate(figuresToAdd);
+                            state = STATE_GROUP_SELECTED;
+                            setUpEditPanel(null);
+                            Log.info('onMouseDown() + STATE_FIGURE_SELECTED + SHIFT  + min. 2 figures => STATE_GROUP_SELECTED');
+                        }else{
+                            selectedFigureId = selectedObject.id;
+                            HandleManager.clear();
+                            setUpEditPanel(STACK.figureGetById(selectedFigureId));
+                            Log.info('onMouseDown() + STATE_FIGURE_SELECTED + single figure => change to STATE_FIGURE_SELECTED (different figure)');
+                        }
+
+                        redraw = true;
+                        break;
+                    case 'Container':
+                        selectedFigureId = -1;
+                        selectedContainerId = selectedObject.id;
+                        state = STATE_CONTAINER_SELECTED;
+                        Log.info('onMouseDown() + STATE_FIGURE_SELECTED + single container  - change to STATE_CONTAINER_SELECTED');
+
+                        setUpEditPanel(STACK.containerGetById(selectedContainerId));
+                        redraw = true;
+                        break;
+                    default:    //mouse down on empty space
                         if (!SHIFT_PRESSED){ //if Shift isn`t pressed
                             selectedFigureId = -1;
-                            
-                            //find container's id
-                            var contId = STACK.containerGetByXY(x, y);
-                            if(contId != -1){                    
-                                var container = STACK.containerGetById(contId);
-                                setUpEditPanel(container);
-                                state = STATE_CONTAINER_SELECTED;
-                                selectedContainerId = contId;
-                                Log.info('onMouseDown() + STATE_FIGURE_SELECTED  - change to STATE_CONTAINER_SELECTED');
-                            }
-                            else{
-                                state = STATE_NONE;
-                                setUpEditPanel(canvasProps);
-                                Log.info('onMouseDown() + STATE_FIGURE_SELECTED  - change to STATE_NONE');
-                            }
-                            redraw = true;
+                            state = STATE_NONE;
+                            setUpEditPanel(canvasProps);
+                            Log.info('onMouseDown() + STATE_FIGURE_SELECTED  - change to STATE_NONE');
                         }
-                    }
-                    else{ //We are sure we clicked a figure
-                        
-                        if(fId == selectedFigureId){ //Clicked the same figure
-                        //DO NOTHING
-                        }
-                        else{ //Clicked a different figure
-                            if (SHIFT_PRESSED){
-                                var figuresToAdd = [];
-                                if (selectedFigureId != -1){ //add already selected figure
-                                    figuresToAdd.push(selectedFigureId);
-                                }
-                                
-                                var f = STACK.figureGetById(fId);
-                                if(f.groupId != -1){ // if selected figure belongs to a group, then add whole group
-                                    var groupFigures = STACK.figureGetByGroupId(f.groupId);
-                                    for(var i=0; i<groupFigures.length; i++ ){
-                                      figuresToAdd.push(groupFigures[i].id);
-                                    }                                    
-                                }else{
-                                    figuresToAdd.push(fId); //add ONLY clicked selected figure
-                                }
-                                
-                                // we will allways have at least two figures here, so create a group
-                                selectedGroupId = STACK.groupCreate(figuresToAdd);
-                                state = STATE_GROUP_SELECTED;
-                                setUpEditPanel(null);
-                                redraw = true;
-                                Log.info('onMouseDown() + STATE_FIGURE_SELECTED + SHIFT  + min. 2 figures => STATE_GROUP_SELECTED');
-                            }else{
-                                var f = STACK.figureGetById(fId);
-                                if(f.groupId != -1){ // belongs to a group, so select it
-                                    
-                                    selectedFigureId = -1;
-                                    selectedGroupId = f.groupId;
-                                    state = STATE_GROUP_SELECTED;
-                                    setUpEditPanel(null);
-                                    redraw = true;                                
-                                    Log.info('onMouseDown() + STATE_FIGURE_SELECTED + group figure => change to STATE_GROUP_SELECTED');                                                                
-                                }
-                                else{ //single figure
-                                    selectedFigureId = fId;
-                                    HandleManager.clear();
-                                    var f = STACK.figureGetById(fId);
-                                    setUpEditPanel(f);
-                                    redraw = true;
-                                    Log.info('onMouseDown() + STATE_FIGURE_SELECTED + single figure => change to STATE_FIGURE_SELECTED (different figure)');
-                                }
-                            }
-                        }
-                    }
+                        redraw = true;
+                        break;
                 }
-
             }                
             
             break;
@@ -1453,9 +1450,11 @@ function onMouseDown(ev){
 
                             selectedGroupId = -1;
                             state = STATE_NONE;
+                            setUpEditPanel(canvasProps);
                             redraw = true;
                             Log.info('onMouseDown() + STATE_GROUP_SELECTED  + mouse on empty => STATE_NONE');
                         }
+                        break;
                 }
             }
             
