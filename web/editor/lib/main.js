@@ -1470,7 +1470,12 @@ function onMouseDown(ev){
              *- mouse down over a connector?
              *      - same connector (do nothing)
              *      - different connector?      
-             *- mouse down over a figure? (maybe in the future...to reduce nr. of clicks)      
+             *- mouse down over a figure, group, container?
+             *      - deselect connector
+             *      - select clicked object
+             *- mouse down over empty space?
+             *      - deselect connector
+             *      - select canvasProps
              **/
                         
             var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(selectedConnectorId);
