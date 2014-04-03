@@ -1442,6 +1442,7 @@ function onMouseDown(ev){
                         selectedContainerId = selectedObject.id;
                         Log.info('onMouseDown() + STATE_GROUP_SELECTED  + container => STATE_CONTAINER_SELECTED');
 
+                        setUpEditPanel(STACK.containerGetById(selectedContainerId));
                         redraw = true;
                         break;
                     default:    //mouse down on empty space
