@@ -1092,12 +1092,12 @@ function onMouseDown(ev){
              * We are in None state when no action was done....yet.  Here is what can happen:
              * - if we clicked a Connector than that Connector should be selected  
              *  (Connectors are more important than Figures :p)
-             * - if we clicked a Figure:
-             *      - select the Figure
              * - if we clicked a Group:
              *      - select the Group
-             * - if we clicked a container (Figures more important than container)
-             *      - select the container
+             * - if we clicked a Figure:
+             *      - select the Figure
+             * - if we clicked a Container (Figures more important than Container)
+             *      - select the Container
              * - if we did not clicked anything....
              *      - we will stay in STATE_NONE
              *      - allow to edit canvas
@@ -1155,7 +1155,12 @@ function onMouseDown(ev){
             /*Description:
              * If we have a figure selected and we do click here is what can happen:
              * - if we clicked a handle of current selected shape (it should be Figure) then just select that Handle
-             * - if we clicked a Connector or Container than it should be selected  (Connectors and Containers are more important than Figures :p)
+             * - if we clicked a Connector than it should be selected  (Connectors are more important than Figures :p)
+             * - if we clicked a Group:
+             *      - if SHIFT is pressed
+             *              create a new group of (selectedFigure + parent group of clicked figure)
+             *      - else (SHIFT not pressed)
+             *              select that group
              * - if we clicked a Figure:
              *      - did we click same figure?
              *          - do nothing
@@ -1164,11 +1169,7 @@ function onMouseDown(ev){
              *              create a new group of (selectedFigure + clicked figure)
              *          - else (SHIFT not pressed)
              *              select that figure
-             * - if we clicked a Group:
-             *      - if SHIFT is pressed
-             *              create a new group of (selectedFigure + parent group of clicked figure)
-             *      - else (SHIFT not pressed)
-             *              select that group
+             * - if we clicked a Container than it should be selected
              * - if we click on nothing -> 
              *      - if SHIFT pressed then State none
              *      - else just keep current state (maybe just missed what we needed)    
@@ -1274,33 +1275,30 @@ function onMouseDown(ev){
             /*Description:
              * If we have a selected group and we pressed the mouse this can happen:
              * - if we clicked a handle of current selected shape (asset: it should be Group) then just select that Handle
-             * - if we clicked a Connector or Container than it should be selected  (Connectors and Containers are more important than Figures
-             *      or Groups :p) :
+             * - if we clicked a Connector than it should be selected  (Connectors are more important than Figures or Groups :p) :
              *      - deselect current group
              *      - if current group is temporary (destroy it)
-             * - if we clicked a Figure:
-             *      - deselect current group
-             *      - the figure is from same group? (do nothing)
-             *      
-             *      - the figure is from different group? (select that group)
+             *      - select that Connector
+             * - if we clicked a Group:
+             *      - Clicked the same group as current?
+             *          - do nothing
+             *      - Clicked another group
              *          - SHIFT is pressed
-             *              merge those 2 groups
              *              if current group is temporary
              *                  destroy it
+             *              merge those 2 groups
              *          - SHIFT not pressed
              *              if current group is temporary
              *                  destroy it
-             *              clicked group become new selected group    
-             *          
-             *          
-             *      - the figure does not belong to any group? 
-             *          - SHIFT is pressed
-             *              add figure to to group
-             *          - else (SHIFT not pressed)
-             *              if current group is temporary 
-             *                  destroy it
-             *              select that figure        
-             *              
+             *              clicked group become new selected group
+             * - if we clicked a Figure:
+             *      - SHIFT is pressed
+             *          add figure to current group
+             *      - else (SHIFT not pressed)
+             *          if current group is temporary
+             *              destroy it
+             *          select that figure
+             * - if we clicked a Container than it should be selected
              * - if we clicked on empty space
              *      -  SHIFT _NOT_ pressed
              *          - current group is temporary
@@ -1467,8 +1465,9 @@ function onMouseDown(ev){
              *      - select handle
              *- mouse down over a connector?
              *      - same connector (do nothing)
-             *      - different connector?      
-             *- mouse down over a figure, group, container?
+             *      - different connector?
+             *          - selected clicked connector
+             *- mouse down over a group, figure, container?
              *      - deselect connector
              *      - select clicked object
              *- mouse down over empty space?
@@ -1571,79 +1570,68 @@ function onMouseDown(ev){
             
             
         case STATE_CONTAINER_SELECTED:
+
+            /*Description:
+             * If we have a Container selected and we do click here is what can happen:
+             * - if we clicked a handle of current selected shape (it should be Container) then just select that Handle
+             * - if we clicked a Connector, Group or than it should be selected  (Connectors, Groups and Figures are more important than Containers :p)
+             * - if we clicked a Container:
+             *      - did we clicked another Container?
+             *          - select that Container
+             *      - did we click same Container?
+             *          - do nothing
+             */
+
             if(HandleManager.handleGet(x, y) != null){ //Clicked a handler (of a Figure or Connector)
                 Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");       
                 /*Nothing important (??) should happen here. We just clicked the handler of the figure*/
                 HandleManager.handleSelectXY(x, y);
             }
             else{
-                //find Connector at (x,y)
-                var cId = CONNECTOR_MANAGER.connectorGetByXY(x, y);
-                if(cId !== -1){ //Clicked a Connector
-                    selectedConnectorId = cId;
-                    state = STATE_CONNECTOR_SELECTED;
-                    var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
-                    setUpEditPanel(con);
-                    Log.info('onMouseDown() + STATE_CONTAINER_SELECTED  - change to STATE_CONNECTOR_SELECTED');
-                    redraw = true;
-                } else {                                
-                    //find figure at (x,y)
-                    var fId = STACK.figureGetByXY(x, y);
-                    if(fId != -1){ //Selected a figure
-                        if(STACK.figureGetById(fId).groupId != -1){ //if the figure belongs to a group then select that group
-                            selectedGroupId = STACK.figureGetById(fId).groupId;
-                            var grp = STACK.groupGetById(selectedGroupId);
-                            state = STATE_GROUP_SELECTED;
-    //                        if(doUndo){
-    //                            currentMoveUndo = new MatrixCommand(selectedGroupId, History.OBJECT_GROUP, History.MATRIX, Matrix.translationMatrix(grp.getBounds()[0],grp.getBounds()[1]), null);
-    //                        }
-                            Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + group selected  =>  change to STATE_GROUP_SELECTED');
-                        }
-                        else{ //ok, we will select lonely figure
-                            selectedFigureId = fId;
-                            var f = STACK.figureGetById(fId);
-                            setUpEditPanel(f);
-                            state = STATE_FIGURE_SELECTED;
-    //                        if(doUndo){
-    //                            currentMoveUndo = new MatrixCommand(fId, History.OBJECT_FIGURE, History.MATRIX, Matrix.translationMatrix(f.getBounds()[0],f.getBounds()[1]), null);
-    //                        }
-                            Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + lonely figure => change to STATE_FIGURE_SELECTED');
-                        }
-
+                // get object under cursor
+                var selectedObject = Util.getObjectByXY(x,y);
+                switch(selectedObject.type) {
+                    case 'Connector':
+                        selectedContainerId = -1;
+                        selectedConnectorId = selectedObject.id;
+                        state = STATE_CONNECTOR_SELECTED;
+                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED  - change to STATE_CONNECTOR_SELECTED');
+                        setUpEditPanel(CONNECTOR_MANAGER.connectorGetById(selectedConnectorId));
                         redraw = true;
-                    }
-                    else{ //no Connector, no Figure
-                        //find container's id
-                        var contId = STACK.containerGetByXY(x, y);
-                        if(contId == -1){ //no container detected, deselect current container
-                            state = STATE_NONE;
-                            setUpEditPanel(canvasProps);
-                            selectedContainerId = -1;
-                            HandleManager.clear();
-                            Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + click on nothing - change to STATE_NONE');
+                        break;
+                    case 'Group':
+                        selectedContainerId = -1;
+                        selectedGroupId = selectedObject.id;
+                        state = STATE_GROUP_SELECTED;
+                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + group selected  =>  change to STATE_GROUP_SELECTED');
+                        setUpEditPanel(null);
+                        redraw = true;
+                        break;
+                    case 'Figure':
+                        selectedContainerId = -1;
+                        selectedFigureId = selectedObject.id;
+                        state = STATE_FIGURE_SELECTED;
+                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + lonely figure => change to STATE_FIGURE_SELECTED');
+                        setUpEditPanel(STACK.figureGetById(selectedFigureId));
+                        redraw = true;
+                        break;
+                    case 'Container':
+                        if(selectedObject.id != selectedContainerId){ //a different one
+                            selectedContainerId = selectedObject.id;
+                            Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
+                            setUpEditPanel(STACK.containerGetById(selectedContainerId));
+                            redraw = true;
                         }
-                        else{ //we have a container
-                            if( contId != selectedContainerId){ //a different one
-                                var container = STACK.containerGetById(contId);
-                                setUpEditPanel(container);
-                                state = STATE_CONTAINER_SELECTED;
-                                selectedContainerId = contId;
-                                Log.info('onMouseDown() + STATE_NONE  - change to STATE_CONTAINER_SELECTED');
-                            }
-                            else{ //same container 
-//                                //see if handler selected
-//                                if(HandleManager.handleGet(x,y) != null){
-//                                    Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");
-//                                    HandleManager.handleSelectXY(x,y);
-//
-//        //                            //TODO: just copy/paste code ....this acts like clone of the connector
-//        //                            var undoCmd = new ContainerAlterCommand(selectedContainerId); 
-//        //                            History.addUndo(undoCmd);
-//                                }
-                            }
-                        }                    
-                    }
-                }    
+                        break;
+                    default:    // nothing else selected
+                        selectedContainerId = -1;
+                        state = STATE_NONE;
+                        setUpEditPanel(canvasProps);
+                        HandleManager.clear();
+                        Log.info('onMouseDown() + STATE_CONTAINER_SELECTED + click on nothing - change to STATE_NONE');
+                        redraw = true;
+                        break;
+                }
             }
             break; //end STATE_CONTAINER_SELECTED
 
