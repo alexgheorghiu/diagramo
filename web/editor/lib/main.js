@@ -3881,17 +3881,25 @@ function action(action){
                     cmdFigUp.execute();
                     redraw = true;
                     break;
+
                 case STATE_GROUP_SELECTED:
                     var cmdGrpUp = new GroupTranslateCommand(selectedGroupId, Matrix.UP);
                     History.addUndo(cmdGrpUp);
                     cmdGrpUp.execute();
                     redraw = true;
                     break;
+
+                case STATE_CONTAINER_SELECTED:
+                    var cmdContUp = new ContainerTranslateCommand(selectedContainerId, Matrix.UP);
+                    History.addUndo(cmdContUp);
+                    cmdContUp.execute();
+                    redraw = true;
+                    break;
             }
                         
             break;
 
-        case 'down':
+        case 'down': //increase Y
             switch(state){
                 case STATE_FIGURE_SELECTED:
                     var cmdFigDown = new FigureTranslateCommand(selectedFigureId, Matrix.DOWN);
@@ -3899,17 +3907,24 @@ function action(action){
                     cmdFigDown.execute();
                     redraw = true;
                     break;
-                    
+
                 case STATE_GROUP_SELECTED:
                     var cmdGrpDown = new GroupTranslateCommand(selectedGroupId, Matrix.DOWN);
                     History.addUndo(cmdGrpDown);
                     cmdGrpDown.execute();
                     redraw = true;
                     break;
+
+                case STATE_CONTAINER_SELECTED:
+                    var cmdContDown = new ContainerTranslateCommand(selectedContainerId, Matrix.DOWN);
+                    History.addUndo(cmdContDown);
+                    cmdContDown.execute();
+                    redraw = true;
+                    break;
             }                        
             break;
 
-        case 'right':
+        case 'right': //increase X
             switch(state){
                 case STATE_FIGURE_SELECTED:
                     var cmdFigRight = new FigureTranslateCommand(selectedFigureId, Matrix.RIGHT);
@@ -3924,10 +3939,17 @@ function action(action){
                     cmdGrpRight.execute();
                     redraw = true;
                     break;
+
+                case STATE_CONTAINER_SELECTED:
+                    var cmdContRight = new ContainerTranslateCommand(selectedContainerId, Matrix.RIGHT);
+                    History.addUndo(cmdContRight);
+                    cmdContRight.execute();
+                    redraw = true;
+                    break;
             } 
             break;
 
-        case 'left':
+        case 'left': //decrease X
             switch(state){
                 case STATE_FIGURE_SELECTED:
                     var cmdFigLeft = new FigureTranslateCommand(selectedFigureId, Matrix.LEFT);
@@ -3940,6 +3962,13 @@ function action(action){
                     var cmdGrpLeft = new GroupTranslateCommand(selectedGroupId, Matrix.LEFT);
                     History.addUndo(cmdGrpLeft);
                     cmdGrpLeft.execute();
+                    redraw = true;
+                    break;
+
+                case STATE_CONTAINER_SELECTED:
+                    var cmdContLeft = new ContainerTranslateCommand(selectedContainerId, Matrix.LEFT);
+                    History.addUndo(cmdContLeft);
+                    cmdContLeft.execute();
                     redraw = true;
                     break;
             }
