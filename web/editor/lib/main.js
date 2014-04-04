@@ -1273,7 +1273,7 @@ function onMouseDown(ev){
 
         case STATE_GROUP_SELECTED:
             /*Description:
-             * If we have a selected group and we pressed the mouse this can happen:
+             * If we have a selected group and we pressed the mouse this what can happen:
              * - if we clicked a handle of current selected shape (asset: it should be Group) then just select that Handle
              * - if we clicked a Connector than it should be selected  (Connectors are more important than Figures or Groups :p) :
              *      - deselect current group

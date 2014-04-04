@@ -1044,6 +1044,9 @@ var Util = {
 
     /** Selects an object using x and y coordinates:
      * it can be one of: Figure, Group, Connector, Container or none.
+     * 
+     * Note: Connectors are more important than Figures and Figures more important 
+     * than Container so Connectors > Figures > Container
      * @param {Number} x - the x coordinate
      * @param {Number} y - the y coordinate
      * @return {Object}- in a form of
@@ -1060,7 +1063,7 @@ var Util = {
             return {
                 id: cId,
                 type: 'Connector'
-            }
+            };
         }
 
         //find Figure at (x,y)
@@ -1077,7 +1080,7 @@ var Util = {
                     return {
                         id: fId,
                         type: 'Figure'
-                    }
+                    };
                 }
         }
 
@@ -1087,14 +1090,14 @@ var Util = {
             return {
                 id: contId,
                 type: 'Container'
-            }
+            };
         }
 
         // none of above
         return {
             id: -1,
             type: ''
-        }
+        };
     }
 
 };
