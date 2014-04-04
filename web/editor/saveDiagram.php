@@ -9,6 +9,12 @@ if (!isset($_SESSION)) {
 
 require_once dirname(__FILE__) . '/common/rememberme.php';
 
+#print_r($_SESSION['userId']);
+$loggedUser = null;
+if(isset($_SESSION['userId']) && is_numeric($_SESSION['userId'])){
+    $loggedUser = $delegate->userGetById($_SESSION['userId']);
+}
+
 //guardian
 #require_once dirname(__FILE__).'/common/guardian.php';
 //TODO: use guardian instead
