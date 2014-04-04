@@ -158,6 +158,9 @@ body{
     width: auto;
     margin-bottom: 0;
 }
+#edit div.title {
+    margin-bottom: 0;
+}
 #right div.color-selector {
     width: 16px;
     height: 16px;

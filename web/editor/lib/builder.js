@@ -103,6 +103,16 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
     // colorPicker plugin requires div to be already appended to the DOM
     DOMObject.appendChild(div);
 
+    //title
+    var titleDiv = document.createElement("div");
+    titleDiv.className = 'label title';
+    titleDiv.textContent = 'Page Setup';
+    div.appendChild(titleDiv);
+
+    //separator
+    var separator = document.createElement("hr");
+    div.appendChild(separator);
+
     //fill color
     var colorDiv = document.createElement("div");
     colorDiv.className = "line";
@@ -112,7 +122,7 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
     var labelDiv = document.createElement("div");
     labelDiv.className = "label";
-    labelDiv.textContent = "Color";
+    labelDiv.textContent = "Background";
 
     icon = new Image();
     icon.className = 'prop-icon';
