@@ -43,10 +43,13 @@ function Text(string, x, y, font, size, outsideCanvas, align){
     /**Line spacing. It should be a percent of the font size so it will grow with the font*/    
     this.lineSpacing = 1 / 4 * size; 
     
-    /**Horizontal alignement of the text, can be: left, center, right*/
+    /**Horizontal alignment of the text, can be: left, center, right*/
     this.align = align || Text.ALIGN_CENTER;
+
+    /**Sets if text is underlined*/
+    this.underlined = false;
     
-    /**Vertical alignement of the text - for now always middle*/
+    /**Vertical alignment of the text - for now always middle*/
 //    this.valign = Text.VALIGN_MIDDLE;
 
     /**We will keep the initial point (as base line) and another point just above it - similar to a vector.
@@ -82,6 +85,7 @@ Text.load = function(o){
     //font loaded by contructor
     //newText.lineSpacing = o.lineSpacing; //automatic computed from text size
     //align loaded by contructor
+    newText.underlined = o.underlined;
     newText.vector = Point.loadArray(o.vector);
     newText.style = Style.load(o.style);
 
@@ -307,17 +311,17 @@ Text.prototype = {
 
         var lines = this.str.split("\n");
 
-        var noLinesTxt = 0;
-        var txtSizeHeight = this.size;
+//        var noLinesTxt = 0;
+//        var txtSizeHeight = this.size;
 
         // update lineSpacing because it could be changed
         // in dynamic way and we do not watch it
         // TODO: reorganize by deleting lineSpacing at all or by adding get/set methods
         this.lineSpacing = 1 / 4 * this.size;
 
-        var txtSpaceLines = this.lineSpacing;
+//        var txtSpaceLines = this.lineSpacing;
 
-        var txtOffsetY = txtSizeHeight + txtSpaceLines;
+//        var txtOffsetY = txtSizeHeight + txtSpaceLines;
 
         //X - offset
         var offsetX = 0;
@@ -405,7 +409,7 @@ Text.prototype = {
             );
             //context.fillText(lines[i], this.vector[0].x, txtOffsetY * noLinesTxt);
             //context.fillText(linesText[i], -this.vector[0].x, txtOffsetY * noLinesTxt);
-            noLinesTxt = noLinesTxt + 1;
+//            noLinesTxt = noLinesTxt + 1;
         }
 
 
