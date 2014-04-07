@@ -72,7 +72,7 @@ if(false){
  * must be increased and also update the importer.js
  * library
  * */
-DIAGRAMO.fileVersion = 3;
+DIAGRAMO.fileVersion = 4;
 
 
 /**Activate or deactivate the undo feature

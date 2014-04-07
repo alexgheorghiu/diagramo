@@ -19,7 +19,9 @@ Importer.fileVersions = {
         Originally used on version 2.3beta\n\
         ",
     
-    3: "Stated to be used beginning with version 2.3 final"
+    3: "Started to be used beginning with version 2.3 final",
+
+    4: "Started to be used beginning with version 2.4 final"
 };
 
 /**Import previous Diagramo file format.
@@ -167,13 +169,47 @@ Importer.patch3 = function(o){
  * @param {JSONObject} o - the old version file JSON object
  * @returns {JSONObject} the new JSON version
  * Warning: It does modify the original {JSONObject}
+ * Details:
+ *  - Set Text::underlined to false (only Figures, Containers - in primitives and Connectors - in middleText field have it)
  * */
 Importer.patch4 = function(o){
     o.v = 4;
-    
-    //Add code here
+
+    if('s' in o){ // 's' stands for Stack
+        var jsonStack = o.s;
+
+        // go through containers
+        for (var i = 0; i < jsonStack.containers.length; i++) {
+            // Text used only in primitives
+            var primitives = jsonStack.containers[i].primitives;
+            for (var j = 0; j < primitives.length; j++) {
+                if (primitives[j].oType == "Text") {
+                    primitives[j].underlined = false;
+                }
+            }
+        }
+
+        // go through figures
+        for (var i = 0; i < jsonStack.figures.length; i++) {
+            // Text used only in primitives
+            var primitives = jsonStack.figures[i].primitives;
+            for (var j = 0; j < primitives.length; j++) {
+                if (primitives[j].oType == "Text") {
+                    primitives[j].underlined = false;
+                }
+            }
+        }
+    }
+
+    if( 'm' in o ){ // 'm' stands for ConnectorManager
+        var jsonConnectorManager = o.m;
+
+        // go through connectors
+        for (var i = 0; i < jsonConnectorManager.connectors.length; i++) {
+            // Text used as middleText property
+            jsonConnectorManager.connectors[i].middleText.underlined = false;
+        }
+    }
     
     return o;
 }
-
-
