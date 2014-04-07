@@ -68,7 +68,7 @@ Builder.IMAGE_TEXT_ICON_PATH = Builder.IMAGE_BASE_PATH + 'prop-icon-text.png' ;
 Builder.constructPropertiesPanel = function(DOMObject, shape){
     for(var i = 0; i < shape.properties.length; i++){
         // regExp to avoid properties of Text editor
-        if (/(primitives\.\d+|middleText)\.(str|size|font|align|style\.fillStyle)/g.test(shape.properties[i].property) === false) {
+        if (/(primitives\.\d+|middleText)\.(str|size|font|align|underlined|style\.fillStyle)/g.test(shape.properties[i].property) === false) {
             shape.properties[i].injectInputArea(DOMObject, shape.id);
         }
     }
@@ -247,7 +247,7 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
 
 
-/** The stucture that will declare any visible and changable property of a shape.
+/** The structure that will declare any visible and changable property of a shape.
  * 
  *  Note:  A {BuilderProperty} DOES NOT STORE THE VALUE OF THE PROPERTY but only
  * describe what properties of a {Style} are exposed and how the {Builder} will
@@ -284,6 +284,9 @@ BuilderProperty.TYPE_TEXT_FONT_FAMILY = 'TextFontFamily';
 
 /**Text aligment property type*/
 BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT = 'TextFontAlignment';
+
+/**Text underlined property type*/
+BuilderProperty.TYPE_TEXT_UNDERLINED = 'TextUnderlined';
 
 /**Boolean property type*/
 BuilderProperty.TYPE_BOOLEAN = 'Boolean';
@@ -338,6 +341,16 @@ BuilderProperty.CONNECTOR_ENDS = [{Text:'Normal', Value:'Normal'},{Text:'Arrow',
 
 /**Display separator*/
 BuilderProperty.SEPARATOR = 'SEPARATOR';
+
+/**Css class for button checking control*/
+BuilderProperty.BUTTON_CHECKER_CLASS = 'button-checker';
+
+/**Name of attribute to define is property checked or not*/
+BuilderProperty.BUTTON_CHECKED_ATTRIBUTE = 'button-checked';
+
+/**Label for text underlined property*/
+BuilderProperty.TEXT_UNDERLINED_LABEL = 'U';
+
 
 /**Creates a {BuilderProperty} out of JSON parsed object
  *@param {JSONObject} o - the JSON parsed object
@@ -411,6 +424,9 @@ BuilderProperty.prototype = {
         }
         else if(this.type == BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT){
             this.generateArrayCode(DOMObject,figureId, Text.ALIGNMENTS);
+        }
+        else if(this.type == BuilderProperty.TYPE_TEXT_UNDERLINED){
+            this.generateButtonCheckerCode(DOMObject,figureId);
         }
         else if(this.type == BuilderProperty.TYPE_CONNECTOR_END){
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.CONNECTOR_ENDS);
@@ -741,7 +757,48 @@ BuilderProperty.prototype = {
             updateShape(figureId, propExposedToAnonymous, colorPicker.value);
         };
     },
-    
+
+
+    /**Generate the code to edit the boolean property with button.
+     *Result control has 2 modes: checked/unchecked.
+     *The property got updated on click
+     *
+     *@param {HTMLElement} DOMObject - the div of the properties panel
+     *@param {Number} figureId - the id of the figure we are using
+     **/
+    generateButtonCheckerCode:function(DOMObject,figureId){
+        var value = this.getValue(figureId);
+
+        var div = document.createElement("div");
+        div.className = "line";
+
+        var buttonChecker = document.createElement("input");
+        buttonChecker.type = "button";
+        buttonChecker.id = this.property; // for DOM manipulation
+        buttonChecker.className = BuilderProperty.BUTTON_CHECKER_CLASS;
+        buttonChecker.value = BuilderProperty.TEXT_UNDERLINED_LABEL; // for now we have button checking only for underlined text property
+        // property value stores in custom attribute
+        buttonChecker.setAttribute(BuilderProperty.BUTTON_CHECKED_ATTRIBUTE, value);
+        div.appendChild(buttonChecker);
+
+        buttonChecker.onclick = function(figureId,property){
+            return function(){
+                // property value stores in custom attribute
+                var currentValue = this.getAttribute(BuilderProperty.BUTTON_CHECKED_ATTRIBUTE);
+                // new value is inverse of the current one
+                var newValue = currentValue == "true" ? false : true;
+                // update control first
+                this.setAttribute(BuilderProperty.BUTTON_CHECKED_ATTRIBUTE, newValue);
+                Log.info("Builder.generateSingleTextCode() value: " + newValue);
+                updateShape(figureId, property, newValue);
+            }
+        }(figureId, this.property);
+
+
+        buttonChecker.onmouseout = buttonChecker.onchange;
+        buttonChecker.onkeyup = buttonChecker.onchange;
+        DOMObject.appendChild(div);
+    },
 
 
     /**We use this to return a value of the property for a figure,
@@ -835,6 +892,7 @@ function TextEditorPopup(editor, tools, shape, textPrimitiveId){
     this.fontPropertyName = propertyPrefix + TextEditorPopup.FONT_PROPERTY_ENDING;
     this.alignPropertyName = propertyPrefix + TextEditorPopup.ALIGN_PROPERTY_ENDING;
     this.colorPropertyName = propertyPrefix + TextEditorPopup.COLOR_PROPERTY_ENDING;
+    this.underlinedPropertyName = propertyPrefix + TextEditorPopup.UNDERLINED_PROPERTY_ENDING;
 }
 
 /**A set of predefined properties fragments*/
@@ -843,6 +901,7 @@ TextEditorPopup.SIZE_PROPERTY_ENDING = 'size';
 TextEditorPopup.FONT_PROPERTY_ENDING = 'font';
 TextEditorPopup.ALIGN_PROPERTY_ENDING = 'align';
 TextEditorPopup.COLOR_PROPERTY_ENDING = 'style.fillStyle';
+TextEditorPopup.UNDERLINED_PROPERTY_ENDING = 'underlined';
 
 
 TextEditorPopup.prototype = {
@@ -889,6 +948,7 @@ TextEditorPopup.prototype = {
                    case this.fontPropertyName:
                    case this.alignPropertyName:
                    case this.colorPropertyName:
+                   case this.underlinedPropertyName:
                        this.shape.properties[i].injectInputArea(this.tools, this.shape.id);
 
                        // set Text editor properties on initialization
@@ -948,6 +1008,14 @@ TextEditorPopup.prototype = {
 
                 // set new property value to editor's tool
                 document.getElementById(property).value = value;
+                break;
+
+            case this.underlinedPropertyName:
+                // set new property value to editor's textarea
+                textarea.style.textDecoration = value == true ? 'underline' : '';
+
+                // set new property value to editor's tool
+                document.getElementById(property).setAttribute(BuilderProperty.BUTTON_CHECKED_ATTRIBUTE, value);
                 break;
 
             case this.colorPropertyName:

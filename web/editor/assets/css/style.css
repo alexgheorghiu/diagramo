@@ -376,6 +376,17 @@ body{
     margin-top: 2px;
 }
 
+#text-editor-tools .button-checker {
+    text-decoration: underline;
+    padding: 0px 4px;
+    margin: 1px;
+    cursor: pointer;
+}
+
+#text-editor-tools .button-checker[button-checked="true"] {
+    border-style: inset;
+}
+
 #insert-image-dialog {
     display: none;
 }
