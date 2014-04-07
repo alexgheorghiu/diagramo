@@ -31,6 +31,7 @@ function figure_Page(x,y)
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.1.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
@@ -85,6 +86,7 @@ function figure_PageUpperCornerFolded(x,y)
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.2.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.2.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.2.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.2.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.2.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
@@ -140,6 +142,7 @@ function figure_PageLowerCornerFolded(x,y)
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.2.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.2.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.2.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.2.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.2.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
@@ -182,6 +185,7 @@ function figure_SemiCircleUp(x,y)
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.2.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.2.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.2.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.2.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.2.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
@@ -222,6 +226,7 @@ function figure_SemiCircleDown(x,y)
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.2.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.2.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.2.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.2.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.2.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
@@ -266,6 +271,7 @@ function figure_Triangle(x,y)
     e.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     e.properties.push(new BuilderProperty('Font ', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     e.properties.push(new BuilderProperty('Alignment ', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    e.properties.push(new BuilderProperty('Text Underlined', 'primitives.1.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     e.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
 
 //    e.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));

@@ -117,6 +117,7 @@ function figure_Stop(x,y)
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.1.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.1.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.1.style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('Stroke Style', 'style.strokeStyle', BuilderProperty.TYPE_COLOR));
@@ -210,6 +211,7 @@ function figure_ImageFrame(x, y)
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.2.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.2.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.2.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.2.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.2.style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     
@@ -226,6 +228,7 @@ function figure_ImageFrame(x, y)
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.3.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.3.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.3.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.3.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.3.style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     
@@ -240,6 +243,7 @@ function figure_ImageFrame(x, y)
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.4.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.4.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
     f.properties.push(new BuilderProperty('Alignment ', 'primitives.4.align', BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT));
+    f.properties.push(new BuilderProperty('Text Underlined', 'primitives.4.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED));
     f.properties.push(new BuilderProperty('Text Color', 'primitives.4.style.fillStyle', BuilderProperty.TYPE_COLOR));
     
     
