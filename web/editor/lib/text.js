@@ -161,6 +161,9 @@ Text.SPACE_BETWEEN_CHARACTERS = 2;
 /**The default size of the created font*/
 Text.DEFAULT_SIZE = 10;
 
+/**Proportion between size of text and thickness of underline*/
+Text.UNDERLINE_THICKNESS_DIVIDER = 16;
+
 
 Text.prototype = {
     
@@ -402,11 +405,25 @@ Text.prototype = {
         for(var i=0; i<lines.length; i++){
 //            Log.info("Line: " + lines[i] + " this.vector[0].x=" + this.vector[0].x + " offsetX=" + offsetX + " this.vector[0].y=" + this.vector[0].y + " offsetY=" + offsetY 
 //            + " this.getNormalHeight()=" + this.getNormalHeight() + " this.size=" + this.size + " this.lineSpacing=" + this.lineSpacing);
+
+            // x and y starting coordinates of text lines
+            var lineStartX = this.vector[0].x + offsetX;
+            var lineStartY = (this.vector[0].y - this.getNormalHeight() / 2 + i * this.size + i * this.lineSpacing) + offsetY;
+
             context.fillText(
-                lines[i], 
-                this.vector[0].x + offsetX,
-                (this.vector[0].y - this.getNormalHeight() / 2 + i * this.size + i * this.lineSpacing) + offsetY
+                lines[i],
+                lineStartX,
+                lineStartY
             );
+
+            if (this.underlined) {
+                this.paintUnderline(
+                    context,
+                    lines[i],
+                    lineStartX,
+                    lineStartY
+                );
+            }
             //context.fillText(lines[i], this.vector[0].x, txtOffsetY * noLinesTxt);
             //context.fillText(linesText[i], -this.vector[0].x, txtOffsetY * noLinesTxt);
 //            noLinesTxt = noLinesTxt + 1;
@@ -415,6 +432,42 @@ Text.prototype = {
 
         context.restore();
 
+    },
+
+
+    /**Paints underline for the text.
+     * There is no native method of canvas context for now, so we're implementing it by ourselves.
+     * Taken and refactored from http://scriptstock.wordpress.com/2012/06/12/html5-canvas-text-underline-workaround/
+     *@author Artyom <artyom.pokatilov@gmail.com>
+     **/
+    paintUnderline:function(context, text, x, y){
+        // text width
+        var width = context.measureText(text).width;
+
+        // if text align differs from "left" - add offset to X axis
+        // fillText method of canvas context make this automatically
+        switch(this.align){
+            case "center":
+                x -= (width/2);
+                break;
+            case "right":
+                x -= width;
+                break;
+        }
+
+        // add offset to Y axis equal to half of text size
+        y += this.size / 2;
+
+        context.save();
+
+        context.beginPath();
+        context.strokeStyle = this.style.fillStyle; // color the same as text
+        context.lineWidth = this.size / Text.UNDERLINE_THICKNESS_DIVIDER;   // thickness taken in proportion of text size
+        context.moveTo(x,y);
+        context.lineTo(x + width, y);
+        context.stroke();
+
+        context.restore();
     },
 
 
