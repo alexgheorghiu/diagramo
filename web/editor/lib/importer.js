@@ -107,7 +107,7 @@ Importer.patch3 = function(o){
             var connectors = jsonConnectorManager.connectors;
             var connectorLength = connectors.length;
             for (var i = 0; i < connectorLength; i++) {
-                // old version has fillStyle underfined
+                // old version has fillStyle undefined
                 if (!connectors[i].middleText.style.fillStyle) {
                     connectors[i].middleText.style.fillStyle = connector_defaultConnectorTextFillStyle;
                 }
@@ -171,6 +171,7 @@ Importer.patch3 = function(o){
  * Warning: It does modify the original {JSONObject}
  * Details:
  *  - Set Text::underlined to false (only Figures, Containers - in primitives and Connectors - in middleText field have it)
+ *  - Add text underlined property to all objects with Text primitives (only Figures, Containers - in primitives and Connectors - in middleText field have it)
  * */
 Importer.patch4 = function(o){
     o.v = 4;
@@ -185,6 +186,9 @@ Importer.patch4 = function(o){
             for (var j = 0; j < primitives.length; j++) {
                 if (primitives[j].oType == "Text") {
                     primitives[j].underlined = false;
+                    // if primitive with j index is Text - than it's text underlined property is
+                    var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
+                    jsonStack.containers[i].properties.push(textUnderlinedProperty);
                 }
             }
         }
@@ -196,6 +200,9 @@ Importer.patch4 = function(o){
             for (var j = 0; j < primitives.length; j++) {
                 if (primitives[j].oType == "Text") {
                     primitives[j].underlined = false;
+                    // if primitive with j index is Text - than it's text underlined property is
+                    var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
+                    jsonStack.figures[i].properties.push(textUnderlinedProperty);
                 }
             }
         }
@@ -204,10 +211,14 @@ Importer.patch4 = function(o){
     if( 'm' in o ){ // 'm' stands for ConnectorManager
         var jsonConnectorManager = o.m;
 
+        // define typical text underlined property
+        var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'middleText.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
+
         // go through connectors
         for (var i = 0; i < jsonConnectorManager.connectors.length; i++) {
             // Text used as middleText property
             jsonConnectorManager.connectors[i].middleText.underlined = false;
+            jsonConnectorManager.connectors[i].properties.push(textUnderlinedProperty);
         }
     }
     
