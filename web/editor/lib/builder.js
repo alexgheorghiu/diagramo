@@ -794,9 +794,6 @@ BuilderProperty.prototype = {
             }
         }(figureId, this.property);
 
-
-        buttonChecker.onmouseout = buttonChecker.onchange;
-        buttonChecker.onkeyup = buttonChecker.onchange;
         DOMObject.appendChild(div);
     },
 
