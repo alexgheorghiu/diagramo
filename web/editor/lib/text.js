@@ -438,7 +438,11 @@ Text.prototype = {
     /**Paints underline for the text.
      * There is no native method of canvas context for now, so we're implementing it by ourselves.
      * Taken and refactored from http://scriptstock.wordpress.com/2012/06/12/html5-canvas-text-underline-workaround/
-     *@author Artyom <artyom.pokatilov@gmail.com>
+     * @argument {CanvasRenderingContext2D} context - the Canvas's 2D context
+     * @argument {String} text - the text to be underlined
+     * @argument {Number} x - the X coordinates of the text
+     * @argument {Number} y - the Y coordinated of the the text
+     * @author Artyom <artyom.pokatilov@gmail.com>
      **/
     paintUnderline:function(context, text, x, y){
         // text width

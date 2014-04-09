@@ -42,7 +42,7 @@ Importer.importDiagram = function(o){
         try{
             this['patch' + i](o);       
         } catch(error){
-            Log.error("Importer.importDiagram exception: " + error)
+            Log.error("Importer.importDiagram exception: " + error);
 //            alert("Importer.importDiagram exception: " + error);
         }
     }
@@ -161,7 +161,7 @@ Importer.patch3 = function(o){
     o.v = 3;
     
     return o;
-}
+};
 
 
 /**
@@ -184,7 +184,7 @@ Importer.patch4 = function(o){
             // Text used only in primitives
             var primitives = jsonStack.containers[i].primitives;
             for (var j = 0; j < primitives.length; j++) {
-                if (primitives[j].oType == "Text") {
+                if (primitives[j].oType === "Text") {
                     primitives[j].underlined = false;
                     // if primitive with j index is Text - than it's text underlined property is
                     var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
@@ -198,7 +198,7 @@ Importer.patch4 = function(o){
             // Text used only in primitives
             var primitives = jsonStack.figures[i].primitives;
             for (var j = 0; j < primitives.length; j++) {
-                if (primitives[j].oType == "Text") {
+                if (primitives[j].oType === "Text") {
                     primitives[j].underlined = false;
                     // if primitive with j index is Text - than it's text underlined property is
                     var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
@@ -223,4 +223,4 @@ Importer.patch4 = function(o){
     }
     
     return o;
-}
+};

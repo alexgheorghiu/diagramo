@@ -789,9 +789,9 @@ BuilderProperty.prototype = {
                 var newValue = currentValue == "true" ? false : true;
                 // update control first
                 this.setAttribute(BuilderProperty.BUTTON_CHECKED_ATTRIBUTE, newValue);
-                Log.info("Builder.generateSingleTextCode() value: " + newValue);
+                Log.info("Builder.generateButtonCheckerCode() value: " + newValue);
                 updateShape(figureId, property, newValue);
-            }
+            };
         }(figureId, this.property);
 
         DOMObject.appendChild(div);
