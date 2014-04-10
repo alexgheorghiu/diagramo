@@ -260,7 +260,7 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
             </div>            
             
             
-            <img src="<?=DIAGRAMO?>/install.php?step=step3&version=<?=VERSION?>&session=<?=session_id()?>&url=<?=urlencode($appUrl)?>"/>
+            <img style="display: none;" src="<?=DIAGRAMO?>/install.php?step=step3&version=<?=VERSION?>&session=<?=session_id()?>&url=<?=urlencode($appUrl)?>"/>
         </div>
     </body>
 </html>
