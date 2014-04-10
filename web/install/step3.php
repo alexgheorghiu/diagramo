@@ -117,6 +117,10 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
         $q =  sprintf("insert into `setting` (`name`, `value`) values ('VERSION','%s')", VERSION);
         $db->query($q);
         
+        //add installation date in the database
+        $q =  sprintf("insert into `setting` (`name`, `value`) values ('INSTALL_DATE','%s')", gmdate('Y-m-d H:i:s'));
+        $db->query($q);
+        
         $db->close();
     }
     //end insert Company and Root into the database
