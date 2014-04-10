@@ -15,7 +15,9 @@ function FigureDeleteCommand(figureId){
     this.figureId = figureId;
     
     this.deletedFigure = null;
-    
+
+    this.deletedGlues = null;
+    this.deletedCPs = null;
         
     this.firstExecute = true;
 }
@@ -29,7 +31,21 @@ FigureDeleteCommand.prototype = {
             //store deleted figure (safe copy)
 //            this.deletedFigure = STACK.figureGetById(this.figureId).clone();
             this.deletedFigure = STACK.figureGetById(this.figureId);
-            
+
+            //store deleted ConnectionPoints of target figure (safe copy)
+            this.deletedCPs = CONNECTOR_MANAGER.connectionPointGetAllByParent(this.figureId);
+
+            //store deleted Glues of all ConnectionPoints of target figure (safe copy)
+            this.deletedGlues = [];
+
+            var cpLength = this.deletedCPs.length;
+            for(var k = 0; k < cpLength; k++) {
+                var glues = CONNECTOR_MANAGER.glueGetByFirstConnectionPointId(this.deletedCPs[k].id);
+                if (glues.length) {
+                    this.deletedGlues.push(glues[0]);
+                }
+            }
+
             //delete it
             STACK.figureRemoveById(this.figureId);
             
@@ -84,6 +100,18 @@ FigureDeleteCommand.prototype = {
     /**This method should be called every time the Command should be undone*/
     undo : function(){        
         if(this.deletedFigure){
+            //add deleted ConnectionPoints back
+            var length = this.deletedCPs.length;
+            for(var i = 0; i < length; i++) {
+                CONNECTOR_MANAGER.connectionPointAdd(this.deletedCPs[i]);
+            }
+
+            //add deleted Glues back
+            length = this.deletedGlues.length;
+            for(var j = 0; j < length; j++) {
+                CONNECTOR_MANAGER.glueAdd(this.deletedGlues[j]);
+            }
+
             //add deleted figure back
 //            STACK.figureAdd(this.deletedFigure.clone());  //safe copy
             STACK.figureAdd(this.deletedFigure);

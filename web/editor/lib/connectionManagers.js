@@ -1224,6 +1224,16 @@ ConnectorManager.prototype = {
     },
 
 
+    /**Adds an existing ConnectionPoint to the connectionPoints array
+     *@param {ConnectionPoint} connectionPoint - the ConnectionPoint to add
+     *
+     * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    connectionPointAdd:function(connectionPoint){
+        this.connectionPoints.push(connectionPoint);
+    },
+
+
     /** Removes the connectionPoints associated with a parent (it can be either Figure or Connector)     
      * @param {Number} parentId - the figure id
      * @author Alex Gheorghiu <alex@scriptoid.com>
@@ -1603,6 +1613,16 @@ ConnectorManager.prototype = {
         this.glues.push(glue);
 
         return glue;
+    },
+
+
+    /**Adds an existing Glue to the glues array
+     *@param {Glue} glue - the Glue to add
+     *
+     * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    glueAdd:function(glue){
+        this.glues.push(glue);
     },
 
 
