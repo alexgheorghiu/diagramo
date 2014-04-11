@@ -784,6 +784,74 @@ Stack.prototype = {
         return found;
     },
 
+    /**Return the bounds for all objects on work area (canvas).
+     *
+     *@return {Array<Number>} - returns [minX, minY, maxX, maxY] - bounds, where
+     *  all objects on canvas (Figures/Containers/Connectors) are in the bounds.
+     *
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    getWorkAreaBounds:function() {
+        var minX;
+        var maxX;
+        var minY;
+        var maxY;
+        var unset = true;   // defines if there were no object - no bounds set
+
+        // function to run for any bounds in format [minX, minY, maxX, maxY]
+        // compares given bounds with current values of canvas
+        var compareAndSet = function (bounds){
+            // if minX is unset or bigger than given
+            if (typeof(minX) === 'undefined' || minX > bounds[0]) {
+                minX = bounds[0];
+            }
+            // if minY is unset or bigger than given
+            if (typeof(minY) === 'undefined' || minY > bounds[1]) {
+                minY = bounds[1];
+            }
+            // if maxX is unset or bigger than given
+            if (typeof(maxX) === 'undefined' || bounds[2] > maxX) {
+                maxX = bounds[2];
+            }
+            // if maxY is unset or bigger than given
+            if (typeof(maxY) === 'undefined' || bounds[3] > maxY) {
+                maxY = bounds[3];
+            }
+
+            // if once function were ran - one object setted it's bounds
+            unset = false;
+        };
+
+        var i;
+        // get bounds of containers
+        var containerLength = this.containers.length;
+        for (i = 0; i < containerLength; i++) {
+            compareAndSet(this.containers[i].getBounds());
+        }
+
+        // get bounds of figures
+        var figureLength = this.figures.length;
+        for (i = 0; i < figureLength; i++) {
+            compareAndSet(this.figures[i].getBounds());
+        }
+
+        // get bounds of connectors
+        var connectorLength = CONNECTOR_MANAGER.connectors.length;
+        for (i = 0; i < connectorLength; i++) {
+            compareAndSet(CONNECTOR_MANAGER.connectors[i].getBounds());
+        }
+
+        // bounds were setted/changed?
+        if (unset) {
+            // return full canvas size
+            var canvas = getCanvas();
+            return [0, 0, canvas.width, canvas.height];
+        } else {
+            // return setted new bounds
+            return [minX, minY, maxX, maxY];
+        }
+    },
+
 
     /**Paints all {Figure}s from back to top (Z order)
      *@param  {Context} context - the 2D context
@@ -791,7 +859,7 @@ Stack.prototype = {
      **/
     paint:function(context, ignoreSelection){
 //        Log.group("STACK: paint");
-        /*The ideea is to paint from bottom to top
+        /*The idea is to paint from bottom to top
          * 1. figures (first)
          * 2. connectors
          * 3. handlers

@@ -4106,6 +4106,8 @@ function action(action){
              * 2) Get new width and height of canvas from 1)
              * 3) Use CanvasChangeSizeCommand to change Canvas
              */
+
+            var workAreaBounds = STACK.getWorkAreaBounds();
             /*
              var cmdCanvasTrim = new CanvasChangeSizeCommand();
              cmdCanvasTrim.execute();

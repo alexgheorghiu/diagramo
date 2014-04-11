@@ -1272,7 +1272,10 @@ Connector.prototype = {
      *@return {Array} - the [minX, minY, maxX, maxY]
      **/
     getBounds:function(){
-        var minX=minY=maxX=maxY=null;
+        var minX = null;
+        var minY = null;
+        var maxX = null;
+        var maxY = null;
         for(var i=0; i<this.turningPoints.length; i++){
             if(this.turningPoints[i].x<minX || minX==null)
                 minX = this.turningPoints[i].x;

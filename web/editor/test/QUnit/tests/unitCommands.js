@@ -6,10 +6,12 @@
     var y;
     var cmdCreateFig;
     var figureId;
+    var cmdCreateContainer;
+    var containerId;
 
     module( "Commands.Undo tests" , {
         /*
-        * Create new Figure on setup before every test run.
+        * Create new Figure and Container on setup before every test run.
         */
         setup: function () {
             x = 10;
@@ -21,6 +23,16 @@
             // after executing of FigureCreateCommand selectedFigureId
             // store Id value of new created Figure
             figureId = selectedFigureId;
+
+
+            x = 100;
+            y = 150;
+            cmdCreateContainer = new ContainerCreateCommand(x, y);
+            cmdCreateContainer.execute();
+
+            // after executing of ContainerCreateCommand selectedContainerId
+            // store Id value of new created Container
+            containerId = selectedContainerId;
         }
     });
 
@@ -35,6 +47,21 @@
 
         ok(figure == null, "After FigureCreateCommand::Undo figure doesn't exist.");
     });
+
+
+    /**
+     * Call ContainerCreateCommand::undo (actually, remove Container)
+     * and then try to find Container
+     */
+    /* TODO: Uncomment when Commands.ContainerCreateCommand::undo will be implemented
+    test("Commands.ContainerCreateCommand", function () {
+        cmdCreateContainer.undo();
+
+        var container = STACK.containerGetById(containerId);
+
+        ok(container == null, "After ContainerCreateCommand::Undo container doesn't exist.");
+    });
+    */
 
 
     /**

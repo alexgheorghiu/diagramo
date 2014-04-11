@@ -16,6 +16,7 @@
     <script type="text/javascript" src="lib/dashed.js"></script>
     <script type="text/javascript" src="lib/commands/FigureCreateCommand.js"></script>
     <script type="text/javascript" src="lib/commands/FigureTranslateCommand.js"></script>
+    <script type="text/javascript" src="../../lib/commands/ContainerCreateCommand.js"></script>
     <script type="text/javascript" src="lib/commands/ShapeChangePropertyCommand.js"></script>
     <script type="text/javascript" src="lib/commands/History.js"></script>
 
@@ -52,6 +53,7 @@
     <script type="text/javascript" src="test/QUnit/tests/unitSerialization.js"></script>
     <script type="text/javascript" src="test/QUnit/tests/unitText.js"></script>
     <script type="text/javascript" src="test/QUnit/tests/unitUtil.js"></script>
+    <script type="text/javascript" src="test/QUnit/tests/unitStack.js"></script>
     <script type="text/javascript" src="test/QUnit/tests/unitCommands.js"></script>
     <script type="text/javascript" src="test/QUnit/tests/unitDashed.js"></script>
     <!-- End Unit Tests section -->
