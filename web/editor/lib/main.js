@@ -4104,16 +4104,25 @@ function action(action){
             /* Algorithm
              * 1) Find border points of Figure/Container/Connector bounds
              * 2) Get new width and height of canvas from 1)
-             * 3) Use CanvasChangeSizeCommand to change Canvas
+             * 3) Use CanvasChangeSizeCommand to change size of Canvas
              */
 
             var workAreaBounds = STACK.getWorkAreaBounds();
-            /*
-             var cmdCanvasTrim = new CanvasChangeSizeCommand();
-             cmdCanvasTrim.execute();
-             History.addUndo(cmdCanvasTrim);
-             redraw = true;
-             */
+            var newCanvasWidth = workAreaBounds[2] - workAreaBounds[0];
+            var newCanvasHeight = workAreaBounds[3] - workAreaBounds[1];
+
+            // Did canvas size changed?
+            if (newCanvasWidth != canvasProps.getWidth() || newCanvasHeight != canvasProps.getHeight()) {
+                var cmdCanvasTrim = new CanvasChangeSizeCommand(
+                    newCanvasWidth,
+                    newCanvasHeight,
+                    workAreaBounds[0],  // new (0,0) point goes this X coordinate
+                    workAreaBounds[1]   // new (0,0) point goes this Y coordinate
+                );
+                cmdCanvasTrim.execute();
+                History.addUndo(cmdCanvasTrim);
+                redraw = true;
+            }
             break;
 
     }//end switch

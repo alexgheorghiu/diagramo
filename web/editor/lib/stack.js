@@ -844,8 +844,7 @@ Stack.prototype = {
         // bounds were setted/changed?
         if (unset) {
             // return full canvas size
-            var canvas = getCanvas();
-            return [0, 0, canvas.width, canvas.height];
+            return [0, 0, canvasProps.getWidth(), canvasProps.getHeight()];
         } else {
             // return setted new bounds
             return [minX, minY, maxX, maxY];
