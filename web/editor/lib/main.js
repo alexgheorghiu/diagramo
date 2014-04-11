@@ -4100,6 +4100,20 @@ function action(action){
             }            
             break;
 
+        case 'trim':
+            /* Algorithm
+             * 1) Find border points of Figure/Container/Connector bounds
+             * 2) Get new width and height of canvas from 1)
+             * 3) Use CanvasChangeSizeCommand to change Canvas
+             */
+            /*
+             var cmdCanvasTrim = new CanvasChangeSizeCommand();
+             cmdCanvasTrim.execute();
+             History.addUndo(cmdCanvasTrim);
+             redraw = true;
+             */
+            break;
+
     }//end switch
 
     if(redraw){
