@@ -16,7 +16,7 @@
     <script type="text/javascript" src="lib/dashed.js"></script>
     <script type="text/javascript" src="lib/commands/FigureCreateCommand.js"></script>
     <script type="text/javascript" src="lib/commands/FigureTranslateCommand.js"></script>
-    <script type="text/javascript" src="../../lib/commands/ContainerCreateCommand.js"></script>
+    <script type="text/javascript" src="lib/commands/ContainerCreateCommand.js"></script>
     <script type="text/javascript" src="lib/commands/ShapeChangePropertyCommand.js"></script>
     <script type="text/javascript" src="lib/commands/History.js"></script>
 
