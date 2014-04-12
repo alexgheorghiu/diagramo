@@ -14,9 +14,9 @@ var DIAGRAMO = {
     * Note: See to set the Connector's visualDebug (Connector.visualDebug) to false too
     **/
     debug : false,
-            
+
     /**Keeps temporary connector solution.
-     * TODO: move to CONNECTION_MANAGE?!*/
+     * TODO: move to CONNECTOR_MANAGER?!*/
     debugSolutions : [],
 
     /** enables/disables rendering of currentCloud
@@ -4112,7 +4112,7 @@ function action(action){
             var newCanvasHeight = workAreaBounds[3] - workAreaBounds[1];
 
             // Did canvas size changed?
-            if (newCanvasWidth != canvasProps.getWidth() || newCanvasHeight != canvasProps.getHeight()) {
+            if (newCanvasWidth !== canvasProps.getWidth() || newCanvasHeight !== canvasProps.getHeight()) {
                 var cmdCanvasTrim = new CanvasChangeSizeCommand(
                     newCanvasWidth,
                     newCanvasHeight,

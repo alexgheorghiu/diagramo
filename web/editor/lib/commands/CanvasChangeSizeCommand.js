@@ -32,7 +32,9 @@ CanvasChangeSizeCommand.prototype = {
     /**This method got called every time the Command must execute*/
     execute : function(){
         /*TODO: translate everything on canvas on (-startX, -startY)*/
+        if (this.startX !== 0 || this.startY !== 0) {
 
+        }
 
         //Attention: canvasProps is a global variable
         canvasProps.setWidth(this.width);
@@ -48,7 +50,9 @@ CanvasChangeSizeCommand.prototype = {
         canvasProps.setHeight(this.previousHeight);
 
         /*TODO: translate everything on canvas on (startX, startY)*/
+        if (this.startX !== 0 || this.startY !== 0) {
 
+        }
 
         setUpEditPanel(canvasProps);
     }

@@ -566,7 +566,7 @@ Connector.prototype = {
 
         //are we moving the whole Connector, or just one point?
         if(this.activeConnectionPointId != -1){
-            var point = CONNETOR_MANAGER.connectionPointGet(this.activeConnectionPointId);
+            var point = CONNECTOR_MANAGER.connectionPointGetById(this.activeConnectionPointId);
             point.transform(matrix);
         }
         else{
