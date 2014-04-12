@@ -17,7 +17,7 @@ function ConnectorTranslateCommand(connectorId, matrix){
     this.connectorId = connectorId;
 
     //compute the translation matrix
-    this.matrix = matrix
+    this.matrix = matrix;
 
     //compute the reverse matrix
     this.reverseMatrix = [

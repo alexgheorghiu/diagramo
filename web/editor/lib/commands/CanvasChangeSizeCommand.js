@@ -22,6 +22,9 @@ function CanvasChangeSizeCommand(newWidth, newHeight, startX, startY){
     this.startX = typeof(startX) !== 'undefined' ? startX : 0;
     this.startY = typeof(startY) !== 'undefined' ? startY : 0;
 
+    // commands used for translation of Figures and Containers
+    this.translationCommands = [];
+
     this.oType = "CanvasChangeSizeCommand";
 }
 
@@ -31,9 +34,34 @@ CanvasChangeSizeCommand.prototype = {
 
     /**This method got called every time the Command must execute*/
     execute : function(){
-        /*TODO: translate everything on canvas on (-startX, -startY)*/
+        // Does canvas should be translated?
         if (this.startX !== 0 || this.startY !== 0) {
+            var translationMatrix = Matrix.translationMatrix(-this.startX, -this.startY);
+            this.translationCommands = [];  // clear translation commands set
 
+            // translate Containers
+            var i;
+            var containerLength = STACK.containers.length;
+            for (i = 0; i < containerLength; i++) {
+                // create ContainerTranslateCommand and add it to translationCommands set
+                this.translationCommands.push(new ContainerTranslateCommand(STACK.containers[i].id, translationMatrix));
+            }
+
+            // translate Figures
+            var figureLength = STACK.figures.length;
+            for (i = 0; i < figureLength; i++) {
+                // Does Figure is outside of container?
+                if (CONTAINER_MANAGER.getContainerForFigure(STACK.figures[i].id) === -1) {
+                    // create FigureTranslateCommand and add it to translationCommands set
+                    this.translationCommands.push(new FigureTranslateCommand(STACK.figures[i].id, translationMatrix));
+                }
+            }
+
+            // execute translation commands
+            var commandLength = this.translationCommands.length;
+            for (i = 0; i < commandLength; i++) {
+                this.translationCommands[i].execute();
+            }
         }
 
         //Attention: canvasProps is a global variable
@@ -49,9 +77,14 @@ CanvasChangeSizeCommand.prototype = {
         canvasProps.setWidth(this.previousWidth);
         canvasProps.setHeight(this.previousHeight);
 
-        /*TODO: translate everything on canvas on (startX, startY)*/
+        // Canvas was translated?
         if (this.startX !== 0 || this.startY !== 0) {
-
+            // undo translation commands
+            var i;
+            var commandLength = this.translationCommands.length;
+            for (i = 0; i < commandLength; i++) {
+                this.translationCommands[i].undo();
+            }
         }
 
         setUpEditPanel(canvasProps);

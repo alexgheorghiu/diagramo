@@ -18,7 +18,7 @@ function FigureTranslateCommand(figureId, matrix){
     
     //compute the translation matrix
 //    this.matrix = generateMoveMatrix(STACK.figureGetById(figureId), this.x,this. y);
-    this.matrix = matrix
+    this.matrix = matrix;
         
     //compute the reverse matrix
     this.reverseMatrix = [
