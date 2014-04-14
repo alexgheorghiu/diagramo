@@ -21,7 +21,10 @@ var DIAGRAMO = {
 
     /** enables/disables rendering of currentCloud
     * TODO: in further can be used for option like "Show Cloud" or "Highlight about to connect points" */
-    visualMagnet : true
+    visualMagnet : true,
+
+    /**On canvas fit action this will be the distance between canvas work area and it's border*/
+    CANVAS_FIT_PADDING : 10
 };
 
 
@@ -116,9 +119,6 @@ var FIGURE_ESCAPE_DISTANCE = 30; /**the distance by which the connectors will es
 
 /**the distance by which the connectors will be able to connect with Figure*/
 var FIGURE_CLOUD_DISTANCE = 4;
-
-/**On canvas trim action this will be the distance between canvas work area and it's border*/
-var CANVAS_TRIM_PADDING = 10;
 
 /*It will store a reference to the function that will create a figure( ex: figureForKids:buildFigure3()) will be stored into this
  *variable so upon click on canvas this function will create the object*/
@@ -4101,31 +4101,6 @@ function action(action){
                 History.addUndo(cmdMoveForward);
                 redraw = true;
             }            
-            break;
-
-        case 'trim':
-            /* Algorithm
-             * 1) Find border points of Figure/Container/Connector bounds
-             * 2) Get new width and height of canvas from 1)
-             * 3) If canvas size changed -> Use CanvasChangeSizeCommand to change canvas size
-             */
-
-            var workAreaBounds = STACK.getWorkAreaBounds();
-            var newCanvasWidth = workAreaBounds[2] - workAreaBounds[0];
-            var newCanvasHeight = workAreaBounds[3] - workAreaBounds[1];
-
-            // Did canvas size changed?
-            if (newCanvasWidth !== canvasProps.getWidth() || newCanvasHeight !== canvasProps.getHeight()) {
-                var cmdCanvasTrim = new CanvasChangeSizeCommand(
-                    newCanvasWidth + CANVAS_TRIM_PADDING * 2,
-                    newCanvasHeight + CANVAS_TRIM_PADDING * 2,
-                    workAreaBounds[0] - CANVAS_TRIM_PADDING,  // new (0,0) point goes this X coordinate
-                    workAreaBounds[1] - CANVAS_TRIM_PADDING   // new (0,0) point goes this Y coordinate
-                );
-                cmdCanvasTrim.execute();
-                History.addUndo(cmdCanvasTrim);
-                redraw = true;
-            }
             break;
 
     }//end switch

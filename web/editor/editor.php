@@ -239,9 +239,6 @@ $page = 'editor';
             <a href="javascript:action('duplicate');">Copy (Ctrl-D)</a>
             -->
 
-            <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
-            <a href="javascript:action('trim');" title="Trim diagram">Trim diagram</a>
-
             <!--
             <input type="text" id="output" />                
             <img style="vertical-align:middle;" src="../assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>

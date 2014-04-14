@@ -200,9 +200,10 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
     div.appendChild(divHeight);
 
-    //update button
+    //button block: Update and Fit options
     var divButton = document.createElement("div");
 
+    //update button
     var btnUpdate = document.createElement("input");
     btnUpdate.setAttribute("type", "button");
     btnUpdate.setAttribute("value", "Update");
@@ -242,6 +243,40 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
     };
 
     divButton.appendChild(btnUpdate);
+
+    //fit button
+    var btnFit = document.createElement("input");
+    btnFit.setAttribute("type", "button");
+    btnFit.setAttribute("value", "Fit");
+
+    btnFit.onclick = function(){
+        /* Algorithm
+         * 1) Find border points of Figure/Container/Connector bounds
+         * 2) Get new width and height of canvas from 1)
+         * 3) If canvas size changed -> Use CanvasChangeSizeCommand to change canvas size
+         */
+
+        var workAreaBounds = STACK.getWorkAreaBounds();
+        var newCanvasWidth = workAreaBounds[2] - workAreaBounds[0];
+        var newCanvasHeight = workAreaBounds[3] - workAreaBounds[1];
+
+        // Did canvas size changed?
+        if (newCanvasWidth !== canvasProps.getWidth() || newCanvasHeight !== canvasProps.getHeight()) {
+            var cmdCanvasFit = new CanvasChangeSizeCommand(
+                newCanvasWidth + DIAGRAMO.CANVAS_FIT_PADDING * 2,
+                newCanvasHeight + DIAGRAMO.CANVAS_FIT_PADDING * 2,
+                workAreaBounds[0] - DIAGRAMO.CANVAS_FIT_PADDING,  // new (0,0) point goes this X coordinate
+                workAreaBounds[1] - DIAGRAMO.CANVAS_FIT_PADDING   // new (0,0) point goes this Y coordinate
+            );
+            cmdCanvasFit.execute();
+            History.addUndo(cmdCanvasFit);
+            //  redraw canvas
+            draw();
+        }
+    };
+
+    divButton.appendChild(btnFit);
+
     div.appendChild(divButton);
 }
 
