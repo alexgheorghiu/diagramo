@@ -852,6 +852,32 @@ Stack.prototype = {
     },
 
 
+    /**
+     *Apply a transformation to all Figures and Containers in Stack
+     *@param {Matrix} matrix - a matrix of numbers
+     *
+     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     **/
+    transform:function(matrix) {
+        // translate Containers
+        var i;
+        var containerLength = this.containers.length;
+        for (i = 0; i < containerLength; i++) {
+            this.containers[i].transform(matrix);
+        }
+
+        // translate Figures
+        var figureLength = this.figures.length;
+        for (i = 0; i < figureLength; i++) {
+            // Does Figure is placed outside of container?
+            if (CONTAINER_MANAGER.getContainerForFigure(this.figures[i].id) === -1) {
+                this.figures[i].transform(matrix);
+            }
+            // otherwise it is already transformed
+        }
+    },
+
+
     /**Paints all {Figure}s from back to top (Z order)
      *@param  {Context} context - the 2D context
      *@param  {boolean} ignoreSelection - if ignoreSelection is set to true selections will not be painted

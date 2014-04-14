@@ -140,6 +140,7 @@ $page = 'editor';
         
         <script type="text/javascript" src="./lib/commands/CanvasChangeColorCommand.js"></script>
         <script type="text/javascript" src="./lib/commands/CanvasChangeSizeCommand.js"></script>
+        <script type="text/javascript" src="./lib/commands/CanvasFitCommand.js"></script>
 
         <script type="text/javascript" src="./lib/commands/InsertedImageFigureCreateCommand.js"></script>
 

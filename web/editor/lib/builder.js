@@ -262,7 +262,7 @@ Builder.constructCanvasPropertiesPanel = function(DOMObject, canvasProps){
 
         // Did canvas size changed?
         if (newCanvasWidth !== canvasProps.getWidth() || newCanvasHeight !== canvasProps.getHeight()) {
-            var cmdCanvasFit = new CanvasChangeSizeCommand(
+            var cmdCanvasFit = new CanvasFitCommand(
                 newCanvasWidth + DIAGRAMO.CANVAS_FIT_PADDING * 2,
                 newCanvasHeight + DIAGRAMO.CANVAS_FIT_PADDING * 2,
                 workAreaBounds[0] - DIAGRAMO.CANVAS_FIT_PADDING,  // new (0,0) point goes this X coordinate
