@@ -22,43 +22,43 @@ figureSets["basic"] = {
 
 /**Object with default values for figures*/
 var FigureDefaults = {
-    /*Size of figure's segment*/
+    /**Size of figure's segment*/
     segmentSize : 70,
 
-    /*Size of figure's short segment*/
+    /**Size of figure's short segment*/
     segmentShortSize : 40,
 
-    /*Size of radius*/
+    /**Size of radius*/
     radiusSize : 35,
 
-    /*Size of offset for parallels
+    /**Size of offset for parallels
     * For example: for parallelogram it's projection of inclined line on X axis*/
     parallelsOffsetSize : 40,
 
-    /*Corner radius
+    /**Corner radius
     * For example: for rounded rectangle*/
     corner : 10,
 
-    /*Corner roundness
+    /**Corner roundness
     * Value from 0 to 10, where 10 - it's circle radius.*/
     cornerRoundness : 8,
 
-    /*Color of lines*/
+    /**Color of lines*/
     strokeStyle : "#000000",
 
-    /*Color of fill*/
+    /**Color of fill*/
     fillStyle : "#ffffff",
 
-    /*Text size*/
+    /**Text size*/
     textSize : 12,
 
-    /*Text label*/
+    /**Text label*/
     textStr : "Text",
 
-    /*Text font*/
+    /**Text font*/
     textFont : "Arial",
 
-    /*Color of text*/
+    /**Color of text*/
     textColor : "#000000"
 };
 
@@ -449,6 +449,10 @@ function figure_Pentagon(x,y)
     
     f.addPrimitive(r);
 
+    /**
+     * Alex: - Why divided by 11?
+     * Artyom: - Value found in experimental way: in Pentagon (x,y) point is a 
+     *  little above center, in little piece of radius - for R/11 it works.*/
     var t2 = new Text(FigureDefaults.textStr, x, y - FigureDefaults.radiusSize/11, FigureDefaults.textFont, FigureDefaults.textSize);
     t2.style.fillStyle = FigureDefaults.textColor;
 
