@@ -63,18 +63,20 @@ function figure_Rectangle(x, y)
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
+    var rectangleHeight = figure_defaultFigureSegmentShortSize + 5;
+
     var r = new Polygon();
 //    var r = new Polyline();
 //    r.style.lineCap = r.style.STYLE_LINE_CAP_BUTT;
 //    r.style.lineJoin = r.style.STYLE_LINE_JOIN_MITER;
     r.addPoint(new Point(x, y));
     r.addPoint(new Point(x + figure_defaultFigureSegmentSize, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize, y + figure_defaultFigureSegmentShortSize+5));
-    r.addPoint(new Point(x, y + figure_defaultFigureSegmentShortSize+5));
+    r.addPoint(new Point(x + figure_defaultFigureSegmentSize, y + rectangleHeight));
+    r.addPoint(new Point(x, y + rectangleHeight));
 
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2, y + figure_defaultFigureSegmentShortSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
+    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2, y + rectangleHeight/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
     t2.style.fillStyle = figure_defaultFillTextStyle;
 
     f.addPrimitive(t2);
@@ -331,7 +333,7 @@ function figure_Ellipse(x,y)
     var c = new Ellipse(new Point(x, y), figure_defaultFigureSegmentShortSize, figure_defaultFigureSegmentShortSize/2);
 
     f.addPrimitive(c);
-    var t2 = new Text(figure_defaultFigureTextStr, x, y - 2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
+    var t2 = new Text(figure_defaultFigureTextStr, x, y, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
     t2.style.fillStyle = figure_defaultFillTextStyle;
 
     f.addPrimitive(t2);
@@ -424,7 +426,7 @@ function figure_Pentagon(x,y)
     
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x, y, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
+    var t2 = new Text(figure_defaultFigureTextStr, x, y - figure_defaultFigureRadiusSize/11, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
     t2.style.fillStyle = figure_defaultFillTextStyle;
 
     f.addPrimitive(t2);
@@ -472,7 +474,7 @@ function figure_Hexagon(x,y)
     
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x, y - 2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
+    var t2 = new Text(figure_defaultFigureTextStr, x, y, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
     t2.style.fillStyle = figure_defaultFillTextStyle;
 
     f.addPrimitive(t2);
@@ -526,7 +528,7 @@ function figure_Octogon(x,y)
 
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + l/2, y + (l+a+a)/2 - 2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
+    var t2 = new Text(figure_defaultFigureTextStr, x + l/2, y + (l+a+a)/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
     t2.style.fillStyle = figure_defaultFillTextStyle;
 
     f.addPrimitive(t2);

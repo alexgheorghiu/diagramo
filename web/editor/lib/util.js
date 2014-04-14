@@ -170,9 +170,9 @@ var Util = {
 
 		var current_point = points[0];
 		//path = 0
-		i = 0 //current point/segment
-		pt_i = 0 //index position in pattern
-		pt_left = pt[0] // spaces or dotts left to paint from current index position in pattern
+		i = 0; //current point/segment
+		var pt_i = 0; //index position in pattern
+		var pt_left = pt[0]; // spaces or dotts left to paint from current index position in pattern
 		
 		info("current_point" + current_point);
 		
@@ -183,7 +183,7 @@ var Util = {
 
 		while (i < points.length - 1) {
 			//inside [Pi, Pi+1] segment
-			segment_path = 0 //how much of current segment was painted
+			var segment_path = 0; //how much of current segment was painted
 
 			group("Paint segment " + i);
 			info("i = " + i + " current_point = " + current_point + " pt_i = " + pt_i + " pt_left = " + pt_left + " segment_path = " + segment_path );
@@ -212,8 +212,8 @@ var Util = {
 
 					//store what was left unpainted
 					segment_path += Util.distance(current_point,  points[i+1]);
-					pt_left = pt_left - Util.distance(current_point, points[i+1])	
-					current_point = points[i+1]
+					pt_left = pt_left - Util.distance(current_point, points[i+1]);
+					current_point = points[i+1];
 					i++; //move to next segment
 					groupEnd(); //end inner group
 					groupEnd(); //end outer group
@@ -221,7 +221,7 @@ var Util = {
 				}			
 				else{ //still inside segment
 					info("Painting from rest path pt_i = " + pt_i + " current_segment = " + segment_path);
-					var newP = Util.point_on_segment(current_point, points[i+1], pt_left) //translate on current_point with pt_left from Pi to Pi+1
+					var newP = Util.point_on_segment(current_point, points[i+1], pt_left); //translate on current_point with pt_left from Pi to Pi+1
 					info("\t newP = " + newP);
 					if ( pt_i % 2 == 0 ) { //dots
 						lineTo(newP) 					
@@ -231,8 +231,8 @@ var Util = {
 					}
 
 					segment_path += Util.distance(current_point,  newP);	
-					current_point = newP
-					pt_left = 0
+					current_point = newP;
+					pt_left = 0;
 					pt_i = (pt_i + 1) % pt.length;
 				}
 				groupEnd();
@@ -256,7 +256,7 @@ var Util = {
 				info("...painting path pt_i = " + pt_i + " dot/space length = " + pt[pt_i] + " current_segment = " + segment_path);
 				if(segment_path + pt[pt_i] <= Util.distance(points[i], points[i+1])){ //still inside segment
 					group("Still inside segment");
-					var newP = Util.point_on_segment(current_point, points[i+1], pt[pt_i]) //translate on current segment with pt[pt_i] from Pi to Pi+1
+					var newP = Util.point_on_segment(current_point, points[i+1], pt[pt_i]); //translate on current segment with pt[pt_i] from Pi to Pi+1
 					info("\t newP = " + newP);
 					if(pt_i % 2 == 0) {
 						lineTo(newP);
@@ -264,7 +264,7 @@ var Util = {
 					else{
 						moveTo(newP);
 					}
-					pt_left = 0
+					pt_left = 0;
 					segment_path += pt[pt_i];
 					current_point = newP;
 					pt_i = (pt_i + 1) % pt.length;

@@ -485,7 +485,7 @@ Polyline.prototype = {
         if(this.style!=null){
             this.style.transform(matrix);
         }
-        for(var i=0; i<points.length; i++){
+        for(var i=0; i<this.points.length; i++){
             this.points[i].transform(matrix);
         }
     },
