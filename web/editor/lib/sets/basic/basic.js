@@ -20,31 +20,54 @@ figureSets["basic"] = {
     ]
 };
 
-var figure_defaultFigureSegmentSize = 70;
-var figure_defaultFigureSegmentShortSize = 40;
-var figure_defaultFigureRadiusSize = 35;
-var figure_defaultFigureParalelsOffsetSize = 40;
-var figure_defaultFigureCorner = 10
+/**Object with default values for figures*/
+var FigureDefaults = {
+    /*Size of figure's segment*/
+    segmentSize : 70,
 
-var figure_defaultFigureCornerRoundness = 8;
+    /*Size of figure's short segment*/
+    segmentShortSize : 40,
 
-var figure_defaultXCoordonate = 0;
-var figure_defaultYCoordonate = 0;
+    /*Size of radius*/
+    radiusSize : 35,
 
-var figure_defaultFigureTextSize = 12;
-var figure_defaultFigureTextStr = "Text";
-var figure_defaultFigureTextFont = "Arial";
-var figure_defaultStrokeStyle = "#000000";
-var figure_defaultFillStyle = "#ffffff";
-var figure_defaultFillTextStyle = "#000000";
+    /*Size of offset for parallels
+    * For example: for parallelogram it's projection of inclined line on X axis*/
+    parallelsOffsetSize : 40,
 
+    /*Corner radius
+    * For example: for rounded rectangle*/
+    corner : 10,
+
+    /*Corner roundness
+    * Value from 0 to 10, where 10 - it's circle radius.*/
+    cornerRoundness : 8,
+
+    /*Color of lines*/
+    strokeStyle : "#000000",
+
+    /*Color of fill*/
+    fillStyle : "#ffffff",
+
+    /*Text size*/
+    textSize : 12,
+
+    /*Text label*/
+    textStr : "Text",
+
+    /*Text font*/
+    textFont : "Arial",
+
+    /*Color of text*/
+    textColor : "#000000"
+};
 
 
 function figure_Rectangle(x, y)
 {
     var f = new Figure("Rectangle");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
@@ -63,21 +86,21 @@ function figure_Rectangle(x, y)
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
-    var rectangleHeight = figure_defaultFigureSegmentShortSize + 5;
+    var rectangleHeight = FigureDefaults.segmentShortSize + 5;
 
     var r = new Polygon();
 //    var r = new Polyline();
 //    r.style.lineCap = r.style.STYLE_LINE_CAP_BUTT;
 //    r.style.lineJoin = r.style.STYLE_LINE_JOIN_MITER;
     r.addPoint(new Point(x, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize, y + rectangleHeight));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y + rectangleHeight));
     r.addPoint(new Point(x, y + rectangleHeight));
 
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2, y + rectangleHeight/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize/2, y + rectangleHeight/2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
@@ -89,21 +112,21 @@ function figure_Rectangle(x, y)
 //    var p = new Point(x + 50, y  +50);
 //    f.addPrimitive(p);
 
-    var l = figure_defaultFigureSegmentShortSize + 5;
+    var l = FigureDefaults.segmentShortSize + 5;
     //top
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 - 10, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 + 10, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 - 10, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 + 10, y), ConnectionPoint.TYPE_FIGURE);
 
     //bottom
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 - 10, y + l), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2, y + l), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 + 10, y + l), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 - 10, y + l), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y + l), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 + 10, y + l), ConnectionPoint.TYPE_FIGURE);
 
     //right
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize, y + l / 2 - 10), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize, y + l / 2), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize, y + l / 2 + 10), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + l / 2 - 10), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + l / 2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + l / 2 + 10), ConnectionPoint.TYPE_FIGURE);
 
     //left
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + l / 2 - 10), ConnectionPoint.TYPE_FIGURE);
@@ -118,12 +141,12 @@ function figure_Square(x,y)
 {
     var r = new Polygon();
     r.addPoint(new Point(x, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize, y + figure_defaultFigureSegmentSize));
-    r.addPoint(new Point(x, y + figure_defaultFigureSegmentSize));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize));
+    r.addPoint(new Point(x, y + FigureDefaults.segmentSize));
     var f=new Figure("Square");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
@@ -144,26 +167,26 @@ function figure_Square(x,y)
 
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2, y + figure_defaultFigureSegmentSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize/2, y + FigureDefaults.segmentSize/2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 - 10,y),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2, y),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 + 10, y),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 - 10,y),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 + 10, y),ConnectionPoint.TYPE_FIGURE);
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 - 10, y + figure_defaultFigureSegmentSize),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2, y + figure_defaultFigureSegmentSize),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 + 10, y + figure_defaultFigureSegmentSize),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 - 10, y + FigureDefaults.segmentSize),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y + FigureDefaults.segmentSize),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 + 10, y + FigureDefaults.segmentSize),ConnectionPoint.TYPE_FIGURE);
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize, y + figure_defaultFigureSegmentSize / 2 - 10),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize, y + figure_defaultFigureSegmentSize / 2),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize, y + figure_defaultFigureSegmentSize / 2 + 10),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2 - 10),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2 + 10),ConnectionPoint.TYPE_FIGURE);
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + figure_defaultFigureSegmentSize / 2 - 10),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + figure_defaultFigureSegmentSize / 2),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + figure_defaultFigureSegmentSize / 2 + 10),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2 - 10),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2 + 10),ConnectionPoint.TYPE_FIGURE);
     f.finalise();
     return f;
 }
@@ -172,8 +195,8 @@ function figure_Circle(x,y)
 {
 
     var f = new Figure("Circle");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
@@ -192,18 +215,18 @@ function figure_Circle(x,y)
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var c = new Arc(x, y, figure_defaultFigureRadiusSize, 0, 360, false, 0);
+    var c = new Arc(x, y, FigureDefaults.radiusSize, 0, 360, false, 0);
 
     f.addPrimitive(c);
-    var t2 = new Text(figure_defaultFigureTextStr, x, y, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureRadiusSize, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + figure_defaultFigureRadiusSize), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - figure_defaultFigureRadiusSize, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - figure_defaultFigureRadiusSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.radiusSize, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - FigureDefaults.radiusSize, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - FigureDefaults.radiusSize), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
     f.finalise();
     return f;
@@ -213,13 +236,13 @@ function figure_Diamond(x,y)
 {
 
     var r = new Polygon();
-    r.addPoint(new Point(x, y - figure_defaultFigureSegmentSize/2));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentShortSize / 3*2, y));
-    r.addPoint(new Point(x, y + figure_defaultFigureSegmentSize/2));
-    r.addPoint(new Point(x - figure_defaultFigureSegmentShortSize/3*2, y));
+    r.addPoint(new Point(x, y - FigureDefaults.segmentSize/2));
+    r.addPoint(new Point(x + FigureDefaults.segmentShortSize / 3*2, y));
+    r.addPoint(new Point(x, y + FigureDefaults.segmentSize/2));
+    r.addPoint(new Point(x - FigureDefaults.segmentShortSize/3*2, y));
     var f=new Figure("Diamond");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
@@ -240,16 +263,16 @@ function figure_Diamond(x,y)
 
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x, y, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - figure_defaultFigureSegmentSize/2), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentShortSize/3*2, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + figure_defaultFigureSegmentSize/2), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - figure_defaultFigureSegmentShortSize/3*2, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - FigureDefaults.segmentSize/2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentShortSize/3*2, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize/2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - FigureDefaults.segmentShortSize/3*2, y), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
     return f;
@@ -259,8 +282,8 @@ function figure_Parallelogram(x,y)
 {
     
     var f = new Figure("Diamond");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
     f.properties.push(new BuilderProperty('Font ', 'primitives.1.font', BuilderProperty.TYPE_TEXT_FONT_FAMILY));
@@ -281,26 +304,26 @@ function figure_Parallelogram(x,y)
     
     var r = new Polygon();
     r.addPoint(new Point(x + 10, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize + 10, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize + figure_defaultFigureParalelsOffsetSize, y + figure_defaultFigureSegmentShortSize));
-    r.addPoint(new Point(x + figure_defaultFigureParalelsOffsetSize, y + figure_defaultFigureSegmentShortSize));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize + 10, y));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize + FigureDefaults.parallelsOffsetSize, y + FigureDefaults.segmentShortSize));
+    r.addPoint(new Point(x + FigureDefaults.parallelsOffsetSize, y + FigureDefaults.segmentShortSize));
     
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2 + figure_defaultFigureParalelsOffsetSize/2 + 5, y + figure_defaultFigureSegmentShortSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize/2 + FigureDefaults.parallelsOffsetSize/2 + 5, y + FigureDefaults.segmentShortSize/2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + 10, y),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize + 10, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize + figure_defaultFigureParalelsOffsetSize, y + figure_defaultFigureSegmentShortSize), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureParalelsOffsetSize, y + figure_defaultFigureSegmentShortSize), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize + figure_defaultFigureParalelsOffsetSize / 2 + 5, y + figure_defaultFigureSegmentShortSize / 2), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureParalelsOffsetSize / 2 + 5, y + figure_defaultFigureSegmentShortSize / 2), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 + figure_defaultFigureParalelsOffsetSize, y + figure_defaultFigureSegmentShortSize), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 + 10, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2 + figure_defaultFigureParalelsOffsetSize/2 + 2, y + figure_defaultFigureSegmentShortSize/2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize + 10, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize + FigureDefaults.parallelsOffsetSize, y + FigureDefaults.segmentShortSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.parallelsOffsetSize, y + FigureDefaults.segmentShortSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize + FigureDefaults.parallelsOffsetSize / 2 + 5, y + FigureDefaults.segmentShortSize / 2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.parallelsOffsetSize / 2 + 5, y + FigureDefaults.segmentShortSize / 2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 + FigureDefaults.parallelsOffsetSize, y + FigureDefaults.segmentShortSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 + 10, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2 + FigureDefaults.parallelsOffsetSize/2 + 2, y + FigureDefaults.segmentShortSize/2), ConnectionPoint.TYPE_FIGURE);
 
     f.finalise();
     return f;
@@ -310,8 +333,8 @@ function figure_Ellipse(x,y)
 {
 
     var f = new Figure("Ellipse");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
@@ -330,18 +353,18 @@ function figure_Ellipse(x,y)
     f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
-    var c = new Ellipse(new Point(x, y), figure_defaultFigureSegmentShortSize, figure_defaultFigureSegmentShortSize/2);
+    var c = new Ellipse(new Point(x, y), FigureDefaults.segmentShortSize, FigureDefaults.segmentShortSize/2);
 
     f.addPrimitive(c);
-    var t2 = new Text(figure_defaultFigureTextStr, x, y, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentShortSize, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + figure_defaultFigureSegmentShortSize/2), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - figure_defaultFigureSegmentShortSize, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - figure_defaultFigureSegmentShortSize/2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentShortSize, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentShortSize/2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - FigureDefaults.segmentShortSize, y), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - FigureDefaults.segmentShortSize/2), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
     f.finalise();
     return f;
@@ -352,12 +375,12 @@ function figure_RightTriangle(x,y)
 
     var t = new Polygon();
     t.addPoint(new Point(x, y));
-    t.addPoint(new Point(x + figure_defaultFigureSegmentShortSize, y + figure_defaultFigureSegmentSize));
-    t.addPoint(new Point(x, y + figure_defaultFigureSegmentSize));
+    t.addPoint(new Point(x + FigureDefaults.segmentShortSize, y + FigureDefaults.segmentSize));
+    t.addPoint(new Point(x, y + FigureDefaults.segmentSize));
 
     var e = new Figure("RightTriangle");
-    e.style.fillStyle = figure_defaultFillStyle;
-    e.style.strokeStyle = figure_defaultStrokeStyle;
+    e.style.fillStyle = FigureDefaults.fillStyle;
+    e.style.strokeStyle = FigureDefaults.strokeStyle;
 
     e.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     e.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
@@ -375,16 +398,16 @@ function figure_RightTriangle(x,y)
     e.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     e.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentShortSize/3, y + figure_defaultFigureSegmentSize*0.70, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentShortSize/3, y + FigureDefaults.segmentSize*0.70, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     e.addPrimitive(t);
     e.addPrimitive(t2);
 
     CONNECTOR_MANAGER.connectionPointCreate(e.id, new Point(x, y), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(e.id, new Point(x + figure_defaultFigureSegmentShortSize, y + figure_defaultFigureSegmentSize), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(e.id, new Point(x, y + figure_defaultFigureSegmentSize), ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(e.id, new Point(x + figure_defaultFigureSegmentShortSize/2, y + figure_defaultFigureSegmentSize/2), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(e.id, new Point(x + FigureDefaults.segmentShortSize, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(e.id, new Point(x, y + FigureDefaults.segmentSize), ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(e.id, new Point(x + FigureDefaults.segmentShortSize/2, y + FigureDefaults.segmentSize/2), ConnectionPoint.TYPE_FIGURE);
 
 
     e.finalise();
@@ -394,7 +417,7 @@ function figure_RightTriangle(x,y)
 function figure_Pentagon(x,y)
 {
     var r = new Polygon();
-    var l = figure_defaultFigureRadiusSize;
+    var l = FigureDefaults.radiusSize;
     /*r.addPoint(new Point(x + (l * Math.cos(180/Math.PI*72)), y - (l * Math.sin(180/Math.PI*72))));
     r.addPoint(new Point(x - (l * Math.cos(180/Math.PI*36)), y + (l * Math.sin(180/Math.PI*36))));
     r.addPoint(new Point(x + l, y));
@@ -404,8 +427,8 @@ function figure_Pentagon(x,y)
         r.addPoint(new Point(x - l * Math.sin(2 * Math.PI * i / 5), y - l * Math.cos(2 * Math.PI * i / 5)));
     }
     var f=new Figure("Pentagon");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
@@ -426,8 +449,8 @@ function figure_Pentagon(x,y)
     
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x, y - figure_defaultFigureRadiusSize/11, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y - FigureDefaults.radiusSize/11, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
@@ -443,7 +466,7 @@ function figure_Pentagon(x,y)
 function figure_Hexagon(x,y)
 {
     var r = new Polygon();
-    var l = figure_defaultFigureSegmentShortSize/4*3+2;
+    var l = FigureDefaults.segmentShortSize/4*3+2;
     r.addPoint(new Point(x, y + l));
     r.addPoint(new Point(x + l, y + l / 2));//(l * (Math.sqrt(3 / 2)))
     r.addPoint(new Point(x + l, y - l / 2));//(l * (Math.sqrt(3 / 2)))
@@ -452,8 +475,8 @@ function figure_Hexagon(x,y)
     r.addPoint(new Point((x - l), y + l / 2));//(l * (Math.sqrt(3 / 2)))
     var f=new Figure("Hexagon");
 
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
@@ -474,8 +497,8 @@ function figure_Hexagon(x,y)
     
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x, y, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
@@ -494,7 +517,7 @@ function figure_Octogon(x,y)
 {
     var r = new Polygon();
 
-    var l = figure_defaultFigureSegmentShortSize/3*2;
+    var l = FigureDefaults.segmentShortSize/3*2;
     var a = l/Math.sqrt(2);
     r.addPoint(new Point(x, y));
     r.addPoint(new Point(x + l, y));
@@ -506,8 +529,8 @@ function figure_Octogon(x,y)
     r.addPoint(new Point(x - a, y + a));
 
     var f = new Figure("Octogon");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
     f.properties.push(new BuilderProperty('Text Size ', 'primitives.1.size', BuilderProperty.TYPE_TEXT_FONT_SIZE));
@@ -528,8 +551,8 @@ function figure_Octogon(x,y)
 
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + l/2, y + (l+a+a)/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x + l/2, y + (l+a+a)/2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
@@ -554,7 +577,7 @@ function figure_Text(x,y)
 {
 
     var f = new Figure('Text');
-    f.style.fillStyle = figure_defaultFillStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.0.str', BuilderProperty.TYPE_TEXT));
 
@@ -571,8 +594,8 @@ function figure_Text(x,y)
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
 
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + figure_defaultFigureRadiusSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + FigureDefaults.radiusSize/2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
     
@@ -591,8 +614,8 @@ function figure_Text(x,y)
 function figure_RoundedRectangle(x,y)
 {
     var f = new Figure("RoundedRectangle");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     f.style.lineWidth = 2;
     f.style.lineStyle = Style.LINE_STYLE_CONTINOUS;
 
@@ -616,33 +639,33 @@ function figure_RoundedRectangle(x,y)
     var hShrinker = 10;
     var vShrinker = 6;
     var l1 = new Line(new Point(x + hShrinker, y + vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker, y + vShrinker));
+        new Point(x + FigureDefaults.segmentSize - hShrinker, y + vShrinker));
 
-    var c1 = new QuadCurve(new Point(x + figure_defaultFigureSegmentSize - hShrinker, y + vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10), y + figure_defaultFigureCorner/figure_defaultFigureCornerRoundness + vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner, y + figure_defaultFigureCorner + vShrinker))
+    var c1 = new QuadCurve(new Point(x + FigureDefaults.segmentSize - hShrinker, y + vShrinker),
+        new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner*(FigureDefaults.cornerRoundness/10), y + FigureDefaults.corner/FigureDefaults.cornerRoundness + vShrinker),
+        new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner, y + FigureDefaults.corner + vShrinker))
 
-    var l2 = new Line(new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner, y + figure_defaultFigureCorner + vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker));
+    var l2 = new Line(new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner, y + FigureDefaults.corner + vShrinker),
+        new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker));
 
-    var c2 = new QuadCurve(new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10), y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10)),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner))
+    var c2 = new QuadCurve(new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker),
+        new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner*(FigureDefaults.cornerRoundness/10), y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner*(FigureDefaults.cornerRoundness/10)),
+        new Point(x + FigureDefaults.segmentSize - hShrinker, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner))
 
-    var l3 = new Line(new Point(x + figure_defaultFigureSegmentSize - hShrinker, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner),
-        new Point(x + hShrinker, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner));
+    var l3 = new Line(new Point(x + FigureDefaults.segmentSize - hShrinker, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner),
+        new Point(x + hShrinker, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner));
 
     var c3 = new QuadCurve(
-        new Point(x + hShrinker, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner),
-        new Point(x + hShrinker - figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10), y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10)),
-        new Point(x + hShrinker - figure_defaultFigureCorner, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker))
+        new Point(x + hShrinker, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner),
+        new Point(x + hShrinker - FigureDefaults.corner*(FigureDefaults.cornerRoundness/10), y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner*(FigureDefaults.cornerRoundness/10)),
+        new Point(x + hShrinker - FigureDefaults.corner, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker))
 
-    var l4 = new Line(new Point(x + hShrinker - figure_defaultFigureCorner, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker),
-        new Point(x + hShrinker - figure_defaultFigureCorner, y + figure_defaultFigureCorner + vShrinker));
+    var l4 = new Line(new Point(x + hShrinker - FigureDefaults.corner, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker),
+        new Point(x + hShrinker - FigureDefaults.corner, y + FigureDefaults.corner + vShrinker));
 
     var c4 = new QuadCurve(
-        new Point(x + hShrinker - figure_defaultFigureCorner, y + figure_defaultFigureCorner + vShrinker),
-        new Point(x + hShrinker - figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10), y + vShrinker),
+        new Point(x + hShrinker - FigureDefaults.corner, y + FigureDefaults.corner + vShrinker),
+        new Point(x + hShrinker - FigureDefaults.corner*(FigureDefaults.cornerRoundness/10), y + vShrinker),
         new Point(x + hShrinker, y + vShrinker))
 
     p.addPrimitive(l1);
@@ -655,13 +678,13 @@ function figure_RoundedRectangle(x,y)
     p.addPrimitive(c4);
     f.addPrimitive(p);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2, y + figure_defaultFigureSegmentShortSize/2 + figure_defaultFigureCorner, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize/2, y + FigureDefaults.segmentShortSize/2 + FigureDefaults.corner, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
-    var wid = figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner;
-    var height = figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner;
+    var wid = FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner;
+    var height = FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner;
     //top
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + wid / 2 - 10, y + vShrinker), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + wid / 2, y + vShrinker), ConnectionPoint.TYPE_FIGURE);

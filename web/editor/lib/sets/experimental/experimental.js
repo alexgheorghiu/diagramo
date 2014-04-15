@@ -24,8 +24,8 @@ figureSets["experimental"] = {
 function figure_PatternLine(x, y)
 {
     var f = new Figure("PatternLine");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 	f.style.lineWidth = 4;
 	f.style.strokeStyle = '#000000';
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
@@ -50,8 +50,8 @@ function figure_PatternLine(x, y)
 function figure_NativeDash(x, y)
 {
     var f = new Figure("PatternLine");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     f.style.lineWidth = 4;
     f.style.strokeStyle = '#000000';
     f.style.lineStyle = Style.LINE_STYLE_DASHED;
@@ -77,8 +77,8 @@ function figure_NativeDash(x, y)
 function figure_Polyline(x, y)
 {
     var f = new Figure("Polyline");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
 
@@ -103,14 +103,14 @@ function figure_Stop(x,y)
 
    var r = new Polygon();
     r.addPoint(new Point(x, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize, y));
-    r.addPoint(new Point(x + figure_defaultFigureSegmentSize, y + figure_defaultFigureSegmentSize));
-    r.addPoint(new Point(x, y + figure_defaultFigureSegmentSize));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y));
+    r.addPoint(new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize));
+    r.addPoint(new Point(x, y + FigureDefaults.segmentSize));
 
 
     var f=new Figure("Square");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     //todo:  if uncomment next line it will creates artefacts
     //f.style.image="Icons/Stop Form.ico";
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
@@ -125,16 +125,16 @@ function figure_Stop(x,y)
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));//f.properties.push(new BuilderProperty('Vertical Alignment ', 'primitives.1.valign', Text.VALIGNMENTS));
     f.addPrimitive(r);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2, y + figure_defaultFigureSegmentSize/2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize/2, y + FigureDefaults.segmentSize/2, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
 
 
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize / 2, y),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize, y + figure_defaultFigureSegmentSize / 2 - 10),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + figure_defaultFigureSegmentSize, y + figure_defaultFigureSegmentSize / 2 + 10),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + figure_defaultFigureSegmentSize / 2 - 10),ConnectionPoint.TYPE_FIGURE);
-    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + figure_defaultFigureSegmentSize / 2 + 10),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize / 2, y),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2 - 10),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + FigureDefaults.segmentSize, y + FigureDefaults.segmentSize / 2 + 10),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2 - 10),ConnectionPoint.TYPE_FIGURE);
+    CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + FigureDefaults.segmentSize / 2 + 10),ConnectionPoint.TYPE_FIGURE);
     f.finalise();
     return f;
   
@@ -143,8 +143,8 @@ function figure_Stop(x,y)
 function figure_SimpleImage(x, y)
 {
     var f = new Figure("FamilyCard");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -169,8 +169,8 @@ function figure_SimpleImage(x, y)
 function figure_ImageFrame(x, y)
 {
     var f = new Figure("FamilyCard");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
     f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -203,7 +203,7 @@ function figure_ImageFrame(x, y)
     
     //Title - 2
     var title = new Text("Hilary Erhard Duff", x + 100, y - 80, 'tahoma', 14);
-    title.style.fillStyle = figure_defaultFillTextStyle;
+    title.style.fillStyle = FigureDefaults.textColor;
     title.style.strokeStyle = '#006633';
     title.style.fillStyle = '#006633';
     f.addPrimitive(title);
@@ -218,7 +218,7 @@ function figure_ImageFrame(x, y)
     //Description
     var description = new Text("After working in local \ntheater plays and \ntelevision commercials in \nher childhood, Duff \ngained fame playing...."
                             , x + 100, y - 20, 'tahoma', 12);
-    description.style.fillStyle = figure_defaultFillTextStyle;
+    description.style.fillStyle = FigureDefaults.textColor;
     description.style.strokeStyle = '#000';
     description.style.fillStyle = '#000';
     description.align = Text.ALIGN_LEFT;
@@ -234,7 +234,7 @@ function figure_ImageFrame(x, y)
     
     //Born date
     var bornDate = new Text("born September 28, 1987" , x - 400 / 4, y + 200 / 4, 'tahoma', 14);
-    bornDate.style.fillStyle = figure_defaultFillTextStyle;
+    bornDate.style.fillStyle = FigureDefaults.textColor;
     bornDate.style.strokeStyle = '#000';
     bornDate.style.fillStyle = '#000';
     //t2.style.font = 'tahoma';
@@ -254,8 +254,8 @@ function figure_ImageFrame(x, y)
 function figure_Settings(x, y)
 {
     var f = new Figure("Settings");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -281,8 +281,8 @@ function figure_Settings(x, y)
 function figure_Tango(x, y)
 {
     var f = new Figure("Tango");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -308,8 +308,8 @@ function figure_Tango(x, y)
 function figure_Organic(x, y)
 {
     var f = new Figure("Organic");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -335,8 +335,8 @@ function figure_Organic(x, y)
 function figure_Inkscape(x, y)
 {
     var f = new Figure("Inkscape");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -360,8 +360,8 @@ function figure_Inkscape(x, y)
 function figure_Airport(x, y)
 {
     var f = new Figure("Inkscape");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -386,8 +386,8 @@ function figure_Airport(x, y)
 function figure_200by200SVG(x, y)
 {
     var f = new Figure("200by200SVG");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -412,8 +412,8 @@ function figure_200by200SVG(x, y)
 function figure_200by200PNG(x, y)
 {
     var f = new Figure("200by200PNG");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -441,8 +441,8 @@ function figure_200by200PNG(x, y)
 function figure_3Figures(x, y)
 {
     var f = new Figure("3FiguresSVG");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     
@@ -466,8 +466,8 @@ function figure_3Figures(x, y)
 function figure_3FiguresNoSize(x, y)
 {
     var f = new Figure("3FiguresSVG");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 //    f.properties.push(new BuilderProperty('Fill Style', 'style.fillStyle', BuilderProperty.TYPE_COLOR));
 //    f.properties.push(new BuilderProperty('Line Width', 'style.lineWidth',BuilderProperty.TYPE_LINE_WIDTH));
     

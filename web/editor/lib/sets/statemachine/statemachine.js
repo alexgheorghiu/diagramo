@@ -18,7 +18,7 @@ function figure_Start(x,y)
     
     var f = new Figure("Start");
     f.style.fillStyle = "#000000";
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     //CIRCLE
     var c = new Arc(x, y, circleRadius, 0, 360, false, 0);
@@ -39,7 +39,7 @@ function figure_End(x,y)
     
     var f = new Figure("Start");
     f.style.fillStyle = "#000000";
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     //outer circle
     var oc = new Arc(x, y, outerCircleRadius, 0, 360, false, 0);
@@ -68,8 +68,8 @@ function figure_End(x,y)
 function figure_State(x,y)
 {
     var f = new Figure("State");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     f.style.lineWidth = 2;
 
     f.properties.push(new BuilderProperty('Text', 'primitives.1.str', BuilderProperty.TYPE_TEXT));
@@ -80,33 +80,33 @@ function figure_State(x,y)
     var hShrinker = 10;
     var vShrinker = 6;
     var l1 = new Line(new Point(x + hShrinker, y + vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker, y + vShrinker));
+        new Point(x + FigureDefaults.segmentSize - hShrinker, y + vShrinker));
 
-    var c1 = new QuadCurve(new Point(x + figure_defaultFigureSegmentSize - hShrinker, y + vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10), y + figure_defaultFigureCorner/figure_defaultFigureCornerRoundness + vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner, y + figure_defaultFigureCorner + vShrinker))
+    var c1 = new QuadCurve(new Point(x + FigureDefaults.segmentSize - hShrinker, y + vShrinker),
+        new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner*(FigureDefaults.cornerRoundness/10), y + FigureDefaults.corner/FigureDefaults.cornerRoundness + vShrinker),
+        new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner, y + FigureDefaults.corner + vShrinker))
 
-    var l2 = new Line(new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner, y + figure_defaultFigureCorner + vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker));
+    var l2 = new Line(new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner, y + FigureDefaults.corner + vShrinker),
+        new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker));
 
-    var c2 = new QuadCurve(new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10), y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10)),
-        new Point(x + figure_defaultFigureSegmentSize - hShrinker, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner))
+    var c2 = new QuadCurve(new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker),
+        new Point(x + FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner*(FigureDefaults.cornerRoundness/10), y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner*(FigureDefaults.cornerRoundness/10)),
+        new Point(x + FigureDefaults.segmentSize - hShrinker, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner))
 
-    var l3 = new Line(new Point(x + figure_defaultFigureSegmentSize - hShrinker, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner),
-        new Point(x + hShrinker, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner));
+    var l3 = new Line(new Point(x + FigureDefaults.segmentSize - hShrinker, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner),
+        new Point(x + hShrinker, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner));
 
     var c3 = new QuadCurve(
-        new Point(x + hShrinker, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner),
-        new Point(x + hShrinker - figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10), y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10)),
-        new Point(x + hShrinker - figure_defaultFigureCorner, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker))
+        new Point(x + hShrinker, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner),
+        new Point(x + hShrinker - FigureDefaults.corner*(FigureDefaults.cornerRoundness/10), y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner*(FigureDefaults.cornerRoundness/10)),
+        new Point(x + hShrinker - FigureDefaults.corner, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker))
 
-    var l4 = new Line(new Point(x + hShrinker - figure_defaultFigureCorner, y + figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker),
-        new Point(x + hShrinker - figure_defaultFigureCorner, y + figure_defaultFigureCorner + vShrinker));
+    var l4 = new Line(new Point(x + hShrinker - FigureDefaults.corner, y + FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker),
+        new Point(x + hShrinker - FigureDefaults.corner, y + FigureDefaults.corner + vShrinker));
 
     var c4 = new QuadCurve(
-        new Point(x + hShrinker - figure_defaultFigureCorner, y + figure_defaultFigureCorner + vShrinker),
-        new Point(x + hShrinker - figure_defaultFigureCorner*(figure_defaultFigureCornerRoundness/10), y + vShrinker),
+        new Point(x + hShrinker - FigureDefaults.corner, y + FigureDefaults.corner + vShrinker),
+        new Point(x + hShrinker - FigureDefaults.corner*(FigureDefaults.cornerRoundness/10), y + vShrinker),
         new Point(x + hShrinker, y + vShrinker))
 
     p.addPrimitive(l1);
@@ -119,13 +119,13 @@ function figure_State(x,y)
     p.addPrimitive(c4);
     f.addPrimitive(p);
 
-    var t2 = new Text(figure_defaultFigureTextStr, x + figure_defaultFigureSegmentSize/2, y + figure_defaultFigureSegmentShortSize/2 + figure_defaultFigureCorner, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x + FigureDefaults.segmentSize/2, y + FigureDefaults.segmentShortSize/2 + FigureDefaults.corner, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
 
-    var wid = figure_defaultFigureSegmentSize - hShrinker + figure_defaultFigureCorner;
-    var height = figure_defaultFigureCorner + figure_defaultFigureSegmentShortSize - vShrinker + figure_defaultFigureCorner;
+    var wid = FigureDefaults.segmentSize - hShrinker + FigureDefaults.corner;
+    var height = FigureDefaults.corner + FigureDefaults.segmentShortSize - vShrinker + FigureDefaults.corner;
     //top
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + wid / 2 - 10, y + vShrinker), ConnectionPoint.TYPE_FIGURE);
     CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + wid / 2, y + vShrinker), ConnectionPoint.TYPE_FIGURE);
@@ -159,8 +159,8 @@ function figure_Note(x,y)
     //figure
     var f = new Figure("Note");
         
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     f.style.lineCap = f.style.STYLE_LINE_CAP_ROUND;
     f.style.lineJoin = f.style.STYLE_LINE_CAP_ROUND;
         
@@ -183,8 +183,8 @@ function figure_Note(x,y)
     f.addPrimitive(fold);
 
     //Text
-    var t2 = new Text(figure_defaultFigureTextStr, x , y , figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x , y , FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
 
     f.addPrimitive(t2);
     

@@ -528,8 +528,8 @@ ImageFrame.figure_InsertedImage = function(url, x, y)
 {
     // create new figure
     var f = new Figure("InsertedImage");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
 
     // figure's part with image
     var ifig = new ImageFrame(url, x, y, true);
@@ -552,17 +552,17 @@ ImageFrame.figure_InsertedImage = function(url, x, y)
 
         f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
 
-        var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight / 2 + figure_defaultFigureTextSize * 2, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-        t2.style.fillStyle = figure_defaultFillTextStyle;
+        var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight / 2 + FigureDefaults.textSize * 2, FigureDefaults.textFont, FigureDefaults.textSize);
+        t2.style.fillStyle = FigureDefaults.textColor;
         f.addPrimitive(t2);
 
-        ifig.frameHeight = imageHeight + figure_defaultFigureTextSize;
+        ifig.frameHeight = imageHeight + FigureDefaults.textSize;
 
         //Connection Points
         CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x + imageWidth / 2, y), ConnectionPoint.TYPE_FIGURE);
         CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x - imageWidth / 2, y), ConnectionPoint.TYPE_FIGURE);
         CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y - imageHeight / 2), ConnectionPoint.TYPE_FIGURE);
-        CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + imageHeight / 2 + figure_defaultFigureTextSize * 3), ConnectionPoint.TYPE_FIGURE);
+        CONNECTOR_MANAGER.connectionPointCreate(f.id, new Point(x, y + imageHeight / 2 + FigureDefaults.textSize * 3), ConnectionPoint.TYPE_FIGURE);
 
         f.finalise();
         draw();

@@ -25,8 +25,8 @@ figureSets["network"] = {
 function figure_Person(x, y)
 {
     var f = new Figure("Person");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=1_person";
@@ -46,8 +46,8 @@ function figure_Person(x, y)
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + 24, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + 24, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -70,8 +70,8 @@ function figure_Switch(x, y){
    
     
     var f = new Figure("Switch");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=2_switch";
@@ -91,8 +91,8 @@ function figure_Switch(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -115,8 +115,8 @@ function figure_Router(x, y){
    
     
     var f = new Figure("Router");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=3_router";
@@ -136,8 +136,8 @@ function figure_Router(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -160,8 +160,8 @@ function figure_Cloud(x, y){
    
     
     var f = new Figure("Cloud");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=4_cloud";
@@ -182,8 +182,8 @@ function figure_Cloud(x, y){
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -205,8 +205,8 @@ function figure_Server(x, y){
    
     
     var f = new Figure("Server");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=5_server";
@@ -226,8 +226,8 @@ function figure_Server(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -250,8 +250,8 @@ function figure_Firewall(x, y){
    
     
     var f = new Figure("Firewall");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=6_firewall";
@@ -271,8 +271,8 @@ function figure_Firewall(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -295,8 +295,8 @@ function figure_Building(x, y){
    
     
     var f = new Figure("Building");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=7_building";
@@ -316,8 +316,8 @@ function figure_Building(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -339,8 +339,8 @@ function figure_Laptop(x, y){
    
     
     var f = new Figure("Laptop");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=8_laptop";
@@ -360,8 +360,8 @@ function figure_Laptop(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -387,8 +387,8 @@ function figure_Desktop(x, y){
    
     
     var f = new Figure("Desktop");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=9_desktop";
@@ -408,8 +408,8 @@ function figure_Desktop(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -432,8 +432,8 @@ function figure_Lock(x, y){
    
     
     var f = new Figure("Lock");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=10_lock";
@@ -453,8 +453,8 @@ function figure_Lock(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -477,8 +477,8 @@ function figure_PDA(x, y){
    
     
     var f = new Figure("PDA");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=11_pda";
@@ -498,8 +498,8 @@ function figure_PDA(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -522,8 +522,8 @@ function figure_Phone(x, y){
    
     
     var f = new Figure("Phone");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=12_phone";
@@ -543,8 +543,8 @@ function figure_Phone(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -567,8 +567,8 @@ function figure_Printer(x, y){
    
     
     var f = new Figure("Printer");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=13_printer";
@@ -588,8 +588,8 @@ function figure_Printer(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -612,8 +612,8 @@ function figure_Database(x, y){
    
     
     var f = new Figure("Database");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=14_database";
@@ -633,8 +633,8 @@ function figure_Database(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -658,8 +658,8 @@ function figure_UPS(x, y){
    
     
     var f = new Figure("UPS");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=15_ups";
@@ -679,8 +679,8 @@ function figure_UPS(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
@@ -703,8 +703,8 @@ function figure_Wireless(x, y){
    
     
     var f = new Figure("Wireless");
-    f.style.fillStyle = figure_defaultFillStyle;
-    f.style.strokeStyle = figure_defaultStrokeStyle;
+    f.style.fillStyle = FigureDefaults.fillStyle;
+    f.style.strokeStyle = FigureDefaults.strokeStyle;
     
     //Image
     var url = figureSetsURL + "/svg.php?set=network&figure=16_wireless_router";
@@ -724,8 +724,8 @@ function figure_Wireless(x, y){
 //    f.properties.push(new BuilderProperty(BuilderProperty.SEPARATOR));
     f.properties.push(new BuilderProperty('URL', 'url', BuilderProperty.TYPE_URL));
     
-    var t2 = new Text(figure_defaultFigureTextStr, x, y + imageHeight/2 + 5, figure_defaultFigureTextFont, figure_defaultFigureTextSize);
-    t2.style.fillStyle = figure_defaultFillTextStyle;
+    var t2 = new Text(FigureDefaults.textStr, x, y + imageHeight/2 + 5, FigureDefaults.textFont, FigureDefaults.textSize);
+    t2.style.fillStyle = FigureDefaults.textColor;
     f.addPrimitive(t2);
     
     //Connection Points
