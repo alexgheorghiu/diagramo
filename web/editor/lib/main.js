@@ -115,6 +115,14 @@ var defaultEditorPadding = 6;
 /**Default border width of Text editor's textarea*/
 var defaultEditorBorderWidth = 1;
 
+/**
+ *Scrollbar width
+ *19px is the width added to a scrollable area (Zack discovered this into Chrome)
+ *We might compute this dimension too but for now it's fine
+ *even if we are wrong by a pixel or two
+ **/
+var scrollBarWidth = 19;
+
 var FIGURE_ESCAPE_DISTANCE = 30; /**the distance by which the connectors will escape Figure's bounds*/
 
 /**the distance by which the connectors will be able to connect with Figure*/
@@ -298,6 +306,18 @@ var clipboardBuffer = [];
 function getCanvas(){
     var canvas = document.getElementById("a");
     return canvas;
+}
+
+
+/**Return work area container.
+ * Work area container will ALWAYS have the 'container' as DOM id
+ * @return {HTMLElement} the DOM element of work area container
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ **/
+function getWorkAreaContainer(){
+    /**Id of work area HTML element, which includes canvas*/
+    var workAreaContainer = document.getElementById("container");
+    return workAreaContainer;
 }
 
 

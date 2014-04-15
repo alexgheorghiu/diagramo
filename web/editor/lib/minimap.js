@@ -86,14 +86,6 @@ function Minimap(bigCanvas, minimapContainer){
 }
 
 
-/**
- *Scrollbar width
- *19px is the width added to a scollable area (Zack discovered this into Chrome)
- *We might compute this dimension too but for now it's fine
- *even if we are wrong by a pixel or two
- **/
-Minimap.scrollBarWidth = 19;
-
 /**Preffered/default width*/
 Minimap.prefferedWidth = 115;
 
@@ -176,8 +168,8 @@ Minimap.prototype = {
         this.smallCanvas.height = $(this.minimapContainer).height();
 
         //compute selection size
-        var selectionWidth = this.ratio * ($(this.bigCanvas.parentNode).width() - Minimap.scrollBarWidth) / 100;
-        var selectionHeight =  this.ratio * ($(this.bigCanvas.parentNode).height() - Minimap.scrollBarWidth) / 100;
+        var selectionWidth = this.ratio * ($(this.bigCanvas.parentNode).width() - scrollBarWidth) / 100;
+        var selectionHeight =  this.ratio * ($(this.bigCanvas.parentNode).height() - scrollBarWidth) / 100;
         if(selectionWidth > $(this.minimapContainer).width()){ //if selection bigger than the container trim it
             selectionWidth = $(this.minimapContainer).width();
         }

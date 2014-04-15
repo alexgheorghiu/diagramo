@@ -1087,12 +1087,6 @@ TextEditorPopup.prototype = {
         var leftCoord = textBounds[0] - defaultEditorBorderWidth - defaultEditorPadding;
         var topCoord = textBounds[1] - defaultEditorBorderWidth - defaultEditorPadding;
         
-        // get toolbox height, because it's situated at the top of Text editor
-        //@see https://developer.mozilla.org/en/docs/DOM/element.offsetHeight
-        //@see http://stackoverflow.com/questions/4106538/difference-between-offsetheight-and-clientheight
-        var toolboxHeight = this.tools.offsetHeight; 
-        
-
         var textareaWidth = textBounds[2] - textBounds[0];
         var textareaHeight = textBounds[3] - textBounds[1];
 
@@ -1117,8 +1111,42 @@ TextEditorPopup.prototype = {
         this.editor.style.left = leftCoord + "px";
         this.editor.style.top = topCoord + "px";
 
-        this.tools.style.left = leftCoord + "px";
-        this.tools.style.top = topCoord - toolboxHeight + "px";
+
+        // visibility: 'hidden' allows us to get proper size without getting strange visual artefacts
+        this.tools.style.visibility = 'hidden';
+        // We set it to the left upper corner to get it's objective size
+        this.tools.style.left = '0px';
+        this.tools.style.top = '0px';
+
+        // Get toolbox height and width. Notice that clientHeight differs from offsetHeight.
+        //@see https://developer.mozilla.org/en/docs/DOM/element.offsetHeight
+        //@see http://stackoverflow.com/questions/4106538/difference-between-offsetheight-and-clientheight
+        var toolboxHeight = this.tools.offsetHeight;
+        var toolboxWidth = this.tools.offsetWidth;
+
+        // define toolbox left position
+        var toolboxLeft = leftCoord;
+        // get width of work area
+        var workAreaWidth = getWorkAreaContainer().offsetWidth;
+
+        // If it's not enough place for toolbox at the page right side
+        if (toolboxLeft + toolboxWidth >= workAreaWidth - scrollBarWidth) {
+            // then shift toolbox to left before it can be placed
+            toolboxLeft = workAreaWidth - toolboxWidth - scrollBarWidth;
+        }
+
+        // define toolbox top position
+        var toolboxTop = topCoord - toolboxHeight;
+        // If it's not enough place for toolbox at the page top
+        if (toolboxTop <= 0) {
+            // then place toolbox below textarea
+            toolboxTop = topCoord + toolboxHeight + defaultEditorBorderWidth + defaultEditorPadding;
+        }
+
+        this.tools.style.left = toolboxLeft + "px";
+        this.tools.style.top = toolboxTop + "px";
+        // return normal visibility to toolbox
+        this.tools.style.visibility = 'visible';
 
         textarea.style.width = textareaWidth + "px";
         textarea.style.height = textareaHeight + "px";
