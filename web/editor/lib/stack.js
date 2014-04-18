@@ -506,9 +506,9 @@ Stack.prototype = {
             var figure = this.figures[i];
             if(figure.id === fId){
                 var primitiveLength = figure.primitives.length;
-                for (var j = primitiveLength - 1; j >= 0; j--) {
+                for (var j = primitiveLength - 1; j >= 0; j--) { //top to bottom
                     var primitive = figure.primitives[j];
-                    if( (primitive.oType == "Text") && primitive.contains(x, y) ){
+                    if( (primitive.oType === "Text") && primitive.contains(x, y) ){
                         return primitive.id;
                     }
                 }

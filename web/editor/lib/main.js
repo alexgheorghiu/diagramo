@@ -502,13 +502,13 @@ function setUpEditPanel(shape){
 
 /**Setup edit mode for Text primitive.
  *@param shape - parent of Text primitive. Can be either {Connector} or {Figure}.
- *@param {Number} textPrimitiveId - the id value of Text primitive
+ *@param {Number} textPrimitiveId - the id value of Text primitive (from {Stack}
  *@author Artyom
  **/
 function setUpTextEditorPopup(shape, textPrimitiveId) {
     // get elements of Text Editor and it's tools
-    var textEditor = document.getElementById('text-editor');
-    var textEditorTools = document.getElementById('text-editor-tools');
+    var textEditor = document.getElementById('text-editor'); //a <div> inside editor page
+    var textEditorTools = document.getElementById('text-editor-tools'); //a <div> inside editor page
 
     // set current Text editor to use it further in code
     currentTextEditor = Builder.constructTextPropertiesPanel(textEditor, textEditorTools, shape, textPrimitiveId);
@@ -2470,7 +2470,7 @@ function onDblClick(ev) {
     // store clicked figure or connector
     var shape = null;
 
-    // store id value of clicked text primitive
+    // store id value (from Stack) of clicked text primitive
     var textPrimitiveId = -1;
 
 

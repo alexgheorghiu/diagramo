@@ -1,7 +1,10 @@
 "use strict";
 
 /**
- * This object is responsable for creating and updating the properties for figures
+ * This object is responsable for creating and updating the properties for figures.
+ * Right now the the properties for a figure are present in a specially designated
+ * panel AND, for texts, a popup editor, so the functionality is split between
+ * the classic (old) panel and new popeditor.
  *
  * @constructor
  * @this {Builder}
@@ -76,8 +79,8 @@ Builder.constructPropertiesPanel = function(DOMObject, shape){
 
 /**
  *Creates the property panel for a Text primitive of shape {Figure} and returns it
- *@param {DOMObject} textEditor - the div of the properties panel
- *@param {DOMObject} textEditorTools - the div of the text editor's tools
+ *@param {DOMObject} textEditor - the <div> of the properties panel (declared inside editor page)
+ *@param {DOMObject} textEditorTools - the <div> of the text editor's tools (declared insider editor page)
  *@param {Figure} shape - the figure - parent of Text primitive
  *@param {Number} textPrimitiveId - the id value of Text primitive child of figure for which the properties will be displayed
  *
@@ -437,42 +440,42 @@ BuilderProperty.prototype = {
      *@param {Number} figureId - the id of the figure we are using
      */
     injectInputArea:function(DOMObject, figureId){
-        if(this.name == BuilderProperty.SEPARATOR){
+        if(this.name === BuilderProperty.SEPARATOR){
             DOMObject.appendChild(document.createElement("hr"));
             return;
         }
-        else if(this.type == BuilderProperty.TYPE_COLOR){
+        else if(this.type === BuilderProperty.TYPE_COLOR){
             this.generateColorCode(DOMObject, figureId);
         }
-        else if(this.type == BuilderProperty.TYPE_TEXT){
+        else if(this.type === BuilderProperty.TYPE_TEXT){
             this.generateTextCode(DOMObject, figureId);
         }
-        else if(this.type == BuilderProperty.TYPE_SINGLE_TEXT){
+        else if(this.type === BuilderProperty.TYPE_SINGLE_TEXT){
             this.generateSingleTextCode(DOMObject,figureId);
         }
-        else if(this.type == BuilderProperty.TYPE_TEXT_FONT_SIZE){            
+        else if(this.type === BuilderProperty.TYPE_TEXT_FONT_SIZE){            
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.FONT_SIZES);
 //            this.generateFontSizesCode(DOMObject,figureId);
         }
-        else if(this.type == BuilderProperty.TYPE_TEXT_FONT_FAMILY){
+        else if(this.type === BuilderProperty.TYPE_TEXT_FONT_FAMILY){
             this.generateArrayCode(DOMObject,figureId, Text.FONTS);
         }
-        else if(this.type == BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT){
+        else if(this.type === BuilderProperty.TYPE_TEXT_FONT_ALIGNMENT){
             this.generateArrayCode(DOMObject,figureId, Text.ALIGNMENTS);
         }
-        else if(this.type == BuilderProperty.TYPE_TEXT_UNDERLINED){
+        else if(this.type === BuilderProperty.TYPE_TEXT_UNDERLINED){
             this.generateButtonCheckerCode(DOMObject,figureId);
         }
-        else if(this.type == BuilderProperty.TYPE_CONNECTOR_END){
+        else if(this.type === BuilderProperty.TYPE_CONNECTOR_END){
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.CONNECTOR_ENDS);
         }
-        else if(this.type == BuilderProperty.TYPE_LINE_WIDTH){
+        else if(this.type === BuilderProperty.TYPE_LINE_WIDTH){
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.LINE_WIDTHS);
         }
-        else if(this.type == BuilderProperty.TYPE_LINE_STYLE){
+        else if(this.type === BuilderProperty.TYPE_LINE_STYLE){
             this.generateArrayCode(DOMObject,figureId, BuilderProperty.LINE_STYLES);
         }
-        else if(this.type == BuilderProperty.TYPE_URL){
+        else if(this.type === BuilderProperty.TYPE_URL){
             this.generateURLCode(DOMObject,figureId);
         }
     },
@@ -541,8 +544,8 @@ BuilderProperty.prototype = {
         text.onchange = function(shapeId,property){
             return function(){
                 // update shape but without adding {Command} to the {History}
-                updateShape(shapeId, property, this.value, true)
-            }
+                updateShape(shapeId, property, this.value, true);
+            };
         }(shapeId, this.property);
 
         // used to create undo {Command}
@@ -550,8 +553,8 @@ BuilderProperty.prototype = {
             return function(){
                 // create {Command} where previous value is
                 // the initialization value of textarea
-                updateShape(shapeId, property, this.value, false, previousValue)
-            }
+                updateShape(shapeId, property, this.value, false, previousValue);
+            };
         }(shapeId, this.property, text.value);
 
         text.onmouseout = text.onchange;
@@ -886,17 +889,20 @@ BuilderProperty.prototype = {
             return obj[propertyAccessors[propertyAccessors.length -1]];
         }
     }
-}
+};
 
 
 
 /**
- * This instance is responsible for creating and updating Text Editor Popup
- *
+ * This instance is responsible for creating and updating Text Editor Popup.
+ * Text Editor Popup is made out of:
+ *  - editor - a <div> (inside #container <div>) that contains the text and reflects the 
+ *  - tools - a <div> (inside #container <div>) that will contain all the buttons and options to format text
+ *  
  * @constructor
  * @this {TextEditorPopup}
- * @param {HTMLElement} editor - the DOM object to create Text Editor Popup
- * @param {HTMLElement} tools - the DOM object to create Text Editor Tools
+ * @param {HTMLElement} editor - the DOM object (a <div> inside editor page) to create Text Editor Popup
+ * @param {HTMLElement} tools - the DOM object (a <div> inside editor page) to create Text Editor Tools 
  * @param  shape - the {Figure} or {Connector} - parent of Text primitive
  * @param {Number} textPrimitiveId - the id value of Text primitive child of shape for which the properties will be displayed
  * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
@@ -907,6 +913,7 @@ function TextEditorPopup(editor, tools, shape, textPrimitiveId){
     this.shape = shape;
     this.textPrimitiveId = textPrimitiveId;
 
+    /*We need to construct the full path to the properties of Text*/
     // beginning of property string of BuilderProperty for primitive
     var propertyPrefix;
 
@@ -1006,7 +1013,7 @@ TextEditorPopup.prototype = {
      * provides WYSIWYG functionality
      * @param {String} property - property name that is being edited (in dotted notation)
      * @param {Object} value - the value to set the property to
-     *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     setProperty : function (property, value) {
         var textarea = this.editor.getElementsByTagName('textarea')[0];
@@ -1092,6 +1099,7 @@ TextEditorPopup.prototype = {
 
         // Firefox includes border & padding as part of width and height,
         // so width and height should additionally include border and padding twice
+        // (similar to "feather" option in Fireworks)
         if (Browser.mozilla) {
             textareaHeight += (defaultEditorPadding) * 2;
             topCoord -= (defaultEditorPadding);
@@ -1102,6 +1110,7 @@ TextEditorPopup.prototype = {
         // some of IE magic:
         // enough to add half of font-size to textarea's width to prevent auto-breaking to next line
         // which is wrong in our case
+        // (similar to "feather" option in Fireworks)
         if (Browser.msie) {
             var fontSize = parseInt(textarea.style['font-size'], 10);
             textareaWidth += fontSize / 2;
@@ -1112,8 +1121,10 @@ TextEditorPopup.prototype = {
         this.editor.style.top = topCoord + "px";
 
 
-        // visibility: 'hidden' allows us to get proper size without getting strange visual artefacts
+        // visibility: 'hidden' allows us to get proper size but 
+        // without getting strange visual artefacts (tiggered by settings positions & other)
         this.tools.style.visibility = 'hidden';
+        
         // We set it to the left upper corner to get it's objective size
         this.tools.style.left = '0px';
         this.tools.style.top = '0px';
@@ -1126,7 +1137,8 @@ TextEditorPopup.prototype = {
 
         // define toolbox left position
         var toolboxLeft = leftCoord;
-        // get width of work area
+        
+        // get width of work area (#container <div> from editor)
         var workAreaWidth = getWorkAreaContainer().offsetWidth;
 
         // If it's not enough place for toolbox at the page right side
@@ -1145,6 +1157,7 @@ TextEditorPopup.prototype = {
 
         this.tools.style.left = toolboxLeft + "px";
         this.tools.style.top = toolboxTop + "px";
+        
         // return normal visibility to toolbox
         this.tools.style.visibility = 'visible';
 
