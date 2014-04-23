@@ -636,6 +636,17 @@ Handle.prototype = {
                     return Handle.types[k]+"-resize";
                 }
             }
+            //end if Figure
+        } else if(HandleManager.shape instanceof Group){
+            if(this.visible == false){
+                return "";
+            }
+            // only rotate handle enabled for a group
+            if(this.type == 'r'){
+                return 'move';
+            }
+
+            //end if Group
         }
 
         return "";
