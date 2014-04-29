@@ -669,7 +669,22 @@ Polygon.prototype = {
 
         //fill current path
         if(this.style.fillStyle != null && this.style.fillStyle != ""){
-            context.fill();
+            if (DIAGRAMO.gradientFill) {
+                // get bounds to define width/height for linear gradient
+                var bounds = this.getBounds();
+                var linearGradient = context.createLinearGradient(bounds[0], bounds[1], bounds[0], bounds[3]);
+                linearGradient.addColorStop(0, "red");
+                linearGradient.addColorStop(1, "black");
+
+                // set gradient fill style
+                context.fillStyle = linearGradient;
+                context.fill();
+
+                // restore original fill style
+                context.fillStyle = this.style.fillStyle;
+            } else {
+                context.fill();
+            }
         }
 
         //stroke current path 
