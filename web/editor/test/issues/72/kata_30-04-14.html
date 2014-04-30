@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<!--
+Explore better coloring of figures 
+@see https://developer.mozilla.org/en-US/docs/Web/Guide/HTML/Canvas_tutorial/Applying_styles_and_colors
+@see #72 https://bitbucket.org/scriptoid/diagramo/issue/72/beautiful-colors
+-->
+<html>
+<head>
+    <title>Color</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="text/javascript">
+
+        function pageLoaded(){
+            console.info("Page Loaded");
+
+            var quilt = document.getElementById("quilt");
+            var ctx = quilt.getContext('2d');
+
+            paint(ctx);
+        }
+
+        function paint(ctx){
+            /*Try to work with HSL values. Change the hue (0-360) to create different colors.*/
+
+            var h = 300;
+            rectangle(ctx,  10,  10, 70, 80, 'hsl(' + h + ',   80%, 92%)', 'hsl(' + h + ',   80%, 80%)', 'hsl(' + h + ',   50%, 68%)');
+
+            h+=30;
+            rectangle(ctx,  100,  10, 70, 80, 'hsl(' + h + ',   80%, 92%)', 'hsl(' + h + ',   80%, 80%)', 'hsl(' + h + ',   50%, 68%)');
+
+            h+=20;
+            rectangle(ctx,  190,  10, 70, 80, 'hsl(' + h + ',   80%, 92%)', 'hsl(' + h + ',   80%, 80%)', 'hsl(' + h + ',   50%, 68%)');
+
+            h+=40;
+            rectangle(ctx,  280,  10, 70, 80, 'hsl(' + h + ',   80%, 92%)', 'hsl(' + h + ',   80%, 80%)', 'hsl(' + h + ',   50%, 68%)');
+
+            h+=30;
+            rectangle(ctx,  370,  10, 70, 80, 'hsl(' + h + ',   80%, 92%)', 'hsl(' + h + ',   80%, 80%)', 'hsl(' + h + ',   50%, 68%)');
+
+            h+=30;
+            rectangle(ctx,  460,  10, 70, 80, 'hsl(' + h + ',   80%, 92%)', 'hsl(' + h + ',   80%, 80%)', 'hsl(' + h + ',   50%, 68%)');
+
+            /*
+             rectangle(ctx, 100,  10, 70, 80, 'hsl(30,  100%, 92%)', 'hsl(30,  80%, 80%)', 'hsl(30,  50%, 68%)');
+             rectangle(ctx, 190,  10, 70, 80, 'hsl(50,  100%, 92%)', 'hsl(50,  80%, 80%)', 'hsl(50,  50%, 68%)');
+             rectangle(ctx, 280,  10, 70, 80, 'hsl(90,  100%, 92%)', 'hsl(90,  80%, 80%)', 'hsl(90,  50%, 68%)');
+             rectangle(ctx, 370,  10, 70, 80, 'hsl(120, 100%, 92%)', 'hsl(120, 80%, 80%)', 'hsl(120, 50%, 68%)');
+             rectangle(ctx, 460,  10, 70, 80, 'hsl(150, 100%, 92%)', 'hsl(150, 80%, 80%)', 'hsl(150, 50%, 68%)');
+             */
+
+            rectangle(ctx,  10, 110, 70, 80, 'hsl(170, 80%, 92%)', 'hsl(170, 80%, 80%)', 'hsl(170, 50%, 80%)');
+            rectangle(ctx, 100, 110, 70, 80, 'hsl(200, 80%, 92%)', 'hsl(200, 80%, 80%)', 'hsl(200, 50%, 80%)');
+            rectangle(ctx, 190, 110, 70, 80, 'hsl(230, 80%, 92%)', 'hsl(230, 80%, 80%)', 'hsl(230, 50%, 80%)');
+            rectangle(ctx, 280, 110, 70, 80, 'hsl(260, 80%, 92%)', 'hsl(260, 80%, 80%)', 'hsl(260, 50%, 80%)');
+            rectangle(ctx, 370, 110, 70, 80, 'hsl(290, 80%, 92%)', 'hsl(290, 80%, 80%)', 'hsl(290, 50%, 80%)');
+            rectangle(ctx, 460, 110, 70, 80, 'hsl(320, 80%, 92%)', 'hsl(320, 80%, 80%)', 'hsl(320, 50%, 80%)');
+
+
+            // arrow(ctx, 10, 110, 200, 20, '#3776c1', '#2d62a0');
+            // arrow(ctx, 10, 150, 200, 20, '#c33936', '#b2322f');
+            // arrow(ctx, 10, 190, 200, 20, '#9ac445', '#779734');
+            // arrow(ctx, 10, 230, 200, 20, '#fb8e2e', '#de771f');
+
+        }
+
+        function rectangle(ctx, x, y, width, height, color1, color2, color3){
+
+            // paint shadows underneath
+            ctx.save();
+
+            ctx.shadowBlur = 3;
+            ctx.shadowOffsetY = 1;
+            ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+            ctx.fillRect(x, y, width, height);
+
+            ctx.restore();
+
+            // paint gradient
+            var lineargradient = ctx.createLinearGradient(x, y, x, y + height);
+            lineargradient.addColorStop(0, color1);
+            lineargradient.addColorStop(1, color2);
+
+            ctx.fillStyle = lineargradient;
+            ctx.fillRect(x, y, width, height);
+
+            // crisp lines, offset 0.5 px
+            x = x - 0.5;
+            y = y - 0.5;
+            width = width + 1;
+            height = height + 1;
+
+            // paint inner highlight
+            var lingrad2 = ctx.createLinearGradient(x, y, x, y + height);
+            lingrad2.addColorStop(0, 'rgba(255, 255, 255, 0.35)');
+            lingrad2.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            ctx.strokeStyle = lingrad2;
+            ctx.strokeRect(x + 1, y + 1, width - 2, height - 2);
+
+            // paint contour
+            ctx.strokeStyle = color3;
+            ctx.strokeRect(x, y, width, height);
+
+        }
+
+        function arrow(ctx, x, y, width, height, color1, color2){
+
+            // paint shadows underneath
+            ctx.save();
+
+            ctx.shadowBlur = 3;
+            ctx.shadowOffsetY = 1;
+            ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+            ctx.fillRect(x, y, width, height);
+
+            ctx.restore();
+
+            // paint gradient
+            var lineargradient = ctx.createLinearGradient(x, y, x, y + height);
+            lineargradient.addColorStop(0, color1);
+            lineargradient.addColorStop(1, color2);
+
+            ctx.fillStyle = lineargradient;
+            ctx.fillRect(x, y, width, height);
+
+        }
+
+        window.addEventListener("load", pageLoaded, false);
+
+    </script>
+
+    <style>
+
+        @import url(http://fonts.googleapis.com/css?family=Open+Sans:600);
+
+        p {
+            font: 13px/15px 'Open Sans';
+            font-weight: 600;
+            text-align: center;
+            position: absolute;
+            top: 30px;
+            left: 219px;
+        }
+
+    </style>
+
+</head>
+<body>
+<div>
+    <canvas style="border: 1px solid #ccc;" id="quilt" width="600" height="400"></canvas>
+    <!-- <p>Milk<br>Juice</p> -->
+</div>
+</body>
+</html>
