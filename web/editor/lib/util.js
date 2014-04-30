@@ -107,7 +107,7 @@ var Util = {
      * @author Arty
      */
     hslToString: function(hsl){
-        return '(' + hsl[0] * 100 + '%,' + hsl[1] * 100 + '%,' + hsl[2] * 100 + '%)'
+        return 'hsl(' + hsl[0] * 360 + ', ' + hsl[1] * 100 + '%, ' + hsl[2] * 100 + '%)'
     },
 
 
@@ -132,15 +132,15 @@ var Util = {
 
         // take hsl color for upper bound: add saturation step to source color
         var upperHsl = sourceHsl.slice();
-        upperHsl[1] = upperHsl[1] + gradientSaturationStep;
+        upperHsl[2] = upperHsl[2] + gradientLightStep;
         // if hsl saturation bigger than 1 - set it to 1
-        upperHsl[1] = upperHsl[1] > 1 ? 1 : upperHsl[1];
+        upperHsl[2] = upperHsl[2] > 1 ? 1 : upperHsl[2];
 
         // take hsl color for lower bound: subtract saturation step to source color
         var lowerHsl = sourceHsl.slice();
-        lowerHsl[1] = lowerHsl[1] - gradientSaturationStep;
+        lowerHsl[2] = lowerHsl[2] - gradientLightStep;
         // if hsl saturation less than 0 - set it to 0
-        lowerHsl[1] = lowerHsl[1] < 0 ? 0 : lowerHsl[1];
+        lowerHsl[2] = lowerHsl[2] < 0 ? 0 : lowerHsl[2];
 
         // Convert bound colors to css-applicable strings
         upperHsl = this.hslToString(upperHsl);

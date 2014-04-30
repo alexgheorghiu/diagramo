@@ -105,8 +105,8 @@ var GRIDWIDTH = 30;
 /**The distance (from a snap line) that will trigger a snap*/
 var SNAP_DISTANCE = 5;
 
-/**The half of saturation distance between upper and lower border for gradient filling*/
-var gradientSaturationStep = 0.06;
+/**The half of light distance between upper and lower border for gradient filling*/
+var gradientLightStep = 0.06;
 
 var fillColor=null;
 var strokeColor='#000000';
