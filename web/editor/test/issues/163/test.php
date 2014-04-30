@@ -3,10 +3,10 @@
 $lines = file('proxy.config');
 
 // get user-defined address, port, login and password for proxy
-$proxyAddress = str_replace('ADDRESS:', '', $lines[0]);
-$proxyPort = str_replace('PORT:', '', $lines[1]);
-$proxyLogin = str_replace('LOGIN:', '', $lines[2]);
-$proxyPassword = str_replace('PASSWORD:', '', $lines[3]);
+$proxyAddress = trim(str_replace('ADDRESS:', '', $lines[0]));
+$proxyPort = trim(str_replace('PORT:', '', $lines[1]));
+$proxyLogin = trim(str_replace('LOGIN:', '', $lines[2]));
+$proxyPassword = trim(str_replace('PASSWORD:', '', $lines[3]));
 
 // get proxy authentification header
 $auth = base64_encode($proxyLogin . ':' . $proxyPassword);
