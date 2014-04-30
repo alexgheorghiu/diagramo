@@ -98,6 +98,36 @@ var Util = {
     },
 
 
+    /**
+     * Generates colors for upper and lower bounds of figure gradient based on source color.
+     * Algorithm:
+     * 1) Split source rgb to {r,g,b}
+     * 2) Generate hsl value from {r,g,b}
+     * 3) Generate 2 hsl colors: add and subtract saturation step from result of step 2.
+     *
+     * @param {String} hex - RGB color to split
+     * @return {Array<String>} - HSL color values.
+     * @author Arty
+     */
+    generateGradientColors: function(hex) {
+        // split rgb string to {r,g,b}
+        var rgbObj = this.hexToRgb(hex);
+
+        // generate hsl value from {r,g,b}
+        var sourceHsl = this.rgbToHsl(rgbObj.r, rgbObj.g, rgbObj.b);
+
+        // take hsl color for upper bound: add saturation step to source color
+        var upperHsl = sourceHsl.slice();
+        upperHsl[1] = upperHsl[1] + gradientSaturationStep;
+
+        // take hsl color for lower bound: subtract saturation step to source color
+        var lowerHsl = sourceHsl.slice();
+        lowerHsl[1] = lowerHsl[1] - gradientSaturationStep;
+
+        return [upperHsl, lowerHsl];
+    },
+
+
     /***/
     getUnionBounds: function(shapes){
         //tODo
