@@ -672,11 +672,15 @@ Polygon.prototype = {
             if (DIAGRAMO.gradientFill) {
                 // get bounds to define width/height for linear gradient
                 var bounds = this.getBounds();
+                // create linear gradient
                 var linearGradient = context.createLinearGradient(bounds[0], bounds[1], bounds[0], bounds[3]);
-                linearGradient.addColorStop(0, "red");
-                linearGradient.addColorStop(1, "black");
+                // generate colors for upper and lower bounds of gradient
+                var colorBounds = Util.generateGradientColors(this.style.fillStyle);
+                // set gradient colors
+                linearGradient.addColorStop(0, colorBounds[0]);
+                linearGradient.addColorStop(1, colorBounds[1]);
 
-                // set gradient fill style
+                // set gradient as fill style
                 context.fillStyle = linearGradient;
                 context.fill();
 
