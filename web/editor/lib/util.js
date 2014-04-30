@@ -99,14 +99,28 @@ var Util = {
 
 
     /**
+     * Converts hsl representation array [h,s,l] contained in the set [0,1]
+     * to css-applicable string, like '(14%,80%,75%)'
+     *
+     * @param {Array<Number>} hsl - Hsl representation array [h,s,l]
+     * @return {String} - css-applicable string of hsl
+     * @author Arty
+     */
+    hslToString: function(hsl){
+        return '(' + hsl[0] * 100 + '%,' + hsl[1] * 100 + '%,' + hsl[2] * 100 + '%)'
+    },
+
+
+    /**
      * Generates colors for upper and lower bounds of figure gradient based on source color.
      * Algorithm:
      * 1) Split source rgb to {r,g,b}
      * 2) Generate hsl value from {r,g,b}
      * 3) Generate 2 hsl colors: add and subtract saturation step from result of step 2.
+     * 4) Convert bound colors to css-applicable strings
      *
      * @param {String} hex - RGB color to split
-     * @return {Array<String>} - HSL color values.
+     * @return {Array<String>} - HSL color values with percents.
      * @author Arty
      */
     generateGradientColors: function(hex) {
@@ -119,10 +133,18 @@ var Util = {
         // take hsl color for upper bound: add saturation step to source color
         var upperHsl = sourceHsl.slice();
         upperHsl[1] = upperHsl[1] + gradientSaturationStep;
+        // if hsl saturation bigger than 1 - set it to 1
+        upperHsl[1] = upperHsl[1] > 1 ? 1 : upperHsl[1];
 
         // take hsl color for lower bound: subtract saturation step to source color
         var lowerHsl = sourceHsl.slice();
         lowerHsl[1] = lowerHsl[1] - gradientSaturationStep;
+        // if hsl saturation less than 0 - set it to 0
+        lowerHsl[1] = lowerHsl[1] < 0 ? 0 : lowerHsl[1];
+
+        // Convert bound colors to css-applicable strings
+        upperHsl = this.hslToString(upperHsl);
+        lowerHsl = this.hslToString(lowerHsl);
 
         return [upperHsl, lowerHsl];
     },
