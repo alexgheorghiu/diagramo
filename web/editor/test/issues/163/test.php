@@ -1,24 +1,28 @@
 <?php
 // read proxy configuration from file
-$lines = file('proxy.config');
+$lines = parse_ini_file('proxy.ini');
 
-// get user-defined address, port, login and password for proxy
-$proxyAddress = trim(str_replace('ADDRESS:', '', $lines[0]));
-$proxyPort = trim(str_replace('PORT:', '', $lines[1]));
-$proxyLogin = trim(str_replace('LOGIN:', '', $lines[2]));
-$proxyPassword = trim(str_replace('PASSWORD:', '', $lines[3]));
-
-// get proxy authentification header
-$auth = base64_encode($proxyLogin . ':' . $proxyPassword);
+// get user-defined address, port, authentification flag, login and password for proxy
+$proxyAddress = $lines['proxy_address'];
+$proxyPort = $lines['proxy_port'];
+$proxyAuth = $lines['proxy_auth'];
+$proxyLogin = $lines['proxy_login'];
+$proxyPassword = $lines['proxy_password'];
 
 // construct http context
 $aContext = array(
     'http' => array(
         'proxy' => "tcp://$proxyAddress:$proxyPort",
         'request_fulluri' => true,
-        'header' => "Proxy-Authorization: Basic $auth",
     ),
 );
+
+// proxy authentification enabled?
+if ($proxyAuth == '1') {
+    // set proxy authentification header
+    $aContext['http']['header'] = "Proxy-Authorization: Basic " . base64_encode($proxyLogin . ':' . $proxyPassword);
+}
+
 $cxContext = stream_context_create($aContext);
 
 // echo ping answer
