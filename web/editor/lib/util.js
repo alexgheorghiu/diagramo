@@ -107,7 +107,7 @@ var Util = {
      * @author Arty
      */
     hslToString: function(hsl){
-        return 'hsl(' + hsl[0] * 360 + ', ' + hsl[1] * 100 + '%, ' + hsl[2] * 100 + '%)'
+        return 'hsl(' + hsl[0] * 360 + ', ' + hsl[1] * 100 + '%, ' + hsl[2] * 100 + '%)';
     },
 
 
