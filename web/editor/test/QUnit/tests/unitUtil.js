@@ -66,6 +66,7 @@ test("Util.lineIntersectsRectangle", function () {
         'segment is inside of rectangle');
 });
 
+
 test("Util.getAngle3Points", function () {
     var a = Util.getAngle3Points(new Point(0, 0), new Point(100, 0),
         new Point(0, 100));
@@ -87,6 +88,7 @@ test("Util.getAngle3Points", function () {
         new Point(0, 100));
     ok(a == 3 * Math.PI / 2, 'angle 3PI/2');
 });
+
 
 test("Util.Min/Max", function () {
     var v = [-22, -1, 0,2,3];
@@ -145,6 +147,7 @@ test("Util.collinearity", function () {
     ok(Util.collinearity(p2, p3, p4, 0.0001), 'Collinearity test 7 failed');
 });
 
+
 test("Util.collinearity2", function () {
     var p1 = {x:10, y:10};
     var p2 = {x:10, y:10};
@@ -199,6 +202,22 @@ test("Util.areBoundsInBounds", function () {
     var wrongInner = [100, 100, 110, 110];    
     strictEqual( Util.areBoundsInBounds(wrongInner, outer), false, 'wrong inner bounds : ' + wrongInner +  ' should not be inside outer bounds: ' + outer);
 });
+
+
+test("Util.hexToRgb", function () {
+    var hex = '#FFFFCC';
+    var rgbObj = Util.hexToRgb(hex);
+    ok(rgbObj.r === 255 && rgbObj.g === 255 && rgbObj.b === 204, '#FFFFCC equal to (255,255,204)');
+
+    hex = '#AA55CC';
+    rgbObj = Util.hexToRgb(hex);
+    ok(rgbObj.r === 170 && rgbObj.g === 85 && rgbObj.b === 204, '#AA55CC equal to (170,85,204)');
+
+    hex = '#573433';
+    rgbObj = Util.hexToRgb(hex);
+    ok(rgbObj.r === 87 && rgbObj.g === 52 && rgbObj.b === 51, '#AA55CC equal to (87,52,51)');
+});
+
 
 //
 //test("Util.operaReplacer", function () {
