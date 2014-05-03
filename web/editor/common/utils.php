@@ -22,6 +22,16 @@ function getUploadedImageFolder(){
     return dirname(__FILE__) . '/' . '../data/import';
 }
 
+/**
+ * Returns the path to the proxy configuration file.
+ * The path does not contain the trailing /
+ *
+ *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ */
+function getProxyConfigPath(){
+    return dirname(__FILE__) . '/' . '../data/proxy.ini';
+}
+
 // Set a error message into session
 function addError($error) {
     if(!empty($error)) {
@@ -788,8 +798,42 @@ function get($url) {
  * Use file_get_contents to access data from URL
  * @return data if accessible or false if not accessible
  */
-function getWithFileContents($fileLocation) {
-    return file_get_contents($fileLocation);
+function getWithFileContents($fileLocation, $proxy = false) {
+echo $proxy;
+    // proxy enabled?
+    if ($proxy) {
+        // read proxy configuration from file
+        $proxyConfig = parse_ini_file(getProxyConfigPath());
+
+        // get user-defined address, port, authorization flag, login and password for proxy
+        $proxyAddress = $proxyConfig['proxy_address'];
+        $proxyPort = $proxyConfig['proxy_port'];
+        $proxyAuth = $proxyConfig['proxy_auth'];
+        $proxyLogin = $proxyConfig['proxy_login'];
+        $proxyPassword = $proxyConfig['proxy_password'];
+
+        // construct http context
+        $aContext = array(
+            'http' => array(
+                'proxy' => "tcp://$proxyAddress:$proxyPort",
+                'request_fulluri' => true,
+            ),
+        );
+
+        // proxy authorization enabled?
+        if ($proxyAuth == '1') {
+            // set proxy authorization header
+            $aContext['http']['header'] = "Proxy-Authorization: Basic " . base64_encode($proxyLogin . ':' . $proxyPassword);
+        }
+
+        $cxContext = stream_context_create($aContext);
+
+        // echo ping answer
+        echo file_get_contents($fileLocation, False, $cxContext);
+    } else {
+        // echo ping answer
+        echo file_get_contents($fileLocation);
+    }
 }
 
 /**
