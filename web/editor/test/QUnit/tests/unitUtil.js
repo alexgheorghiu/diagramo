@@ -219,6 +219,18 @@ test("Util.hexToRgb", function () {
 });
 
 
+test("Util.rgbToHsl", function () {
+    var hslArray = Util.rgbToHsl(255, 255, 255);
+    ok(hslArray[0] === 0 && hslArray[1] === 0 && hslArray[2] === 1, 'rgbToHsl(255, 255, 255) results in [0, 0, 1]');
+
+    hslArray = Util.rgbToHsl(255, 0, 0);
+    ok(hslArray[0] === 0 && hslArray[1] === 1 && hslArray[2] === 0.5, 'rgbToHsl(255, 0, 0) results in [0, 1, 0.5]');
+
+    hslArray = Util.rgbToHsl(0,255,255);
+    ok(hslArray[0] === 0.5 && hslArray[1] === 1 && hslArray[2] === 0.5, 'rgbToHsl(0,255,255) results in [0.5, 1, 0.5]');
+});
+
+
 //
 //test("Util.operaReplacer", function () {
 //    var s = "Diagramo";
