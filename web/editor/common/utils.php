@@ -777,9 +777,14 @@ function displayName($user){
  * @return data if accessible or false if not accessible
  */
 function get($url) {
+    // read proxy configuration from file
+    $proxyConfig = parse_ini_file(getProxyConfigPath());
+
+    // check: use proxy-server configuration or not
+    $use_proxy = $proxyConfig['use_proxy'] === '1';
 
     // Try to get the url content with file_get_contents()
-    $getWithFileContents = getWithFileContents($url);
+    $getWithFileContents = getWithFileContents($url, $use_proxy);
     if ($getWithFileContents !== false) {
         return trim($getWithFileContents);
     }
@@ -799,7 +804,6 @@ function get($url) {
  * @return data if accessible or false if not accessible
  */
 function getWithFileContents($fileLocation, $proxy = false) {
-echo $proxy;
     // proxy enabled?
     if ($proxy) {
         // read proxy configuration from file
@@ -828,11 +832,9 @@ echo $proxy;
 
         $cxContext = stream_context_create($aContext);
 
-        // echo ping answer
-        echo file_get_contents($fileLocation, False, $cxContext);
+        return file_get_contents($fileLocation, False, $cxContext);
     } else {
-        // echo ping answer
-        echo file_get_contents($fileLocation);
+        return file_get_contents($fileLocation);
     }
 }
 
