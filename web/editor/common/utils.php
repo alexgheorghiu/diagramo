@@ -590,6 +590,39 @@ function redirect($location, $isUrl = false) {
 }
 
 
+/**Remove a folder recursively
+ * @param $dir - the path to the folder
+ * @see http://www.php.net/manual/en/function.rmdir.php
+ * @author gianluca.toso@gmail.com
+ * @author alex@scriptoid.com
+ */
+function rrmdir($dir) {
+    $r = true;
+    
+    $fp = opendir($dir);
+    
+    if(!fp){
+        return false;
+    }
+    
+    while ($f = readdir($fp)) {
+        $file = $dir . "/" . $f;
+        if ($f == "." || $f == "..") {
+            continue;
+        } else if (is_dir($file) && !is_link($file)) {
+            $r &= rrmdir($file);
+        } else {
+            $r &= unlink($file);
+        }
+    }
+    
+    closedir($fp);
+    $r &= rmdir($dir);
+    
+    return $r;
+}
+
+
 /*Computes the MD5 for a a file
  * author : alex
 */

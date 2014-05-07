@@ -34,6 +34,23 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
         $passed = false;
     }
     
+    $folderDiagrams = realpath('../editor/data/diagrams');
+    $folderImports = realpath('../editor/data/import');
+    
+    if(file_exists($folderDiagrams)){
+        if(!rrmdir($folderDiagrams)){
+            $errors[] = "Could not remove previously created folder. Please check and delete folder: $folderDiagrams";
+            $passed = false;
+        }
+    }
+    
+    if(file_exists($folderImports)){
+        if(!rrmdir($folderImports)){
+            $errors[] = "Could not remove previously created folder. Please check and delete folder: $folderImports";
+            $passed = false;
+        }
+    }
+    
     //Create folder structure
     //Create [diagrams] folder
     if( mkdir('../editor/data/diagrams', 0777, true) ){
