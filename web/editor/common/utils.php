@@ -5,11 +5,19 @@ date_default_timezone_set('America/New_York');
 
 
 /**
+  * Returns the path to the data folder.
+  * The path does not contain the trailing /
+  */
+function getDataFolder(){
+    return dirname(__FILE__) . '/../data';
+}
+
+/**
   * Returns the path to the diagrams storage folder.
   * The path does not contain the trailing /
   */
  function getStorageFolder(){
-     return dirname(__FILE__) . '/../data/diagrams';
+     return getDataFolder() . '/diagrams';
  }
 
 /**
@@ -19,7 +27,7 @@ date_default_timezone_set('America/New_York');
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  */
 function getUploadedImageFolder(){
-    return dirname(__FILE__) . '/' . '../data/import';
+    return getDataFolder() . '/import';
 }
 
 // Set a error message into session

@@ -37,7 +37,8 @@ CREATE  TABLE IF NOT EXISTS `user` (
     `lastLoginDate` DATETIME,
     `lastLoginIP` CHAR(40),
     `lastBrowserType` VARCHAR(255),
-    `admin` boolean default false
+    `admin` boolean default false,
+    `tutorial` int default 1
 );
 
 
@@ -51,3 +52,7 @@ CREATE  TABLE IF NOT EXISTS `diagramdata` (
     FOREIGN KEY(diagramId) REFERENCES diagram(id),
     PRIMARY KEY (`diagramId`, `type`)    
 );
+
+
+--insert current database patch no --
+insert into `setting`(`name`, `value`) values ('patch', 1);

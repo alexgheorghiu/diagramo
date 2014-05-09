@@ -82,6 +82,7 @@ class User {
     public $lastLoginIP;
     public $lastBrowserType;
     public $admin;
+    public $tutorial;
 
     function loadFromSQL($row) {
         $this->id = is_null($row['id']) ? null : $row['id'];
@@ -93,6 +94,7 @@ class User {
         $this->lastLoginIP = is_null($row['lastLoginIP']) ? null : $row['lastLoginIP'];
         $this->lastBrowserType = is_null($row['lastBrowserType']) ? null : $row['lastBrowserType'];
         $this->admin = is_null($row['admin']) ? null : $row['admin'];
+        $this->tutorial = is_null($row['tutorial']) ? null : $row['tutorial'];
     }
 
 }
@@ -364,6 +366,9 @@ class Delegate extends SQLite3 {
                         case 'string':
                             $query .= sprintf(" {$key} = '%s' ", addslashes($value));
                             break;
+//                        case 'boolean':
+//                            $query .= sprintf(" {$key} = '%s' ", $value?'true':'false');
+//                            break;
                         default: //we place together integers, booleans and aliens
                             $query .= sprintf(" {$key} = %s ", addslashes($value));
                             break;

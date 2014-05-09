@@ -71,6 +71,10 @@ switch ($action) {
     case 'loadTemp':
         loadTemp();
         break;
+    
+    case 'loadQuickStart':
+        loadQuickStart();
+        break;
 
     case 'getUploadedImageFileNames':
         getUploadedImageFileNames();
@@ -87,6 +91,13 @@ switch ($action) {
     case 'deleteDiagramExe':
         deleteDiagramExe();
         break;
+    /*************************** */
+    /*********QUICK start****** */
+    /*************************** */
+    case 'closeQuickStart':
+        closeQuickStart();
+        break;
+    
     /*************************** */
     /*********COLABORATORS****** */
     /*************************** */
@@ -176,7 +187,12 @@ function loginExe() {
         $user->lastBrowserType = $_SERVER['HTTP_USER_AGENT'];
         //$delegate->userUpdate($user);
 
-        redirect("../editor.php");
+        if($user->tutorial){
+            redirect("../editor.php?diagramId=quickstart");
+        }
+        else{
+            redirect("../editor.php");
+        }
         exit(0);        
     } else {
         addError("Authetication failed");
@@ -747,6 +763,20 @@ function loadTemp() {
 }
 
 
+/**Loads quick start diagram*/
+function loadQuickStart() {
+
+    if (!is_numeric($_SESSION['userId'])) {
+        print "Wrong way";
+        exit();
+    }
+    
+    $diaFile = getDataFolder() . '/quickstart.dmo';
+    $data = file_get_contents($diaFile);
+    print $data;
+}
+
+
 /** Returns filenames array for uploaded images.
 *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
 */
@@ -944,6 +974,24 @@ function deleteDiagramExe() {
     }
 
     redirect('../myDiagrams.php');
+}
+
+
+function closeQuickStart(){
+    if (!is_numeric($_SESSION['userId'])) {
+        print "Wrong way";
+        exit();
+    }
+    
+    $delegate = new Delegate();
+    
+    $user = $delegate->userGetById($_SESSION['userId']);
+    
+    $user->tutorial = 0;
+        
+    $delegate->userUpdate($user);
+    
+    newDiagramExe();
 }
 
 

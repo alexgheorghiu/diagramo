@@ -60,6 +60,9 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
         
         <!--Direct link-->
         <?if($page=='editor'){?>
+            <?if($loggedUser->tutorial && isset($_REQUEST['diagramId']) && $_REQUEST['diagramId'] == 'quickstart'){?>                
+                <a style="padding: 6px; display: table-cell; color: #EF6329; background-color: #0288AE;" href="./common/controller.php?action=closeQuickStart">Close quick start</a>
+            <?}?>
             <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){ //these options should appear ONLY if we have a saved diagram
                 $diagram = $delegate->diagramGetById($_REQUEST['diagramId']);
                 $url = $WEBADDRESS . '/editor/viewDiagram.php?diagramId=' . $diagram->id ;
