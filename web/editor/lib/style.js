@@ -174,7 +174,7 @@ Style.prototype={
             }
         }
 
-        if(this.linearGradient.length !=0 && image == null){
+        if(this.linearGradient.length !=0 && this.image == null){
             var lin = context.createLinearGradient(this.linearGradient[0], this.linearGradient[1], this.linearGradient[2], this.linearGradient[3]);
 
             for(var i=0; i<this.addColorStop.length; i++){
@@ -232,7 +232,7 @@ Style.prototype={
 //        }
         
 
-        if(this.image != null && IE){
+        if(this.image != null && Browser.msie){
             var ptrn = context.createPattern(this.image,'no-repeat');
         //context.fillStyle=ptrn;
         //this.fillStyle=ptrn;
