@@ -68,10 +68,10 @@ function Style(){
     this.shadowColor = null;
     
     /**An {Array} of colors used in gradients*/
-    this.addColorStop = [];
+    this.colorStops = [];
     
-    /**An {Array} used in gradients*/
-    this.linearGradient = [];
+    /**An {Array} in form of [x0, y0, x1, y1] with figure bounds used in gradients*/
+    this.gradientBounds = [];
     
     /**Dash length used for dashed styles
      * @deprecated Trying to use setLineDash and lineDashOffset
@@ -122,8 +122,8 @@ Style.load = function(o){
     newStyle.shadowOffsetY = o.shadowOffsetY;
     newStyle.shadowBlur = o.shadowBlur;
     newStyle.shadowColor = o.shadowColor;
-    newStyle.addColorStop = o.addColorStop;
-    newStyle.linearGradient = o.linearGradient;
+    newStyle.colorStops = o.colorStops;
+    newStyle.gradientBounds = o.gradientBounds;
     newStyle.dashLength = o.dashLength;
     newStyle.lineStyle = o.lineStyle;
     newStyle.image = o.image;
@@ -157,8 +157,8 @@ Style.prototype={
      **/
     setupContext:function(context){
         for(var propertyName in this){
-            if(propertyName !== "linearGradient" 
-                    && propertyName !== "addColorStop" 
+            if(propertyName !== "gradientBounds"
+                    && propertyName !== "colorStops"
                     && propertyName !== "image"
                     
                     //iPad's Safari is very picky about this and for a reason (see #118)
@@ -174,11 +174,11 @@ Style.prototype={
             }
         }
 
-        if(this.linearGradient.length !=0 && this.image == null){
-            var lin = context.createLinearGradient(this.linearGradient[0], this.linearGradient[1], this.linearGradient[2], this.linearGradient[3]);
+        if(this.gradientBounds.length !=0 && this.image == null){
+            var lin = context.createLinearGradient(this.gradientBounds[0], this.gradientBounds[1], this.gradientBounds[2], this.gradientBounds[3]);
 
-            for(var i=0; i<this.addColorStop.length; i++){
-                lin.addColorStop(i, this.addColorStop[i]);
+            for(var i=0; i<this.colorStops.length; i++){
+                lin.colorStops(i, this.colorStops[i]);
             }
 
             context.fillStyle = lin;
@@ -243,7 +243,7 @@ Style.prototype={
     clone: function(){
         var anotherStyle = new Style();
         for(var propertyName in anotherStyle){
-            if(propertyName != "addColorStop" && propertyName != "linearGradient"){
+            if(propertyName != "colorStops" && propertyName != "gradientBounds"){
                 anotherStyle[propertyName] = this[propertyName];
             }
             else{
@@ -312,13 +312,13 @@ Style.prototype={
 
 
     getGradient:function(){
-        return this.addColorStop[0]+"/"+this.addColorStop[1];
+        return this.colorStops[0]+"/"+this.colorStops[1];
     },
 
 
     setGradient:function(figure, value){
-        this.addColorStop[0] = value.split("/")[0];
-        this.addColorStop[1] = value.split("/")[1];
+        this.colorStops[0] = value.split("/")[0];
+        this.colorStops[1] = value.split("/")[1];
     },
 
     /**Merge current style with another style.
@@ -337,15 +337,15 @@ Style.prototype={
 
 
     transform:function(matrix){
-        if(this.linearGradient.length!=0){
-            var p1=new Point(this.linearGradient[0],this.linearGradient[1]);
-            var p2=new Point(this.linearGradient[2],this.linearGradient[3]);
+        if(this.gradientBounds.length!=0){
+            var p1=new Point(this.gradientBounds[0],this.gradientBounds[1]);
+            var p2=new Point(this.gradientBounds[2],this.gradientBounds[3]);
             p1.transform(matrix);
             p2.transform(matrix);
-            this.linearGradient[0]=p1.x;
-            this.linearGradient[1]=p1.y;
-            this.linearGradient[2]=p2.x;
-            this.linearGradient[3]=p2.y;
+            this.gradientBounds[0]=p1.x;
+            this.gradientBounds[1]=p1.y;
+            this.gradientBounds[2]=p2.x;
+            this.gradientBounds[3]=p2.y;
         }
         if(this.image){
             var p1 = new Point(0,0);

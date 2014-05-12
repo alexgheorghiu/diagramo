@@ -402,7 +402,7 @@ function buildFigure11(){
     var c=new Arc(x,y,30,0,360,false,0);
 
     //coordinates relative to shape bounds
-    c.style.linearGradient=[-30,30,30,-30];
+    c.style.gradientBounds=[-30,30,30,-30];
     c.style.addColorStop.push('#00ff00');
     c.style.addColorStop.push('#ff0000');
     f.addPrimitive(c);
