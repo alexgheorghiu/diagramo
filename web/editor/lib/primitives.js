@@ -675,26 +675,7 @@ Polygon.prototype = {
 
         //fill current path
         if(this.style.fillStyle != null && this.style.fillStyle != ""){
-            if (DIAGRAMO.gradientFill) {
-                // get bounds to define width/height for linear gradient
-                var bounds = this.getBounds();
-                // create linear gradient
-                var linearGradient = context.createLinearGradient(bounds[0], bounds[1], bounds[0], bounds[3]);
-                // generate colors for upper and lower bounds of gradient
-                var colorBounds = Style.prototype.generateGradientColors(this.style.fillStyle);
-                // set gradient colors
-                linearGradient.addColorStop(0, colorBounds[0]);
-                linearGradient.addColorStop(1, colorBounds[1]);
-
-                // set gradient as fill style
-                context.fillStyle = linearGradient;
-                context.fill();
-
-                // restore original fill style
-                context.fillStyle = this.style.fillStyle;
-            } else {
-                context.fill();
-            }
+            context.fill();
         }
 
         //stroke current path 

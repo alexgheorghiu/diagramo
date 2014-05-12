@@ -24,7 +24,7 @@ var DIAGRAMO = {
     visualMagnet : true,
 
     /** enables/disables rendering fill color as gradient*/
-    gradientFill : false,
+    gradientFill : true,
 
     /**On canvas fit action this will be the distance between canvas work area and it's border*/
     CANVAS_FIT_PADDING : 10

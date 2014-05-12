@@ -174,15 +174,18 @@ Style.prototype={
             }
         }
 
-        if(DIAGRAMO.gradientFill && this.gradientBounds.length !=0 && this.image == null){
+        if(DIAGRAMO.gradientFill && this.gradientBounds.length !=0 && this.fillStyle != null && this.image == null){
+            // generate gradient colors here, because fill color is changing in many places
+            this.generateGradientColors();
+
             var lin = context.createLinearGradient(this.gradientBounds[0], this.gradientBounds[1], this.gradientBounds[2], this.gradientBounds[3]);
 
             for(var i=0; i<this.colorStops.length; i++){
-                lin.colorStops(i, this.colorStops[i]);
+                lin.addColorStop(i, this.colorStops[i]);
             }
 
             context.fillStyle = lin;
-            this.fillStyle = lin;
+//            this.fillStyle = lin;
         }
         
         
@@ -273,20 +276,18 @@ Style.prototype={
 
 
     /**
-     * Generates colors for upper and lower bounds of figure gradient based on source color.
+     * Generates colors for upper and lower bounds of figure gradient based on fill color.
      * Algorithm:
      * 1) Split source rgb to {r,g,b}
      * 2) Generate hsl value from {r,g,b}
      * 3) Generate 2 hsl colors: add and subtract saturation step from result of step 2.
      * 4) Convert bound colors to css-applicable strings
      *
-     * @param {String} hex - RGB color to split
-     * @return {Array<String>} - HSL color values with percents.
      * @author Arty
      */
-    generateGradientColors: function(hex) {
+    generateGradientColors: function() {
         // split rgb string to {r,g,b}
-        var rgbObj = Util.hexToRgb(hex);
+        var rgbObj = Util.hexToRgb(this.fillStyle);
 
         // generate hsl value from {r,g,b}
         var sourceHsl = Util.rgbToHsl(rgbObj.r, rgbObj.g, rgbObj.b);
@@ -297,7 +298,7 @@ Style.prototype={
         // if hsl saturation bigger than 1 - set it to 1
         upperHsl[2] = upperHsl[2] > 1 ? 1 : upperHsl[2];
 
-        // take hsl color for lower bound: subtract saturation step to source color
+        // take hsl color for lower bound: subtract saturation step from source color
         var lowerHsl = sourceHsl.slice();
         lowerHsl[2] = lowerHsl[2] - gradientLightStep;
         // if hsl saturation less than 0 - set it to 0
@@ -307,7 +308,7 @@ Style.prototype={
         upperHsl = Util.hslToString(upperHsl);
         lowerHsl = Util.hslToString(lowerHsl);
 
-        return [upperHsl, lowerHsl];
+        this.colorStops = [upperHsl, lowerHsl];
     },
 
 
