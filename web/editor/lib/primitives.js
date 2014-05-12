@@ -619,7 +619,7 @@ Polyline.prototype = {
   **/
 function Polygon(){
     /**An {Array} of {@link Point}s*/
-    this.points = []
+    this.points = [];
     
     /**The {@link Style} of the polygon*/
     this.style = new Style();
@@ -2637,10 +2637,10 @@ Figure.load = function(o){
             newFigure.addPrimitive(Path.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Figure'){
-            newFigure.addPrimitive(Figure.load(o.primitives[i])) //kinda recursevly
+            newFigure.addPrimitive(Figure.load(o.primitives[i])); //kinda recursevly
         }
         else if(o.primitives[i].oType == 'ImageFrame'){
-            newFigure.addPrimitive(ImageFrame.load(o.primitives[i])) //kinda recursevly
+            newFigure.addPrimitive(ImageFrame.load(o.primitives[i])); //kinda recursevly
         }
     }//end for
 
@@ -2728,7 +2728,7 @@ Figure.prototype = {
             CONNECTOR_MANAGER.connectionPointTransform(this.id,matrix);
         }
 
-        //some figures dont have rotation coords, i.e. those that arent "real" figures, such as the highlight rectangle
+        //some figures don't have rotation coords, i.e. those that aren't "real" figures, such as the highlight rectangle
         if(this.rotationCoords.length!=0){
             this.rotationCoords[0].transform(matrix);
             this.rotationCoords[1].transform(matrix);
@@ -2780,7 +2780,7 @@ Figure.prototype = {
         ret.rotationCoords[1]=this.rotationCoords[1].clone();
         ret.url = this.url;
         
-        //get all conection points and add them to the figure
+        //get all connection points and add them to the figure
         var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(this.id);
         
         cps.forEach(
@@ -2869,7 +2869,7 @@ Figure.prototype = {
             primitive.paint(context);
             primitive.style = oldStyle;
 			
-//            if(this.style.image != null){ //TODO: should a figure has a Style cann't just delegate all to primitives?
+//            if(this.style.image != null){ //TODO: should a figure has a Style can't just delegate all to primitives?
 //                //clip required for background images, there were two methods, this was the second I tried
 //                //neither work in IE
 //                context.clip();
