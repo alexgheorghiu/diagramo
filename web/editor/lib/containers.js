@@ -19,21 +19,21 @@ function Container(id, topLeft, bottomRight) {
         this.id = id;
     }
     
-    /**The {@link Style} of the polygon*/
-    this.style = new Style();
-    this.style.strokeStyle = "#000000";
-    this.style.fillStyle = "#F9F8F6";
-    this.style.lineStyle = Style.LINE_STYLE_CONTINOUS;
-    
     this.topLeft = topLeft.clone();
     this.bottomRight = bottomRight.clone();        
-    
+
     /**An {Array} of primitives that make the figure*/
     this.primitives = [];
     
     /**An {Array} of primitives*/
     this.properties = [];
-    
+
+    /**The {@link Style} of the polygon*/
+    this.style = new Style(this.getBounds());
+    this.style.strokeStyle = "#000000";
+    this.style.fillStyle = "#F9F8F6";
+    this.style.lineStyle = Style.LINE_STYLE_CONTINOUS;
+
     
     /**We keep the figure position by having different points
      *[central point of the figure, the middle of upper edge]

@@ -222,7 +222,7 @@ ConnectorManager.prototype = {
                 }
                 var oldStyle = this.connectors[i].style.clone();
                 var oldWidth = this.connectors[i].style.lineWidth;
-                this.connectors[i].style = new Style();
+                this.connectors[i].style = new Style([]);
                 this.connectors[i].style.lineWidth = parseInt(oldWidth) + 2;
                 this.connectors[i].style.strokeStyle = "lime";
                 this.connectors[i].paint(context);

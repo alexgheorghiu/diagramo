@@ -9,10 +9,11 @@
  * 
  * @this {Style}
  * @constructor
+ * @param {Array<Number>} gradientBounds - [x0, y0, x1, y1] - bounds of current object used in gradient.
  * @author Zack Newsham <zack_newsham@yahoo.co.uk>
  * @author Alex Gheorghiu <alex@scriptoid.com>
  */
-function Style(){
+function Style(gradientBounds){
     /**Font used*/
     this.font = null;
     
@@ -71,7 +72,7 @@ function Style(){
     this.colorStops = [];
     
     /**An {Array} in form of [x0, y0, x1, y1] with figure bounds used in gradients*/
-    this.gradientBounds = [];
+    this.gradientBounds = gradientBounds;
     
     /**Dash length used for dashed styles
      * @deprecated Trying to use setLineDash and lineDashOffset
@@ -109,7 +110,7 @@ Style.LINE_STYLES = {
 /**Loads a style from a JSONObject
  **/
 Style.load = function(o){
-    var newStyle = new Style();
+    var newStyle = new Style(this.gradientBounds);
 
     newStyle.strokeStyle = o.strokeStyle;
     newStyle.fillStyle = o.fillStyle;
@@ -123,7 +124,6 @@ Style.load = function(o){
     newStyle.shadowBlur = o.shadowBlur;
     newStyle.shadowColor = o.shadowColor;
     newStyle.colorStops = o.colorStops;
-    newStyle.gradientBounds = o.gradientBounds;
     newStyle.dashLength = o.dashLength;
     newStyle.lineStyle = o.lineStyle;
     newStyle.image = o.image;
@@ -174,7 +174,7 @@ Style.prototype={
             }
         }
 
-        if(this.gradientBounds.length !=0 && this.image == null){
+        if(DIAGRAMO.gradientFill && this.gradientBounds.length !=0 && this.image == null){
             var lin = context.createLinearGradient(this.gradientBounds[0], this.gradientBounds[1], this.gradientBounds[2], this.gradientBounds[3]);
 
             for(var i=0; i<this.colorStops.length; i++){
@@ -241,9 +241,9 @@ Style.prototype={
 
 
     clone: function(){
-        var anotherStyle = new Style();
+        var anotherStyle = new Style(this.gradientBounds);
         for(var propertyName in anotherStyle){
-            if(propertyName != "colorStops" && propertyName != "gradientBounds"){
+            if(propertyName != "colorStops"){
                 anotherStyle[propertyName] = this[propertyName];
             }
             else{
