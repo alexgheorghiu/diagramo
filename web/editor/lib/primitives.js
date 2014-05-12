@@ -675,7 +675,7 @@ Polygon.prototype = {
                 // create linear gradient
                 var linearGradient = context.createLinearGradient(bounds[0], bounds[1], bounds[0], bounds[3]);
                 // generate colors for upper and lower bounds of gradient
-                var colorBounds = Util.generateGradientColors(this.style.fillStyle);
+                var colorBounds = Style.prototype.generateGradientColors(this.style.fillStyle);
                 // set gradient colors
                 linearGradient.addColorStop(0, colorBounds[0]);
                 linearGradient.addColorStop(1, colorBounds[1]);

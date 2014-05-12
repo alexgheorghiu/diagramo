@@ -272,6 +272,45 @@ Style.prototype={
     },
 
 
+    /**
+     * Generates colors for upper and lower bounds of figure gradient based on source color.
+     * Algorithm:
+     * 1) Split source rgb to {r,g,b}
+     * 2) Generate hsl value from {r,g,b}
+     * 3) Generate 2 hsl colors: add and subtract saturation step from result of step 2.
+     * 4) Convert bound colors to css-applicable strings
+     *
+     * @param {String} hex - RGB color to split
+     * @return {Array<String>} - HSL color values with percents.
+     * @author Arty
+     */
+    generateGradientColors: function(hex) {
+        // split rgb string to {r,g,b}
+        var rgbObj = Util.hexToRgb(hex);
+
+        // generate hsl value from {r,g,b}
+        var sourceHsl = Util.rgbToHsl(rgbObj.r, rgbObj.g, rgbObj.b);
+
+        // take hsl color for upper bound: add saturation step to source color
+        var upperHsl = sourceHsl.slice();
+        upperHsl[2] = upperHsl[2] + gradientLightStep;
+        // if hsl saturation bigger than 1 - set it to 1
+        upperHsl[2] = upperHsl[2] > 1 ? 1 : upperHsl[2];
+
+        // take hsl color for lower bound: subtract saturation step to source color
+        var lowerHsl = sourceHsl.slice();
+        lowerHsl[2] = lowerHsl[2] - gradientLightStep;
+        // if hsl saturation less than 0 - set it to 0
+        lowerHsl[2] = lowerHsl[2] < 0 ? 0 : lowerHsl[2];
+
+        // Convert bound colors to css-applicable strings
+        upperHsl = Util.hslToString(upperHsl);
+        lowerHsl = Util.hslToString(lowerHsl);
+
+        return [upperHsl, lowerHsl];
+    },
+
+
     getGradient:function(){
         return this.addColorStop[0]+"/"+this.addColorStop[1];
     },
