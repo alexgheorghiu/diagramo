@@ -178,12 +178,15 @@ Style.prototype={
             // generate gradient colors here, because fill color is changing in many places
             this.generateGradientColors();
 
+            // create linear gradient for current bounds
             var lin = context.createLinearGradient(this.gradientBounds[0], this.gradientBounds[1], this.gradientBounds[2], this.gradientBounds[3]);
 
+            // set gradient colors: currently 2 - for start and end points
             for(var i=0; i<this.colorStops.length; i++){
                 lin.addColorStop(i, this.colorStops[i]);
             }
 
+            // put gradient as a fill style for context
             context.fillStyle = lin;
 //            this.fillStyle = lin;
         }
@@ -250,9 +253,8 @@ Style.prototype={
                 anotherStyle[propertyName] = this[propertyName];
             }
             else{
-                for(var i=0; i< this[propertyName].length; i++){
-                    anotherStyle[propertyName].push(this[propertyName][i]);
-                }
+                // colorStops is array - we use slice
+                anotherStyle[propertyName] = this[propertyName].slice();
             }
         }
         return anotherStyle;
@@ -276,7 +278,7 @@ Style.prototype={
 
 
     /**
-     * Generates colors for upper and lower bounds of figure gradient based on fill color.
+     * Generates colors for upper and lower bounds of figure gradient based on fill style.
      * Algorithm:
      * 1) Split source rgb to {r,g,b}
      * 2) Generate hsl value from {r,g,b}
@@ -308,6 +310,7 @@ Style.prototype={
         upperHsl = Util.hslToString(upperHsl);
         lowerHsl = Util.hslToString(lowerHsl);
 
+        // set calculated values as colorStops of Style
         this.colorStops = [upperHsl, lowerHsl];
     },
 
@@ -337,16 +340,21 @@ Style.prototype={
     },
 
 
-    transform:function(matrix){
-        if(this.gradientBounds.length!=0){
-            var p1=new Point(this.gradientBounds[0],this.gradientBounds[1]);
-            var p2=new Point(this.gradientBounds[2],this.gradientBounds[3]);
-            p1.transform(matrix);
-            p2.transform(matrix);
-            this.gradientBounds[0]=p1.x;
-            this.gradientBounds[1]=p1.y;
-            this.gradientBounds[2]=p2.x;
-            this.gradientBounds[3]=p2.y;
+    transform: function(matrix){
+        if(this.gradientBounds.length != 0){
+            // to transform gradient bounds we join coordinates in points
+            var startPoint = new Point(this.gradientBounds[0],this.gradientBounds[1]);
+            var endPoint = new Point(this.gradientBounds[2],this.gradientBounds[3]);
+
+            // transform created points due to general transformation
+            startPoint.transform(matrix);
+            endPoint.transform(matrix);
+
+            // and set transformed coordinates back to gradientBounds
+            this.gradientBounds[0] = startPoint.x;
+            this.gradientBounds[1] = startPoint.y;
+            this.gradientBounds[2] = endPoint.x;
+            this.gradientBounds[3] = endPoint.y;
         }
         if(this.image){
             var p1 = new Point(0,0);
