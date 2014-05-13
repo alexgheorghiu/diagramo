@@ -73,7 +73,7 @@ function Style(gradientBounds){
     
     /**An {Array} in form of [x0, y0, x1, y1] with figure bounds used in gradients
      * sliced to avoid side effects (Actually made a clone)*/
-    this.gradientBounds = gradientBounds.slice(0);
+    this.gradientBounds = (gradientBounds==null || gradientBounds == undefined) ? [] : gradientBounds.slice(0);
     
     /**Dash length used for dashed styles
      * @deprecated Trying to use setLineDash and lineDashOffset
