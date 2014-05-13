@@ -233,9 +233,11 @@ function Line(startPoint, endPoint){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 Line.load = function(o){
-    var newLine = new Line();
-    newLine.startPoint = Point.load(o.startPoint);
-    newLine.endPoint = Point.load(o.endPoint);
+    var newLine = new Line(
+        Point.load(o.startPoint),
+        Point.load(o.endPoint)
+    );
+
     newLine.style = Style.load(o.style);
     return newLine;
 }
@@ -1020,10 +1022,12 @@ function QuadCurve(startPoint, controlPoint, endPoint){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 QuadCurve.load = function(o){
-    var newQuad = new QuadCurve();
-    newQuad.startPoint = Point.load(o.startPoint);
-    newQuad.controlPoint = Point.load(o.controlPoint);
-    newQuad.endPoint = Point.load(o.endPoint);
+    var newQuad = new QuadCurve(
+        Point.load(o.startPoint),
+        Point.load(o.controlPoint),
+        Point.load(o.endPoint)
+    );
+
     newQuad.style = Style.load(o.style);
     return newQuad;
 }
@@ -1326,12 +1330,12 @@ function CubicCurve(startPoint, controlPoint1, controlPoint2, endPoint){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 CubicCurve.load = function(o){
-    var newCubic = new CubicCurve();
-
-    newCubic.startPoint = Point.load(o.startPoint);
-    newCubic.controlPoint1 = Point.load(o.controlPoint1);
-    newCubic.controlPoint2 = Point.load(o.controlPoint2);
-    newCubic.endPoint = Point.load(o.endPoint);
+    var newCubic = new CubicCurve(
+        Point.load(o.startPoint),
+        Point.load(o.controlPoint1),
+        Point.load(o.controlPoint2),
+        Point.load(o.endPoint)
+    );
 
     newCubic.style = Style.load(o.style);
     return newCubic;
