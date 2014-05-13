@@ -150,7 +150,7 @@ $requirements = loadRequirements();
         </style>
         <script type="text/javascript">
             function showMessage(page){
-                myRef = window.open('./help/' + page + '.html','mywin','left=200,top=200,width=500,height=200,toolbar=0,resizable=0');
+                myRef = window.open('./help/' + page + '.html','mywin','left=200,top=200,width=500,height=250,toolbar=0,resizable=0');
             }
             
             function init(){
@@ -190,18 +190,26 @@ $requirements = loadRequirements();
                 
                 <?php
                 $errors = false;
+                $internetConnection = true;
+
                 for($i=0; $i < count($requirements); $i++){
                     $requirement = $requirements[$i];
                     $valid = isValid($requirement);
                     if(!$valid){
                         if($requirement['wanted'] == 'mandatory'){
+                            if($requirement['name'] == 'Internet connection'){
+                                $internetConnection = false;
+                            }
                             $errors = true;
                         }
                     }
                     $style = 'sandwitch' . (($i%2) == 0 ? '2' : '');
                 ?>
                     <tr>
-                        <td class="<?=$style?>"><?php echo $requirement['name']?></td>
+                        <td class="<?=$style?>">
+                            <?php echo $requirement['name']?>
+                            <?php if ($requirement['name'] == 'Internet connection' && $internetConnection == false) echo '<text class="error">(check help)</text>' ?>
+                        </td>
                         <td class="<?=$style?>">
                             <?php 
                             if($valid){

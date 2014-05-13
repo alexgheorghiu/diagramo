@@ -20,6 +20,7 @@ web/editor/data/import/*.gif
 web/editor/data/import/*.bmp
 web/editor/data/import/*.svg
 web/editor/data/import/.htaccess
+web/editor/data/proxy.ini
 
 documents/mailserver/*.html
 documents/jsdoc-toolkit/out/

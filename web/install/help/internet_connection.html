@@ -3,12 +3,42 @@
     <head>
         <title>Internet connection</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <style type="text/css">
+            ul {
+                margin-top: 0;
+                list-style: none;
+            }
+        </style>
     </head>
     <body>
-        You need to be able to access internet from your host.
-        <p/>
-        
-        <p />
+        <p>
+            You need to be able to access internet from your host.
+        </p>
+
+        <p></p>
+
+        <p></p>
+        If you use http proxy then you need to:
+            <ol>
+                <li>Rename /[editor]/[data]/<b>default-proxy.ini</b> to [editor]/[data]/<b>proxy.ini</b></li>
+                <li>Open <b>proxy.ini</b> and set use_proxy to 'On' (Ex: <code>use_proxy = On</code>)</li>
+                <li>Set all other values to your proxy's settings<br/>
+                    For example:
+                    <pre>
+    [proxy]
+
+    ;use_proxy can be set to On or Off, by defaul it Off
+    use_proxy = On
+    proxy_address = 192.168.251.1
+    proxy_port = 8080
+    proxy_auth = On
+    proxy_login = john.tango
+    proxy_password = theeaglehaslanded
+                    </pre>
+                </li>
+            </ol>
+
+        <p></p>
         <div style="text-align: center;">
             <a href="javascript:void(0);" onclick="javascript: window.close();">Close</a>
         </div>
