@@ -3,13 +3,6 @@ date_default_timezone_set('America/New_York');
 ################################################################################
 ###   ERRORS   AND   SUCCESSFULLY   MESSAGES   #################################
 
-/**
-  * Returns the path to the [data] folder.
-  * The path does not contain the trailing /
-  */
-function getDataFolder(){
-    return dirname(__FILE__) . '/../data';
-}
 
 /**
   * Returns the path to the data folder.
