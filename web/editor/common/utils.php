@@ -3,13 +3,20 @@ date_default_timezone_set('America/New_York');
 ################################################################################
 ###   ERRORS   AND   SUCCESSFULLY   MESSAGES   #################################
 
+/**
+  * Returns the path to the [data] folder.
+  * The path does not contain the trailing /
+  */
+function getDataFolder(){
+    return dirname(__FILE__) . '/../data';
+}
 
 /**
   * Returns the path to the diagrams storage folder.
   * The path does not contain the trailing /
   */
  function getStorageFolder(){
-     return dirname(__FILE__) . '/../data/diagrams';
+     return getDataFolder() . '/diagrams';
  }
 
 /**
@@ -19,17 +26,19 @@ date_default_timezone_set('America/New_York');
  *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  */
 function getUploadedImageFolder(){
-    return dirname(__FILE__) . '/' . '../data/import';
+    return getDataFolder() . '/import';
 }
 
 /**
  * Returns the path to the proxy configuration file.
  * The path does not contain the trailing /
- *
- *  @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+ * 
+ * Note: Open default-proxy.ini file for more information
+ * @see https://bitbucket.org/scriptoid/diagramo/issue/163/installation-step2-failing-on-internet
+ * @author Artyom Pokatilov <artyom.pokatilov@gmail.com>
  */
 function getProxyConfigPath(){
-    return dirname(__FILE__) . '/' . '../data/proxy.ini';
+    return getDataFolder() . '/proxy.ini';
 }
 
 // Set a error message into session
@@ -772,17 +781,24 @@ function displayName($user){
 /**
  * Gets data from a specific URL
  * It will try several methods before fails.
+ * 
+ * First we will see if there is any proxy.ini file set inside [data] folder
+ * and then if the proxy is activated.
+ * 
+ * Then we will try with 
  *
  * @param $url - the URL to get data from
  * @return data if accessible or false if not accessible
  */
 function get($url) {
-    // read proxy configuration from file
-    $proxyConfig = parse_ini_file(getProxyConfigPath());
-
-    // check: use proxy-server configuration or not
-    $use_proxy = $proxyConfig['use_proxy'] === '1';
-
+    $proxyFilePath = getProxyConfigPath();
+    
+    $use_proxy = FALSE;
+    
+    if(file_exists($proxyFilePath)){ //use proxy settings only if proxy.ini is present
+        $use_proxy = TRUE;
+    }
+                
     // Try to get the url content with file_get_contents()
     $getWithFileContents = getWithFileContents($url, $use_proxy);
     if ($getWithFileContents !== false) {
@@ -806,33 +822,39 @@ function get($url) {
 function getWithFileContents($fileLocation, $proxy = false) {
     // proxy enabled?
     if ($proxy) {
+        
         // read proxy configuration from file
         $proxyConfig = parse_ini_file(getProxyConfigPath());
+        
+        if($proxyConfig['use_proxy'] === '1'){ //see if the proxy.ini file wants to use proxy :)
+            // get user-defined address, port, authorization flag, login and password for proxy
+            $proxyAddress = $proxyConfig['proxy_address'];
+            $proxyPort = $proxyConfig['proxy_port'];
+            $proxyAuth = $proxyConfig['proxy_auth'];
+            $proxyLogin = $proxyConfig['proxy_login'];
+            $proxyPassword = $proxyConfig['proxy_password'];
 
-        // get user-defined address, port, authorization flag, login and password for proxy
-        $proxyAddress = $proxyConfig['proxy_address'];
-        $proxyPort = $proxyConfig['proxy_port'];
-        $proxyAuth = $proxyConfig['proxy_auth'];
-        $proxyLogin = $proxyConfig['proxy_login'];
-        $proxyPassword = $proxyConfig['proxy_password'];
+            // construct http context
+            $aContext = array(
+                'http' => array(
+                    'proxy' => "tcp://$proxyAddress:$proxyPort",
+                    'request_fulluri' => true,
+                ),
+            );
 
-        // construct http context
-        $aContext = array(
-            'http' => array(
-                'proxy' => "tcp://$proxyAddress:$proxyPort",
-                'request_fulluri' => true,
-            ),
-        );
+            // proxy authorization enabled?
+            if ($proxyAuth == '1') {
+                // set proxy authorization header
+                $aContext['http']['header'] = "Proxy-Authorization: Basic " . base64_encode($proxyLogin . ':' . $proxyPassword);
+            }
 
-        // proxy authorization enabled?
-        if ($proxyAuth == '1') {
-            // set proxy authorization header
-            $aContext['http']['header'] = "Proxy-Authorization: Basic " . base64_encode($proxyLogin . ':' . $proxyPassword);
+            $cxContext = stream_context_create($aContext);
+
+            return file_get_contents($fileLocation, False, $cxContext);
         }
-
-        $cxContext = stream_context_create($aContext);
-
-        return file_get_contents($fileLocation, False, $cxContext);
+        else{ //maybe not ;)
+            return file_get_contents($fileLocation);
+        }
     } else {
         return file_get_contents($fileLocation);
     }

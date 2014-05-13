@@ -18,15 +18,25 @@
         <p></p>
 
         <p></p>
-        If you use http proxy then you need set address, port number, login and password of it into: PROJECT_FOLDER/web/proxy.config
-        <br>
-        For example:
-        <ul>
-            <li>ADDRESS:192.168.251.1</li>
-            <li>PORT:8080</li>
-            <li>LOGIN:admin</li>
-            <li>PASSWORD:admin</li>
-        </ul>
+        If you use http proxy then you need to:
+            <ol>
+                <li>Rename /[editor]/[data]/<b>default-proxy.ini</b> to [editor]/[data]/<b>proxy.ini</b></li>
+                <li>Open <b>proxy.ini</b> and set use_proxy to 'On' (Ex: <code>use_proxy = On</code>)</li>
+                <li>Set all other values to your proxy's settings<br/>
+                    For example:
+                    <pre>
+    [proxy]
+
+    ;use_proxy can be set to On or Off, by defaul it Off
+    use_proxy = On
+    proxy_address = 192.168.251.1
+    proxy_port = 8080
+    proxy_auth = On
+    proxy_login = john.tango
+    proxy_password = theeaglehaslanded
+                    </pre>
+                </li>
+            </ol>
 
         <p></p>
         <div style="text-align: center;">

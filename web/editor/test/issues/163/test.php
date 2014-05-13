@@ -4,6 +4,7 @@ $proxyConfig = parse_ini_file('proxy.ini');
 
 // get user-defined flag for proxy usage
 $useProxy = $proxyConfig['use_proxy'];
+#print($useProxy);
 
 // proxy enabled?
 if ($useProxy == '1') {
@@ -31,7 +32,7 @@ if ($useProxy == '1') {
     $cxContext = stream_context_create($aContext);
 
     // echo ping answer
-    echo file_get_contents("http://diagramo.com/echo.php?voice=ping", False, $cxContext);
+    echo file_get_contents("http://diagramo.com/echo.php?voice=ping", FALSE, $cxContext);
 } else {
     // echo ping answer
     echo file_get_contents("http://diagramo.com/echo.php?voice=ping");
