@@ -708,19 +708,29 @@ var Util = {
     },
     
 
-	/**
-     * Calculates the number of times the line from (x0,y0) to (x1,y1)
-     * crosses the ray extending to the right from (px,py).
-     * If the point lies on the line, then no crossings are recorded.
-     * +1 is returned for a crossing where the Y coordinate is increasing
-     * -1 is returned for a crossing where the Y coordinate is decreasing
+    /**
+     * Calculates the number of times the vector from P0(x0,y0) to P1(x1,y1)
+     * crosses the ray extending to the right from P(px,py).
+     * @return {Number} 
+     *  0 - if the point lies on the line or no intersection
+     * +1 - if intersection happened and the Y coordinate is increasing (y0 < y1)
+     * -1 - if intersection happened and the Y coordinate is decreasing (y0 >= y1)
+     * @param {Number} px coordinates x for point P
+     * @param {Number} py coordinates y for point P
+     * @param {Number} x0 coordinates x for point P0
+     * @param {Number} y0 coordinates y for point P0
+     * @param {Number} x1 coordinates x for point P1
+     * @param {Number} y1 coordinates y for point P1
+     * Note: This is pretty much similar to what we have in isPointInside(...) method
+     * but this was inspired from JDK thus older and not used
      */
-    pointCrossingsForLine: function(px, py, x0, y0,x1,y1)
+    pointCrossingsForLine: function(px, py, x0, y0, x1, y1)
     {
         if (py <  y0 && py <  y1) return 0;
         if (py >= y0 && py >= y1) return 0;
-        // assert(y0 != y1);
         if (px >= x0 && px >= x1) return 0;
+        // assert(y0 != y1);        
+        if(y0 == y1) throw Exception('Asserted: ' + y0 + ' == ' + y1);
         if (px <  x0 && px <  x1) return (y0 < y1) ? 1 : -1;
         var xintercept = x0 + (py - y0) * (x1 - x0) / (y1 - y0);
         if (px >= xintercept) return 0;
@@ -729,14 +739,26 @@ var Util = {
 
 
     /**
-     * Calculates the number of times the cubic from (x0,y0) to (x1,y1)
-     * crosses the ray extending to the right from (px,py).
-     * If the point lies on a part of the curve,
-     * then no crossings are counted for that intersection.
-     * the level parameter should be 0 at the top-level call and will count
-     * up for each recursion level to prevent infinite recursion
-     * +1 is added for each crossing where the Y coordinate is increasing
-     * -1 is added for each crossing where the Y coordinate is decreasing
+     * Calculates the number of times the cubic from point P0(x0,y0) to point P1(x1,y1)
+     * crosses the ray extending to the right from point P(px,py).
+     * @return {Number}
+     *  0 - If the point lies on a part of the curve or no intersetion
+     * +1 - is added for each crossing where the Y coordinate is increasing
+     * -1 - is added for each crossing where the Y coordinate is decreasing
+     * 
+     * @param {Number} px coordinates x for point P
+     * @param {Number} py coordinates y for point P
+     * @param {Number} x0 coordinates x for point P0 (start point)
+     * @param {Number} y0 coordinates y for point P0 (start point)
+     * @param {Number} xc0 coordinates x for point C0 (first controll point)
+     * @param {Number} yc0 coordinates y for point C0 (first controll point)
+     * @param {Number} xc1 coordinates x for point C1 (second controll point)
+     * @param {Number} yc1 coordinates y for point C1 (second controll point)
+     * @param {Number} x1 coordinates x for point P1 (end point)
+     * @param {Number} y1 coordinates y for point P1 (end point)
+     * @param {Number} level The level parameter should be 0 at the top-level 
+     * call and will count up for each recursion level to prevent infinite recursion
+     * @see http://www.atalasoft.com/blogs/stevehawley/may-2013/how-to-split-a-cubic-bezier-curve
      */
     pointCrossingsForCubic: function (px, py, x0, y0, xc0, yc0, xc1, yc1, x1, y1, level)
     {
@@ -754,8 +776,10 @@ var Util = {
             // py outside of y01 range, and/or y0==yc0
             return 0;
         }
-        // double precision only has 52 bits of mantissa
+        // double precision only has 52 bits of mantissa (Give up and fall back to line intersection)
         if (level > 52) return pointCrossingsForLine(px, py, x0, y0, x1, y1);
+        
+        //"split" current cubic into 2 new cubic curves
         var xmid = (xc0 + xc1) / 2;
         var ymid = (yc0 + yc1) / 2;
         xc0 = (x0 + xc0) / 2;
@@ -774,12 +798,8 @@ var Util = {
             // These values are also NaN if opposing infinities are added
             return 0;
         }
-        return (Util.pointCrossingsForCubic(px, py,
-		x0, y0, xc0, yc0,
-		xc0m, yc0m, xmid, ymid, level+1) +
-			Util.pointCrossingsForCubic(px, py,
-		xmid, ymid, xmc1, ymc1,
-		xc1, yc1, x1, y1, level+1));
+        return (Util.pointCrossingsForCubic(px, py,x0, y0, xc0, yc0, xc0m, yc0m, xmid, ymid, level+1) 
+                + Util.pointCrossingsForCubic(px, py, xmid, ymid, xmc1, ymc1, xc1, yc1, x1, y1, level+1));
     },
 
 

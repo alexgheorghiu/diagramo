@@ -1404,35 +1404,44 @@ CubicCurve.prototype = {
 
     /**
      * Inspired by java.awt.geom.CubicCurve2D
+     * @author Alex
      */
     contains:function(x, y) {
-//        if (!(x * 0.0 + y * 0.0 == 0.0)) {
-//            /* Either x or y was infinite or NaN.
-//             * A NaN always produces a negative response to any test
-//             * and Infinity values cannot be "inside" any path so
-//             * they should return false as well.
-//             */
-//            return false;
-//        }
-//        // We count the "Y" crossings to determine if the point is
-//        // inside the curve bounded by its closing line.
-//        var x1 = this.startPoint.x//getX1();
-//        var y1 = this.startPoint.y//getY1();
-//        var x2 = this.endPoint.x//getX2();
-//        var y2 = this.endPoint.y//getY2();
-//        var crossings =
-//        (Util.pointCrossingsForLine(x, y, x1, y1, x2, y2) +
-//            Util.pointCrossingsForCubic(x, y,
-//                x1, y1,
-//                this.controlPoint1.x, this.controlPoint1.y,
-//                this.controlPoint2.x, this.controlPoint2.y,
-//                x2, y2, 0));
-//        return ((crossings & 1) == 1);
+        /*This piece of code is kept as a reference.
+        The "old" idea was to treat the curve as a polygon
+        thus closing it and apply a similar algorithm as for polygon.
+        Of course it does not offer precision :(
         
-        /*
-        *Algorithm: split the Bezier curve into an aproximative polyline and use polyline's near method*/
+//        if (!(x * 0.0 + y * 0.0 == 0.0)) {
+//            Either x or y was infinite or NaN.
+//             A NaN always produces a negative response to any test
+//             and Infinity values cannot be "inside" any path so
+//             they should return false as well.
+//             
+            return false;
+        }
+        // We count the "Y" crossings to determine if the point is
+        // inside the curve bounded by its closing line.
+        var x1 = this.startPoint.x //getX1();
+        var y1 = this.startPoint.y //getY1();
+        var x2 = this.endPoint.x //getX2();
+        var y2 = this.endPoint.y //getY2();
+        var crossings =
+        (Util.pointCrossingsForLine(x, y, x1, y1, x2, y2) +
+            Util.pointCrossingsForCubic(x, y,
+                x1, y1,
+                this.controlPoint1.x, this.controlPoint1.y,
+                this.controlPoint2.x, this.controlPoint2.y,
+                x2, y2, 0));
+        return ((crossings & 1) == 1);
+        */
+        
+        
+        /*Algorithm: split the Bezier curve into an aproximative polyline and 
+         * use {Polyline}'s contains(...) method
+         * */
        var poly = new Polyline();
-       for(var t=0; t<=1; t=t+0.01){
+       for(var t=0; t<=1; t=t+0.01){ //101 points :D
            var a = Math.pow((1 - t), 3);            
             var b = 3 * t * Math.pow((1 - t), 2);
             var c = 3 * Math.pow(t, 2) * (1 - t);
@@ -3023,6 +3032,7 @@ Figure.prototype = {
  * @see http://www.timotheegroleau.com/Flash/articles/cubic_bezier_in_flash.htm
  * @see http://www.algorithmist.net/bezier3.html
  * @see http://www.caffeineowl.com/graphics/2d/vectorial/bezierintro.html
+ * @author Alex Gheorghiu <alex@scriptoid.com>
  **/
 function NURBS(points){
     if(points.length < 2){
@@ -3032,7 +3042,7 @@ function NURBS(points){
     /**The initial {@link Point}s*/
     this.points = Point.cloneArray(points);
     
-    /**The array of Cubic curves*/
+    /**The array of {CubicCurve} s from which the NURB will be made*/
     this.fragments = this.nurbsPoints(this.points);
     
     /**The {@link Style} of the line*/
@@ -3057,7 +3067,7 @@ NURBS.load = function(o){
 NURBS.prototype = {
     /**Computes a series of Bezier(Cubic) curves to aproximate a curve modeled 
      *by a set of points
-     *@return an {Array} of Cubic curves (provided also as {Array})
+     *@return an {Array} of {CubicCurve} (provided also as {Array})
      *Example: 
      *  [
      *      [p1, p2, p3, p4],
@@ -3072,19 +3082,21 @@ NURBS.prototype = {
         /**Contains the gathered sub curves*/        
         var sol = [];
         
-        if(n == 2){
+        if(n === 2){
             sol.push(new Line(P[0], P[1]));
         }
-        else if(n == 3){
+        else if(n === 3){
             sol.push(new QuadCurve(P[0], P[1], P[2]));
         }
-        else if(n == 4){
+        else if(n === 4){
             sol.push(new CubicCurve(P[0], P[1], P[2], P[3]));
         }
         
-        /**Computes factorial*/
+        /**Computes factorial
+         * @param {Number} k the number
+         * */
         function fact(k){
-            if(k==0 || k==1){
+            if(k===0 || k===1){
                 return 1;
             }
             else{

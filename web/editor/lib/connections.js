@@ -332,6 +332,7 @@ Connector.prototype = {
                 context.fillStyle = '#FF0000';
                 context.lineWidth = '2';
                 
+                //small dots
                 for(var p in points){
                     context.fillRect(points[p].x - 1, points[p].y - 1 , 3, 3);
                 }
@@ -355,12 +356,12 @@ Connector.prototype = {
                 
 //                var n = new NURBS(points);
                 var n = new NURBS(rPoints);
-                n.style.strokeStyle = 'rgba(0,100,0,0.5)';
+                n.style.strokeStyle = 'rgba(0,100,0,0.5)'; //green
                 n.paint(context);
                 
                 
                 var n2 = new NURBS(points);
-                n2.style.strokeStyle = 'rgba(0,0,100,0.5)';
+                n2.style.strokeStyle = 'rgba(0,0,100,0.5)'; //blue
                 n2.paint(context);
                 
                 
@@ -384,7 +385,7 @@ Connector.prototype = {
                 points.push(rPoints[rPoints.length-1]);
                 
                 var n2 = new NURBS(points);
-                n2.style.strokeStyle = 'rgba(100,0,0,0.5)';
+                n2.style.strokeStyle = 'rgba(100,0,0,0.5)'; //red
                 n2.paint(context);
                 
                 break;
