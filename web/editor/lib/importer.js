@@ -181,28 +181,54 @@ Importer.patch4 = function(o){
 
         // go through containers
         for (var i = 0; i < jsonStack.containers.length; i++) {
-            // Text used only in primitives
-            var primitives = jsonStack.containers[i].primitives;
+            var currentContainer = jsonStack.containers[i];
+
+            // old version  has Style::gradientBounds and Style::colorStops undefined
+            currentContainer.style.gradientBounds = [];
+            currentContainer.style.colorStops = [];
+
+            // go through primitives of container
+            var primitives = currentContainer.primitives;
             for (var j = 0; j < primitives.length; j++) {
-                if (primitives[j].oType === "Text") {
-                    primitives[j].underlined = false;
+                var currentPrimitive = primitives[j];
+
+                // old version  has Style::gradientBounds and Style::colorStops undefined
+                currentPrimitive.style.gradientBounds = [];
+                currentPrimitive.style.colorStops = [];
+
+                // search for Text instances in primitives
+                if (currentPrimitive.oType === "Text") {
+                    currentPrimitive.underlined = false;
                     // if primitive with j index is Text - than it's text underlined property is
                     var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
-                    jsonStack.containers[i].properties.push(textUnderlinedProperty);
+                    currentContainer.properties.push(textUnderlinedProperty);
                 }
             }
         }
 
         // go through figures
         for (var i = 0; i < jsonStack.figures.length; i++) {
+            var currentFigure = jsonStack.figures[i];
+
+            // old version has Style::gradientBounds and Style::colorStops undefined
+            currentFigure.style.gradientBounds = [];
+            currentFigure.style.colorStops = [];
+
             // Text used only in primitives
-            var primitives = jsonStack.figures[i].primitives;
+            var primitives = currentFigure.primitives;
             for (var j = 0; j < primitives.length; j++) {
-                if (primitives[j].oType === "Text") {
-                    primitives[j].underlined = false;
+                var currentPrimitive = primitives[j];
+
+                // old version  has Style::gradientBounds and Style::colorStops undefined
+                currentPrimitive.style.gradientBounds = [];
+                currentPrimitive.style.colorStops = [];
+
+                // search for Text instances in primitives
+                if (currentPrimitive.oType === "Text") {
+                    currentPrimitive.underlined = false;
                     // if primitive with j index is Text - than it's text underlined property is
                     var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
-                    jsonStack.figures[i].properties.push(textUnderlinedProperty);
+                    currentFigure.properties.push(textUnderlinedProperty);
                 }
             }
         }
@@ -216,9 +242,15 @@ Importer.patch4 = function(o){
 
         // go through connectors
         for (var i = 0; i < jsonConnectorManager.connectors.length; i++) {
+            var currentConnector = jsonConnectorManager.connectors[i];
+
+            // old version has Style::gradientBounds and Style::colorStops undefined
+            currentConnector.style.gradientBounds = [];
+            currentConnector.style.colorStops = [];
+
             // Text used as middleText property
-            jsonConnectorManager.connectors[i].middleText.underlined = false;
-            jsonConnectorManager.connectors[i].properties.push(textUnderlinedProperty);
+            currentConnector.middleText.underlined = false;
+            currentConnector.properties.push(textUnderlinedProperty);
         }
     }
     
