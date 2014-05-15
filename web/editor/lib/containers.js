@@ -29,10 +29,11 @@ function Container(id, topLeft, bottomRight) {
     this.properties = [];
 
     /**The {@link Style} of the polygon*/
-    this.style = new Style(this.getBounds());
+    this.style = new Style();
     this.style.strokeStyle = "#000000";
     this.style.fillStyle = "#F9F8F6";
     this.style.lineStyle = Style.LINE_STYLE_CONTINOUS;
+    this.style.gradientBounds = this.getBounds();
 
     
     /**We keep the figure position by having different points

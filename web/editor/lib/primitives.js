@@ -45,7 +45,7 @@ function Point(x, y){
     this.y = y;
     
     /**The {@link Style} of the Point*/
-    this.style = new Style([]);
+    this.style = new Style();
     
     /**Serialization type*/
     this.oType = 'Point'; //object type used for JSON deserialization
@@ -221,8 +221,9 @@ function Line(startPoint, endPoint){
     this.endPoint = endPoint;
     
     /**The {@link Style} of the line*/
-    this.style = new Style(this.getBounds());
-    
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**Serialization type*/
     this.oType = 'Line'; //object type used for JSON deserialization
 }
@@ -448,8 +449,9 @@ function Polyline(){
     this.points = [];
     
     /**The {@link Style} of the polyline*/
-    this.style = new Style(this.getBounds());
-    
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**The starting {@link Point}. 
      * Required for path, we could use getPoints(), but this existed first.
      * Also its a lot simpler. Each other element used in path already has a startPoint
@@ -627,8 +629,9 @@ function Polygon(){
     this.points = [];
     
     /**The {@link Style} of the polygon*/
-    this.style = new Style(this.getBounds());
-    
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**Serialization type*/
     this.oType = 'Polygon'; //object type used for JSON deserialization
 }
@@ -817,11 +820,12 @@ Polygon.prototype = {
   **/
 function DottedPolygon(pattern){
     /**An {Array} of {@link Point}s*/
-    this.points = []
+    this.points = [];
     
     /**The {@link Style} of the polygon*/
-    this.style = new Style(this.getBounds());
-	
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**An {Array} of {Integer}s*/
     this.pattern = pattern;
     
@@ -1010,8 +1014,9 @@ function QuadCurve(startPoint, controlPoint, endPoint){
     this.endPoint = endPoint;
     
     /**The {@link Style} of the quad*/
-    this.style = new Style(this.getBounds());
-    
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**Serialization type*/
     this.oType = 'QuadCurve'; //object type used for JSON deserialization
 }
@@ -1318,8 +1323,9 @@ function CubicCurve(startPoint, controlPoint1, controlPoint2, endPoint){
     this.endPoint = endPoint;
     
     /**The {@link Style} of the quad*/
-    this.style = new Style(this.getBounds());
-    
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**Object type used for JSON deserialization*/
     this.oType = 'CubicCurve';
 }
@@ -1616,8 +1622,9 @@ function Arc(x, y, radius, startAngle, endAngle, direction, styleFlag){
     this.styleFlag = styleFlag;
     
     /**The {@link Style} of the arc*/
-    this.style = new Style(this.getBounds());
-    
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**Adding a reference to the end point makes the transform code hugely cleaner*/
     this.direction = direction;
     
@@ -1875,8 +1882,9 @@ function Ellipse(centerPoint, width, height) {
     this.matrix = null; //TODO: do we really need this?
     
     /**The {@link Style} used*/
-    this.style = new Style(this.getBounds());
-    
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**Oject type used for JSON deserialization*/
     this.oType = 'Ellipse'; 
 }
@@ -2215,8 +2223,9 @@ function Path() {
     this.primitives = [];
     
     /**The {@link Style} used for drawing*/
-    this.style = new Style(this.getBounds());
-    
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**Object type used for JSON deserialization*/
     this.oType = 'Path'; 
 }
@@ -2562,7 +2571,8 @@ function Figure(name) {
     this.properties = []; 
     
     /**The {@link Style} use to draw this figure*/
-    this.style = new Style(this.getBounds());
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
 
     /**We keep the figure position by having different points
      *[central point of the figure, the middle of upper edge]
@@ -3049,8 +3059,9 @@ function NURBS(points){
     this.fragments = this.nurbsPoints(this.points);
     
     /**The {@link Style} of the line*/
-    this.style = new Style(this.getBounds());
-    
+    this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
+
     /**Serialization type*/
     this.oType = 'NURBS'; //object type used for JSON deserialization
 }

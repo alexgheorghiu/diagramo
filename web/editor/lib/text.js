@@ -58,7 +58,7 @@ function Text(string, x, y, font, size, outsideCanvas, align){
     this.vector = [new Point(x,y),new Point(x,y-20)];
 
     /**Style of the text*/
-    this.style = new Style([]);
+    this.style = new Style();
 
     if(!outsideCanvas){
         this.bounds = this.getNormalBounds();

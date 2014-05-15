@@ -94,7 +94,7 @@ function ImageFrame(url, x, y, scale, frameWidth, frameHeight){
     
     /**The style of the Image. Kinda fake/default value*/
     //TODO: do we really need to keep this?
-    this.style = new Style([]);
+    this.style = new Style();
     //    
     //    //this.url = '';
     /**The type of the object. Used in deserialization*/

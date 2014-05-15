@@ -9,11 +9,10 @@
  * 
  * @this {Style}
  * @constructor
- * @param {Array<Number>} gradientBounds - [x0, y0, x1, y1] - bounds of current object used in gradient.
  * @author Zack Newsham <zack_newsham@yahoo.co.uk>
  * @author Alex Gheorghiu <alex@scriptoid.com>
  */
-function Style(gradientBounds){
+function Style(){
     /**Font used*/
     this.font = null;
     
@@ -71,9 +70,8 @@ function Style(gradientBounds){
     /**An {Array} of colors used in gradients*/
     this.colorStops = [];
     
-    /**An {Array} in form of [x0, y0, x1, y1] with figure bounds used in gradients
-     * sliced to avoid side effects (Actually made a clone)*/
-    this.gradientBounds = (gradientBounds==null || gradientBounds == undefined) ? [] : gradientBounds.slice(0);
+    /**An {Array} in form of [x0, y0, x1, y1] with figure bounds used in gradients*/
+    this.gradientBounds = [];
     
     /**Dash length used for dashed styles
      * @deprecated Trying to use setLineDash and lineDashOffset
@@ -111,7 +109,7 @@ Style.LINE_STYLES = {
 /**Loads a style from a JSONObject
  **/
 Style.load = function(o){
-    var newStyle = new Style(this.gradientBounds);
+    var newStyle = new Style();
 
     newStyle.strokeStyle = o.strokeStyle;
     newStyle.fillStyle = o.fillStyle;
@@ -124,6 +122,7 @@ Style.load = function(o){
     newStyle.shadowOffsetY = o.shadowOffsetY;
     newStyle.shadowBlur = o.shadowBlur;
     newStyle.shadowColor = o.shadowColor;
+    newStyle.gradientBounds = o.gradientBounds;
     newStyle.colorStops = o.colorStops;
     newStyle.dashLength = o.dashLength;
     newStyle.lineStyle = o.lineStyle;
@@ -248,9 +247,9 @@ Style.prototype={
 
 
     clone: function(){
-        var anotherStyle = new Style(this.gradientBounds);
+        var anotherStyle = new Style();
         for(var propertyName in anotherStyle){
-            if(propertyName != "colorStops"){
+            if(propertyName != "colorStops" && propertyName != "gradientBounds"){
                 anotherStyle[propertyName] = this[propertyName];
             }
             else{
