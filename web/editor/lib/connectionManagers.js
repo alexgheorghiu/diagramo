@@ -399,6 +399,8 @@ ConnectorManager.prototype = {
      *@param {Integer} cpId - the id of the connector
      *@param {Number} x - the x coordinates of the point
      *@param {Number} y - the y coordinates of the point
+     *@deprecated This function seems to no longer be used. 
+     *See ConnectionMamager.connectionPointTransform(...)
      **/
     connectorAdjustByConnectionPoint: function(cpId, x, y){
         var cp = this.connectionPointGetById(cpId); //ConnectionPoint
@@ -428,14 +430,15 @@ ConnectorManager.prototype = {
             var eBounds = eFigure == null ? null : eFigure.getBounds();
             
             //adjust connector
-            var solution = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
+            var solutions = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
 
+            //smmoth it for organic connector
             if(con.type === Connector.TYPE_ORGANIC){
-                con.addIntermediatePoints(solution);
+                con.addIntermediatePoints(solutions);
             }
 
-            // apply solution to Connector
-            con.applySolution(solution);
+            // apply solution to Connector (for delta changes made by user)
+            con.applySolution(solutions);
 
             conCps[0].point = con.turningPoints[0].clone();
             conCps[1].point = con.turningPoints[con.turningPoints.length - 1].clone();
@@ -1487,10 +1490,14 @@ ConnectorManager.prototype = {
                 );
 
                 //solutions
-                DIAGRAMO.debugSolution = CONNECTOR_MANAGER.connector2Points(connector.type, candidate[0], candidate[1], startBounds, endBounds);
+                DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(connector.type, candidate[0], candidate[1], startBounds, endBounds);
 
+                if(connector.type === Connector.TYPE_ORGANIC){
+                    connector.addIntermediatePoints(DIAGRAMO.debugSolutions);
+                }
+            
                 // apply solution to Connector
-                connector.applySolution(DIAGRAMO.debugSolution);
+                connector.applySolution(DIAGRAMO.debugSolutions);
 
                 // update position of Connector's ConnectionPoints
                 cCPs[0].point = connector.turningPoints[0].clone();

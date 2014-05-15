@@ -2741,6 +2741,10 @@ function connectorPickSecond(x, y, ev){
             rStartBounds, 
             rEndBounds
         );
+
+        if(con.type === Connector.TYPE_ORGANIC){
+            con.addIntermediatePoints(DIAGRAMO.debugSolutions);
+        }
     }
     
     //end remove block

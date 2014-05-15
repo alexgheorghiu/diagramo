@@ -351,7 +351,8 @@ Connector.prototype = {
         //poly.paint(context);
 
         //paint NURBS
-        var rPoints  = Util.collinearReduction(this.turningPoints);
+//        var rPoints  = Util.collinearReduction(this.turningPoints);
+        var rPoints  = this.turningPoints;
         Log.info("Connector:paint() - Number of reduced points: " + rPoints.length + " " + rPoints);
         
         //1 - Draw NURB based only on turning points
@@ -995,32 +996,107 @@ Connector.prototype = {
     
     /**
      * Add intermediate points for a solution. For making it more smooth or similar
-     *
+     * @param {Numeric} type - the algorithm used to add intermediate points
      * */
-    addIntermediatePoints: function(solution, type){
-        
+    addIntermediatePoints: function(solutions, type){
+        var rPoints = Point.cloneArray(solutions[0][2]);
+        type = type || 3; //by default is 3
+        switch (type){
+            case 0:
+                //do nothing
+                break;
+                
+            case 1:
+                //Middle point for anything (except first and last)
+                var points = [];
+
+                var point = rPoints[0];
+
+                //add controll points AND the middle of each segment (except first and last)
+                for(var i=0; i < rPoints.length-1; i++){
+                    point = rPoints[i];
+
+                    //add point
+                    points.push(point.clone());
+
+                    if(i == 0 || i == rPoints.length-2){ ///skip first and last middle
+                        continue;
+                    }
+                    //add middle of current segment
+                    var nextPoint = rPoints[i+1];
+                    var middlePoint = new Point( (point.x + nextPoint.x) / 2, (point.y + nextPoint.y) / 2);
+                    points.push(middlePoint.clone());
+                }
+                points.push(rPoints[rPoints.length-1]);
+                
+                solutions[0][2] = points;
+                break;
+                
+            case 2:
+                //Middle point for anything
+                points = [];
+                var point = rPoints[0];
+
+                //add controll points in the middle of each segment (except first and last)
+                for(var i=0; i < rPoints.length-1; i++){
+                    point = rPoints[i];
+                    var nextPoint = rPoints[i+1];
+                    var middlePoint = new Point( (point.x + nextPoint.x) / 2, (point.y + nextPoint.y) / 2);
+
+                    points.push(point.clone());
+                    points.push(middlePoint.clone());
+                }
+                points.push(rPoints[rPoints.length-1]);
+
+                solutions[0][2] = points;
+                break;
+                
+            case 3:
+                //Middle points only for segments at the end [0 <-> 1] and [n-1 <-> n]
+                //This is similar to 0 but forces the curve to move away from figure more than 0
+                points = [];
+                var point = rPoints[0];
+
+                //add controll points in the middle of each segment (except first and last)
+                for(var i=0; i < rPoints.length-1; i++){
+                    point = rPoints[i];
+                                        
+                    points.push(point.clone());
+                    
+                    if(i==0 || i == rPoints.length-2){
+                        var nextPoint = rPoints[i+1];
+                        var middlePoint = new Point( (point.x + nextPoint.x) / 2, (point.y + nextPoint.y) / 2);
+                        points.push(middlePoint.clone());
+                    }
+                }
+                points.push(rPoints[rPoints.length-1]);
+
+                solutions[0][2] = points;
+                break;    
+
+        } //end switch
     },
 
 
     /**Applies solution from ConnectionManager.connector2Points() method.
-     *@param {Array} solution - value returned from ConnectionManager.connector2Points()
+     *@param {Array} solutions - value returned from ConnectionManager.connector2Points()
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      *@author Alex
      **/
-    applySolution: function(solution) {
+    applySolution: function(solutions) {
         // solution category: 's0', 's1_1', 's2_2', etc.
-        var solutionCategory = solution[0][1];
+        var solutionCategory = solutions[0][1];
 
         /*We should check if solution changed from previous.
         * Solution determined by it's category (s1_2, s2_1) and number of turning points.*/
         if (!this.solution //No solution?
                 || this.solution != solutionCategory   // Did category changed?
-                || this.turningPoints.length != solution[0][2].length) {   // Did number of turning points changed?
+                || this.turningPoints.length != solutions[0][2].length) {   // Did number of turning points changed?
             this.solution = solutionCategory;   // update solution
             this.clearUserChanges();  // clear user changes
-            this.turningPoints = Point.cloneArray(solution[0][2]);  // update turning points
+            this.turningPoints = Point.cloneArray(solutions[0][2]);  // update turning points
         } else { //same solution (category and turning points no)
-            this.turningPoints = Point.cloneArray(solution[0][2]);    // get turning points from solution
+            this.turningPoints = Point.cloneArray(solutions[0][2]);    // get turning points from solution
             this.applyUserChanges();    // apply user changes to turning points
         }
 
