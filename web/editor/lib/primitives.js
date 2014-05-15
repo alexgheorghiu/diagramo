@@ -3285,7 +3285,7 @@ NURBS.prototype = {
     },
     
     getBounds: function(){
-        Util.getBounds(this.getPoints());
+        return Util.getBounds(this.getPoints());
     },
     
     near : function(x, y, radius){

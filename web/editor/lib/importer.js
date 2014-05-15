@@ -169,90 +169,160 @@ Importer.patch3 = function(o){
  * @param {JSONObject} o - the old version file JSON object
  * @returns {JSONObject} the new JSON version
  * Warning: It does modify the original {JSONObject}
- * Details:
- *  - Set Text::underlined to false (only Figures, Containers - in primitives and Connectors - in middleText field have it)
- *  - Add text underlined property to all objects with Text primitives (only Figures, Containers - in primitives and Connectors - in middleText field have it)
  * */
 Importer.patch4 = function(o){
     o.v = 4;
 
-    if('s' in o){ // 's' stands for Stack
-        var jsonStack = o.s;
+    /**
+     * Adds support for text underline feature
+     * @param {JSONObject} o - the old version file JSON object
+     * Warning: It does modify the original {JSONObject}
+     * Details:
+     *  - Set Text::underlined to false (only Figures, Containers - in primitives and Connectors - in middleText field have it)
+     *  - Add text underlined property to all objects with Text primitives (only Figures, Containers - in primitives and Connectors - in middleText field have it)
+     * */
+    function addTextUnderline(o){
+        if('s' in o){ // 's' stands for Stack
+            var jsonStack = o.s;
 
-        // go through containers
-        for (var i = 0; i < jsonStack.containers.length; i++) {
-            var currentContainer = jsonStack.containers[i];
+            // go through containers
+            for (var i = 0; i < jsonStack.containers.length; i++) {
+                var currentContainer = jsonStack.containers[i];
 
-            // old version  has Style::gradientBounds and Style::colorStops undefined
-            currentContainer.style.gradientBounds = [];
-            currentContainer.style.colorStops = [];
+                // go through primitives of container
+                var primitives = currentContainer.primitives;
+                for (var j = 0; j < primitives.length; j++) {
+                    var currentPrimitive = primitives[j];
 
-            // go through primitives of container
-            var primitives = currentContainer.primitives;
-            for (var j = 0; j < primitives.length; j++) {
-                var currentPrimitive = primitives[j];
+                    // search for Text instances in primitives
+                    if (currentPrimitive.oType === "Text") {
+                        currentPrimitive.underlined = false;
+                        // if primitive with j index is Text - than it's text underlined property is
+                        var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
+                        currentContainer.properties.push(textUnderlinedProperty);
+                    }
+                }
+            }
 
-                // old version  has Style::gradientBounds and Style::colorStops undefined
-                currentPrimitive.style.gradientBounds = [];
-                currentPrimitive.style.colorStops = [];
+            // go through figures
+            for (var i = 0; i < jsonStack.figures.length; i++) {
+                var currentFigure = jsonStack.figures[i];
 
-                // search for Text instances in primitives
-                if (currentPrimitive.oType === "Text") {
-                    currentPrimitive.underlined = false;
-                    // if primitive with j index is Text - than it's text underlined property is
-                    var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
-                    currentContainer.properties.push(textUnderlinedProperty);
+                // Text used only in primitives
+                var primitives = currentFigure.primitives;
+                for (var j = 0; j < primitives.length; j++) {
+                    var currentPrimitive = primitives[j];
+
+                    // search for Text instances in primitives
+                    if (currentPrimitive.oType === "Text") {
+                        currentPrimitive.underlined = false;
+                        // if primitive with j index is Text - than it's text underlined property is
+                        var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
+                        currentFigure.properties.push(textUnderlinedProperty);
+                    }
                 }
             }
         }
 
-        // go through figures
-        for (var i = 0; i < jsonStack.figures.length; i++) {
-            var currentFigure = jsonStack.figures[i];
+        if( 'm' in o ){ // 'm' stands for ConnectorManager
+            var jsonConnectorManager = o.m;
 
-            // old version has Style::gradientBounds and Style::colorStops undefined
-            currentFigure.style.gradientBounds = [];
-            currentFigure.style.colorStops = [];
+            // define typical text underlined property
+            var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'middleText.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
 
-            // Text used only in primitives
-            var primitives = currentFigure.primitives;
-            for (var j = 0; j < primitives.length; j++) {
-                var currentPrimitive = primitives[j];
+            // go through connectors
+            for (var i = 0; i < jsonConnectorManager.connectors.length; i++) {
+                var currentConnector = jsonConnectorManager.connectors[i];
+
+                // Text used as middleText property
+                currentConnector.middleText.underlined = false;
+                currentConnector.properties.push(textUnderlinedProperty);
+            }
+        }
+    }
+
+
+    /**
+     * Adds support for gradient feature as a fill color
+     * @param {JSONObject} o - the old version file JSON object
+     * Warning: It does modify the original {JSONObject}
+     * Details:
+     *  - Add to all Style instances fields Style::gradientBounds and Style::colorStops
+     *  - Initialize Style::gradientBounds and Style::colorStops fields as an empty arrays
+     * */
+    function addFillGradient(o){
+        if('s' in o){ // 's' stands for Stack
+            var jsonStack = o.s;
+
+            // go through containers
+            for (var i = 0; i < jsonStack.containers.length; i++) {
+                var currentContainer = jsonStack.containers[i];
 
                 // old version  has Style::gradientBounds and Style::colorStops undefined
-                currentPrimitive.style.gradientBounds = [];
-                currentPrimitive.style.colorStops = [];
+                currentContainer.style.gradientBounds = [];
+                currentContainer.style.colorStops = [];
 
-                // search for Text instances in primitives
-                if (currentPrimitive.oType === "Text") {
-                    currentPrimitive.underlined = false;
-                    // if primitive with j index is Text - than it's text underlined property is
-                    var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'primitives.' + j + '.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
-                    currentFigure.properties.push(textUnderlinedProperty);
+                // go through primitives of container
+                var primitives = currentContainer.primitives;
+                for (var j = 0; j < primitives.length; j++) {
+                    var currentPrimitive = primitives[j];
+
+                    // old version has Style::gradientBounds and Style::colorStops undefined
+                    currentPrimitive.style.gradientBounds = [];
+                    currentPrimitive.style.colorStops = [];
+                }
+            }
+
+            // go through figures
+            for (var i = 0; i < jsonStack.figures.length; i++) {
+                var currentFigure = jsonStack.figures[i];
+
+                // old version has Style::gradientBounds and Style::colorStops undefined
+                currentFigure.style.gradientBounds = [];
+                currentFigure.style.colorStops = [];
+
+                // go through primitives of figure
+                var primitives = currentFigure.primitives;
+                for (var j = 0; j < primitives.length; j++) {
+                    var currentPrimitive = primitives[j];
+
+                    // old version has Style::gradientBounds and Style::colorStops undefined
+                    currentPrimitive.style.gradientBounds = [];
+                    currentPrimitive.style.colorStops = [];
+                }
+            }
+        }
+
+        if( 'm' in o ){ // 'm' stands for ConnectorManager
+            var jsonConnectorManager = o.m;
+
+            // go through connectors
+            for (var i = 0; i < jsonConnectorManager.connectors.length; i++) {
+                var currentConnector = jsonConnectorManager.connectors[i];
+
+                // old version has Style::gradientBounds and Style::colorStops undefined
+                currentConnector.style.gradientBounds = [];
+                currentConnector.style.colorStops = [];
+
+                // go through turning points of connector
+                var turningPoints = currentConnector.turningPoints;
+                for (var j = 0; j < turningPoints.length; j++) {
+                    var currentTurningPoint = turningPoints[j];
+
+                    // old version has Style::gradientBounds and Style::colorStops undefined
+                    currentTurningPoint.style.gradientBounds = [];
+                    currentTurningPoint.style.colorStops = [];
                 }
             }
         }
     }
 
-    if( 'm' in o ){ // 'm' stands for ConnectorManager
-        var jsonConnectorManager = o.m;
+    /** call functions to add support for a new features of release version 4:
+     * - Text underline
+     * - Gradient as a fill color
+    */
+    addTextUnderline(o);
+    addFillGradient(o);
 
-        // define typical text underlined property
-        var textUnderlinedProperty = new BuilderProperty('Text Underlined', 'middleText.underlined', BuilderProperty.TYPE_TEXT_UNDERLINED);
-
-        // go through connectors
-        for (var i = 0; i < jsonConnectorManager.connectors.length; i++) {
-            var currentConnector = jsonConnectorManager.connectors[i];
-
-            // old version has Style::gradientBounds and Style::colorStops undefined
-            currentConnector.style.gradientBounds = [];
-            currentConnector.style.colorStops = [];
-
-            // Text used as middleText property
-            currentConnector.middleText.underlined = false;
-            currentConnector.properties.push(textUnderlinedProperty);
-        }
-    }
-    
     return o;
 };
