@@ -406,13 +406,13 @@ ConnectorManager.prototype = {
         var con = this.connectorGetById(cp.parentId); //Connector
         var conCps = this.connectionPointGetAllByParent(con.id); //Conector's ConnectionPoints
         
-        if(con.type == Connector.TYPE_STRAIGHT){
+        if(con.type === Connector.TYPE_STRAIGHT){
             /**For STRAIGHT is very simple just update the tunrning points to the start and end connection points*/
             var start = conCps[0].point.clone();
             var end = conCps[1].point.clone();
             con.turningPoints = [start, end];
         }
-        else if(con.type == Connector.TYPE_JAGGED || con.type == Connector.TYPE_ORGANIC){
+        else if(con.type === Connector.TYPE_JAGGED || con.type === Connector.TYPE_ORGANIC){
             //first ConnectionPoint
             var startPoint = conCps[0].point.clone();
             
@@ -429,6 +429,10 @@ ConnectorManager.prototype = {
             
             //adjust connector
             var solution = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
+
+            if(con.type === Connector.TYPE_ORGANIC){
+                con.addIntermediatePoints(solution);
+            }
 
             // apply solution to Connector
             con.applySolution(solution);

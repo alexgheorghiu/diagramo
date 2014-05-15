@@ -277,7 +277,7 @@ Connector.prototype = {
 
     
     /**Paints the connector
-     *@param {Context} context - the 2D context of the canvas
+     *@param {CanvasRenderingContext2D} context - the 2D context of the canvas
      *@author Alex, Zack, Artyom
      **/
     paint:function(context){
@@ -293,101 +293,7 @@ Connector.prototype = {
 
         switch(this.type){
             case Connector.TYPE_ORGANIC:
-                
-//                poly.style.strokeStyle = '#000000';
-//                poly.style.lineWidth = 1;
-//                poly.paint(context);
-                
-                //paint NURBS
-                var rPoints  = Util.collinearReduction(this.turningPoints);
-                Log.info("Connector:paint() - Number of reduced points: " + rPoints.length + " " + rPoints);
-
-                var points = [];
-                
-                var point = rPoints[0];
-                
-                //add controll points in the middle of each segment (except first and last)
-                for(var i=0; i < rPoints.length-1; i++){
-                    point = rPoints[i];
-                    var nextPoint = rPoints[i+1];
-                    var middlePoint = new Point( (point.x + nextPoint.x) / 2, (point.y + nextPoint.y) / 2);
-                    
-                    points.push(point.clone());
-                    if(i == 0 || i == rPoints.length-2){ ///skip first and last middle
-                        continue;
-                    }
-                    points.push(middlePoint.clone());
-                    //points.push(nextPoint.clone());
-                }
-//                points.push(rPoints[rPoints.length-2]);		
-                points.push(rPoints[rPoints.length-1]);
-                
-                
-                Log.info("Connector:paint() - New points: " + points);
-                context.save();
-                //draw  
-                context.beginPath();
-                
-                context.strokeStyle = '#00CC00';
-                context.fillStyle = '#FF0000';
-                context.lineWidth = '2';
-                
-                //small dots
-                for(var p in points){
-                    context.fillRect(points[p].x - 1, points[p].y - 1 , 3, 3);
-                }
-                
-//                //move into position
-//                context.moveTo(points[0].x, points[0].y);
-//
-//                //start drawing cubic curves by grouping 3 points together
-//                for(var i=0; i < points.length-2 ; i=i+2){
-//                    
-//                    context.quadraticCurveTo( 
-//                        points[i+1].x, points[i+1].y, 
-//                        points[i+2].x, points[i+2].y 
-//                    );                    
-//                }
-//                
-//                context.lineTo(points[points.length-1].x, points[points.length-1].y);
-//
-//                context.stroke();
-//                context.restore();
-                
-//                var n = new NURBS(points);
-                var n = new NURBS(rPoints);
-                n.style.strokeStyle = 'rgba(0,100,0,0.5)'; //green
-                n.paint(context);
-                
-                
-                var n2 = new NURBS(points);
-                n2.style.strokeStyle = 'rgba(0,0,100,0.5)'; //blue
-                n2.paint(context);
-                
-                
-                points = [];
-                var point = rPoints[0];
-                
-                //add controll points in the middle of each segment (except first and last)
-                for(var i=0; i < rPoints.length-1; i++){
-                    point = rPoints[i];
-                    var nextPoint = rPoints[i+1];
-                    var middlePoint = new Point( (point.x + nextPoint.x) / 2, (point.y + nextPoint.y) / 2);
-                    
-                    points.push(point.clone());
-//                    if(i == 0 || i == rPoints.length-2){ ///skip first and last middle
-//                        continue;
-//                    }
-                    points.push(middlePoint.clone());
-                    //points.push(nextPoint.clone());
-                }
-//                points.push(rPoints[rPoints.length-2]);		
-                points.push(rPoints[rPoints.length-1]);
-                
-                var n2 = new NURBS(points);
-                n2.style.strokeStyle = 'rgba(100,0,0,0.5)'; //red
-                n2.paint(context);
-                
+                this.paintOrganic(context);
                 break;
                 
             case Connector.TYPE_STRAIGHT:
@@ -425,8 +331,6 @@ Connector.prototype = {
                 break;
         }
         
-        
-        
         this.paintVisualDebug(context);
 
         this.paintStart(context);
@@ -436,6 +340,89 @@ Connector.prototype = {
         
         
         context.restore();
+    },
+    
+    /**
+     * @param {CanvasRenderingContext2D} context the context to draw 
+     * */
+    paintOrganic : function(context){
+        //poly.style.strokeStyle = '#000000';
+        //poly.style.lineWidth = 1;
+        //poly.paint(context);
+
+        //paint NURBS
+        var rPoints  = Util.collinearReduction(this.turningPoints);
+        Log.info("Connector:paint() - Number of reduced points: " + rPoints.length + " " + rPoints);
+        
+        //1 - Draw NURB based only on turning points
+        var n = new NURBS(rPoints);
+        n.style.strokeStyle = 'rgba(0,100,0,0.5)'; //green
+        n.paint(context);
+        //end 1
+        
+
+//        //2 - Draw NURB based on turning points (except first and last) and middle of each segment
+//        var points = [];
+//
+//        var point = rPoints[0];
+//
+//        //add controll points AND the middle of each segment (except first and last)
+//        for(var i=0; i < rPoints.length-1; i++){
+//            point = rPoints[i];
+//            
+//            //add point
+//            points.push(point.clone());
+//            
+//            if(i == 0 || i == rPoints.length-2){ ///skip first and last middle
+//                continue;
+//            }
+//            //add middle of current segment
+//            var nextPoint = rPoints[i+1];
+//            var middlePoint = new Point( (point.x + nextPoint.x) / 2, (point.y + nextPoint.y) / 2);
+//            points.push(middlePoint.clone());
+//        }
+//        points.push(rPoints[rPoints.length-1]);
+//
+//
+//        Log.info("Connector:paint() - New points: " + points);
+//        context.save();
+//        //draw  
+//        context.beginPath();
+//
+//        context.strokeStyle = '#00CC00';
+//        context.fillStyle = '#FF0000';
+//        context.lineWidth = '2';
+//
+//        //small dots
+//        for(var p in points){
+//            context.fillRect(points[p].x - 1, points[p].y - 1 , 3, 3);
+//        }       
+//
+//        var n2 = new NURBS(points);
+//        n2.style.strokeStyle = 'rgba(0,0,100,0.5)'; //blue
+//        n2.paint(context);
+//        //end 2
+//
+//        
+//        //3 - Draw NURB based on turning points (except first and last) and middle of each segment
+//        points = [];
+//        var point = rPoints[0];
+//
+//        //add controll points in the middle of each segment (except first and last)
+//        for(var i=0; i < rPoints.length-1; i++){
+//            point = rPoints[i];
+//            var nextPoint = rPoints[i+1];
+//            var middlePoint = new Point( (point.x + nextPoint.x) / 2, (point.y + nextPoint.y) / 2);
+//
+//            points.push(point.clone());
+//            points.push(middlePoint.clone());
+//        }
+//        points.push(rPoints[rPoints.length-1]);
+//
+//        var n2 = new NURBS(points);
+//        n2.style.strokeStyle = 'rgba(100,0,0,0.5)'; //red
+//        n2.paint(context);
+//        //end 3
     },
 
 
@@ -1004,11 +991,21 @@ Connector.prototype = {
             }
         }
     },
+    
+    
+    /**
+     * Add intermediate points for a solution. For making it more smooth or similar
+     *
+     * */
+    addIntermediatePoints: function(solution, type){
+        
+    },
 
 
     /**Applies solution from ConnectionManager.connector2Points() method.
      *@param {Array} solution - value returned from ConnectionManager.connector2Points()
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
+     *@author Alex
      **/
     applySolution: function(solution) {
         // solution category: 's0', 's1_1', 's2_2', etc.
@@ -1016,15 +1013,15 @@ Connector.prototype = {
 
         /*We should check if solution changed from previous.
         * Solution determined by it's category (s1_2, s2_1) and number of turning points.*/
-        if (!this.solution || this.solution != solutionCategory   // Did category changed?
+        if (!this.solution //No solution?
+                || this.solution != solutionCategory   // Did category changed?
                 || this.turningPoints.length != solution[0][2].length) {   // Did number of turning points changed?
             this.solution = solutionCategory;   // update solution
             this.clearUserChanges();  // clear user changes
             this.turningPoints = Point.cloneArray(solution[0][2]);  // update turning points
-        } else {
-            this.turningPoints = solution[0][2];    // get turning points from solution
+        } else { //same solution (category and turning points no)
+            this.turningPoints = Point.cloneArray(solution[0][2]);    // get turning points from solution
             this.applyUserChanges();    // apply user changes to turning points
-            solution[0][2] = Point.cloneArray(this.turningPoints);  // update turning points of solution (used further in debug)
         }
 
         this.updateMiddleText();    // update position of middle text
