@@ -289,6 +289,29 @@ Importer.patch4 = function(o){
                     // old version has Style::gradientBounds and Style::colorStops undefined
                     currentPrimitive.style.gradientBounds = [];
                     currentPrimitive.style.colorStops = [];
+
+                    // go through points of primitive if it's defined
+                    var points = currentPrimitive.points || currentPrimitive.vector;
+                    if (points) {
+                        for (var k = 0; k < points.length; k++) {
+                            var currentPoint = points[k];
+
+                            // old version has Style::gradientBounds and Style::colorStops undefined
+                            currentPoint.style.gradientBounds = [];
+                            currentPoint.style.colorStops = [];
+                        }
+                    }
+                }
+
+
+                // go through rotation coordinates of figure
+                var rotationCoords = currentFigure.rotationCoords;
+                for (var j = 0; j < rotationCoords.length; j++) {
+                    var currentCoord = rotationCoords[j];
+
+                    // old version has Style::gradientBounds and Style::colorStops undefined
+                    currentCoord.style.gradientBounds = [];
+                    currentCoord.style.colorStops = [];
                 }
             }
         }
@@ -313,6 +336,15 @@ Importer.patch4 = function(o){
                     currentTurningPoint.style.gradientBounds = [];
                     currentTurningPoint.style.colorStops = [];
                 }
+            }
+
+            // go through connection points
+            for (var i = 0; i < jsonConnectorManager.connectionPoints.length; i++) {
+                var currentCp = jsonConnectorManager.connectionPoints[i];
+
+                // old version has Style::gradientBounds and Style::colorStops undefined
+                currentCp.point.style.gradientBounds = [];
+                currentCp.point.style.colorStops = [];
             }
         }
     }
