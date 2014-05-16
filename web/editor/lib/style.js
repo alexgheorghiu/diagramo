@@ -253,7 +253,7 @@ Style.prototype={
                 anotherStyle[propertyName] = this[propertyName];
             }
             else{
-                // colorStops is array - we use slice
+                // colorStops and gradientBounds are arrays - we use slice
                 anotherStyle[propertyName] = this[propertyName].slice();
             }
         }
