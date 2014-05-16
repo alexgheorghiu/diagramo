@@ -1023,9 +1023,9 @@ Stack.prototype = {
             };
             
             context.save();
-            for(var i=0; i<DIAGRAMO.debugSolution.length; i++){
+            for(var i=0; i<DIAGRAMO.debugSolutions.length; i++){
                 var shift = 3 + i * 3;
-                var solution = DIAGRAMO.debugSolution[i];
+                var solution = DIAGRAMO.debugSolutions[i];
 //                Log.info("Solution: " + solution + " type of " + typeof(solution[2]) + " length: " + solution.length );
 //                Log.info("Solution points: " + solution[2]);
                 var points = solution[2]; //get points

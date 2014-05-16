@@ -187,6 +187,16 @@ test("Util.miscelaneus", function () {
 });
 
 
+test("Util.getMiddle", function () {
+    var p1 = new Point(10,10);
+    var p2 = new Point(100,100);
+    var pm = Util.getMiddle(p1, p2);
+
+    
+    ok(pm.x === 55 && pm.y === 55 , 'Incorrect middle');
+});
+
+
 test("Util.areBoundsInBounds", function () {
     var outer = [0,0, 100,100];
     

@@ -432,11 +432,6 @@ ConnectorManager.prototype = {
             //adjust connector
             var solutions = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
 
-            //smmoth it for organic connector
-            if(con.type === Connector.TYPE_ORGANIC){
-                con.addIntermediatePoints(solutions);
-            }
-
             // apply solution to Connector (for delta changes made by user)
             con.applySolution(solutions);
 
@@ -666,7 +661,12 @@ ConnectorManager.prototype = {
      * Note: We are not using {ConnectionPoint}s here are this somehow a generic algorithm
      * where we have a type of drawing, a start point, and end point and 2 boundaries to
      * consider.
-     *@param {Number} type - Connector.TYPE_STRAIGHT or Connector.TYPE_JAGGED
+     * 
+     * Note 2: For organic connector the solution(s) is "injected" with 2 additional
+     * points: in the middle of start and end segment (of turning points) so that 
+     * the curve will look more natural.
+     * 
+     *@param {Number} type - Connector.TYPE_STRAIGHT, Connector.TYPE_JAGGED or Connector.TYPE_ORGANIC
      *@param {Point} startPoint - the start {Point}
      *@param {Point} endPoint - the end {Point}
      *@param {Array} sBounds - the starting bounds (of a Figure) as [left, top, right, bottom] - area we should avoid
@@ -1028,6 +1028,29 @@ ConnectorManager.prototype = {
                 
                 break;
         }
+        
+        //SMOOTHING curve
+        //Add the middle point for start and end segment so that we "force" the 
+        //curve to both come "perpendicular" on bounds and also make the curve
+        //"flee" more from bounds (on exit)
+        if(type === Connector.TYPE_ORGANIC){
+            for(var s=0; s<solutions.length; s++){
+                var solTurningPoints = solutions[s][2];
+                
+                //first segment
+                var a1 = solTurningPoints[0];
+                var a2 = solTurningPoints[1];
+                var startMiddlePoint = Util.getMiddle(a1, a2);
+                solTurningPoints.splice(1,0, startMiddlePoint);
+                
+                //last segment
+                var a3 = solTurningPoints[solTurningPoints.length - 2];
+                var a4 = solTurningPoints[solTurningPoints.length - 1];                
+                var endMiddlePoint = Util.getMiddle(a3, a4);
+                solTurningPoints.splice(solTurningPoints.length - 1, 0, endMiddlePoint);
+            }
+        }
+        //END SMOOTHING curve
         
         Log.groupEnd();
         
@@ -1492,9 +1515,6 @@ ConnectorManager.prototype = {
                 //solutions
                 DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(connector.type, candidate[0], candidate[1], startBounds, endBounds);
 
-                if(connector.type === Connector.TYPE_ORGANIC){
-                    connector.addIntermediatePoints(DIAGRAMO.debugSolutions);
-                }
             
                 // apply solution to Connector
                 connector.applySolution(DIAGRAMO.debugSolutions);

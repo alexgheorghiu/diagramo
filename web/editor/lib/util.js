@@ -320,6 +320,16 @@ var Util = {
     getLength:function(startPoint,endPoint){
         return Math.sqrt( Math.pow(startPoint.x-endPoint.x,2) + Math.pow(startPoint.y-endPoint.y,2) );
     },
+    
+    
+    /**Returns the middle point between 2 points
+     *@param {Point} startPoint - one point
+     *@param {Point} endPoint - the other point
+     *@return {Point} the middle point
+     **/
+    getMiddle: function(startPoint, endPoint){
+        return new Point( (startPoint.x + endPoint.x)/2, (startPoint.y + endPoint.y)/2);
+    },
 
 
     /**Returns the length of a Polyline that would be created with a set of points
