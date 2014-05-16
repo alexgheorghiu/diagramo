@@ -2291,6 +2291,9 @@ Path.prototype = {
 
     addPrimitive:function(primitive){
         this.primitives.push(primitive);
+
+        // update bound coordinates for gradient
+        this.style.gradientBounds = this.getBounds();
     },
 
     contains: function(x,y){
