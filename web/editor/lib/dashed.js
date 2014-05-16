@@ -84,7 +84,7 @@ var dashSupport = false;
         }
     }    
 
-    console.info("Context enhanced with dotted line");
+//    console.info("Context enhanced with dotted line");
     
     dashSupport = true;
 })();
