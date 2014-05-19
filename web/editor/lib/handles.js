@@ -478,14 +478,16 @@ Handle.prototype = {
         context.beginPath();
         context.arc(this.x, this.y, Handle.RADIUS, 0, Math.PI*2, false);
         context.strokeStyle = "rgb(0,0,0)";
+        context.lineWidth = defaultHandleLineWidth;
         context.closePath();
         context.stroke();
 
         
         if(this.type == 'r'){
-            var line = new Line(new Point(this.x,this.y), new Point(HandleManager.handles[1].x,HandleManager.handles[1].y))
+            var line = new Line(new Point(this.x,this.y), new Point(HandleManager.handles[1].x,HandleManager.handles[1].y));
             line.style.dashLength = 3;
-            line.style.strokeStyle="grey";
+            line.style.strokeStyle = "grey";
+            line.style.lineWidth = defaultHandleLineWidth;
             line.paint(context);
         }
         
@@ -925,7 +927,7 @@ HandleManager.handleGet = function(x,y){
 }
 
 /**
- *Select the handle from a certain coodinates
+ *Select the handle from a certain coordinates
  *@param {Number} x - the value on Ox
  *@param {Number} y - the value on Oy
  **/
@@ -954,13 +956,14 @@ HandleManager.clear = function(){
 HandleManager.paint = function(context){
     var handles = HandleManager.handleGetAll(); //calling this sets the coordinates
 
-    //paint first the selection rectanle
+    //paint first the selection rectangle
     context.save();
 
-    //paint selection rectagle (if present - only for Figure and Group)
+    //paint selection rectangle (if present - only for Figure and Group)
     if(HandleManager.selectRect != null){
         //alert("Handle manager paint!");
         HandleManager.selectRect.style.strokeStyle = "grey";
+        HandleManager.selectRect.style.lineWidth = defaultHandleLineWidth;
         HandleManager.selectRect.paint(context);
     }
 

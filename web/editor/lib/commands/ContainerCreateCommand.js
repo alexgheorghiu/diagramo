@@ -31,6 +31,7 @@ ContainerCreateCommand.prototype = {
             var p2 = new Point(this.x + 50,this.y + 50);
             
             var container = new Container(null, p1, p2);
+            container.style.lineWidth = defaultLineWidth;   // set container default line width
             
             STACK.containerAdd(container);
             
