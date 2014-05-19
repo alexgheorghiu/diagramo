@@ -68,10 +68,10 @@ function Style(){
     this.shadowColor = null;
     
     /**An {Array} of colors used in gradients*/
-    this.addColorStop = [];
+    this.colorStops = [];
     
-    /**An {Array} used in gradients*/
-    this.linearGradient = [];
+    /**An {Array} in form of [x0, y0, x1, y1] with figure bounds used in gradients*/
+    this.gradientBounds = [];
     
     /**Dash length used for dashed styles
      * @deprecated Trying to use setLineDash and lineDashOffset
@@ -122,8 +122,8 @@ Style.load = function(o){
     newStyle.shadowOffsetY = o.shadowOffsetY;
     newStyle.shadowBlur = o.shadowBlur;
     newStyle.shadowColor = o.shadowColor;
-    newStyle.addColorStop = o.addColorStop;
-    newStyle.linearGradient = o.linearGradient;
+    newStyle.gradientBounds = o.gradientBounds;
+    newStyle.colorStops = o.colorStops;
     newStyle.dashLength = o.dashLength;
     newStyle.lineStyle = o.lineStyle;
     newStyle.image = o.image;
@@ -152,37 +152,43 @@ Style.prototype={
     
     constructor : Style,
 
+
     /**Setup the style of a context
      *@param {Context} context - the canvas context
      **/
     setupContext:function(context){
         for(var propertyName in this){
-            if(propertyName !== "linearGradient" 
-                    && propertyName !== "addColorStop" 
-                    && propertyName !== "image"
+            if(this[propertyName] != null && propertyName != undefined    
+                && propertyName !== "gradientBounds" && propertyName !== "colorStops" 
+                && propertyName !== "image"
                     
-                    //iPad's Safari is very picky about this and for a reason (see #118)
-                    && propertyName !== "constructor" 
-                ){
-                if(this[propertyName] != null && propertyName != undefined){
-                    try{
-                        context[propertyName] = this[propertyName];
-                    } catch(error){
-                        alert("Style:setupContext() Error trying to setup context's property: ["  + propertyName + '] details = [' + error + "]\n");
-                    }
+                //iPad's Safari is very picky about this and for a reason (see #118)
+                && propertyName !== "constructor" 
+                )
+            {
+                try{
+                    context[propertyName] = this[propertyName];
+                } catch(error){
+                    alert("Style:setupContext() Error trying to setup context's property: ["  + propertyName + '] details = [' + error + "]\n");
                 }
+            }//end if
+        }//end for
+
+        if(DIAGRAMO.gradientFill && this.gradientBounds.length !=0 && this.fillStyle != null && this.image == null){
+            // generate gradient colors here, because fill color is changing in many places
+            this.generateGradientColors();
+
+            // create linear gradient for current bounds
+            var lin = context.createLinearGradient(this.gradientBounds[0], this.gradientBounds[1], this.gradientBounds[2], this.gradientBounds[3]);
+
+            // set gradient colors: currently 2 - for start and end points
+            for(var i=0; i<this.colorStops.length; i++){
+                lin.addColorStop(i, this.colorStops[i]);
             }
-        }
 
-        if(this.linearGradient.length !=0 && image == null){
-            var lin = context.createLinearGradient(this.linearGradient[0], this.linearGradient[1], this.linearGradient[2], this.linearGradient[3]);
-
-            for(var i=0; i<this.addColorStop.length; i++){
-                lin.addColorStop(i, this.addColorStop[i]);
-            }
-
+            // put gradient as a fill style for context
             context.fillStyle = lin;
-            this.fillStyle = lin;
+//            this.fillStyle = lin;
         }
         
         
@@ -232,7 +238,7 @@ Style.prototype={
 //        }
         
 
-        if(this.image != null && IE){
+        if(this.image != null && Browser.msie){
             var ptrn = context.createPattern(this.image,'no-repeat');
         //context.fillStyle=ptrn;
         //this.fillStyle=ptrn;
@@ -243,13 +249,12 @@ Style.prototype={
     clone: function(){
         var anotherStyle = new Style();
         for(var propertyName in anotherStyle){
-            if(propertyName != "addColorStop" && propertyName != "linearGradient"){
+            if(propertyName != "colorStops" && propertyName != "gradientBounds"){
                 anotherStyle[propertyName] = this[propertyName];
             }
             else{
-                for(var i=0; i< this[propertyName].length; i++){
-                    anotherStyle[propertyName].push(this[propertyName][i]);
-                }
+                // colorStops and gradientBounds are arrays - we use slice
+                anotherStyle[propertyName] = this[propertyName].slice();
             }
         }
         return anotherStyle;
@@ -272,14 +277,60 @@ Style.prototype={
     },
 
 
-    getGradient:function(){
-        return this.addColorStop[0]+"/"+this.addColorStop[1];
+    /**
+     * Generates colors for upper and lower bounds of figure gradient based on fill style.
+     * Algorithm:
+     * 1) Split source rgb to {r,g,b}
+     * 2) Generate hsl value from {r,g,b}
+     * 3) Generate 2 hsl colors: add and subtract saturation step from result of step 2.
+     * 4) Convert bound colors to css-applicable strings
+     *
+     * @author Arty
+     */
+    generateGradientColors: function() {
+        // split rgb string to {r,g,b}
+        var rgbObj = Util.hexToRgb(this.fillStyle);
+
+        // generate hsl value from {r,g,b}
+        var sourceHsl = Util.rgbToHsl(rgbObj.r, rgbObj.g, rgbObj.b);
+
+        // take hsl color for upper bound: add saturation step to source color
+        var upperHsl = sourceHsl.slice();
+        upperHsl[2] = upperHsl[2] + gradientLightStep;
+        // if hsl saturation bigger than 1 - set it to 1
+        upperHsl[2] = upperHsl[2] > 1 ? 1 : upperHsl[2];
+
+        // take hsl color for lower bound: subtract saturation step from source color
+        var lowerHsl = sourceHsl.slice();
+        lowerHsl[2] = lowerHsl[2] - gradientLightStep;
+        // if hsl saturation less than 0 - set it to 0
+        lowerHsl[2] = lowerHsl[2] < 0 ? 0 : lowerHsl[2];
+
+        // Convert bound colors to css-applicable strings
+        upperHsl = Util.hslToString(upperHsl);
+        lowerHsl = Util.hslToString(lowerHsl);
+
+        // set calculated values as colorStops of Style
+        this.colorStops = [upperHsl, lowerHsl];
     },
 
 
+    /**
+     * Get current gradient
+     * @return {String} gradient in form #color/#color
+     * */
+    getGradient:function(){
+        return this.colorStops[0]+"/"+this.colorStops[1];
+    },
+
+
+    /**
+     * Sets gradient for figure
+     * @param {String} value the value of gradient set in in #color/#color form
+     * */
     setGradient:function(figure, value){
-        this.addColorStop[0] = value.split("/")[0];
-        this.addColorStop[1] = value.split("/")[1];
+        this.colorStops[0] = value.split("/")[0];
+        this.colorStops[1] = value.split("/")[1];
     },
 
     /**Merge current style with another style.
@@ -297,16 +348,21 @@ Style.prototype={
     },
 
 
-    transform:function(matrix){
-        if(this.linearGradient.length!=0){
-            var p1=new Point(this.linearGradient[0],this.linearGradient[1]);
-            var p2=new Point(this.linearGradient[2],this.linearGradient[3]);
-            p1.transform(matrix);
-            p2.transform(matrix);
-            this.linearGradient[0]=p1.x;
-            this.linearGradient[1]=p1.y;
-            this.linearGradient[2]=p2.x;
-            this.linearGradient[3]=p2.y;
+    transform: function(matrix){
+        if(this.gradientBounds.length != 0){
+            // to transform gradient bounds we join coordinates in points
+            var startPoint = new Point(this.gradientBounds[0],this.gradientBounds[1]);
+            var endPoint = new Point(this.gradientBounds[2],this.gradientBounds[3]);
+
+            // transform created points due to general transformation
+            startPoint.transform(matrix);
+            endPoint.transform(matrix);
+
+            // and set transformed coordinates back to gradientBounds
+            this.gradientBounds[0] = startPoint.x;
+            this.gradientBounds[1] = startPoint.y;
+            this.gradientBounds[2] = endPoint.x;
+            this.gradientBounds[3] = endPoint.y;
         }
         if(this.image){
             var p1 = new Point(0,0);

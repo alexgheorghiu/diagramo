@@ -95,7 +95,7 @@ Point.prototype = {
      *Transform a point by a tranformation matrix. 
      *It is done by multiplication
      *Pay attention on the order of multiplication: The tranformation {Matrix} is
-     *mutiplied with the {Point} matrix.
+     *multiplied with the {Point} matrix.
      * P' = M x P
      *@param matrix is a 3x3 matrix
      *@see <a href="http://en.wikipedia.org/wiki/Transformation_matrix#Affine_transformations">http://en.wikipedia.org/wiki/Transformation_matrix#Affine_transformations</a>
@@ -222,7 +222,8 @@ function Line(startPoint, endPoint){
     
     /**The {@link Style} of the line*/
     this.style = new Style();
-    
+    this.style.gradientBounds = this.getBounds();
+
     /**Serialization type*/
     this.oType = 'Line'; //object type used for JSON deserialization
 }
@@ -233,9 +234,11 @@ function Line(startPoint, endPoint){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 Line.load = function(o){
-    var newLine = new Line();
-    newLine.startPoint = Point.load(o.startPoint);
-    newLine.endPoint = Point.load(o.endPoint);
+    var newLine = new Line(
+        Point.load(o.startPoint),
+        Point.load(o.endPoint)
+    );
+
     newLine.style = Style.load(o.style);
     return newLine;
 }
@@ -443,11 +446,12 @@ Line.prototype = {
   **/
 function Polyline(){
     /**An {Array} of {@link Point}s*/
-    this.points = []
+    this.points = [];
     
     /**The {@link Style} of the polyline*/
     this.style = new Style();
-    
+    this.style.gradientBounds = this.getBounds();
+
     /**The starting {@link Point}. 
      * Required for path, we could use getPoints(), but this existed first.
      * Also its a lot simpler. Each other element used in path already has a startPoint
@@ -480,6 +484,9 @@ Polyline.prototype = {
             this.startPoint=point;
         }
         this.points.push(point);
+
+        // update bound coordinates for gradient
+        this.style.gradientBounds = this.getBounds();
     },
     transform:function(matrix){
         if(this.style!=null){
@@ -619,11 +626,12 @@ Polyline.prototype = {
   **/
 function Polygon(){
     /**An {Array} of {@link Point}s*/
-    this.points = []
+    this.points = [];
     
     /**The {@link Style} of the polygon*/
     this.style = new Style();
-    
+    this.style.gradientBounds = this.getBounds();
+
     /**Serialization type*/
     this.oType = 'Polygon'; //object type used for JSON deserialization
 }
@@ -646,6 +654,9 @@ Polygon.prototype = {
     
     addPoint:function(point){
         this.points.push(point);
+
+        // update bound coordinates for gradient
+        this.style.gradientBounds = this.getBounds();
     },
 
 
@@ -680,7 +691,7 @@ Polygon.prototype = {
 
 
     getPoints:function(){
-		var p = [];
+        var p = [];
         for (var i=0; i<this.points.length; i++){
             p.push(this.points[i]);
         }
@@ -809,11 +820,12 @@ Polygon.prototype = {
   **/
 function DottedPolygon(pattern){
     /**An {Array} of {@link Point}s*/
-    this.points = []
+    this.points = [];
     
     /**The {@link Style} of the polygon*/
     this.style = new Style();
-	
+    this.style.gradientBounds = this.getBounds();
+
     /**An {Array} of {Integer}s*/
     this.pattern = pattern;
     
@@ -1003,7 +1015,8 @@ function QuadCurve(startPoint, controlPoint, endPoint){
     
     /**The {@link Style} of the quad*/
     this.style = new Style();
-    
+    this.style.gradientBounds = this.getBounds();
+
     /**Serialization type*/
     this.oType = 'QuadCurve'; //object type used for JSON deserialization
 }
@@ -1014,10 +1027,12 @@ function QuadCurve(startPoint, controlPoint, endPoint){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 QuadCurve.load = function(o){
-    var newQuad = new QuadCurve();
-    newQuad.startPoint = Point.load(o.startPoint);
-    newQuad.controlPoint = Point.load(o.controlPoint);
-    newQuad.endPoint = Point.load(o.endPoint);
+    var newQuad = new QuadCurve(
+        Point.load(o.startPoint),
+        Point.load(o.controlPoint),
+        Point.load(o.endPoint)
+    );
+
     newQuad.style = Style.load(o.style);
     return newQuad;
 }
@@ -1309,7 +1324,8 @@ function CubicCurve(startPoint, controlPoint1, controlPoint2, endPoint){
     
     /**The {@link Style} of the quad*/
     this.style = new Style();
-    
+    this.style.gradientBounds = this.getBounds();
+
     /**Object type used for JSON deserialization*/
     this.oType = 'CubicCurve';
 }
@@ -1320,12 +1336,12 @@ function CubicCurve(startPoint, controlPoint1, controlPoint2, endPoint){
  *@author Alex Gheorghiu <alex@scriptoid.com>
  **/
 CubicCurve.load = function(o){
-    var newCubic = new CubicCurve();
-
-    newCubic.startPoint = Point.load(o.startPoint);
-    newCubic.controlPoint1 = Point.load(o.controlPoint1);
-    newCubic.controlPoint2 = Point.load(o.controlPoint2);
-    newCubic.endPoint = Point.load(o.endPoint);
+    var newCubic = new CubicCurve(
+        Point.load(o.startPoint),
+        Point.load(o.controlPoint1),
+        Point.load(o.controlPoint2),
+        Point.load(o.endPoint)
+    );
 
     newCubic.style = Style.load(o.style);
     return newCubic;
@@ -1607,7 +1623,8 @@ function Arc(x, y, radius, startAngle, endAngle, direction, styleFlag){
     
     /**The {@link Style} of the arc*/
     this.style = new Style();
-    
+    this.style.gradientBounds = this.getBounds();
+
     /**Adding a reference to the end point makes the transform code hugely cleaner*/
     this.direction = direction;
     
@@ -1866,7 +1883,8 @@ function Ellipse(centerPoint, width, height) {
     
     /**The {@link Style} used*/
     this.style = new Style();
-    
+    this.style.gradientBounds = this.getBounds();
+
     /**Oject type used for JSON deserialization*/
     this.oType = 'Ellipse'; 
 }
@@ -2206,7 +2224,8 @@ function Path() {
     
     /**The {@link Style} used for drawing*/
     this.style = new Style();
-    
+    this.style.gradientBounds = this.getBounds();
+
     /**Object type used for JSON deserialization*/
     this.oType = 'Path'; 
 }
@@ -2272,6 +2291,9 @@ Path.prototype = {
 
     addPrimitive:function(primitive){
         this.primitives.push(primitive);
+
+        // update bound coordinates for gradient
+        this.style.gradientBounds = this.getBounds();
     },
 
     contains: function(x,y){
@@ -2553,6 +2575,7 @@ function Figure(name) {
     
     /**The {@link Style} use to draw this figure*/
     this.style = new Style();
+    this.style.gradientBounds = this.getBounds();
 
     /**We keep the figure position by having different points
      *[central point of the figure, the middle of upper edge]
@@ -2618,10 +2641,10 @@ Figure.load = function(o){
             newFigure.addPrimitive(Path.load(o.primitives[i]))
         }
         else if(o.primitives[i].oType == 'Figure'){
-            newFigure.addPrimitive(Figure.load(o.primitives[i])) //kinda recursevly
+            newFigure.addPrimitive(Figure.load(o.primitives[i])); //kinda recursevly
         }
         else if(o.primitives[i].oType == 'ImageFrame'){
-            newFigure.addPrimitive(ImageFrame.load(o.primitives[i])) //kinda recursevly
+            newFigure.addPrimitive(ImageFrame.load(o.primitives[i])); //kinda recursevly
         }
     }//end for
 
@@ -2709,7 +2732,7 @@ Figure.prototype = {
             CONNECTOR_MANAGER.connectionPointTransform(this.id,matrix);
         }
 
-        //some figures dont have rotation coords, i.e. those that arent "real" figures, such as the highlight rectangle
+        //some figures don't have rotation coords, i.e. those that aren't "real" figures, such as the highlight rectangle
         if(this.rotationCoords.length!=0){
             this.rotationCoords[0].transform(matrix);
             this.rotationCoords[1].transform(matrix);
@@ -2729,6 +2752,9 @@ Figure.prototype = {
         primitive.id = this.primitives.length;
 
         this.primitives.push(primitive);
+
+        // update bound coordinates for gradient
+        this.style.gradientBounds = this.getBounds();
     },
 
     //no more points to add, so create the handles and selectRect
@@ -2761,7 +2787,7 @@ Figure.prototype = {
         ret.rotationCoords[1]=this.rotationCoords[1].clone();
         ret.url = this.url;
         
-        //get all conection points and add them to the figure
+        //get all connection points and add them to the figure
         var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(this.id);
         
         cps.forEach(
@@ -2850,7 +2876,7 @@ Figure.prototype = {
             primitive.paint(context);
             primitive.style = oldStyle;
 			
-//            if(this.style.image != null){ //TODO: should a figure has a Style cann't just delegate all to primitives?
+//            if(this.style.image != null){ //TODO: should a figure has a Style can't just delegate all to primitives?
 //                //clip required for background images, there were two methods, this was the second I tried
 //                //neither work in IE
 //                context.clip();
@@ -3037,7 +3063,8 @@ function NURBS(points){
     
     /**The {@link Style} of the line*/
     this.style = new Style();
-    
+    this.style.gradientBounds = this.getBounds();
+
     /**Serialization type*/
     this.oType = 'NURBS'; //object type used for JSON deserialization
 }
@@ -3261,7 +3288,7 @@ NURBS.prototype = {
     },
     
     getBounds: function(){
-        Util.getBounds(this.getPoints());
+        return Util.getBounds(this.getPoints());
     },
     
     near : function(x, y, radius){
