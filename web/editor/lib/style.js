@@ -71,8 +71,9 @@ function Style(gradientBounds){
     /**An {Array} of colors used in gradients*/
     this.colorStops = [];
     
-    /**An {Array} in form of [x0, y0, x1, y1] with figure bounds used in gradients*/
-    this.gradientBounds = gradientBounds;
+    /**An {Array} in form of [x0, y0, x1, y1] with figure bounds used in gradients
+     * sliced to avoid side effects (Actually made a clone)*/
+    this.gradientBounds = (gradientBounds==null || gradientBounds == undefined) ? [] : gradientBounds.slice(0);
     
     /**Dash length used for dashed styles
      * @deprecated Trying to use setLineDash and lineDashOffset
@@ -152,27 +153,27 @@ Style.prototype={
     
     constructor : Style,
 
+
     /**Setup the style of a context
      *@param {Context} context - the canvas context
      **/
     setupContext:function(context){
         for(var propertyName in this){
-            if(propertyName !== "gradientBounds"
-                    && propertyName !== "colorStops"
-                    && propertyName !== "image"
+            if(this[propertyName] != null && propertyName != undefined    
+                && propertyName !== "gradientBounds" && propertyName !== "colorStops" 
+                && propertyName !== "image"
                     
-                    //iPad's Safari is very picky about this and for a reason (see #118)
-                    && propertyName !== "constructor" 
-                ){
-                if(this[propertyName] != null && propertyName != undefined){
-                    try{
-                        context[propertyName] = this[propertyName];
-                    } catch(error){
-                        alert("Style:setupContext() Error trying to setup context's property: ["  + propertyName + '] details = [' + error + "]\n");
-                    }
+                //iPad's Safari is very picky about this and for a reason (see #118)
+                && propertyName !== "constructor" 
+                )
+            {
+                try{
+                    context[propertyName] = this[propertyName];
+                } catch(error){
+                    alert("Style:setupContext() Error trying to setup context's property: ["  + propertyName + '] details = [' + error + "]\n");
                 }
-            }
-        }
+            }//end if
+        }//end for
 
         if(DIAGRAMO.gradientFill && this.gradientBounds.length !=0 && this.fillStyle != null && this.image == null){
             // generate gradient colors here, because fill color is changing in many places
@@ -315,11 +316,19 @@ Style.prototype={
     },
 
 
+    /**
+     * Get current gradient
+     * @return {String} gradient in form #color/#color
+     * */
     getGradient:function(){
         return this.colorStops[0]+"/"+this.colorStops[1];
     },
 
 
+    /**
+     * Sets gradient for figure
+     * @param {String} value the value of gradient set in in #color/#color form
+     * */
     setGradient:function(figure, value){
         this.colorStops[0] = value.split("/")[0];
         this.colorStops[1] = value.split("/")[1];

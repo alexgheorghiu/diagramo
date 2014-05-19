@@ -688,7 +688,7 @@ Polygon.prototype = {
 
 
     getPoints:function(){
-		var p = [];
+        var p = [];
         for (var i=0; i<this.points.length; i++){
             p.push(this.points[i]);
         }
