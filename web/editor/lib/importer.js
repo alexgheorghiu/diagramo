@@ -291,7 +291,8 @@ Importer.patch4 = function(o){
                     currentPrimitive.style.colorStops = [];
 
                     // go through points of primitive if it's defined
-                    var points = currentPrimitive.points || currentPrimitive.vector;
+                    var points = currentPrimitive.points /* for: Polyline, Polygon, etc*/
+                            || currentPrimitive.vector /*for: ImageFrame, Text, etc*/;
                     if (points) {
                         for (var k = 0; k < points.length; k++) {
                             var currentPoint = points[k];
@@ -305,7 +306,7 @@ Importer.patch4 = function(o){
 
 
                 // go through rotation coordinates of figure
-                var rotationCoords = currentFigure.rotationCoords;
+                var rotationCoords = currentFigure.rotationCoords /*for: Figure, Group, etc*/;
                 for (var j = 0; j < rotationCoords.length; j++) {
                     var currentCoord = rotationCoords[j];
 
