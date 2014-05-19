@@ -478,7 +478,7 @@ Handle.prototype = {
         context.beginPath();
         context.arc(this.x, this.y, Handle.RADIUS, 0, Math.PI*2, false);
         context.strokeStyle = "rgb(0,0,0)";
-        context.lineWidth = defaultHandleLineWidth;
+        context.lineWidth = defaultThinLineWidth;
         context.closePath();
         context.stroke();
 
@@ -487,7 +487,7 @@ Handle.prototype = {
             var line = new Line(new Point(this.x,this.y), new Point(HandleManager.handles[1].x,HandleManager.handles[1].y));
             line.style.dashLength = 3;
             line.style.strokeStyle = "grey";
-            line.style.lineWidth = defaultHandleLineWidth;
+            line.style.lineWidth = defaultThinLineWidth;
             line.paint(context);
         }
         
@@ -963,7 +963,7 @@ HandleManager.paint = function(context){
     if(HandleManager.selectRect != null){
         //alert("Handle manager paint!");
         HandleManager.selectRect.style.strokeStyle = "grey";
-        HandleManager.selectRect.style.lineWidth = defaultHandleLineWidth;
+        HandleManager.selectRect.style.lineWidth = defaultThinLineWidth;
         HandleManager.selectRect.paint(context);
     }
 

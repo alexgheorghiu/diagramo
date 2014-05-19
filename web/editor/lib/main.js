@@ -272,7 +272,7 @@ var lastClick = [];
 var defaultLineWidth = 2;
 
 /**Default handle line width*/
-var defaultHandleLineWidth = 1;
+var defaultThinLineWidth = 1;
 
 /**Current instance of TextEditorPopup*/
 var currentTextEditor = null;

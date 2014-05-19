@@ -1530,6 +1530,7 @@ ConnectionPoint.prototype = {
         context.save();
         context.fillStyle = this.color;
         context.strokeStyle = '#000000';
+        context.lineWidth = defaultThinLineWidth;
         context.beginPath();
         context.arc(this.point.x, this.point.y, ConnectionPoint.RADIUS, 0, (Math.PI/180)*360, false);
         context.stroke();
