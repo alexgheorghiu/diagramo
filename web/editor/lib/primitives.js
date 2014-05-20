@@ -3067,6 +3067,7 @@ NURBS.load = function(o){
 NURBS.prototype = {
     /**Computes a series of Bezier(Cubic) curves to aproximate a curve modeled 
      *by a set of points
+     *@param {Array}- P and {Array} of {Point}s
      *@return an {Array} of {CubicCurve} (provided also as {Array})
      *Example: 
      *  [

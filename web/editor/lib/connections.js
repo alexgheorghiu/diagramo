@@ -1240,6 +1240,13 @@ Connector.prototype = {
                 }
 
             }
+        } else if(this.type === Connector.TYPE_ORGANIC){
+            //TODO: Either compute the middle using pure NURB algorithm (and use t=0.5) or 
+            //base it on the curves already computed (but they might no be evenly distributes
+            //(or might not have the same length) to pick the middle of middle curve 
+            //(if no. of curves is odd) or joining
+            //point (if number of curves is even)
+            throw Exception("Connector::middle() organic not implemented");
         }
 
         return null;
