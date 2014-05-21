@@ -77,8 +77,8 @@ function Connector(startPoint,endPoint,type, id){
     /**Start style for connector. Ex: Connector.STYLE_NORMAL*/
     this.startStyle = Connector.STYLE_NORMAL;
     
-    /**End style for connector. Ex: Connector.STYLE_ARROW*/
-    this.endStyle = Connector.STYLE_ARROW;
+    /**End style for connector. Ex: Connector.STYLE_FILLED_TRIANGLE*/
+    this.endStyle = Connector.STYLE_FILLED_TRIANGLE;
 
     /**The {ConnectionPoint}'s id that is currently being dragged*/
     this.activeConnectionPointId = -1;
@@ -115,10 +115,10 @@ Connector.STYLE_EMPTY_TRIANGLE = "Empty";
 Connector.STYLE_FILLED_TRIANGLE = "Filled";
 
 /**End connector arrow size*/
-Connector.ARROW_SIZE = 15;
+Connector.ARROW_SIZE = 12;
 
 /**End connector arrow angle*/
-Connector.ARROW_ANGLE = 30;
+Connector.ARROW_ANGLE = 15;
 
 
 /**User change horizontal align*/
