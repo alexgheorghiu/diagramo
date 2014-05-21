@@ -257,6 +257,7 @@ selectionArea.points.push(new Point(0,0));
 selectionArea.points.push(new Point(0,0));
 selectionArea.points.push(new Point(0,0));
 selectionArea.style.strokeStyle = 'grey';
+selectionArea.style.gradientBounds = [];
 selectionArea.style.lineWidth = '1';
 
 /**Toggle grid visible or not*/
