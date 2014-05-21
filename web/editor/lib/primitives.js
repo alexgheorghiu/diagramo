@@ -408,6 +408,14 @@ Line.prototype = {
         points.push(this.endPoint);
         return points;
     },
+    
+    /**
+     * Returns the middle of the line
+     * @return {Point} the middle point
+     * */
+    getMiddle : function(){
+        return new Point((this.startPoint.x + this.endPoint.x)/2, (this.startPoint.y + this.endPoint.y)/2);
+    },
 
     /**
      *Get bounds for this line
@@ -509,6 +517,18 @@ Polyline.prototype = {
         }
         ret.style=this.style.clone();
         return ret;
+    },
+    
+    /**Return the length of the polyline
+     * by summing up all the length of all
+     * segments*/
+    getLength : function(){
+        var l = 0;
+        for(var i=0; i< this.points.length-1; i++){
+            l += Util.distance(this.points[i], this.points[i+1]);
+        }
+        
+        return l;
     },
 
 
@@ -1050,10 +1070,18 @@ QuadCurve.prototype = {
     },
 
 	//TODO: should this return a number of points along the line?
-    getPoints:function(){
-        
+    getPoints:function(){        
         return [this.startPoint,this.controlPoint,this.endPoint];
     },
+    
+    
+    /**
+     * Return the point corresponding to parameter value t
+     * @return {Point} t the value of t parameter, t in [0,1]*/
+    getPoint:function(t){
+        throw Exception("Not implemented yet");
+    },
+    
 
     /*We could use an interpolation algorightm t=0,1 and pick 10 points to iterate on ...but for now it's fine
      **/
@@ -1483,7 +1511,7 @@ CubicCurve.prototype = {
        return poly.near(x, y, radius);
     },
 
-	//TODO: should this return a number of points along the line?
+    //TODO: should this return a number of points along the line?
     getPoints:function(){
         return [this.startPoint,this.controlPoint1,this.controlPoint2,this.endPoint];
     },
@@ -1491,6 +1519,42 @@ CubicCurve.prototype = {
     getBounds:function(){
         return Util.getBounds(this.getPoints());
     },
+    
+    /**Computes the length of the Cubic Curve
+     * TODO: This is by far not the best algorithm but only an aproximation.
+     * */
+    getLength:function(){
+        /*Algorithm: split the Bezier curve into an aproximative 
+       polyline and use polyline's near method*/
+        var poly = new Polyline();
+        
+        for(var t=0; t<=1; t+=0.01){
+            poly.addPoint(getPoint(t));
+        }
+       
+       return poly.getLength();
+    },
+    
+    /**Return the {Point} corresponding the t certain t value
+     * @param {Number} t the value of parameter t, where t in [0,1]*/
+    getPoint: function(t){
+        var a = Math.pow((1 - t), 3);            
+        var b = 3 * t * Math.pow((1 - t), 2);
+        var c = 3 * Math.pow(t, 2) * (1 - t);
+        var d = Math.pow(t, 3);
+        var Xp = a * this.startPoint.x + b * this.controlPoint1.x + c * this.controlPoint2.x + d * this.endPoint.x;
+        var Yp = a * this.startPoint.y + b * this.controlPoint1.y + c * this.controlPoint2.y + d * this.endPoint.y;
+        
+        return new Point(Xp, Yp);
+    },
+    
+    /**The middle point
+     * @return {Point} the point in the middle of the curve
+     * */
+    getMiddle: function(){
+        return this.getPoint(0.5);
+    },
+
 
     toString:function(){
         return 'quad(' + this.startPoint + ',' + this.controlPoint1 + ',' + this.controlPoint2 + ',' + this.endPoint + ')';
@@ -3085,12 +3149,15 @@ NURBS.prototype = {
         
         if(n === 2){
             sol.push(new Line(P[0], P[1]));
+            return sol;
         }
         else if(n === 3){
             sol.push(new QuadCurve(P[0], P[1], P[2]));
+            return sol;
         }
         else if(n === 4){
             sol.push(new CubicCurve(P[0], P[1], P[2], P[3]));
+            return sol;
         }
         
         /**Computes factorial
@@ -3241,6 +3308,45 @@ NURBS.prototype = {
         return false;
     },
     
+    /**Computes the length of the {NURB} by summing the length of {CubicCurve}s
+     * is made of*/
+    getLength : function(){
+        var l = 0;
+        
+        for(var ci=0; ci<this.fragments.length; ci++){
+            l += this.fragments[ci].getLength();
+        }
+        return l;
+    },
+    
+    /**Get middle point*/
+    getMiddle: function(){
+        var ci;
+        
+        //gather lengths of curves
+        var lengths = [];
+        for(ci=0; ci<this.fragments.length; ci++){
+            lengths.push(this.fragments[ci].getLength());
+        }
+        
+        //find on what curve (index) the middle of NURBE will be        
+        ci = 0;
+        collectedLength = 0;
+        for(ci=0; ci<this.fragments.length; ci++){
+            if(collectedLength + this.fragments[ci].getLength() > this.getLength()/2)
+                break;
+            
+            collectedLength += this.fragments[ci].getLength();
+        }
+        
+        if (ci == 0 || ci == this.fragments.length-1)   
+            throw Exception("Assert ci it should not be ");
+        
+        var l = this.getLength()/2 - collectedLength;
+        var t = l/this.fragments[ci+1];
+        
+        return this.fragments[ci+1].getPoint(t);
+    },
     
     equals : function (object){
         throw Exception("Not implemented");

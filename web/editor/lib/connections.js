@@ -1246,6 +1246,8 @@ Connector.prototype = {
             //(or might not have the same length) to pick the middle of middle curve 
             //(if no. of curves is odd) or joining
             //point (if number of curves is even)
+            var n = new NURBS(this.turningPoints);
+            
             throw Exception("Connector::middle() organic not implemented");
         }
 
