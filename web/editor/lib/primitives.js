@@ -414,7 +414,12 @@ Line.prototype = {
      * @return {Point} the middle point
      * */
     getMiddle : function(){
-        return new Point((this.startPoint.x + this.endPoint.x)/2, (this.startPoint.y + this.endPoint.y)/2);
+        return Util.getMiddle(this.startPoint, this.endPoint);
+    },
+    
+    
+    getLength : function(){
+        return Util.getLength(this.startPoint, this.endPoint);
     },
 
     /**
@@ -1083,6 +1088,30 @@ QuadCurve.prototype = {
     },
     
 
+    /**The middle point
+     * @return {Point} the point in the middle of the curve
+     * */
+    getMiddle: function(){
+        return this.getPoint(0.5);
+    },
+    
+    
+    /**Computes the length of the Cubic Curve
+     * TODO: This is by far not the best algorithm but only an aproximation.
+     * */
+    getLength:function(){
+        /*Algorithm: split the Bezier curve into an aproximative 
+       polyline and use polyline's near method*/
+        var poly = new Polyline();
+        
+        for(var t=0; t<=1; t+=0.01){
+            poly.addPoint(getPoint(t));
+        }
+       
+       return poly.getLength();
+    },
+
+
     /*We could use an interpolation algorightm t=0,1 and pick 10 points to iterate on ...but for now it's fine
      **/
     getBounds:function(){
@@ -1529,7 +1558,7 @@ CubicCurve.prototype = {
         var poly = new Polyline();
         
         for(var t=0; t<=1; t+=0.01){
-            poly.addPoint(getPoint(t));
+            poly.addPoint(this.getPoint(t));
         }
        
        return poly.getLength();
@@ -3309,7 +3338,9 @@ NURBS.prototype = {
     },
     
     /**Computes the length of the {NURB} by summing the length of {CubicCurve}s
-     * is made of*/
+     * is made of.
+     * TODO: as this involves a lot of computations it would nice to use a Math formula
+     * */
     getLength : function(){
         var l = 0;
         
@@ -3331,7 +3362,7 @@ NURBS.prototype = {
         
         //find on what curve (index) the middle of NURBE will be        
         ci = 0;
-        collectedLength = 0;
+        var collectedLength = 0;
         for(ci=0; ci<this.fragments.length; ci++){
             if(collectedLength + this.fragments[ci].getLength() > this.getLength()/2)
                 break;
@@ -3339,13 +3370,13 @@ NURBS.prototype = {
             collectedLength += this.fragments[ci].getLength();
         }
         
-        if (ci == 0 || ci == this.fragments.length-1)   
-            throw Exception("Assert ci it should not be ");
+        if (ci == 0 || ci == this.fragments.length)   
+            throw "Assert ci it should not be " + ci;
         
         var l = this.getLength()/2 - collectedLength;
-        var t = l/this.fragments[ci+1];
+        var t = l/this.fragments[ci].getLength();
         
-        return this.fragments[ci+1].getPoint(t);
+        return this.fragments[ci].getPoint(t);
     },
     
     equals : function (object){

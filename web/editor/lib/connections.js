@@ -1248,7 +1248,10 @@ Connector.prototype = {
             //point (if number of curves is even)
             var n = new NURBS(this.turningPoints);
             
-            throw Exception("Connector::middle() organic not implemented");
+            var middle = n.getMiddle();
+            Log.info("Middle is " + middle);
+            
+            return [middle.x, middle.y];
         }
 
         return null;
@@ -1263,7 +1266,8 @@ Connector.prototype = {
         var middlePoint = this.middle();
 
         if(middlePoint != null){
-            this.middleText.transform(Matrix.translationMatrix(middlePoint[0] - this.middleText.vector[0].x, middlePoint[1] - this.middleText.vector[0].y));
+            var m = Matrix.translationMatrix(middlePoint[0] - this.middleText.vector[0].x, middlePoint[1] - this.middleText.vector[0].y)
+            this.middleText.transform(m);
         }
     },
     

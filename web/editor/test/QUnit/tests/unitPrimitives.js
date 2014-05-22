@@ -248,6 +248,14 @@ test("primitive.Line.near [Depends on Point.constructor, Point.near, Line.constr
     ok(line.near(pX, pY, radius), "point has X bigger than max X of line, but is closer than radius.");
 });
 
+
+module( "Primitive.Polyline tests" );
+
+test("primitive.Polyline.getLength", function () {
+//    var poly = new Polyline();
+//    poly.addPoint(new Point());
+});
+
 //module( "SVG Export tests" );
 //
 ///**SVG is no longer used as export*/
