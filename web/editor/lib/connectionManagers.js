@@ -1029,26 +1029,9 @@ ConnectorManager.prototype = {
                 break;
         }
         
-        //SMOOTHING curve
-        //Add the middle point for start and end segment so that we "force" the 
-        //curve to both come "perpendicular" on bounds and also make the curve
-        //"flee" more from bounds (on exit)
+        //SMOOTHING curve        
         if(type === Connector.TYPE_ORGANIC){
-            for(var s=0; s<solutions.length; s++){
-                var solTurningPoints = solutions[s][2];
-                
-                //first segment
-                var a1 = solTurningPoints[0];
-                var a2 = solTurningPoints[1];
-                var startMiddlePoint = Util.getMiddle(a1, a2);
-                solTurningPoints.splice(1,0, startMiddlePoint);
-                
-                //last segment
-                var a3 = solTurningPoints[solTurningPoints.length - 2];
-                var a4 = solTurningPoints[solTurningPoints.length - 1];                
-                var endMiddlePoint = Util.getMiddle(a3, a4);
-                solTurningPoints.splice(solTurningPoints.length - 1, 0, endMiddlePoint);
-            }
+            this.smoothOrganic(solutions);
         }
         //END SMOOTHING curve
         
@@ -1057,6 +1040,70 @@ ConnectorManager.prototype = {
         Log.level = oldLogLevel; 
         
         return solutions;
+    },
+    
+    
+    /**
+     * Tries to smooth the solution.
+     * Made mainly for organic connectors
+     * @param {Array} solutions - in a form ('generic solution name', 'specific solution name', [point1, point2, ...])
+     * Example: ['s1', 's1_1', [point1, point2, point3, ...]] where 's1 - is the generic solution name,
+     * s1_1 - the specific solution name (Case 1 of Solution 1)
+     * */
+    smoothOrganic: function(solutions){
+        var option = 3;
+        
+        switch(option){
+            case 0:
+                //do nothing
+                break;
+            
+            case 1: //add intermediate points
+                //Add the middle point for start and end segment so that we "force" the 
+                //curve to both come "perpendicular" on bounds and also make the curve
+                //"flee" more from bounds (on exit)
+                for(var s=0; s<solutions.length; s++){
+                    var solTurningPoints = solutions[s][2];
+
+                    //first segment
+                    var a1 = solTurningPoints[0];
+                    var a2 = solTurningPoints[1];
+                    var startMiddlePoint = Util.getMiddle(a1, a2);
+                    solTurningPoints.splice(1,0, startMiddlePoint);
+
+                    //last segment
+                    var a3 = solTurningPoints[solTurningPoints.length - 2];
+                    var a4 = solTurningPoints[solTurningPoints.length - 1];                
+                    var endMiddlePoint = Util.getMiddle(a3, a4);
+                    solTurningPoints.splice(solTurningPoints.length - 1, 0, endMiddlePoint);
+                }
+                break;
+                
+            case 2: //remove points 
+                for(var s=0; s<solutions.length; s++){
+                    var solType= solutions[s][0];
+                    if(solType == 's1' || solType == 's2'){
+                        var solTurningPoints = solutions[s][2];
+                        solTurningPoints.splice(1,1);
+                        solTurningPoints.splice(solTurningPoints.length - 2, 1);
+                    }
+                }
+                break;
+                
+            case 3: 
+                /*remove colinear point for s1 as it seems that more colinear points do not look good 
+                 * on organic solutions >:D*/
+                for(var s=0; s<solutions.length; s++){
+                    var solType= solutions[s][0];
+                    if(solType == 's1'){
+                        var solTurningPoints = solutions[s][2];
+                        var reducedSolution = Util.collinearReduction(solTurningPoints);
+                        solutions[s][2] = reducedSolution;
+                    }
+                }
+                break;
+        }//end switch
+        
     },
 
 

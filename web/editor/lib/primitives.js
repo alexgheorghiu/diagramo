@@ -192,13 +192,13 @@ Point.prototype = {
 
         r += "\n" + repeat("\t", INDENTATION) + '<circle cx="' + this.x + '" cy="' + this.y + '" r="' + 1 + '"' ;
         r += this.style.toSVG();
-        r += '/>'
+        r += '/>';
 
         return r;
     }
 
 
-}
+};
 
 
 
@@ -408,6 +408,15 @@ Line.prototype = {
         points.push(this.endPoint);
         return points;
     },
+    
+    /**Return the {Point} corresponding the t certain t value
+     * @param {Number} t the value of parameter t, where t in [0,1]*/
+    getPoint: function(t){
+        var Xp = t * (this.endPoint.x - this.startPoint.x) + this.startPoint.x;
+        var Yp = t * (this.endPoint.y - this.startPoint.y) + this.startPoint.y;
+        
+        return new Point(Xp, Yp);
+    },    
     
     /**
      * Returns the middle of the line
@@ -1082,9 +1091,17 @@ QuadCurve.prototype = {
     
     /**
      * Return the point corresponding to parameter value t
-     * @return {Point} t the value of t parameter, t in [0,1]*/
+     * @return {Point} t the value of t parameter, t in [0,1]
+     * @see http://html5tutorial.com/how-to-join-two-bezier-curves-with-the-canvas-api/
+     * */
     getPoint:function(t){
-        throw Exception("Not implemented yet");
+        var a = Math.pow((1 - t), 2);            
+        var b = (1 - t) * t;
+        var c = Math.pow(t, 2);
+        var Xp = a * this.startPoint.x + b * this.controlPoint.x + c * this.endPoint.x;
+        var Yp = a * this.startPoint.y + b * this.controlPoint.y + c * this.endPoint.y;
+        
+        return new Point(Xp, Yp);
     },
     
 
@@ -1105,7 +1122,7 @@ QuadCurve.prototype = {
         var poly = new Polyline();
         
         for(var t=0; t<=1; t+=0.01){
-            poly.addPoint(getPoint(t));
+            poly.addPoint(this.getPoint(t));
         }
        
        return poly.getLength();
@@ -1164,14 +1181,14 @@ QuadCurve.prototype = {
             var fromStart = Math.pow(t, 2); //get how far from start we are and square it
             var newX = fromEnd * this.startPoint.x + a * this.controlPoint.x + this.fromStart * this.endPoint.x;//?
             var newY = fromEnd * this.startPoint.y + a * this.controlPoint.y + this.fromStart * this.endPoint.y;//?
-            p = new Point(newX,newY);
+            var p = new Point(newX,newY);
             if(p.near(x, y, radius)){
                 return true;
             }
 
             //get distance between start and the point we are looking for, and the current point on line
-            pToStart=Math.sqrt(Math.pow(this.startPoint.x-p.x,2)+Math.pow(this.startPoint.y-p.y,2));
-            myToStart=Math.sqrt(Math.pow(this.startPoint.x-x,2)+Math.pow(this.startPoint.y-y,2));
+            var pToStart=Math.sqrt(Math.pow(this.startPoint.x-p.x,2)+Math.pow(this.startPoint.y-p.y,2));
+            var myToStart=Math.sqrt(Math.pow(this.startPoint.x-x,2)+Math.pow(this.startPoint.y-y,2));
 
             //if our point is closer to start, we know that our cursor must be between start and where we are
             if(myToStart<pToStart){
@@ -3129,7 +3146,7 @@ Figure.prototype = {
  **/
 function NURBS(points){
     if(points.length < 2){
-        throw Exception("NURBS: contructor() We need minimum 3 points to have a NURBS");
+        throw "NURBS: contructor() We need minimum 3 points to have a NURBS";
     }
     
     /**The initial {@link Point}s*/
@@ -3370,8 +3387,8 @@ NURBS.prototype = {
             collectedLength += this.fragments[ci].getLength();
         }
         
-        if (ci == 0 || ci == this.fragments.length)   
-            throw "Assert ci it should not be " + ci;
+//        if (ci == 0 || ci == this.fragments.length)   
+//            throw "Assert ci it should not be " + ci;
         
         var l = this.getLength()/2 - collectedLength;
         var t = l/this.fragments[ci].getLength();
