@@ -159,7 +159,9 @@ if(strpos($currentHost, ':')){
             
             <?}?>
         </div>
-        
+
+        <p></p>
+        <div class="copyright">&copy; <?=date('Y') ?> Diagramo</div>
 
     </body>
 </html>

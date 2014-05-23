@@ -143,6 +143,8 @@ function firstName($email){
             
             
         </div>
+        <p></p>
+        <div class="copyright">&copy; <?=date('Y')?> Diagramo</div>
                 
     </body>
 </html>

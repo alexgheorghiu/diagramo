@@ -76,6 +76,7 @@ $page = "mysqttings";
                         
                     </form>
                 </div>
+                <p>&nbsp;</p>
             </div>
 
             <p/>
