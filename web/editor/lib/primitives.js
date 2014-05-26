@@ -410,7 +410,7 @@ Line.prototype = {
     },
     
     /**Return the {Point} corresponding the t certain t value
-     * @param {Number} t the value of parameter t, where t in [0,1]*/
+     * @param {Number} t the value of parameter t, where t in [0,1], t is like a percent*/
     getPoint: function(t){
         var Xp = t * (this.endPoint.x - this.startPoint.x) + this.startPoint.x;
         var Yp = t * (this.endPoint.y - this.startPoint.y) + this.startPoint.y;
@@ -513,11 +513,36 @@ Polyline.prototype = {
     },
 	
     getPoints:function(){
-        var p = [];
-        for (var i=0; i<this.points.length; i++){
-            p.push(this.points[i]);
+        return Point.cloneArray(this.points);
+    },
+    
+    /**Return the {Point} corresponding the t certain t value. 
+     * NOTE: t is the visual percentage of a point from the start of the 
+     * primitive and the result is
+     * different than the t from getPoint(...) method
+     * @param {Number} t the value of parameter t, where t in [0,1]*/
+    getVisualPoint:function (t){
+        var l = this.getLength();
+
+        
+        var walked = 0;
+        var i;
+        for(i=0; i< this.points.length-1; i++){
+            if( walked + Util.distance(this.points[i], this.points[i+1]) > l * t ){
+                break;
+            }
+            
+            walked += Util.distance(this.points[i], this.points[i+1]);
         }
-        return p;
+        
+        var rest = l * t - walked;
+        var currentSegmentLength = Util.distance(this.points[i], this.points[i+1]);
+        
+        //find the position/ration of the middle of Polyline on current segment
+        var segmentPercent = rest / currentSegmentLength;
+        var THEpoint = new Line(this.points[i], this.points[i+1]).getPoint(segmentPercent);
+        
+        return THEpoint;
     },
 
     getBounds:function(){
@@ -544,7 +569,7 @@ Polyline.prototype = {
         
         return l;
     },
-
+    
 
     equals:function(anotherPolyline){
         if(!anotherPolyline instanceof Polyline){
@@ -1083,11 +1108,18 @@ QuadCurve.prototype = {
         this.endPoint.transform(matrix);
     },
 
-	//TODO: should this return a number of points along the line?
-    getPoints:function(){        
-        return [this.startPoint,this.controlPoint,this.endPoint];
+
+    //TODO: dynamically adjust until the length of a segment is small enough
+    //(1 unit)?
+    getPoints:function(){
+        var STEP = 0.01;
+        var points = [];
+        for(var t = 0; t<=1; t+=STEP){
+            points.push(this.getPoint(t));
+        }
+        
+        return points;
     },
-    
     
     /**
      * Return the point corresponding to parameter value t
@@ -1104,12 +1136,32 @@ QuadCurve.prototype = {
         return new Point(Xp, Yp);
     },
     
+    /**Return the {Point} corresponding the t certain t value. 
+     * NOTE: t is the visual percentage of a point from the start of the 
+     * primitive and the result is
+     * different than the t from getPoint(...) method
+     * @param {Number} t the value of parameter t, where t in [0,1]*/
+    getVisualPoint:function (t){
+        var points = this.getPoints();
+        var polyline = new Polyline();
+        polyline.points = points;
+        
+        return polyline.getVisualPoint(t);
+    },    
+    
 
-    /**The middle point
+    /**The middle point. 
+     * Note: The middle point of a curve (t=0.5) is not the same as visual 
+     * middle. We will try to get the VISUAL middle
      * @return {Point} the point in the middle of the curve
      * */
     getMiddle: function(){
-        return this.getPoint(0.5);
+        var points = this.getPoints();
+        var polyline = new Polyline();
+        polyline.points = points;
+        
+        return polyline.getMiddle();
+//        return this.getPoint(0.5);
     },
     
     
@@ -1557,9 +1609,16 @@ CubicCurve.prototype = {
        return poly.near(x, y, radius);
     },
 
-    //TODO: should this return a number of points along the line?
+    //TODO: dynamically adjust until the length of a segment is small enough
+    //(1 unit)?
     getPoints:function(){
-        return [this.startPoint,this.controlPoint1,this.controlPoint2,this.endPoint];
+        var STEP = 0.01;
+        var points = [];
+        for(var t = 0; t<=1; t+=STEP){
+            points.push(this.getPoint(t));
+        }
+        
+        return points;
     },
 
     getBounds:function(){
@@ -1574,14 +1633,12 @@ CubicCurve.prototype = {
        polyline and use polyline's near method*/
         var poly = new Polyline();
         
-        for(var t=0; t<=1; t+=0.01){
-            poly.addPoint(this.getPoint(t));
-        }
+        poly.points = this.getPoints();      
        
        return poly.getLength();
     },
     
-    /**Return the {Point} corresponding the t certain t value
+    /**Return the {Point} corresponding a t value, from parametric equation of Curve
      * @param {Number} t the value of parameter t, where t in [0,1]*/
     getPoint: function(t){
         var a = Math.pow((1 - t), 3);            
@@ -1594,12 +1651,19 @@ CubicCurve.prototype = {
         return new Point(Xp, Yp);
     },
     
-    /**The middle point
-     * @return {Point} the point in the middle of the curve
-     * */
-    getMiddle: function(){
-        return this.getPoint(0.5);
+    /**Return the {Point} corresponding the t certain t value. 
+     * NOTE: t is the visual percentage of a point from the start of the 
+     * primitive and the result is
+     * different than the t from getPoint(...) method
+     * @param {Number} t the value of parameter t, where t in [0,1]*/
+    getVisualPoint:function (t){
+        var points = this.getPoints();
+        var polyline = new Polyline();
+        polyline.points = points;
+        
+        return polyline.getVisualPoint(t);
     },
+    
 
 
     toString:function(){
@@ -3172,7 +3236,7 @@ NURBS.load = function(o){
     var newNURBS = new NURBS(Point.loadArray(o.points));    
     newNURBS.style = Style.load(o.style);
     return newNURBS;
-}
+};
 
 NURBS.prototype = {
     /**Computes a series of Bezier(Cubic) curves to aproximate a curve modeled 
@@ -3308,7 +3372,7 @@ NURBS.prototype = {
     
     /**Paint the NURBS*/
     paint : function(context){
-		context.beginPath();
+        context.beginPath();
 		
         if(this.style != null){
             this.style.setupContext(context);
@@ -3368,7 +3432,7 @@ NURBS.prototype = {
     },
     
     /**Get middle point*/
-    getMiddle: function(){
+    _deprecated_getMiddle: function(){
         var ci;
         
         //gather lengths of curves
@@ -3393,7 +3457,15 @@ NURBS.prototype = {
         var l = this.getLength()/2 - collectedLength;
         var t = l/this.fragments[ci].getLength();
         
-        return this.fragments[ci].getPoint(t);
+        return this.fragments[ci].getVisualPoint(t);
+    },
+    
+    getMiddle : function() {
+        var points = this.getPoints();
+        var poly = new Polyline();
+        poly.points = points;
+        
+        return poly.getVisualPoint(0.5);
     },
     
     equals : function (object){
@@ -3443,14 +3515,14 @@ NURBS.prototype = {
     },
     
     getPoints : function(){
-        var points = []
+        var points = [];
         for(var f=0; f<this.fragments.length; f++){
             var fragment = this.fragments[f];
             points = points.concat(fragment.getPoints());
         }
         return points;
     }    
-}
+};
 
 
 /**

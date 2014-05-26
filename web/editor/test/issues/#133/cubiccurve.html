@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cubic curve - in the search of "the middle"</title>
+    <script type="text/javascript" >
+        function init(){
+            paint();
+        }
+        
+        /**Return the {Point} corresponding the t certain t value
+        * @param {Number} t the value of parameter t, where t in [0,1]*/
+       function  getPoint(startPoint, controlPoint1, controlPoint2, endPoint, t){
+           var a = Math.pow((1 - t), 3);            
+           var b = 3 * t * Math.pow((1 - t), 2);
+           var c = 3 * Math.pow(t, 2) * (1 - t);
+           var d = Math.pow(t, 3);
+           var Xp = a * startPoint.x + b * controlPoint1.x + c * controlPoint2.x + d * endPoint.x;
+           var Yp = a * startPoint.y + b * controlPoint1.y + c * controlPoint2.y + d * endPoint.y;
+
+           return {x:Xp, y:Yp};
+       }
+        
+        function paint(){
+            var a = document.getElementById('a');
+            var ctx = a.getContext('2d');
+            
+                                    
+            var sp = new Point(159, 135);
+            var cp1 = new Point(159, 76);
+            var cp2 = new Point(808, 76);
+            var ep = new Point(808, 644);
+        
+            var cc = new CubicCurve(sp, cp1, cp2, ep);
+            cc.style.strokeStyle = "black";
+            
+            
+            
+            cc.paint(ctx);
+
+            var m1 = cc.getPoint(0.5);
+            ctx.fillStyle = '#00FF00'; //green
+            ctx.fillRect(m1.x - 2, m1.y-2, 4, 4);
+            
+            var m2 = cc.getVisualPoint(0.5);        
+            ctx.fillStyle = '#FF0000'; //red
+            ctx.fillRect(m2.x - 2, m2.y-2, 4, 4);
+        }
+        
+        window.addEventListener("load", init, false);
+    </script>
+    
+    <script type="text/javascript" src="../../../lib/util.js"></script>
+    <script type="text/javascript" src="../../../lib/log.js"></script>
+    <script type="text/javascript" src="../../../lib/style.js"></script>
+    <script type="text/javascript" src="../../../lib/primitives.js"></script>
+</head>
+<body>
+    <div style="float: left">
+        <canvas style="border: 1px solid green;" id="a" width="900" height="900"></canvas>
+    </div>
+    <div style="float: right;">
+        <form>
+            First point:
+            <input type="text" name="startpoint"/>
+        </form>
+    </div>
+</body>
+</html>

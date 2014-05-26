@@ -358,6 +358,18 @@ Connector.prototype = {
         //1 - Draw NURB based only on turning points
         var n = new NURBS(rPoints);
         n.style.strokeStyle = 'rgba(0,100,0,0.5)'; //green
+        
+        //paint glow
+        if(DIAGRAMO.debug){
+            //Log.info("Nr of cubic curves " +  this.fragments.length);
+            for(var f=0; f<n.fragments.length; f++){
+                var fragment = n.fragments[f].clone();                
+                fragment.style.lineWidth =  6;
+                fragment.style.strokeStyle = "rgb(" + f * 100 % 255 + "," + f * 50 % 255 + "," + f * 20 % 255 + ")";
+                fragment.paint(context);
+            }
+        }
+        
         n.paint(context);
         //end 1
         
