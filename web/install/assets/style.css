@@ -48,3 +48,8 @@ body{
 .error {
     color : red;
 }
+
+#buildno {
+    font-size: 9px;
+    color: #D2D2D2;
+}

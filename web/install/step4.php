@@ -60,7 +60,7 @@ define('STEP', 'step4');
             
             
             <img style="display: none;" src="<?=DIAGRAMO?>/install.php?step=step4&version=<?=VERSION?>&session=<?=session_id()?>&url=<?=urlencode($appUrl)?>"/>
-            
+            <?php include 'buildno.php'?>
         </div>
     </body>
 </html>

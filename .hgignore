@@ -29,6 +29,7 @@ documents/jsdoc-toolkit/test.log
 documents/sql/*.db3
 
 web/editor/common/settings.php
+web/version.num
 
 
 

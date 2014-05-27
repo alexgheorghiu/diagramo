@@ -50,6 +50,7 @@ $appUrl = substr($fullURL, 0, strpos($fullURL, '/install'));
             
             
             <img style="display: none;" src="<?=DIAGRAMO?>/install.php?step=step1&version=<?=VERSION?>&session=<?=session_id()?>&url=<?=urlencode($appUrl)?>"/>
+            <?php include 'buildno.php'?>
         </div>
     </body>
 </html>

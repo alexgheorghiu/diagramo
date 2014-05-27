@@ -53,6 +53,13 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
                 <a href="https://bitbucket.org/scriptoid/diagramo/issues/new" target="new">Report bug</a>
                 <a href="javascript:void(0);" onclick="javascript:DIAGRAMO.switchDebug()"><img id="iconDebug"  src="./assets/images/icon_debug_false.gif" style="vertical-align: middle;"/> Debug</a>
                 <!--<a href="./license.php">License</a>-->
+                <a href="javascript:void(0);" onclick="buildNo()">About</a>
+                <script type="text/javascript">
+                    var msg = "Build number: <?=file_get_contents('../version.num')?>";
+                    function buildNo(){
+                        alert(msg);
+                    }
+                </script>                
             </div>                        
         </div>
         <!--Help menu-->
