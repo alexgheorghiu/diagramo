@@ -465,7 +465,7 @@ Line.prototype = {
   **/
 function Polyline(){
     /**An {Array} of {@link Point}s*/
-    this.points = []
+    this.points = [];
     
     /**The {@link Style} of the polyline*/
     this.style = new Style();
@@ -492,7 +492,7 @@ Polyline.load = function(o){
     newPolyline.style = Style.load(o.style);
     newPolyline.startPoint = Point.load(o.startPoint);
     return newPolyline;
-}
+};
 
 Polyline.prototype = {
     constructor : Polyline,
@@ -503,6 +503,7 @@ Polyline.prototype = {
         }
         this.points.push(point);
     },
+    
     transform:function(matrix){
         if(this.style!=null){
             this.style.transform(matrix);
@@ -1079,7 +1080,7 @@ QuadCurve.load = function(o){
     newQuad.endPoint = Point.load(o.endPoint);
     newQuad.style = Style.load(o.style);
     return newQuad;
-}
+};
 
 /**Creates an {Array} of {QuadCurve} out of JSON parsed object
  *@param {JSONObject} v - the JSON parsed object (actually an {Array} of {JSONObject}s
@@ -1094,7 +1095,7 @@ QuadCurve.loadArray = function(v){
     }
 
     return quads;
-}
+};
 
 QuadCurve.prototype = {
     constructor : QuadCurve,
@@ -1123,12 +1124,13 @@ QuadCurve.prototype = {
     
     /**
      * Return the point corresponding to parameter value t
-     * @return {Point} t the value of t parameter, t in [0,1]
+     * @param {Number} t the value of t parameter, t in [0,1]
+     * @return {Point} the value of t parameter, t in [0,1]
      * @see http://html5tutorial.com/how-to-join-two-bezier-curves-with-the-canvas-api/
      * */
     getPoint:function(t){
         var a = Math.pow((1 - t), 2);            
-        var b = (1 - t) * t;
+        var b = 2 * (1 - t) * t;
         var c = Math.pow(t, 2);
         var Xp = a * this.startPoint.x + b * this.controlPoint.x + c * this.endPoint.x;
         var Yp = a * this.startPoint.y + b * this.controlPoint.y + c * this.endPoint.y;
@@ -1149,20 +1151,6 @@ QuadCurve.prototype = {
         return polyline.getVisualPoint(t);
     },    
     
-
-    /**The middle point. 
-     * Note: The middle point of a curve (t=0.5) is not the same as visual 
-     * middle. We will try to get the VISUAL middle
-     * @return {Point} the point in the middle of the curve
-     * */
-    getMiddle: function(){
-        var points = this.getPoints();
-        var polyline = new Polyline();
-        polyline.points = points;
-        
-        return polyline.getMiddle();
-//        return this.getPoint(0.5);
-    },
     
     
     /**Computes the length of the Cubic Curve
@@ -1207,14 +1195,27 @@ QuadCurve.prototype = {
         if(this.style.strokeStyle!=null && this.style.strokeStyle!=""){
             context.stroke();
         }
-
+        
+        
+        if(false){ //structure polyline
+            var polyline = new Polyline();
+            polyline.style.strokeStyle = '#ccc';
+            polyline.points = this.getPoints();
+            polyline.paint(context);
+            context.stroke();
+            
+            context.fillStyle = "#F00";
+            context.fillRect(this.startPoint.x-2, this.startPoint.y-2, 4, 4);
+            context.fillRect(this.controlPoint.x-2, this.controlPoint.y-2, 4, 4);
+            context.fillRect(this.endPoint.x-2, this.endPoint.y-2, 4, 4);
+        }
     },
 
     /*
      *TODO: algorithm not clear and maybe we can find the math formula to determine if we have an intersection
      *@see <a href="http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic">http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic</a>
      */
-    near:function(x, y, radius){
+    deprecated__near:function(x, y, radius){
         var polls=100;
         if(!Util.isPointInside(new Point(x,y), [this.startPoint, this.controlPoint, this.endPoint]) 
                 && !this.startPoint.near(x,y,radius) && ! this.endPoint.near(x,y,radius)){
@@ -1255,9 +1256,16 @@ QuadCurve.prototype = {
             return this.startPoint.near(x,y,radius)|| this.endPoint.near(x,y,radius);
             }
     },
+    
+    near:function(x, y, radius){
+        var points = this.getPoints();
+        var polyline = new Polyline();
+        polyline.points = points;
+        return polyline.near(x, y, radius);
+    },
 
     clone:function(){
-        ret=new QuadCurve(this.startPoint.clone(),this.controlPoint.clone(),this.endPoint.clone());
+        var ret=new QuadCurve(this.startPoint.clone(),this.controlPoint.clone(),this.endPoint.clone());
         ret.style=this.style.clone();
         return ret;
     },
@@ -1286,7 +1294,7 @@ QuadCurve.prototype = {
      * @see sources for <a href="http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/6-b14/java/awt/geom/QuadCurve2D.java">java.awt.geom.QuadCurve2D</a>
      * @author (just converted to JavaScript) alex@scriptoid.com
      */
-    contains:function(x,y) {
+    deprecated_2_contains:function(x,y) {
 
         var x1 = this.startPoint.x;
         var y1 = this.startPoint.y;
@@ -1383,6 +1391,13 @@ QuadCurve.prototype = {
         (y >= yb && y < yl) ||
         (y >= yl && y < yb);
     },
+    
+    contains:function(x,y) {
+        var points = this.getPoints();
+        var polyline = new Polyline();
+        polyline.points = points;
+        return polyline.contains(x, y);
+    },
 
     toString:function(){
         return 'quad(' + this.startPoint + ',' + this.controlPoint + ',' + this.endPoint + ')';
@@ -1405,7 +1420,7 @@ QuadCurve.prototype = {
 
         return result;
     }
-}
+};
 
 
 /**

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Quad curve - what the heck is wrong with equation?</title>
+        <script type="text/javascript" >
+            function init() {
+                paint();
+            }
+
+            /**Return the {Point} corresponding the t certain t value
+             * @param {Number} t the value of parameter t, where t in [0,1]*/
+            function  getPoint(startPoint, controlPoint1, controlPoint2, endPoint, t) {
+                var a = Math.pow((1 - t), 3);
+                var b = 3 * t * Math.pow((1 - t), 2);
+                var c = 3 * Math.pow(t, 2) * (1 - t);
+                var d = Math.pow(t, 3);
+                var Xp = a * startPoint.x + b * controlPoint1.x + c * controlPoint2.x + d * endPoint.x;
+                var Yp = a * startPoint.y + b * controlPoint1.y + c * controlPoint2.y + d * endPoint.y;
+
+                return {x: Xp, y: Yp};
+            }
+
+            function getPoint(startPoint, controlPoint, endPoint, t) {
+                var a = Math.pow((1 - t), 2);
+                var b = 2 * (1 - t) * t;
+                var c = Math.pow(t, 2);
+                var Xp = a * startPoint.x + b * controlPoint.x + c * endPoint.x;
+                var Yp = a * startPoint.y + b * controlPoint.y + c * endPoint.y;
+
+                return {x: Xp, y: Yp};
+            }
+
+            function getPoints(startPoint, controlPoint, endPoint, dt) {
+                var points = [];
+                for (var t = 0; t <= 1; t += dt) {
+                    points.push(getPoint(startPoint, controlPoint, endPoint, t));
+                }
+                return points;
+            }
+
+            function paint() {
+                var a = document.getElementById('a');
+                var ctx = a.getContext('2d');
+
+
+                var sp = {x: 100, y: 300};
+                var cp = {x: 100, y: 100};
+                var ep = {x: 300, y: 100};
+
+                ctx.moveTo(sp.x, sp.y);
+                ctx.quadraticCurveTo(cp.x, cp.y, ep.x, ep.y);
+                ctx.strokeStyle = "black";
+
+                ctx.stroke();
+
+                ctx.fillStyle = "red";
+                var points = getPoints(sp, cp, ep, 0.1);
+                for(var pi=0; pi<points.length; pi++){
+                    ctx.fillRect(points[pi].x-2, points[pi].y-2, 4, 4);
+                }
+                
+
+            }
+
+            window.addEventListener("load", init, false);
+        </script>
+
+    </head>
+    <body>
+        <div style="float: left">
+            <canvas style="border: 1px solid green;" id="a" width="900" height="900"></canvas>
+        </div>
+        <div style="float: right;">
+            <form>
+                First point:
+                <input type="text" name="startpoint"/>
+            </form>
+        </div>
+    </body>
+</html>
