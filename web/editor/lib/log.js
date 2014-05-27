@@ -114,7 +114,7 @@ var Log  = {
 
 /*Set the log level*/
 //Log.level = Log.LOG_LEVEL_DEBUG; 
-Log.level = Log.LOG_LEVEL_INFO; 
+Log.level = Log.LOG_LEVEL_ERROR; 
 //Log.level = Log.LOG_LEVEL_ERROR;
 //Log.level = Log.LOG_LEVEL_NONE;
 

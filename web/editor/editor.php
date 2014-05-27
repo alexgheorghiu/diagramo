@@ -183,7 +183,7 @@ $page = 'editor';
             
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
-            <a href="javascript:action('connector-organic');" title="Organic connector (Experimental)"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
+            <a href="javascript:action('connector-organic');" title="Organic connector"><img src="assets/images/icon_connector_organic.gif" border="0" alt="Organic"/></a>
             
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             

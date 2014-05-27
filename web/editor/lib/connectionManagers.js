@@ -399,6 +399,8 @@ ConnectorManager.prototype = {
      *@param {Integer} cpId - the id of the connector
      *@param {Number} x - the x coordinates of the point
      *@param {Number} y - the y coordinates of the point
+     *@deprecated This function seems to no longer be used. 
+     *See ConnectionMamager.connectionPointTransform(...)
      **/
     connectorAdjustByConnectionPoint: function(cpId, x, y){
         var cp = this.connectionPointGetById(cpId); //ConnectionPoint
@@ -406,13 +408,13 @@ ConnectorManager.prototype = {
         var con = this.connectorGetById(cp.parentId); //Connector
         var conCps = this.connectionPointGetAllByParent(con.id); //Conector's ConnectionPoints
         
-        if(con.type == Connector.TYPE_STRAIGHT){
+        if(con.type === Connector.TYPE_STRAIGHT){
             /**For STRAIGHT is very simple just update the tunrning points to the start and end connection points*/
             var start = conCps[0].point.clone();
             var end = conCps[1].point.clone();
             con.turningPoints = [start, end];
         }
-        else if(con.type == Connector.TYPE_JAGGED || con.type == Connector.TYPE_ORGANIC){
+        else if(con.type === Connector.TYPE_JAGGED || con.type === Connector.TYPE_ORGANIC){
             //first ConnectionPoint
             var startPoint = conCps[0].point.clone();
             
@@ -428,10 +430,10 @@ ConnectorManager.prototype = {
             var eBounds = eFigure == null ? null : eFigure.getBounds();
             
             //adjust connector
-            var solution = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
+            var solutions = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
 
-            // apply solution to Connector
-            con.applySolution(solution);
+            // apply solution to Connector (for delta changes made by user)
+            con.applySolution(solutions);
 
             conCps[0].point = con.turningPoints[0].clone();
             conCps[1].point = con.turningPoints[con.turningPoints.length - 1].clone();
@@ -659,7 +661,12 @@ ConnectorManager.prototype = {
      * Note: We are not using {ConnectionPoint}s here are this somehow a generic algorithm
      * where we have a type of drawing, a start point, and end point and 2 boundaries to
      * consider.
-     *@param {Number} type - Connector.TYPE_STRAIGHT or Connector.TYPE_JAGGED
+     * 
+     * Note 2: For organic connector the solution(s) is "injected" with 2 additional
+     * points: in the middle of start and end segment (of turning points) so that 
+     * the curve will look more natural.
+     * 
+     *@param {Number} type - Connector.TYPE_STRAIGHT, Connector.TYPE_JAGGED or Connector.TYPE_ORGANIC
      *@param {Point} startPoint - the start {Point}
      *@param {Point} endPoint - the end {Point}
      *@param {Array} sBounds - the starting bounds (of a Figure) as [left, top, right, bottom] - area we should avoid
@@ -1022,11 +1029,81 @@ ConnectorManager.prototype = {
                 break;
         }
         
+        //SMOOTHING curve        
+        if(type === Connector.TYPE_ORGANIC){
+            this.smoothOrganic(solutions);
+        }
+        //END SMOOTHING curve
+        
         Log.groupEnd();
         
         Log.level = oldLogLevel; 
         
         return solutions;
+    },
+    
+    
+    /**
+     * Tries to smooth the solution.
+     * Made mainly for organic connectors
+     * @param {Array} solutions - in a form ('generic solution name', 'specific solution name', [point1, point2, ...])
+     * Example: ['s1', 's1_1', [point1, point2, point3, ...]] where 's1 - is the generic solution name,
+     * s1_1 - the specific solution name (Case 1 of Solution 1)
+     * */
+    smoothOrganic: function(solutions){
+        var option = 3;
+        
+        switch(option){
+            case 0:
+                //do nothing
+                break;
+            
+            case 1: //add intermediate points
+                //Add the middle point for start and end segment so that we "force" the 
+                //curve to both come "perpendicular" on bounds and also make the curve
+                //"flee" more from bounds (on exit)
+                for(var s=0; s<solutions.length; s++){
+                    var solTurningPoints = solutions[s][2];
+
+                    //first segment
+                    var a1 = solTurningPoints[0];
+                    var a2 = solTurningPoints[1];
+                    var startMiddlePoint = Util.getMiddle(a1, a2);
+                    solTurningPoints.splice(1,0, startMiddlePoint);
+
+                    //last segment
+                    var a3 = solTurningPoints[solTurningPoints.length - 2];
+                    var a4 = solTurningPoints[solTurningPoints.length - 1];                
+                    var endMiddlePoint = Util.getMiddle(a3, a4);
+                    solTurningPoints.splice(solTurningPoints.length - 1, 0, endMiddlePoint);
+                }
+                break;
+                
+            case 2: //remove points 
+                for(var s=0; s<solutions.length; s++){
+                    var solType= solutions[s][0];
+                    if(solType == 's1' || solType == 's2'){
+                        var solTurningPoints = solutions[s][2];
+                        solTurningPoints.splice(1,1);
+                        solTurningPoints.splice(solTurningPoints.length - 2, 1);
+                    }
+                }
+                break;
+                
+            case 3: 
+                /*remove colinear point for s1 as it seems that more colinear points do not look good 
+                 * on organic solutions >:D*/
+                for(var s=0; s<solutions.length; s++){
+                    var solType= solutions[s][0];
+                    if(solType == 's1'){
+                        var solTurningPoints = solutions[s][2];
+                        var reducedSolution = Util.collinearReduction(solTurningPoints);
+                        solutions[s][2] = reducedSolution;
+                    }
+                }
+                break;
+        }//end switch
+        
     },
 
 
@@ -1483,10 +1560,11 @@ ConnectorManager.prototype = {
                 );
 
                 //solutions
-                DIAGRAMO.debugSolution = CONNECTOR_MANAGER.connector2Points(connector.type, candidate[0], candidate[1], startBounds, endBounds);
+                DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(connector.type, candidate[0], candidate[1], startBounds, endBounds);
 
+            
                 // apply solution to Connector
-                connector.applySolution(DIAGRAMO.debugSolution);
+                connector.applySolution(DIAGRAMO.debugSolutions);
 
                 // update position of Connector's ConnectionPoints
                 cCPs[0].point = connector.turningPoints[0].clone();

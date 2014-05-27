@@ -56,4 +56,5 @@
     <script type="text/javascript" src="test/QUnit/tests/unitStack.js"></script>
     <script type="text/javascript" src="test/QUnit/tests/unitCommands.js"></script>
     <script type="text/javascript" src="test/QUnit/tests/unitDashed.js"></script>
+    <script type="text/javascript" src="test/QUnit/tests/unitMatrix.js"></script>
     <!-- End Unit Tests section -->

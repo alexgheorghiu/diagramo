@@ -2751,6 +2751,7 @@ function connectorPickSecond(x, y, ev){
             rStartBounds, 
             rEndBounds
         );
+
     }
     
     //end remove block

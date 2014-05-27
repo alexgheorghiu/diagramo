@@ -86,6 +86,29 @@ Matrix.subtract = function(m1, m2){
 };
 
 
+/**Check againsts NaN values
+ *@param {Array} m - the matrix
+ *@return {boolean} true - if it contains NaN values, false otherwise
+ **/
+Matrix.isNaN = function(m){
+    for(var row=0; row<m.length; row++){
+        if(m[row] instanceof Array){
+            for(var column=0; column<m[row].length; column++){
+                if( isNaN(m[row][column])) {
+                    return true;
+                }
+            }
+        }
+        else{
+            if( isNaN(m[row])) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+
+
 /**Multiply matrix m2 with m1
  *@param {Array} m1 - first matrix
  *@param {Array} m2 - second matrix

@@ -45,7 +45,7 @@ ConnectorAlterCommand.prototype = {
         var con = CONNECTOR_MANAGER.connectorGetById(this.connectorId);
         con.turningPoints = this.turningPoints;
         con.userChanges = this.userChanges;
-        /*TODO: make changes to DIAGRAMO.debugSolution here
+        /*TODO: make changes to DIAGRAMO.debugSolutions here
          * because, otherwise, those changes are not reflected in debug painting of Connector
          */
         CONNECTOR_MANAGER.glues = this.glues;

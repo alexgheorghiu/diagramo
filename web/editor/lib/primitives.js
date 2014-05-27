@@ -192,13 +192,13 @@ Point.prototype = {
 
         r += "\n" + repeat("\t", INDENTATION) + '<circle cx="' + this.x + '" cy="' + this.y + '" r="' + 1 + '"' ;
         r += this.style.toSVG();
-        r += '/>'
+        r += '/>';
 
         return r;
     }
 
 
-}
+};
 
 
 
@@ -411,6 +411,28 @@ Line.prototype = {
         points.push(this.endPoint);
         return points;
     },
+    
+    /**Return the {Point} corresponding the t certain t value
+     * @param {Number} t the value of parameter t, where t in [0,1], t is like a percent*/
+    getPoint: function(t){
+        var Xp = t * (this.endPoint.x - this.startPoint.x) + this.startPoint.x;
+        var Yp = t * (this.endPoint.y - this.startPoint.y) + this.startPoint.y;
+        
+        return new Point(Xp, Yp);
+    },    
+    
+    /**
+     * Returns the middle of the line
+     * @return {Point} the middle point
+     * */
+    getMiddle : function(){
+        return Util.getMiddle(this.startPoint, this.endPoint);
+    },
+    
+    
+    getLength : function(){
+        return Util.getLength(this.startPoint, this.endPoint);
+    },
 
     /**
      *Get bounds for this line
@@ -474,7 +496,7 @@ Polyline.load = function(o){
     newPolyline.style = Style.load(o.style);
     newPolyline.startPoint = Point.load(o.startPoint);
     return newPolyline;
-}
+};
 
 Polyline.prototype = {
     constructor : Polyline,
@@ -488,6 +510,7 @@ Polyline.prototype = {
         // update bound coordinates for gradient
         this.style.gradientBounds = this.getBounds();
     },
+    
     transform:function(matrix){
         if(this.style!=null){
             this.style.transform(matrix);
@@ -498,11 +521,36 @@ Polyline.prototype = {
     },
 	
     getPoints:function(){
-        var p = [];
-        for (var i=0; i<this.points.length; i++){
-            p.push(this.points[i]);
+        return Point.cloneArray(this.points);
+    },
+    
+    /**Return the {Point} corresponding the t certain t value. 
+     * NOTE: t is the visual percentage of a point from the start of the 
+     * primitive and the result is
+     * different than the t from getPoint(...) method
+     * @param {Number} t the value of parameter t, where t in [0,1]*/
+    getVisualPoint:function (t){
+        var l = this.getLength();
+
+        
+        var walked = 0;
+        var i;
+        for(i=0; i< this.points.length-1; i++){
+            if( walked + Util.distance(this.points[i], this.points[i+1]) > l * t ){
+                break;
+            }
+            
+            walked += Util.distance(this.points[i], this.points[i+1]);
         }
-        return p;
+        
+        var rest = l * t - walked;
+        var currentSegmentLength = Util.distance(this.points[i], this.points[i+1]);
+        
+        //find the position/ration of the middle of Polyline on current segment
+        var segmentPercent = rest / currentSegmentLength;
+        var THEpoint = new Line(this.points[i], this.points[i+1]).getPoint(segmentPercent);
+        
+        return THEpoint;
     },
 
     getBounds:function(){
@@ -517,7 +565,19 @@ Polyline.prototype = {
         ret.style=this.style.clone();
         return ret;
     },
-
+    
+    /**Return the length of the polyline
+     * by summing up all the length of all
+     * segments*/
+    getLength : function(){
+        var l = 0;
+        for(var i=0; i< this.points.length-1; i++){
+            l += Util.distance(this.points[i], this.points[i+1]);
+        }
+        
+        return l;
+    },
+    
 
     equals:function(anotherPolyline){
         if(!anotherPolyline instanceof Polyline){
@@ -1035,7 +1095,7 @@ QuadCurve.load = function(o){
 
     newQuad.style = Style.load(o.style);
     return newQuad;
-}
+};
 
 /**Creates an {Array} of {QuadCurve} out of JSON parsed object
  *@param {JSONObject} v - the JSON parsed object (actually an {Array} of {JSONObject}s
@@ -1050,7 +1110,7 @@ QuadCurve.loadArray = function(v){
     }
 
     return quads;
-}
+};
 
 QuadCurve.prototype = {
     constructor : QuadCurve,
@@ -1064,11 +1124,65 @@ QuadCurve.prototype = {
         this.endPoint.transform(matrix);
     },
 
-	//TODO: should this return a number of points along the line?
+
+    //TODO: dynamically adjust until the length of a segment is small enough
+    //(1 unit)?
     getPoints:function(){
+        var STEP = 0.01;
+        var points = [];
+        for(var t = 0; t<=1; t+=STEP){
+            points.push(this.getPoint(t));
+        }
         
-        return [this.startPoint,this.controlPoint,this.endPoint];
+        return points;
     },
+    
+    /**
+     * Return the point corresponding to parameter value t
+     * @param {Number} t the value of t parameter, t in [0,1]
+     * @return {Point} the value of t parameter, t in [0,1]
+     * @see http://html5tutorial.com/how-to-join-two-bezier-curves-with-the-canvas-api/
+     * */
+    getPoint:function(t){
+        var a = Math.pow((1 - t), 2);            
+        var b = 2 * (1 - t) * t;
+        var c = Math.pow(t, 2);
+        var Xp = a * this.startPoint.x + b * this.controlPoint.x + c * this.endPoint.x;
+        var Yp = a * this.startPoint.y + b * this.controlPoint.y + c * this.endPoint.y;
+        
+        return new Point(Xp, Yp);
+    },
+    
+    /**Return the {Point} corresponding the t certain t value. 
+     * NOTE: t is the visual percentage of a point from the start of the 
+     * primitive and the result is
+     * different than the t from getPoint(...) method
+     * @param {Number} t the value of parameter t, where t in [0,1]*/
+    getVisualPoint:function (t){
+        var points = this.getPoints();
+        var polyline = new Polyline();
+        polyline.points = points;
+        
+        return polyline.getVisualPoint(t);
+    },    
+    
+    
+    
+    /**Computes the length of the Cubic Curve
+     * TODO: This is by far not the best algorithm but only an aproximation.
+     * */
+    getLength:function(){
+        /*Algorithm: split the Bezier curve into an aproximative 
+       polyline and use polyline's near method*/
+        var poly = new Polyline();
+        
+        for(var t=0; t<=1; t+=0.01){
+            poly.addPoint(this.getPoint(t));
+        }
+       
+       return poly.getLength();
+    },
+
 
     /*We could use an interpolation algorightm t=0,1 and pick 10 points to iterate on ...but for now it's fine
      **/
@@ -1096,14 +1210,27 @@ QuadCurve.prototype = {
         if(this.style.strokeStyle!=null && this.style.strokeStyle!=""){
             context.stroke();
         }
-
+        
+        
+        if(false){ //structure polyline
+            var polyline = new Polyline();
+            polyline.style.strokeStyle = '#ccc';
+            polyline.points = this.getPoints();
+            polyline.paint(context);
+            context.stroke();
+            
+            context.fillStyle = "#F00";
+            context.fillRect(this.startPoint.x-2, this.startPoint.y-2, 4, 4);
+            context.fillRect(this.controlPoint.x-2, this.controlPoint.y-2, 4, 4);
+            context.fillRect(this.endPoint.x-2, this.endPoint.y-2, 4, 4);
+        }
     },
 
     /*
      *TODO: algorithm not clear and maybe we can find the math formula to determine if we have an intersection
      *@see <a href="http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic">http://rosettacode.org/wiki/Bitmap/B%C3%A9zier_curves/Quadratic</a>
      */
-    near:function(x, y, radius){
+    deprecated__near:function(x, y, radius){
         var polls=100;
         if(!Util.isPointInside(new Point(x,y), [this.startPoint, this.controlPoint, this.endPoint]) 
                 && !this.startPoint.near(x,y,radius) && ! this.endPoint.near(x,y,radius)){
@@ -1122,14 +1249,14 @@ QuadCurve.prototype = {
             var fromStart = Math.pow(t, 2); //get how far from start we are and square it
             var newX = fromEnd * this.startPoint.x + a * this.controlPoint.x + this.fromStart * this.endPoint.x;//?
             var newY = fromEnd * this.startPoint.y + a * this.controlPoint.y + this.fromStart * this.endPoint.y;//?
-            p = new Point(newX,newY);
+            var p = new Point(newX,newY);
             if(p.near(x, y, radius)){
                 return true;
             }
 
             //get distance between start and the point we are looking for, and the current point on line
-            pToStart=Math.sqrt(Math.pow(this.startPoint.x-p.x,2)+Math.pow(this.startPoint.y-p.y,2));
-            myToStart=Math.sqrt(Math.pow(this.startPoint.x-x,2)+Math.pow(this.startPoint.y-y,2));
+            var pToStart=Math.sqrt(Math.pow(this.startPoint.x-p.x,2)+Math.pow(this.startPoint.y-p.y,2));
+            var myToStart=Math.sqrt(Math.pow(this.startPoint.x-x,2)+Math.pow(this.startPoint.y-y,2));
 
             //if our point is closer to start, we know that our cursor must be between start and where we are
             if(myToStart<pToStart){
@@ -1144,9 +1271,16 @@ QuadCurve.prototype = {
             return this.startPoint.near(x,y,radius)|| this.endPoint.near(x,y,radius);
             }
     },
+    
+    near:function(x, y, radius){
+        var points = this.getPoints();
+        var polyline = new Polyline();
+        polyline.points = points;
+        return polyline.near(x, y, radius);
+    },
 
     clone:function(){
-        ret=new QuadCurve(this.startPoint.clone(),this.controlPoint.clone(),this.endPoint.clone());
+        var ret=new QuadCurve(this.startPoint.clone(),this.controlPoint.clone(),this.endPoint.clone());
         ret.style=this.style.clone();
         return ret;
     },
@@ -1175,7 +1309,7 @@ QuadCurve.prototype = {
      * @see sources for <a href="http://grepcode.com/file/repository.grepcode.com/java/root/jdk/openjdk/6-b14/java/awt/geom/QuadCurve2D.java">java.awt.geom.QuadCurve2D</a>
      * @author (just converted to JavaScript) alex@scriptoid.com
      */
-    contains:function(x,y) {
+    deprecated_2_contains:function(x,y) {
 
         var x1 = this.startPoint.x;
         var y1 = this.startPoint.y;
@@ -1272,6 +1406,13 @@ QuadCurve.prototype = {
         (y >= yb && y < yl) ||
         (y >= yl && y < yb);
     },
+    
+    contains:function(x,y) {
+        var points = this.getPoints();
+        var polyline = new Polyline();
+        polyline.points = points;
+        return polyline.contains(x, y);
+    },
 
     toString:function(){
         return 'quad(' + this.startPoint + ',' + this.controlPoint + ',' + this.endPoint + ')';
@@ -1294,7 +1435,7 @@ QuadCurve.prototype = {
 
         return result;
     }
-}
+};
 
 
 /**
@@ -1420,35 +1561,44 @@ CubicCurve.prototype = {
 
     /**
      * Inspired by java.awt.geom.CubicCurve2D
+     * @author Alex
      */
     contains:function(x, y) {
-//        if (!(x * 0.0 + y * 0.0 == 0.0)) {
-//            /* Either x or y was infinite or NaN.
-//             * A NaN always produces a negative response to any test
-//             * and Infinity values cannot be "inside" any path so
-//             * they should return false as well.
-//             */
-//            return false;
-//        }
-//        // We count the "Y" crossings to determine if the point is
-//        // inside the curve bounded by its closing line.
-//        var x1 = this.startPoint.x//getX1();
-//        var y1 = this.startPoint.y//getY1();
-//        var x2 = this.endPoint.x//getX2();
-//        var y2 = this.endPoint.y//getY2();
-//        var crossings =
-//        (Util.pointCrossingsForLine(x, y, x1, y1, x2, y2) +
-//            Util.pointCrossingsForCubic(x, y,
-//                x1, y1,
-//                this.controlPoint1.x, this.controlPoint1.y,
-//                this.controlPoint2.x, this.controlPoint2.y,
-//                x2, y2, 0));
-//        return ((crossings & 1) == 1);
+        /*This piece of code is kept as a reference.
+        The "old" idea was to treat the curve as a polygon
+        thus closing it and apply a similar algorithm as for polygon.
+        Of course it does not offer precision :(
         
-        /*
-        *Algorithm: split the Bezier curve into an aproximative polyline and use polyline's near method*/
+//        if (!(x * 0.0 + y * 0.0 == 0.0)) {
+//            Either x or y was infinite or NaN.
+//             A NaN always produces a negative response to any test
+//             and Infinity values cannot be "inside" any path so
+//             they should return false as well.
+//             
+            return false;
+        }
+        // We count the "Y" crossings to determine if the point is
+        // inside the curve bounded by its closing line.
+        var x1 = this.startPoint.x //getX1();
+        var y1 = this.startPoint.y //getY1();
+        var x2 = this.endPoint.x //getX2();
+        var y2 = this.endPoint.y //getY2();
+        var crossings =
+        (Util.pointCrossingsForLine(x, y, x1, y1, x2, y2) +
+            Util.pointCrossingsForCubic(x, y,
+                x1, y1,
+                this.controlPoint1.x, this.controlPoint1.y,
+                this.controlPoint2.x, this.controlPoint2.y,
+                x2, y2, 0));
+        return ((crossings & 1) == 1);
+        */
+        
+        
+        /*Algorithm: split the Bezier curve into an aproximative polyline and 
+         * use {Polyline}'s contains(...) method
+         * */
        var poly = new Polyline();
-       for(var t=0; t<=1; t=t+0.01){
+       for(var t=0; t<=1; t=t+0.01){ //101 points :D
            var a = Math.pow((1 - t), 3);            
             var b = 3 * t * Math.pow((1 - t), 2);
             var c = 3 * Math.pow(t, 2) * (1 - t);
@@ -1490,14 +1640,62 @@ CubicCurve.prototype = {
        return poly.near(x, y, radius);
     },
 
-	//TODO: should this return a number of points along the line?
+    //TODO: dynamically adjust until the length of a segment is small enough
+    //(1 unit)?
     getPoints:function(){
-        return [this.startPoint,this.controlPoint1,this.controlPoint2,this.endPoint];
+        var STEP = 0.01;
+        var points = [];
+        for(var t = 0; t<=1; t+=STEP){
+            points.push(this.getPoint(t));
+        }
+        
+        return points;
     },
 
     getBounds:function(){
         return Util.getBounds(this.getPoints());
     },
+    
+    /**Computes the length of the Cubic Curve
+     * TODO: This is by far not the best algorithm but only an aproximation.
+     * */
+    getLength:function(){
+        /*Algorithm: split the Bezier curve into an aproximative 
+       polyline and use polyline's near method*/
+        var poly = new Polyline();
+        
+        poly.points = this.getPoints();      
+       
+       return poly.getLength();
+    },
+    
+    /**Return the {Point} corresponding a t value, from parametric equation of Curve
+     * @param {Number} t the value of parameter t, where t in [0,1]*/
+    getPoint: function(t){
+        var a = Math.pow((1 - t), 3);            
+        var b = 3 * t * Math.pow((1 - t), 2);
+        var c = 3 * Math.pow(t, 2) * (1 - t);
+        var d = Math.pow(t, 3);
+        var Xp = a * this.startPoint.x + b * this.controlPoint1.x + c * this.controlPoint2.x + d * this.endPoint.x;
+        var Yp = a * this.startPoint.y + b * this.controlPoint1.y + c * this.controlPoint2.y + d * this.endPoint.y;
+        
+        return new Point(Xp, Yp);
+    },
+    
+    /**Return the {Point} corresponding the t certain t value. 
+     * NOTE: t is the visual percentage of a point from the start of the 
+     * primitive and the result is
+     * different than the t from getPoint(...) method
+     * @param {Number} t the value of parameter t, where t in [0,1]*/
+    getVisualPoint:function (t){
+        var points = this.getPoints();
+        var polyline = new Polyline();
+        polyline.points = points;
+        
+        return polyline.getVisualPoint(t);
+    },
+    
+
 
     toString:function(){
         return 'quad(' + this.startPoint + ',' + this.controlPoint1 + ',' + this.controlPoint2 + ',' + this.endPoint + ')';
@@ -3049,16 +3247,17 @@ Figure.prototype = {
  * @see http://www.timotheegroleau.com/Flash/articles/cubic_bezier_in_flash.htm
  * @see http://www.algorithmist.net/bezier3.html
  * @see http://www.caffeineowl.com/graphics/2d/vectorial/bezierintro.html
+ * @author Alex Gheorghiu <alex@scriptoid.com>
  **/
 function NURBS(points){
     if(points.length < 2){
-        throw Exception("NURBS: contructor() We need minimum 3 points to have a NURBS");
+        throw "NURBS: contructor() We need minimum 3 points to have a NURBS";
     }
     
     /**The initial {@link Point}s*/
     this.points = Point.cloneArray(points);
     
-    /**The array of Cubic curves*/
+    /**The array of {CubicCurve} s from which the NURB will be made*/
     this.fragments = this.nurbsPoints(this.points);
     
     /**The {@link Style} of the line*/
@@ -3079,12 +3278,13 @@ NURBS.load = function(o){
     var newNURBS = new NURBS(Point.loadArray(o.points));    
     newNURBS.style = Style.load(o.style);
     return newNURBS;
-}
+};
 
 NURBS.prototype = {
     /**Computes a series of Bezier(Cubic) curves to aproximate a curve modeled 
      *by a set of points
-     *@return an {Array} of Cubic curves (provided also as {Array})
+     *@param {Array}- P and {Array} of {Point}s
+     *@return an {Array} of {CubicCurve} (provided also as {Array})
      *Example: 
      *  [
      *      [p1, p2, p3, p4],
@@ -3099,19 +3299,24 @@ NURBS.prototype = {
         /**Contains the gathered sub curves*/        
         var sol = [];
         
-        if(n == 2){
+        if(n === 2){
             sol.push(new Line(P[0], P[1]));
+            return sol;
         }
-        else if(n == 3){
+        else if(n === 3){
             sol.push(new QuadCurve(P[0], P[1], P[2]));
+            return sol;
         }
-        else if(n == 4){
+        else if(n === 4){
             sol.push(new CubicCurve(P[0], P[1], P[2], P[3]));
+            return sol;
         }
         
-        /**Computes factorial*/
+        /**Computes factorial
+         * @param {Number} k the number
+         * */
         function fact(k){
-            if(k==0 || k==1){
+            if(k===0 || k===1){
                 return 1;
             }
             else{
@@ -3209,7 +3414,7 @@ NURBS.prototype = {
     
     /**Paint the NURBS*/
     paint : function(context){
-		context.beginPath();
+        context.beginPath();
 		
         if(this.style != null){
             this.style.setupContext(context);
@@ -3255,6 +3460,55 @@ NURBS.prototype = {
         return false;
     },
     
+    /**Computes the length of the {NURB} by summing the length of {CubicCurve}s
+     * is made of.
+     * TODO: as this involves a lot of computations it would nice to use a Math formula
+     * */
+    getLength : function(){
+        var l = 0;
+        
+        for(var ci=0; ci<this.fragments.length; ci++){
+            l += this.fragments[ci].getLength();
+        }
+        return l;
+    },
+    
+    /**Get middle point*/
+    _deprecated_getMiddle: function(){
+        var ci;
+        
+        //gather lengths of curves
+        var lengths = [];
+        for(ci=0; ci<this.fragments.length; ci++){
+            lengths.push(this.fragments[ci].getLength());
+        }
+        
+        //find on what curve (index) the middle of NURBE will be        
+        ci = 0;
+        var collectedLength = 0;
+        for(ci=0; ci<this.fragments.length; ci++){
+            if(collectedLength + this.fragments[ci].getLength() > this.getLength()/2)
+                break;
+            
+            collectedLength += this.fragments[ci].getLength();
+        }
+        
+//        if (ci == 0 || ci == this.fragments.length)   
+//            throw "Assert ci it should not be " + ci;
+        
+        var l = this.getLength()/2 - collectedLength;
+        var t = l/this.fragments[ci].getLength();
+        
+        return this.fragments[ci].getVisualPoint(t);
+    },
+    
+    getMiddle : function() {
+        var points = this.getPoints();
+        var poly = new Polyline();
+        poly.points = points;
+        
+        return poly.getVisualPoint(0.5);
+    },
     
     equals : function (object){
         throw Exception("Not implemented");
@@ -3303,14 +3557,14 @@ NURBS.prototype = {
     },
     
     getPoints : function(){
-        var points = []
+        var points = [];
         for(var f=0; f<this.fragments.length; f++){
             var fragment = this.fragments[f];
             points = points.concat(fragment.getPoints());
         }
         return points;
     }    
-}
+};
 
 
 /**

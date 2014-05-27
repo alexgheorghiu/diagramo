@@ -377,7 +377,7 @@ Handle.prototype = {
                 var deltaY = newY - lastMove[1];    //Take changes on Oy
                 var translationMatrix = Matrix.translationMatrix(0, deltaY);    //Generate translation matrix
 
-                /*TODO: make changes to DIAGRAMO.debugSolution here
+                /*TODO: make changes to DIAGRAMO.debugSolutions here
                  * because, otherwise, those changes are not reflected in debug painting of Connector
                  */
                 //Pick turning points neighbours and translate them
