@@ -254,6 +254,7 @@ module( "Primitive.Polyline tests" );
 test("primitive.Polyline.getLength", function () {
 //    var poly = new Polyline();
 //    poly.addPoint(new Point());
+    expect(0);
 });
 
 //module( "SVG Export tests" );
