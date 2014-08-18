@@ -1,4 +1,4 @@
-The application is released under Diagramo Free License ( http://diagramo.com/license.php )
+The application is released under Apache License, Version 2.0
 
 Details
 ---------
