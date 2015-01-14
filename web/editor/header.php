@@ -15,6 +15,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+if (SHOW_HEADER) {
 
 $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
 ?>
@@ -122,3 +123,5 @@ $WEBADDRESS = $delegate->settingsGetByKeyNative('WEBADDRESS');
         
     </div>
 </div>
+
+<?php } ?>
