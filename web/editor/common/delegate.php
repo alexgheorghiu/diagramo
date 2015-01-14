@@ -17,6 +17,7 @@ limitations under the License.
 */
 
 define('DEBUG', false);
+define('SHOW_HEADER', true);
 
 require_once dirname(__FILE__) . '/utils.php';
 
