@@ -36,9 +36,8 @@ var connector_defaultConnectorTextBgStyle = "#ffffff";
  *@author Alex Gheorghiu <alex@scriptoid.com>
 */
 function Connector(startPoint,endPoint,type, id){
-    debugger;
-
     // agbl edit
+    debugger;
     console.log("am I really not doing connector");
 
     /**Connector's id*/

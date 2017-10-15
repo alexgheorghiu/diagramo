@@ -105,6 +105,8 @@ var doUndo = true;
 /**Usually an instance of a Command (see /lib/commands/*.js)*/
 var currentMoveUndo = null; 
 
+//agbl edit
+debugger;
 var CONNECTOR_MANAGER = new ConnectorManager();
 var CONTAINER_MANAGER = new ContainerFigureManager();
 
@@ -1493,6 +1495,7 @@ function onMouseDown(ev){
         
         case STATE_CONNECTOR_PICK_FIRST:
             //moved so it can be called from undo action
+            
             //agbl edit
             //where kick off happens for connector
             debugger;
@@ -2642,8 +2645,9 @@ function connectorPickFirst(x, y, ev){
     var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
 
     //agbl edit
-    //if is for boxes, we might want to limit this to only being able to snap to/from boxes
+    //this is for boxes, we will probably want to limit this to only being able to snap to/from Figures/boxes
     //then expand to allow for arrow to arrow
+    //if handles new connections from connection points on a Figure
     //else if handles for creating new connections on the grid itself
 
     debugger;

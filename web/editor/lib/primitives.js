@@ -2768,6 +2768,7 @@ Path.prototype = {
 function Figure(name) {
     //this is the elements of our graph
     //called on creation of boxes and text
+    //agbl edit
     debugger;
 
     /**Each Figure will have an unique Id on canvas*/
