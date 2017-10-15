@@ -45,6 +45,9 @@ limitations under the License.
  * It can be Center|Left|Right <a href="http://dev.w3.org/html5/2dcontext/#dom-context-2d-textalign">http://dev.w3.org/html5/2dcontext/#dom-context-2d-textalign</a>
  **/
 function Text(string, x, y, font, size, outsideCanvas, align){
+    debugger;
+    console.log("am i doing text");
+
     /**Text used to display*/
     this.str = string;
 

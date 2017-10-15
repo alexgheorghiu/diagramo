@@ -221,9 +221,16 @@
                             for(var figure in set['figures']){
                                 figure = set['figures'][figure];
                                 
-                                var figureFunctionName = 'figure_' + figure.figureFunction;                                
+                                var figureFunctionName = 'figure_' + figure.figureFunction;
+
+                                //agbl edit
+                                console.log(figureFunctionName);
+
                                 var figureThumbURL = 'lib/sets/' + setName + '/' + figure.image;
                                 
+                                //agbl edit
+                                console.log('lib/sets/' + setName + '/' + figure.image);
+
                                 var eFigure = document.createElement('img');
                                 eFigure.setAttribute('src', figureThumbURL);
                                 
@@ -232,6 +239,12 @@
                                         evt.preventDefault();
                                         //Log.info("editor.php:buildPanel: figureFunctionName:" + figureFunctionName);
                                         
+                                        //agbl edit
+                                        console.log("do we ever get here");
+                                        //just prints figure_Text?
+                                        console.log(figureFunctionName);
+
+
                                         createFigure(window[figureFunction] /*we need to search for function in window namespace (as all that we have is a simple string)**/
                                             ,figureThumbURL);
                                     };
