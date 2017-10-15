@@ -2766,6 +2766,10 @@ Path.prototype = {
  *
  **/
 function Figure(name) {
+    //this is the elements of our graph
+    //called on creation of boxes and text
+    debugger;
+
     /**Each Figure will have an unique Id on canvas*/
     this.id = STACK.generateId();
     

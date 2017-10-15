@@ -1493,6 +1493,9 @@ function onMouseDown(ev){
         
         case STATE_CONNECTOR_PICK_FIRST:
             //moved so it can be called from undo action
+            //agbl edit
+            //where kick off happens for connector
+            debugger;
             connectorPickFirst(x,y,ev);
             break;
 
@@ -2620,6 +2623,8 @@ function onDblClick(ev) {
  *@author Alex, Artyom
  **/
 function connectorPickFirst(x, y, ev){
+    //agbl edit
+    //where we make the connector
     Log.group("connectorPickFirst");
     //create connector
     var conId = CONNECTOR_MANAGER.connectorCreate(new Point(x, y),new Point(x+10,y+10) /*fake cp*/, connectorType);
@@ -2635,6 +2640,13 @@ function connectorPickFirst(x, y, ev){
     var fOverId = STACK.figureGetByXY(x,y);
     //get the ConnectionPoint's id if we are over it (and belonging to a figure)
     var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
+
+    //agbl edit
+    //if is for boxes, we might want to limit this to only being able to snap to/from boxes
+    //then expand to allow for arrow to arrow
+    //else if handles for creating new connections on the grid itself
+
+    debugger;
 
     //see if we can snap to a figure
     if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
