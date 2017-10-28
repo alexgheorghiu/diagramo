@@ -1296,6 +1296,18 @@ ConnectorManager.prototype = {
         return id;
     },
 
+    connectionPointConnectorGetByXY:function(x,y, type, currentId){
+        var id = -1;
+
+        for(var i=0; i<this.connectionPoints.length; i++){
+            if( this.connectionPoints[i].contains(x,y) && this.connectionPoints[i].type == type && this.connectionPoints[i].parentId != currentId){
+                id = this.connectionPoints[i].id;
+                break;
+            }
+        }
+
+        return id;
+    },
     /** Returns closest connection point id based on an x, y, radius and the ConnectionPoint.RADIUS
      * It will pick the first one that matches the criteria
      *@param {Number} x - the x coordinates of the point

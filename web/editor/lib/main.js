@@ -2634,7 +2634,7 @@ function onDblClick(ev) {
 function connectorPickFirst(x, y, ev){
     Log.group("connectorPickFirst");
     //create connector
-    var conId = CONNECTOR_MANAGER.connectorCreateMidPoint(new Point(x, y),new Point(x+30, y+30), new Point(x+60,y+60) /*fake cp*/, connectorType);
+    var conId = CONNECTOR_MANAGER.connectorCreateMidPoint(new Point(x, y),new Point(x+5, y+5), new Point(x+10,y+10) /*fake cp*/, connectorType);
     selectedConnectorId = conId;
     var con = CONNECTOR_MANAGER.connectorGetById(conId);
 
@@ -2647,7 +2647,7 @@ function connectorPickFirst(x, y, ev){
     var fOverId = STACK.figureGetByXY(x,y);
     //get the ConnectionPoint's id if we are over it (and belonging to a figure)
     var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
-
+    var fCpOverMidId = CONNECTOR_MANAGER.connectionPointConnectorGetByXY(x, y, ConnectionPoint.TYPE_CONNECTOR, selectedConnectorId);  //find midpoint cp
     //see if we can snap to a figure
     if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
         var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
@@ -2689,6 +2689,10 @@ function connectorPickFirst(x, y, ev){
 
         var g = CONNECTOR_MANAGER.glueCreate(candidate[1], conCps[0].id, true);
         Log.info("First glue created : " + g);
+    }else if (fCpOverMidId != -1) { //are we over a midpoint?
+      var cp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverMidId);
+      conCps[0].color = ConnectionPoint.OVER_COLOR;
+      CONNECTOR_MANAGER.glueCreate(fCpOverMidId, cp.id, false);
     }
     state = STATE_CONNECTOR_PICK_SECOND;
     Log.groupEnd();
@@ -2709,6 +2713,7 @@ function connectorPickSecond(x, y, ev){
 
     //get the ConnectionPoint's id if we are over it (and belonging to a figure)
     var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
+    var fCpOverMidId = CONNECTOR_MANAGER.connectionPointConnectorGetByXY(x, y, ConnectionPoint.TYPE_CONNECTOR, selectedConnectorId);  //find midpoint cp
     //get Figure's id if over it
     var fOverId = STACK.figureGetByXY(x,y);
 
@@ -2786,7 +2791,7 @@ function connectorPickSecond(x, y, ev){
 
     //COLOR MANAGEMENT FOR {ConnectionPoint}
     //Find any {ConnectionPoint} from a figure at (x,y). Change FCP (figure connection points) color
-    if (fCpOverId != -1 || fOverId != -1) { //Are we over a ConnectionPoint from a Figure or over a Figure?
+    if (fCpOverId != -1 || fOverId != -1|| fCpOverMidId != -1) { //Are we over a ConnectionPoint from a Figure or over a Figure?
         cps[2].color = ConnectionPoint.OVER_COLOR;
     } else {
         cps[2].color = ConnectionPoint.NORMAL_COLOR;
@@ -2821,6 +2826,8 @@ function connectorPickSecond(x, y, ev){
         CONNECTOR_MANAGER.glueCreate(fCpOverId, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, false);
     } else if(fOverId != -1){ //Are we, at least, over a Figure?
         CONNECTOR_MANAGER.glueCreate(candidate[3]/*end Figure's ConnectionPoint Id*/, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, true);
+    }else if(fCpOverMidId !=-1){//Are we over a ConnectionPoint from a midpoint?
+        CONNECTOR_MANAGER.glueCreate(fCpOverMidId, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, false);
     } else { //No ConnectionPoint, no Figure (I'm lonely)
         fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
         if(fCpOverId !== -1){
@@ -2848,7 +2855,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
 
     //get the ConnectionPoint's id if we are over it (and belonging to a figure)
     var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x,y, ConnectionPoint.TYPE_FIGURE);
-
+    var fCpOverMidId = CONNECTOR_MANAGER.connectionPointConnectorGetByXY(x, y, ConnectionPoint.TYPE_CONNECTOR, selectedConnectorId);  //find midpoint cp
     //get Figure's id if over it
     var fOverId = STACK.figureGetByXY(x,y);
 
@@ -2858,13 +2865,13 @@ function connectorMovePoint(connectionPointId, x, y, ev){
 
     //MANAGE COLOR
     //update cursor if over a figure's cp
-    if(fCpOverId != -1 || fOverId != -1){ //Are we over a ConnectionPoint from a Figure or over a Figure?
+    if(fCpOverId != -1 || fOverId != -1 || fCpOverMidId != -1){ //Are we over a ConnectionPoint from a Figure or over a Figure?
         //canvas.style.cursor = 'default';
         if(cps[0].id == selectedConnectionPointId){
             cps[0].color = ConnectionPoint.OVER_COLOR;
         }
         else{
-            cps[1].color = ConnectionPoint.OVER_COLOR;
+            cps[2].color = ConnectionPoint.OVER_COLOR;
         }
     }
     else{
@@ -2873,7 +2880,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
             cps[0].color = ConnectionPoint.NORMAL_COLOR;
         }
         else{
-            cps[1].color = ConnectionPoint.NORMAL_COLOR;
+            cps[2].color = ConnectionPoint.NORMAL_COLOR;
         }
     }
 
@@ -2970,6 +2977,8 @@ function connectorMovePoint(connectionPointId, x, y, ev){
             CONNECTOR_MANAGER.glueCreate(fCpOverId, firstConPoint.id, false);
         } else if(fOverId != -1){ //Are we, at least, over a Figure?
             CONNECTOR_MANAGER.glueCreate(candidate[1], firstConPoint.id, true);
+        }else if (fCpOverMidId != -1){
+            CONNECTOR_MANAGER.glueCreate(fCpOverMidId, firstConPoint.id, false);
         } else {
             fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, secondConPoint);
             if(fCpOverId !== -1){
@@ -3054,7 +3063,9 @@ function connectorMovePoint(connectionPointId, x, y, ev){
             CONNECTOR_MANAGER.glueCreate(fCpOverId, secondConPoint.id, false);
         } else if(fOverId != -1){ //Are we, at least, over a Figure?
             CONNECTOR_MANAGER.glueCreate(candidate[3], secondConPoint.id, true);
-        } else {
+        }else if (fCpOverMidId != -1) {
+            CONNECTOR_MANAGER.glueCreate(fCpOverMidId, secondConPoint.id, false);
+        }else {
             fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
             if(fCpOverId !== -1){
                 currentCloud = [fCpOverId, secondConPoint.id];
