@@ -36,9 +36,16 @@ var connector_defaultConnectorTextBgStyle = "#ffffff";
  *@author Alex Gheorghiu <alex@scriptoid.com>
 */
 function Connector(startPoint,endPoint,type, id){
+    // agbl edit
+    debugger;
+    console.log("am I really not doing connector");
+
     /**Connector's id*/
     this.id = id;
     
+    //agbl edit
+    console.log(this.id);
+
     /**An {Array} of {Point}s. They will be used to draw the connector*/
     this.turningPoints = [startPoint,endPoint];
     
@@ -66,7 +73,8 @@ function Connector(startPoint,endPoint,type, id){
     this.style.lineStyle = Style.LINE_STYLE_CONTINOUS;
 
     /**The text that will appear in the middle of the connector*/
-    this.middleText = new Text(connector_defaultConnectorTextStr, (startPoint.x + endPoint.x)/2+10, (startPoint.y +  endPoint.y) / 2 - 13, connector_defaultConnectorTextFont, connector_defaultConnectorTextSize);
+    //agbl edit
+    this.middleText = new Text("hello", (startPoint.x + endPoint.x)/2+10, (startPoint.y +  endPoint.y) / 2 - 13, connector_defaultConnectorTextFont, connector_defaultConnectorTextSize);
     this.middleText.style.strokeStyle = connector_defaultConnectorTextStrokeStyle;
     this.middleText.style.fillStyle = connector_defaultConnectorTextFillStyle;
     this.middleText.bgStyle = connector_defaultConnectorTextBgStyle;
