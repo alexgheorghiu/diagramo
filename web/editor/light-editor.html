@@ -300,6 +300,18 @@
                 </center>
                 <div style="overflow: scroll;" id="edit">
                 </div>
+
+                <!--agbl edit-->
+                <div id="matrix">
+                    Matrix: <textarea id="matrixgen">Enter text here...</textarea><br><br>
+
+                    <button onclick="myFunction()">Generate Matrix</button>
+                    <script>
+                    function myFunction() {
+                        document.getElementById("matrixgen").value = generateMatrix();
+                    }
+                    </script>
+                </div>
             </div>
             
         </div>

@@ -326,6 +326,124 @@ var canvasProps = null;
 /**Currently holds two elements the type: figure|group and the id*/
 var clipboardBuffer = [];
 
+
+
+
+/*agbl edit*/
+function lookupNode(myCP) {
+    for(var j = 0; j < CONNECTOR_MANAGER.connectionPoints.length; j++) {
+        if (myCP == CONNECTOR_MANAGER.connectionPoints[j].id) {
+            console.log("id: " + CONNECTOR_MANAGER.connectionPoints[j].parentId);
+            return CONNECTOR_MANAGER.connectionPoints[j].parentId;
+        }
+    }
+
+    //otherwise we have an issue here
+    return -1;
+}
+
+function generateMatrix(){
+    var matrixString = "";
+    var nodeArray = [];
+    var tailArray = [];
+    var headArray = [];
+    var matrixArray = [];
+
+    //connectionPoints
+    //CONNECTOR_MANAGER.connectionPoints[];
+
+    //glues
+    //CONNECTOR_MANAGER.glues[];
+
+    debugger;
+
+    //get unique boxes to be our row and column headers
+    for (var i = 0; i < CONNECTOR_MANAGER.connectionPoints.length; i++) {
+        if ((CONNECTOR_MANAGER.connectionPoints[i].type == "figure") && 
+            ($.inArray(CONNECTOR_MANAGER.connectionPoints[i].parentId, nodeArray)) == -1) {
+            nodeArray.push(CONNECTOR_MANAGER.connectionPoints[i].parentId);
+        }
+    }
+
+    //come in glue pairs (ex. 0,1)
+    //glue[0].id1 is tail
+    //glue[0].id2 is connection tail
+    //glue[1].id1 is head
+    //glue[1].id2 is connection head
+    for (var i = 0; i < CONNECTOR_MANAGER.glues.length; i = i+2) {
+        tailArray.push(CONNECTOR_MANAGER.glues[i].id1);
+        headArray.push(CONNECTOR_MANAGER.glues[i+1].id1)
+    }
+
+    //initialize matrixArray
+    for (var i = 0; i <= nodeArray.length; i++) {
+        matrixArray[i] = [];
+    }
+
+    //set columns
+    for (var i = 0; i < nodeArray.length; i++) {
+        matrixArray[0][i+1] = nodeArray[i];
+    }
+
+    //set rows
+    for (var i = 0; i < nodeArray.length; i++) {
+        matrixArray[i+1][0] = nodeArray[i];
+    }
+
+    //fill matrix with adjacencies
+
+    //search head in CONNECTOR_MANAGER.connectionPoints[] to determine which 'node' it belongs to
+    //search tail in CONNECTOR_MANAGER.connectionPoints[] to determine which 'node' it belongs to
+
+    debugger;
+
+    var iterations = headArray.length;
+
+    for (var i = 0; i < iterations; i++) {
+        var nodeHead;
+        var nodeTail;
+
+        //might want to replace this with 'pop' from front
+        var tempHeadCP = headArray.pop();
+        var tempTailCP = tailArray.pop();
+
+        //lookupNode: have a CP -> get a node
+        //then we look up node in our nodeArray to determine where it should be inserted in matrix
+        nodeHead = nodeArray.indexOf(lookupNode(tempHeadCP));
+        nodeTail = nodeArray.indexOf(lookupNode(tempTailCP));
+
+        //row header pointing to column header
+        matrixArray[nodeTail+1][nodeHead+1] = 1;
+    }
+
+    //matrix generation
+    for (var row = 0; row < matrixArray.length; row++) {
+        for (var col = 0; col < matrixArray.length; col++) {
+            if(row == 0 && col == 0) {
+                matrixString = matrixString.concat("-");
+            }
+
+            else if(matrixArray[row][col] == undefined){
+                matrixString = matrixString.concat("0");
+            }
+
+            else {
+                matrixString = matrixString.concat(matrixArray[row][col]);
+            }
+
+        }
+        matrixString = matrixString.concat("\n");
+    }
+
+    //look in console to see matrix
+    console.log(matrixString);
+
+    return matrixString;
+}
+
+
+
+
 /**Return current canvas.
  * Current canvas will ALWAYS have the 'a' as DOM id
  * @return {HTMLCanvasElement} the DOM element of <canvas> tag
