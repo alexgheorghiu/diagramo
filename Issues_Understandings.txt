@@ -1,0 +1,67 @@
+Project issues:
+- Things to explore enumerated below by *******************
+	- Especially how the relationship of boxes and arrows are stored (if they are stored)
+	- Related:
+		- What is "glue"? Is that how we associate a box and an arrow/line?
+- Lines can be drawn without connecting to a box (see main.js)
+	- We will want to limit this behaviour to just being able to draw from a box's connection point
+	- Then Connectors will need a connection point of their own so they can draw to each other
+- Delete a box doesn't delete arrows associated to it
+	- This probably can wait
+	- We need to figure out how the boxes and arrows are associated so we can cascade a deletion
+- Matrix generation
+	- When above relationship between boxes and arrows is figured out, then this can be considered
+- Insert image is broken
+	- Probably don't need this (insertion of image into graph area)
+
+__________________________________________________________________________________
+
+
+Files and what they do:
+- Note: I have added debugger messages to track the below details. Open in Chrome, inspect element and use the call stack to explore backwards. Walk through line by line to follow forwards. My edits are marked by //agbl edit for ctrl f purposes.
+	- Figures = boxes/text
+	- Connections = arrows
+- connections.js
+	- has function Connector(startPoint,endPoint,type, id)
+		- Occurs when Connector--our 'arrows'--is created
+- light-editor.html
+	- generates our left pane with boxes and arrows
+	- creates action listener for these buttons/images
+		- We can trace what functions are called by using debugger and call stack/walk through functions starting from here
+	- also generates top pane with 'undo' and stuff
+		- Not as important for now
+- text.js
+	- has function Text(string, x, y, font, size, outsideCanvas, align)
+		- Occurs on creation of Text (there is a Text inside of every Figure--or our 'boxes')
+	- We might want to remove this as an option from the left pane, not sure if we need this
+- main.js
+*******************	IMPORTANT TO NOTE *******************
+	- The below is probably how they keep track of Figures and Connectors but this needs to be revisited and explored
+	//agbl edit
+	debugger;
+	var CONNECTOR_MANAGER = new ConnectorManager();			//please note this is in connectionManagers.js
+	var CONTAINER_MANAGER = new ContainerFigureManager();	//please note this is in containers.js
+*********************************************************
+	- there is a line "case STATE_CONNECTOR_PICK_FIRST:" (there's one for the second too that follows same logic)
+		- This is triggers kick off for creation of our Connector
+	-  function connectorPickFirst(x, y, ev)
+*******************	IMPORTANT TO NOTE *******************
+		- var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
+			- Is how they locate whether a Connection is being created from a ConnectionPoint that belongs to a Figure
+				- We will want to explore this and see how they hold the relationship between a Figure and a ConnectionPoint or Connector
+*********************************************************
+		- Is the kick off for Connector
+			- if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
+				- This section handles the logic for creation of a Connection from a ConnectionPoint from a Figure
+					- This is the behaviour we want
+			- else if (fOverId !== -1) { //Are we, at least, over the {Figure}?
+				- This section handles the logic for creation of a Connection when you are hovering over the graph area and not a Figure
+					- We probably want to limit this behaviour as it does not fit into our model
+	- At some point, this is the class where we will want to add the 'arrows to arrows' functionality
+- basic.js
+	- has function figure_Rectangle(x, y)
+		- This is the one called that kicks off the Figure creation for our boxes
+	- has function function figure_Text(x,y)
+		- This is the one called that kicks off the Text creation
+- primitives.js
+	- has function Figure(name) that creates a figure with passed name information
