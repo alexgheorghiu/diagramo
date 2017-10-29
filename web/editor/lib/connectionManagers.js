@@ -18,17 +18,17 @@ limitations under the License.
 
 /**
  * It manages all the Connectors on a diagram
- * 
+ *
  * @constructor
  * @this {ConnectorManager}
  **/
 function ConnectorManager(){
     /**An {Array} of {Connector}s. Keeps all Connectors from canvas*/
     this.connectors = [];
-    
+
     /**An {Array} of {ConnectionPoint}s. Keeps all ConnectionPoints from canvas*/
-    this.connectionPoints = []; 
-    
+    this.connectionPoints = [];
+
     /**Used to generate unique IDs for ConnectionPoint*/
     this.connectionPointCurrentId = 0; //
 
@@ -61,7 +61,7 @@ ConnectorManager.load = function(o){
 
     //1 - load connectors
     localLog += '\nCONNECTORS';
-    newConnectionManager.connectors = Connector.loadArray(o.connectors);    
+    newConnectionManager.connectors = Connector.loadArray(o.connectors);
 //    newConnectionManager.connectorSelectedIndex = o.connectorSelectedIndex;
     for(var i=0;i<newConnectionManager.connectors.length;i++){
         localLog += '\n' + newConnectionManager.connectors[i].toString();
@@ -74,7 +74,7 @@ ConnectorManager.load = function(o){
         localLog += "\n" +  newConnectionManager.connectionPoints[i].toString();
     }
     //alert(str);
-    
+
 //    newConnectionManager.connectionPointSelectedIndex = o.connectionPointSelectedIndex;
     newConnectionManager.connectionPointCurrentId = o.connectionPointCurrentId;
 
@@ -82,23 +82,23 @@ ConnectorManager.load = function(o){
     //3 - load glues
     localLog += '\nGLUES';
     newConnectionManager.glues = Glue.loadArray(o.glues);
-    
+
     //localLog += 'Connection manager has ' + newConnectionManager.glues.length + " glues";
     for(var i=0;i<newConnectionManager.glues.length; i++){
         localLog += "\n" +  newConnectionManager.glues[i].toString();
     }
-    
+
     //alert(localLog);
-    
+
     newConnectionManager.connectionMode = o.connectionMode;
 
     return newConnectionManager ;
 }
 
 ConnectorManager.prototype = {
-    
+
     constructor : ConnectorManager,
-    
+
     /**
      *Performs a deeps equals
      *@param {ConnectorManager} anotherConnectionManager - the other object to compare against
@@ -140,7 +140,7 @@ ConnectorManager.prototype = {
     /**Export the entire ConnectionManager to SVG format*/
     toSVG : function(){
         var r = '';
-        
+
         for(var i=0; i<this.connectors.length; i++){
             r += this.connectors[i].toSVG();
         }
@@ -151,10 +151,10 @@ ConnectorManager.prototype = {
     /****************************************************************/
     /**************************Connector*****************************/
     /****************************************************************/
-    
-    /** 
+
+    /**
      * Creates a new connector. Also store the connector into the pool of connectors.
-     * 
+     *
      * @param {Point} startPoint
      * @param {Point} endPoint
      * @param {String} type of Connector. It can be either 'straight' or 'jagged'
@@ -180,6 +180,36 @@ ConnectorManager.prototype = {
 
 
     /**
+     * Creates a new connector. Also store the connector into the pool of connectors.
+     *
+     * @param {Point} startPoint
+     * @param {Point} endPoint
+     * @param {Point} midpoint
+     * @param {String} type of Connector. It can be either 'straight' or 'jagged'
+     * @return {Number} the id of the newly created Connector
+     */
+    connectorCreateMidPoint:function(startPoint,midpoint,endPoint,type){
+        //get a new id for Connector
+        var id = STACK.generateId();
+
+        //create and save connector
+        this.connectors.push(new Connector(startPoint,midpoint,endPoint,type, id));
+
+        //create ConnectionPoints for Connector
+        this.connectionPointCreate(id, startPoint, ConnectionPoint.TYPE_CONNECTOR);
+        this.connectionPointCreate(id, midpoint, ConnectionPoint.TYPE_CONNECTOR);
+        this.connectionPointCreate(id, endPoint, ConnectionPoint.TYPE_CONNECTOR);
+
+        //log
+        var c = this.connectorGetById(id);
+
+        //alert('log:connectorCreate: connector has ' + c.turningPoints.length);
+
+        return id;
+    },
+
+
+    /**
      * Remove a connector and all other objects( ConnectionPoints, Glues) linked to it
      * @param {Connector} connector - the connector you want to remove
      */
@@ -194,19 +224,19 @@ ConnectorManager.prototype = {
      *@param {Boolean} cascade - if cascade is true it will delete the (linked) ConnectionPoints and Glues
      */
     connectorRemoveById:function(connectorId, cascade){
-        
+
         if(cascade){
-            
+
             //remove all affected Glues
-            var cCPs = this.connectionPointGetAllByParent(connectorId); //get all connection points             
+            var cCPs = this.connectionPointGetAllByParent(connectorId); //get all connection points
             for(var k=0; k<cCPs.length; k++){
                 this.glueRemoveAllBySecondId(cCPs[k].id);
             }
-            
-            //remove all affected ConnectionPoints 
+
+            //remove all affected ConnectionPoints
             this.connectionPointRemoveAllByParent(connectorId);
         }
-        
+
         //remove the connector
         for(var i=0; i<this.connectors.length; i++){
             if(this.connectors[i].id == connectorId){
@@ -243,12 +273,12 @@ ConnectorManager.prototype = {
                 this.connectors[i].style.strokeStyle = "lime";
                 this.connectors[i].paint(context);
                 this.connectors[i].style = oldStyle;
-                context.restore();                                
+                context.restore();
             }
 
             //2 - paint the connector
             this.connectors[i].paint(context);
-            
+
             //3 - paint the connection points (as they are on top of the connector)
             if(this.connectors[i].id == highlightedConnectorId){
                 this.connectionPointPaint(context, this.connectors[i].id)
@@ -259,7 +289,7 @@ ConnectorManager.prototype = {
 //                HandleManager.shapeSet(this.connectors[i]);
 //                HandleManager.paint(context);
 //            }
-            
+
         }//end for
     },
 
@@ -309,7 +339,7 @@ ConnectorManager.prototype = {
         if(!this.connectionPointIsConnected(nonFigurePoint.id,figurePoint.id)){
             this.glueCreate(nonFigurePoint.id,figurePoint.id, false);
         }
-        
+
         //if we are now connected at two places, make the line jagged.
         var connector = this.connectorGetById(nonFigurePoint.parentId);
 
@@ -325,7 +355,7 @@ ConnectorManager.prototype = {
                 connector.redraw();
             }
         }
-        
+
     },
 
 
@@ -415,7 +445,7 @@ ConnectorManager.prototype = {
      *@param {Integer} cpId - the id of the connector
      *@param {Number} x - the x coordinates of the point
      *@param {Number} y - the y coordinates of the point
-     *@deprecated This function seems to no longer be used. 
+     *@deprecated This function seems to no longer be used.
      *See ConnectionMamager.connectionPointTransform(...)
      **/
     connectorAdjustByConnectionPoint: function(cpId, x, y){
@@ -423,20 +453,20 @@ ConnectorManager.prototype = {
         Log.debug("connectorAdjustByConnectionPoint() - Cp is :" + cp);
         var con = this.connectorGetById(cp.parentId); //Connector
         var conCps = this.connectionPointGetAllByParent(con.id); //Conector's ConnectionPoints
-        
+
         if(con.type === Connector.TYPE_STRAIGHT){
             /**For STRAIGHT is very simple just update the tunrning points to the start and end connection points*/
             var start = conCps[0].point.clone();
-            var end = conCps[1].point.clone();
+            var end = conCps[2].point.clone();
             con.turningPoints = [start, end];
         }
         else if(con.type === Connector.TYPE_JAGGED || con.type === Connector.TYPE_ORGANIC){
             //first ConnectionPoint
             var startPoint = conCps[0].point.clone();
-            
+
             //second ConnectionPoint
-            var endPoint = conCps[1].point.clone();
-            
+            var endPoint = conCps[2].point.clone();
+
             //first bounds (of start figure)
             var sFigure = STACK.figureGetAsFirstFigureForConnector(con.id);
             var sBounds =  sFigure == null ? null : sFigure.getBounds();
@@ -444,7 +474,7 @@ ConnectorManager.prototype = {
             //second bounds (of end figure)
             var eFigure = STACK.figureGetAsSecondFigureForConnector(con.id);
             var eBounds = eFigure == null ? null : eFigure.getBounds();
-            
+
             //adjust connector
             var solutions = this.connector2Points(Connector.TYPE_JAGGED, startPoint, endPoint, sBounds, eBounds);
 
@@ -452,11 +482,11 @@ ConnectorManager.prototype = {
             con.applySolution(solutions);
 
             conCps[0].point = con.turningPoints[0].clone();
-            conCps[1].point = con.turningPoints[con.turningPoints.length - 1].clone();
+            conCps[2].point = con.turningPoints[con.turningPoints.length - 1].clone();
         }
     },
-    
-    
+
+
 
     /**Simple function to get access to first {ConnectionPoint}
      *@param {Number} connectorId - the id of the connector
@@ -466,24 +496,33 @@ ConnectorManager.prototype = {
     connectionPointGetFirstForConnector : function(connectorId) {
         return this.connectionPointGetAllByParentIdAndType(connectorId, ConnectionPoint.TYPE_CONNECTOR)[0];
     },
-    
-    
+
+
     /**Simple function to get access to second {ConnectionPoint}
      *@param {Number} connectorId - the id of the connector
      *@return {ConnectionPoint} - the end {ConnectionPoint}
      *@author Alex Gheorghiu
      **/
     connectionPointGetSecondForConnector : function(connectorId) {
+        return this.connectionPointGetAllByParentIdAndType(connectorId, ConnectionPoint.TYPE_CONNECTOR)[2];
+    },
+
+    /**Simple function to get access to mid {ConnectionPoint}
+     *@param {Number} connectorId - the id of the connector
+     *@return {ConnectionPoint} - the mid {ConnectionPoint}
+     *@author Alex Gheorghiu
+     **/
+    connectionPointGetMidForConnector : function(connectorId) {
         return this.connectionPointGetAllByParentIdAndType(connectorId, ConnectionPoint.TYPE_CONNECTOR)[1];
     },
 
 
     /**
-     * This function simply takes 2 points: M, N from 2 figures A, B (M belongs to A, 
+     * This function simply takes 2 points: M, N from 2 figures A, B (M belongs to A,
      * N belongs to B) and tries to find the
      * nearest {ConnectionPoint}s to M ( C1i ) and nearest {ConnectionPoint}s to N  ( C2i ) and then
      * pick those that have a minimum distance between them (minimum C1-C2 distance]
-     *   
+     *
      *@param {Boolean} startAutomatic - flag defines if start of connection is automatic
      *@param {Boolean} endAutomatic - flag defines if end of connection is automatic
      *@param {Number} startFigureId - Start {Figure}'s id or -1 if no start {Figure} present
@@ -491,25 +530,25 @@ ConnectorManager.prototype = {
      *@param {Number} endFigureId - End {Figure}'s id or -1 if no start {Figure} present
      *@param {Point} endPoint - End {Point} of connection
      *
-     *@retun {Array} - in a form of 
+     *@retun {Array} - in a form of
      *  [
-     *  startPoint, 
-     *  endPoint, 
-     *  start {Figure}'s {ConnectionPoint} Id - or -1 if none, 
+     *  startPoint,
+     *  endPoint,
+     *  start {Figure}'s {ConnectionPoint} Id - or -1 if none,
      *  end {Figure}'s {ConnectionPoint}'s Id - or -1 if none
      *  ]
      *@author Artyom Pokatilov <artyom.pokatilov@gmail.com>
      **/
     getClosestPointsOfConnection: function(startAutomatic, endAutomatic, startFigureId, startPoint, endFigureId, endPoint) {
 
-        //We will have 4 cases depending on automaticStart and automaticEnd values        
-        
+        //We will have 4 cases depending on automaticStart and automaticEnd values
+
         //Case 1
         // both points have locked position
         // we are taking defined {Point}s of connection
         if (!startAutomatic && !endAutomatic) {
-            
-            //TODO: not fair not to return CPs'ids where we know for sure they 
+
+            //TODO: not fair not to return CPs'ids where we know for sure they
             //are present( !automaticStart && !automaticEnd)
             return this.closestPointsFixed2Fixed(startPoint, endPoint);
         }
@@ -537,12 +576,12 @@ ConnectorManager.prototype = {
             return this.closestPointsAuto2Auto(startFigureId, startPoint, endFigureId, endPoint);
         }
     },
-    
-    
+
+
     /**
      * Special case of getClosestPointsOfConnection() when
      * startAutomatic = true
-     * and 
+     * and
      * endAutomatic = true
      * */
     closestPointsAuto2Auto : function(startFigureId, startPoint, endFigureId, endPoint){
@@ -555,7 +594,7 @@ ConnectorManager.prototype = {
                 startFigureId,  //start figure's id
                 startPoint, //start point
                 endFigureId, //end figure's id
-                endPoint //end 
+                endPoint //end
             );
 
             candidate[1] = candidate[0];
@@ -597,11 +636,11 @@ ConnectorManager.prototype = {
 
         return [closestStartPoint.clone(), closestEndPoint.clone(), closestStartConnectionPointId, closestEndConnectionPointId];
     },
-    
+
     /**
      * Special case of getClosestPointsOfConnection() when
      * startAutomatic = false
-     * and 
+     * and
      * endAutomatic = true
      * */
     closestPointsFixed2Auto : function(startPoint, endFigureId){
@@ -632,7 +671,7 @@ ConnectorManager.prototype = {
     /**
      * Special case of getClosestPointsOfConnection() when
      * startAutomatic = true
-     * and 
+     * and
      * endAutomatic = false
      * */
     closestPointsAuto2Fixed: function(startFigureId, endPoint){
@@ -657,31 +696,31 @@ ConnectorManager.prototype = {
         }
         return [closestPoint.clone(), endPoint, closestConnectionPointId, -1];
     },
-    
-    
+
+
     /**
      * Special case of getClosestPointsOfConnection() when
      * startAutomatic = false
-     * and 
+     * and
      * endAutomatic = false
      * */
     closestPointsFixed2Fixed : function (startPoint, endPoint){
         return [startPoint, endPoint, -1, -1];
     },
-    
+
 
     /**This function returns a "temp" connector between 2 points. The points
      * are usually inside some boundaries and we need to "discover" a path
      * from start point to the end point.
-     * 
+     *
      * Note: We are not using {ConnectionPoint}s here are this somehow a generic algorithm
      * where we have a type of drawing, a start point, and end point and 2 boundaries to
      * consider.
-     * 
+     *
      * Note 2: For organic connector the solution(s) is "injected" with 2 additional
-     * points: in the middle of start and end segment (of turning points) so that 
+     * points: in the middle of start and end segment (of turning points) so that
      * the curve will look more natural.
-     * 
+     *
      *@param {Number} type - Connector.TYPE_STRAIGHT, Connector.TYPE_JAGGED or Connector.TYPE_ORGANIC
      *@param {Point} startPoint - the start {Point}
      *@param {Point} endPoint - the end {Point}
@@ -695,33 +734,38 @@ ConnectorManager.prototype = {
      **/
     connector2Points: function(type,  startPoint, endPoint, sBounds, eBounds ){
         var oldLogLevel = Log.level;
-//        Log.level = Log.LOG_LEVEL_DEBUG; 
-        
+//        Log.level = Log.LOG_LEVEL_DEBUG;
+
         Log.group("connectionManager: connector2Points");
-        
-        
+
+
         Log.info("ConnectionManager: connector2Points (" + type + ", " + startPoint + ", " + endPoint + ", " + sBounds + ", " + eBounds + ')');
         var solutions = [];
-        
-        
-        
+
+
+
         switch(type){
             case Connector.TYPE_STRAIGHT:
                 var points = [startPoint.clone(), endPoint.clone()];
                 solutions.push( ['straight', 'straight', points] );
                 break;
-                
+
             case Connector.TYPE_ORGANIC:
                 //do nothing....just flow with JAGGED...for now
-                
+            case Connector.TYPE_STRMIDPOINT:
+                var midpoint = new Point((endPoint.x - startPoint.x)/2 + startPoint.x , (endPoint.y - startPoint.y)/2 + startPoint.y)
+                var points = [startPoint.clone(), midpoint, endPoint.clone()];
+                solutions.push( ['straight', 'straight', points] );
+                break;
+
             case Connector.TYPE_JAGGED:
                 var startExitPoint = null;
                 var endExitPoint = null;
-                
+
                 //find start exit point
                 if(sBounds != null){
                     var potentialExits = [];
-                    
+
                     potentialExits.push(new Point(startPoint.x, sBounds[1] - FIGURE_ESCAPE_DISTANCE)); //north
                     potentialExits.push(new Point(sBounds[2] + FIGURE_ESCAPE_DISTANCE, startPoint.y)); //east
                     potentialExits.push(new Point(startPoint.x, sBounds[3] + FIGURE_ESCAPE_DISTANCE)); //south
@@ -734,17 +778,17 @@ ConnectorManager.prototype = {
                             startExitPoint = potentialExits[i];
                         }
                     }
-                    
+
                     if(startExitPoint == null){
                         alert("No way");
                     }
                 }
-                
-                
+
+
                 //find end exit point
                 if(eBounds != null){
                     var potentialExits = [];
-                    
+
                     potentialExits.push(new Point(endPoint.x, eBounds[1] - FIGURE_ESCAPE_DISTANCE)); //north
                     potentialExits.push(new Point(eBounds[2] + FIGURE_ESCAPE_DISTANCE, endPoint.y)); //east
                     potentialExits.push(new Point(endPoint.x, eBounds[3] + FIGURE_ESCAPE_DISTANCE)); //south
@@ -757,12 +801,12 @@ ConnectorManager.prototype = {
                             endExitPoint = potentialExits[i];
                         }
                     }
-                    
+
                     if(endExitPoint == null){
                         alert("No way");
                     }
                 }
-                
+
                 //Basic solution (basic kit :p)
                 var s = [startPoint];
                 var gapIndex = 0; //the index of the gap (where do we need to insert new points) DO NOT CHANGE IT
@@ -774,138 +818,138 @@ ConnectorManager.prototype = {
                     s.push(endExitPoint);
                 }
                 s.push(endPoint);
-                
-                
-                
+
+
+
                 //SO - no additional points
                 var s0 = Point.cloneArray(s);
                 solutions.push(['s0', 's0', s0]);
-                
-                
-                
+
+
+
                 //S1
                 var s1 = Point.cloneArray(s);
-                
+
                 //first variant
                 var s1_1 = Point.cloneArray(s1);
                 s1_1.splice(gapIndex + 1, 0, new Point(s1_1[gapIndex].x , s1_1[gapIndex+1].y) );
                 solutions.push(['s1', 's1_1', s1_1]);
-                
+
                 //second variant
                 var s1_2 = Point.cloneArray(s1);
                 s1_2.splice(gapIndex + 1, 0, new Point(s1_2[gapIndex+1].x , s1_2[gapIndex].y) );
-                solutions.push(['s1', 's1_2', s1_2]);    
-                
-                
-                //S2     
-                                
+                solutions.push(['s1', 's1_2', s1_2]);
+
+
+                //S2
+
                 //Variant I
                 var s2_1 = Point.cloneArray(s);
                 var s2_1_1 = new Point( (s2_1[gapIndex].x + s2_1[gapIndex+1].x) / 2,  s2_1[gapIndex].y);
-                var s2_1_2 = new Point( (s2_1[gapIndex].x + s2_1[gapIndex+1].x) / 2,  s2_1[gapIndex+1].y);                
+                var s2_1_2 = new Point( (s2_1[gapIndex].x + s2_1[gapIndex+1].x) / 2,  s2_1[gapIndex+1].y);
                 s2_1.splice(gapIndex + 1, 0, s2_1_1, s2_1_2);
                 solutions.push(['s2', 's2_1', s2_1]);
-                
-                
+
+
                 //Variant II
                 var s2_2 = Point.cloneArray(s);
                 var s2_2_1 = new Point( s2_2[gapIndex].x, (s2_2[gapIndex].y + s2_2[gapIndex+1].y)/2 );
                 var s2_2_2 = new Point( s2_2[gapIndex+1].x, (s2_2[gapIndex].y + s2_2[gapIndex+1].y)/2);
                 s2_2.splice(gapIndex + 1, 0, s2_2_1, s2_2_2);
                 solutions.push(['s2', 's2_2', s2_2]);
-                
-                
+
+
                 //Variant III
                 var s2_3 = Point.cloneArray(s);
                 //find the amount (stored in delta) of pixels we need to move right so no intersection with a figure will be present
                 //!See:  /documents/specs/connected_figures_deltas.jpg file
-                
+
                 var eastExits = [s2_3[gapIndex].x + 20, s2_3[gapIndex+1].x + 20]; //add points X coordinates to be able to generate Variant III even in the absence of figures :p
-                
+
                 if(sBounds){
-                    eastExits.push(sBounds[2] + 20); 
+                    eastExits.push(sBounds[2] + 20);
                 }
 
                 if(eBounds){
                     eastExits.push(eBounds[2] + 20);
                 }
-                
+
                 var eastExit = Util.max(eastExits);
                 var s2_3_1 = new Point( eastExit, s2_3[gapIndex].y );
                 var s2_3_2 = new Point( eastExit, s2_3[gapIndex+1].y );
                 s2_3.splice(gapIndex + 1, 0, s2_3_1, s2_3_2);
                 solutions.push(['s2', 's2_3', s2_3]);
-                
-                
+
+
                 //Variant IV
                 var s2_4 = Point.cloneArray(s);
                 //find the amount (stored in delta) of pixels we need to move up so no intersection with a figure will be present
                 //!See:  /documents/specs/connected_figures_deltas.jpg file
-                
+
                 var northExits = [s2_4[gapIndex].y - 20, s2_4[gapIndex+1].y - 20]; //add points y coordinates to be able to generate Variant III even in the absence of figures :p
-                
+
                 if(sBounds){
-                    northExits.push(sBounds[1] - 20);  
+                    northExits.push(sBounds[1] - 20);
                 }
 
                 if(eBounds){
                     northExits.push(eBounds[1] - 20);
                 }
-                
+
                 var northExit = Util.min(northExits);
                 var s2_4_1 = new Point( s2_4[gapIndex].x, northExit);
                 var s2_4_2 = new Point( s2_4[gapIndex+1].x, northExit);
                 s2_4.splice(gapIndex + 1, 0, s2_4_1, s2_4_2);
                 solutions.push(['s2', 's2_4', s2_4]);
-                
-                
+
+
                 //Variant V
                 var s2_5 = Point.cloneArray(s);
                 //find the amount (stored in delta) of pixels we need to move left so no intersection with a figure will be present
                 //!See:  /documents/specs/connected_figures_deltas.jpg file
-                
+
                 var westExits = [s2_5[gapIndex].x - 20, s2_5[gapIndex+1].x - 20]; //add points x coordinates to be able to generate Variant III even in the absence of figures :p
-                
+
                 if(sBounds){
-                    westExits.push(sBounds[0] - 20);  
+                    westExits.push(sBounds[0] - 20);
                 }
 
                 if(eBounds){
                     westExits.push(eBounds[0] - 20);
                 }
-                
+
                 var westExit = Util.min(westExits);
                 var s2_5_1 = new Point( westExit, s2_5[gapIndex].y);
                 var s2_5_2 = new Point( westExit, s2_5[gapIndex+1].y);
                 s2_5.splice(gapIndex + 1, 0, s2_5_1, s2_5_2);
                 solutions.push(['s2', 's2_5', s2_5]);
-                
-                
+
+
                 //Variant VI
                 var s2_6 = Point.cloneArray(s);
                 //find the amount (stored in delta) of pixels we need to move down so no intersection with a figure will be present
                 //!See:  /documents/specs/connected_figures_deltas.jpg file
-                
+
                 var southExits = [s2_6[gapIndex].y + 20, s2_6[gapIndex+1].y + 20]; //add points y coordinates to be able to generate Variant III even in the absence of figures :p
-                
+
                 if(sBounds){
-                    southExits.push(sBounds[3] + 20);  
+                    southExits.push(sBounds[3] + 20);
                 }
 
                 if(eBounds){
                     southExits.push(eBounds[3] + 20);
                 }
-                
+
                 var southExit = Util.max(southExits);
                 var s2_6_1 = new Point( s2_6[gapIndex].x, southExit);
                 var s2_6_2 = new Point( s2_6[gapIndex+1].x, southExit);
                 s2_6.splice(gapIndex + 1, 0, s2_6_1, s2_6_2);
                 solutions.push(['s2', 's2_6', s2_6]);
-                
-                
-                
+
+
+
                 //FILTER solutions
-                
+
                 /*Algorithm
                  * 0. solutions are ordered from minimmun nr of points to maximum >:)
                  * 1. remove all solutions that are not orthogonal (mainly s0 solution)
@@ -915,7 +959,7 @@ ConnectorManager.prototype = {
                  * 5. pick the first solution with 90 degree angles (less turnarounds)
                  * (not interesteted) sort by length :p
                  */
-                
+
                 //1. filter non ortogonal solutions
                 if(true){
                     Log.info("Filter orthogonal solutions. Initial number of solutions = " + solutions.length);
@@ -929,9 +973,9 @@ ConnectorManager.prototype = {
                     solutions = orthogonalSolution;
                     Log.info("\n\tOrthogonalSolutions = " + solutions.length);
                 }
-                
+
                 //2. filter backward solutions
-                if(true){ 
+                if(true){
                     //do not allow start and end points to coincide - ignore them
                     if(startPoint.equals(endPoint)){
                         Log.info("Start and end point coincide...skip backward solution. I think we will just fall on s0 :)");
@@ -943,21 +987,21 @@ ConnectorManager.prototype = {
                         for(var l=0; l<solutions.length; l++){
                             var solution = solutions[l][2];
                             if(Util.forwardPath(solution)){
-                                forwardSolutions.push(solutions[l]);                                
+                                forwardSolutions.push(solutions[l]);
                             }
                             else{
                                 temp = temp +  "\n\t" + solution;
                             }
                         }
-                        solutions = forwardSolutions;                    
+                        solutions = forwardSolutions;
                         Log.info("\n\t ForwardSolutions = " + solutions.length);
                         if(solutions.length == 0){
                             Log.info("Discarded solutions: " + temp);
                         }
                     }
                 }
-                
-                
+
+
                 //3. Filter non intersecting solutions
                 if(true){
                     Log.info("Filter non intersecting solutions. Initial number of solutions = " + solutions.length);
@@ -974,7 +1018,7 @@ ConnectorManager.prototype = {
                         if(eBounds || sBounds){
                             //i0nnerLines = innerLines.slice(0, innerLines.length - 1);
                             innerLines = innerLines.slice(1, innerLines.length - 1);
-                            //Log.info("\t eBounds present,innerLines nr. points = " + innerLines.length + ", points = " + innerLines);                        
+                            //Log.info("\t eBounds present,innerLines nr. points = " + innerLines.length + ", points = " + innerLines);
                         }
 
 
@@ -988,44 +1032,44 @@ ConnectorManager.prototype = {
                         }
 
                         if(!intersect){
-                            nonIntersectionSolutions.push(solutions[l]);                    
+                            nonIntersectionSolutions.push(solutions[l]);
                         }
-                    }                
-                    
+                    }
+
                     //If all solutions intersect than this is destiny  :) and just ignore the intersection filter
                     if(nonIntersectionSolutions.length != 0){
                         //reasign to solutions
-                        solutions = nonIntersectionSolutions;   
+                        solutions = nonIntersectionSolutions;
                     }
-                    
+
                     Log.info("\n\t nonIntersectionSolutions = " + solutions.length);
                 }
-                
-                
+
+
                 //4. get first class of solutions with same nr of points
                 if(true){
                     Log.info("Get first class of solutions with same nr of points");
                     if(solutions.length == 0){
                         alert("This is not possible");
                     }
-                    
+
                     var firstSolution = solutions[0][2]; //pick first solution
                     var nrOfPoints = firstSolution.length;
                     var sameNrPointsSolution = [];
-                    
+
                     for(var l=0; l<solutions.length; l++){
                         var solution = solutions[l][2];
                         if(solution.length == nrOfPoints){
                             sameNrPointsSolution.push(solutions[l]);
                         }
                     }
-                    
+
                     solutions = sameNrPointsSolution;
                 }
-                
-                
-                
-                
+
+
+
+
                 /*5. Pick the first solution with 90 degree angles (less turnarounds)
                 *in case we have more than one solution in our class
                 */
@@ -1040,25 +1084,25 @@ ConnectorManager.prototype = {
                     }
                     solutions = [solutions[solIndex]];
                 }
-                
-                
+
+
                 break;
         }
-        
-        //SMOOTHING curve        
+
+        //SMOOTHING curve
         if(type === Connector.TYPE_ORGANIC){
             this.smoothOrganic(solutions);
         }
         //END SMOOTHING curve
-        
+
         Log.groupEnd();
-        
-        Log.level = oldLogLevel; 
-        
+
+        Log.level = oldLogLevel;
+
         return solutions;
     },
-    
-    
+
+
     /**
      * Tries to smooth the solution.
      * Made mainly for organic connectors
@@ -1068,14 +1112,14 @@ ConnectorManager.prototype = {
      * */
     smoothOrganic: function(solutions){
         var option = 3;
-        
+
         switch(option){
             case 0:
                 //do nothing
                 break;
-            
+
             case 1: //add intermediate points
-                //Add the middle point for start and end segment so that we "force" the 
+                //Add the middle point for start and end segment so that we "force" the
                 //curve to both come "perpendicular" on bounds and also make the curve
                 //"flee" more from bounds (on exit)
                 for(var s=0; s<solutions.length; s++){
@@ -1089,13 +1133,13 @@ ConnectorManager.prototype = {
 
                     //last segment
                     var a3 = solTurningPoints[solTurningPoints.length - 2];
-                    var a4 = solTurningPoints[solTurningPoints.length - 1];                
+                    var a4 = solTurningPoints[solTurningPoints.length - 1];
                     var endMiddlePoint = Util.getMiddle(a3, a4);
                     solTurningPoints.splice(solTurningPoints.length - 1, 0, endMiddlePoint);
                 }
                 break;
-                
-            case 2: //remove points 
+
+            case 2: //remove points
                 for(var s=0; s<solutions.length; s++){
                     var solType= solutions[s][0];
                     if(solType == 's1' || solType == 's2'){
@@ -1105,9 +1149,9 @@ ConnectorManager.prototype = {
                     }
                 }
                 break;
-                
-            case 3: 
-                /*remove colinear point for s1 as it seems that more colinear points do not look good 
+
+            case 3:
+                /*remove colinear point for s1 as it seems that more colinear points do not look good
                  * on organic solutions >:D*/
                 for(var s=0; s<solutions.length; s++){
                     var solType= solutions[s][0];
@@ -1119,7 +1163,7 @@ ConnectorManager.prototype = {
                 }
                 break;
         }//end switch
-        
+
     },
 
 
@@ -1147,7 +1191,7 @@ ConnectorManager.prototype = {
                 if(signum(v[i+1].y - v[i].y) == signum(v[i].y - v[i-1].y)){ //same direction
                     if(smooth){
                         score++;
-                    }                    
+                    }
                 }
                 else{ //going back - no good
                     return -1;
@@ -1202,7 +1246,7 @@ ConnectorManager.prototype = {
 
         return true;
     },
-    
+
 
     /**Reset this ConnectionManager*/
     reset:function(){
@@ -1212,7 +1256,7 @@ ConnectorManager.prototype = {
         this.connectionPointSelectedIndex = -1;
         this.connectionPointCurrentId = 0;
     },
-    
+
 
 
     /****************************************************************/
@@ -1252,6 +1296,18 @@ ConnectorManager.prototype = {
         return id;
     },
 
+    connectionPointConnectorGetByXY:function(x,y, type, currentId){
+        var id = -1;
+
+        for(var i=0; i<this.connectionPoints.length; i++){
+            if( this.connectionPoints[i].contains(x,y) && this.connectionPoints[i].type == type && this.connectionPoints[i].parentId != currentId){
+                id = this.connectionPoints[i].id;
+                break;
+            }
+        }
+
+        return id;
+    },
     /** Returns closest connection point id based on an x, y, radius and the ConnectionPoint.RADIUS
      * It will pick the first one that matches the criteria
      *@param {Number} x - the x coordinates of the point
@@ -1300,7 +1356,7 @@ ConnectorManager.prototype = {
 
     /** Creates a new ConnectionPoint. Beside creating the ConnectionPoint it will also
      * inject the id and store the ConnectionPoint
-     * 
+     *
      * @param {Number} parentId - the id of the parent ( Figure or Connector )this ConnectionPoint will belong to
      * @param {Point} point - the location
      * @param {String} type - the type of parent. It can be 'figure' (ConnectionPoint.TYPE_FIGURE)
@@ -1312,7 +1368,7 @@ ConnectorManager.prototype = {
     connectionPointCreate:function(parentId, point, type){
         var conPoint = new ConnectionPoint(parentId, point.clone(), this.connectionPointCurrentId++, type);
         this.connectionPoints.push(conPoint);
-        
+
         return conPoint;
     },
 
@@ -1327,7 +1383,7 @@ ConnectorManager.prototype = {
     },
 
 
-    /** Removes the connectionPoints associated with a parent (it can be either Figure or Connector)     
+    /** Removes the connectionPoints associated with a parent (it can be either Figure or Connector)
      * @param {Number} parentId - the figure id
      * @author Alex Gheorghiu <alex@scriptoid.com>
      */
@@ -1354,8 +1410,8 @@ ConnectorManager.prototype = {
         }
         return null;
     },
-    
-    
+
+
     /** Returns a ConnectionPoint based on its id
      * or null if none finded
      *@param {Number} parentId - the id of the parent
@@ -1365,7 +1421,7 @@ ConnectorManager.prototype = {
      */
     connectionPointGetByParentAndCoordinates:function(parentId, x, y){
         for(var i=0; i<this.connectionPoints.length; i++){
-            if(this.connectionPoints[i].parentId == parentId 
+            if(this.connectionPoints[i].parentId == parentId
                 && this.connectionPoints[i].point.x == x
                 && this.connectionPoints[i].point.y == y
 
@@ -1385,7 +1441,7 @@ ConnectorManager.prototype = {
      */
     connectionPointGetAllByParent:function(parentId){
         var collectedPoints = [];
-       
+
         for(var connectionPoint in this.connectionPoints){
             if(this.connectionPoints[connectionPoint].parentId == parentId){
                 collectedPoints.push(this.connectionPoints[connectionPoint]);
@@ -1393,8 +1449,8 @@ ConnectorManager.prototype = {
         }
         return collectedPoints;
     },
-    
-    
+
+
     /** Returns a subset of whole ConnectionPoints that belong to a figure or a connector
      *@param {Number} parentId - the figure or connector's id whom subset we want
      *@param {String} type - ConnectionPoint.TYPE_FIGURE or ConnectionPoint.TYPE_CONNECTOR. No more guessing.
@@ -1403,7 +1459,7 @@ ConnectorManager.prototype = {
      */
     connectionPointGetAllByParentIdAndType:function(parentId, type){
         var collectedPoints = [];
-       
+
         for(var cpIndex in this.connectionPoints){
             if(this.connectionPoints[cpIndex].parentId == parentId && this.connectionPoints[cpIndex].type == type){
                 collectedPoints.push(this.connectionPoints[cpIndex]);
@@ -1413,7 +1469,7 @@ ConnectorManager.prototype = {
     },
 
 
-    
+
     /** Get the connectionPoint the mouse is over
      * @param {Number} x - coordinate
      * @param {Number} y - coordinate
@@ -1454,22 +1510,28 @@ ConnectorManager.prototype = {
                 }
             }
         }
-        
+
 
         return foundedConnectionPoint;
     },
-    
+
 
     /**Paints ALL ConnectionPoints that are attached to a shape (Figure or Connector)
      *@param {Context} context - the HTML5 canvas' context
      *@param {Number} parentFigureId - the the parent figure's ID
      */
     connectionPointPaint:function(context, parentFigureId){
-        var figureConnectionPoints = this.connectionPointGetAllByParent(parentFigureId);
-        
-        for(var conPoint in figureConnectionPoints){
-            figureConnectionPoints[conPoint].paint(context);
-        }
+      ///commenting out for now, just paint all of them!
+      //technically should be optimised to show figure and midpoint only
+      //var figureConnectionPoints = this.connectionPointGetAllByParent(parentFigureId);
+
+      //for(var conPoint in figureConnectionPoints){
+      //    figureConnectionPoints[conPoint].paint(context);
+     // }
+     var allConnectionPoints = this.connectionPoints;
+     for (var conPoint in allConnectionPoints){
+         allConnectionPoints[conPoint].paint(context);
+     }
     },
 
 
@@ -1495,13 +1557,13 @@ ConnectorManager.prototype = {
             var gluesLength = glues.length;
             //Log.info("\tConnectionManager: connectionPointTransform()" + fCps[i].id + " glues = " + gluesLength);
             for(var j = 0; j < gluesLength; j++){
-                
+
                 // get the ConnectionPoint from other side of current Glue (from the Connector)
                 var firstCP = this.connectionPointGetById(glues[j].id2);
 
                 // get the Connector - parent of firstCP ConnectionPoint
                 var connector = this.connectorGetById(firstCP.parentId);
-                
+
                 // get ConnectionPoints of the Connector
                 var cCPs = this.connectionPointGetAllByParent(connector.id);
 
@@ -1510,7 +1572,7 @@ ConnectorManager.prototype = {
                  * Variables used in finding solution of ConnectionPoints. we need to find
                  * who is the start Figure, end Figure, starting Glue, ending Glue, etc*/
                 var startPoint = cCPs[0].point;
-                var endPoint = cCPs[1].point;
+                var endPoint = cCPs[2].point;
                 var startFigure;
                 var endFigure;
                 var startBounds;
@@ -1522,37 +1584,37 @@ ConnectorManager.prototype = {
                 if (firstCP.id == cCPs[0].id) {
                     // ConnectionPoint connected with moved (transformed) Figure must be moved (transformed) as well
                     cCPs[0].transform(matrix);
-                    
+
                     // in this case current Figure is startFigure of the connection
                     startFigure = currentFigure;
 
                     // get Glue for second ConnectionPoint of the Connector
-                    var endGlue = this.glueGetBySecondConnectionPointId(cCPs[1].id)[0];
-                    
+                    var endGlue = this.glueGetBySecondConnectionPointId(cCPs[2].id)[0];
+
                     // get Figure's ConnectionPoint which is glued with second ConnectionPoint of the Connector
                     var endFigureCP = endGlue ? this.connectionPointGetById(endGlue.id1) : null;
-                    
+
                     // get endFigure as parent of endFigureCP
                     endFigure = endFigureCP ? STACK.figureGetById(endFigureCP.parentId) : null;
 
                     // if startPoint has automatic Glue -> connection has automatic start
                     automaticStart = glues[j].automatic;
-                    
+
                     // if endPoint has Glue and it's automatic -> connection has automatic end
                     automaticEnd = endGlue && endGlue.automatic;
                 } else {    // if current Figure is glued with endPoint of the Connector
                     // ConnectionPoint connected with moved (transformed) Figure must be moved (transformed) as well
-                    cCPs[1].transform(matrix);
-                    
+                    cCPs[2].transform(matrix);
+
                     // in this case current Figure is endFigure of the connection
                     endFigure = currentFigure;
 
                     // get Glue for first ConnectionPoint of the Connector
                     var startGlue = this.glueGetBySecondConnectionPointId(cCPs[0].id)[0];
-                    
+
                     // get Figure's ConnectionPoint which is glued with first ConnectionPoint of the Connector
                     var startFigureCP = startGlue ? this.connectionPointGetById(startGlue.id1) : null;
-                    
+
                     // get startFigure as parent of startFigureCP
                     startFigure = startFigureCP ? STACK.figureGetById(startFigureCP.parentId) : null;
 
@@ -1578,13 +1640,13 @@ ConnectorManager.prototype = {
                 //solutions
                 DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(connector.type, candidate[0], candidate[1], startBounds, endBounds);
 
-            
+
                 // apply solution to Connector
                 connector.applySolution(DIAGRAMO.debugSolutions);
 
                 // update position of Connector's ConnectionPoints
                 cCPs[0].point = connector.turningPoints[0].clone();
-                cCPs[1].point = connector.turningPoints[connector.turningPoints.length - 1].clone();
+                cCPs[2].point = connector.turningPoints[connector.turningPoints.length - 1].clone();
 
 
                 //Log.info("\t\tConnectionManager: connectionPointTransform() - connector's point " + conCp);
@@ -1733,8 +1795,8 @@ ConnectorManager.prototype = {
             }
         }
     },
-    
-    
+
+
     /**Removes all the  {Glue}s  based on first Id (usually the Figure)
      *@param {Number} id - the id of the first shape (usually the Figure)
      *@author Alex Gheorghiu <alex@scriptoid.com>

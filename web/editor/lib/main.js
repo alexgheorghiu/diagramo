@@ -57,9 +57,9 @@ DIAGRAMO.switchDebug = function(value) {
     else{
         DIAGRAMO.debug = value;
     }
-    
+
     var iconDebug = document.getElementById('iconDebug');
-    
+
     if(DIAGRAMO.debug){
         iconDebug.src = './assets/images/icon_debug_true.gif';
     }
@@ -83,7 +83,7 @@ if(false){
                 + ' Page: ' + page
                 + ' Line: '+ line
                 + ' Position: '+ chr
-        ); 
+        );
     };
 }
 
@@ -100,11 +100,13 @@ DIAGRAMO.fileVersion = 4;
 /**Activate or deactivate the undo feature
  *@deprecated
  ***/
-var doUndo = true; 
+var doUndo = true;
 
 /**Usually an instance of a Command (see /lib/commands/*.js)*/
-var currentMoveUndo = null; 
+var currentMoveUndo = null;
 
+//agbl edit
+debugger;
 var CONNECTOR_MANAGER = new ConnectorManager();
 var CONTAINER_MANAGER = new ContainerFigureManager();
 
@@ -112,11 +114,11 @@ var CONTAINER_MANAGER = new ContainerFigureManager();
  * Cloud highlights 2 {ConnectionPoint}s whose are able to connect. */
 var currentCloud = [];
 
-/**The width of grid cell. 
+/**The width of grid cell.
  *Must be an odd number.
- *Must coincide with the size of the image used as canvas tile 
+ *Must coincide with the size of the image used as canvas tile
  **/
-var GRIDWIDTH = 30; 
+var GRIDWIDTH = 30;
 
 /**The distance (from a snap line) that will trigger a snap*/
 var SNAP_DISTANCE = 5;
@@ -188,31 +190,31 @@ var INDENTATION = 0;
  **/
 function toSVG(){
     return '';
-    
-    /* Note: Support for SVG is suspended 
-     * 
+
+    /* Note: Support for SVG is suspended
+     *
     var canvas = getCanvas();
     //@see http://www.w3schools.com/svg/svg_example.asp
     var v2 = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
-    v2 += "\n" + '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="' 
-        + canvas.width +'" height="' + canvas.height 
+    v2 += "\n" + '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="'
+        + canvas.width +'" height="' + canvas.height
         + '" viewBox="0 0 ' + canvas.width + ' ' + canvas.height + '" version="1.1">';
     INDENTATION++;
     v2 += STACK.toSVG();
     v2 += CONNECTOR_MANAGER.toSVG();
     INDENTATION--;
     v2 += "\n" + '</svg>';
-    
+
     return v2;
     */
 }
-            
+
 
 /**
  *Supposelly stop any selection from happening
  */
 function stopselection(ev){
-    
+
     /*If we are selecting text within anything with the className text, we allow it
     * This gives us the option of using textareas, inputs and any other item we
     * want to allow text selection in.
@@ -226,23 +228,23 @@ function stopselection(ev){
 var STACK  = new Stack();
 
 
-/**keeps track if the MLB is pressed*/    
-var mousePressed = false; 
+/**keeps track if the MLB is pressed*/
+var mousePressed = false;
 
 /**the default application state*/
-var STATE_NONE = 'none'; 
+var STATE_NONE = 'none';
 
 /**we have figure to be created**/
-var STATE_FIGURE_CREATE = 'figure_create'; 
+var STATE_FIGURE_CREATE = 'figure_create';
 
 /**we selected a figure (for further editing for example)*/
-var STATE_FIGURE_SELECTED = 'figure_selected'; 
+var STATE_FIGURE_SELECTED = 'figure_selected';
 
 /**we are selecting the start of a connector*/
-var STATE_CONNECTOR_PICK_FIRST = 'connector_pick_first'; 
+var STATE_CONNECTOR_PICK_FIRST = 'connector_pick_first';
 
 /**we are selecting the end of a connector*/
-var STATE_CONNECTOR_PICK_SECOND = 'connector_pick_second'; 
+var STATE_CONNECTOR_PICK_SECOND = 'connector_pick_second';
 
 /**we selected a connector (for further editing for example)*/
 var STATE_CONNECTOR_SELECTED = 'connector_selected';
@@ -267,7 +269,7 @@ var STATE_TEXT_EDITING = 'text_editing';
 var state = STATE_NONE;
 
 /**The (current) selection area*/
-var selectionArea = new Polygon(); 
+var selectionArea = new Polygon();
 selectionArea.points.push(new Point(0,0));
 selectionArea.points.push(new Point(0,0));
 selectionArea.points.push(new Point(0,0));
@@ -324,6 +326,124 @@ var canvasProps = null;
 /**Currently holds two elements the type: figure|group and the id*/
 var clipboardBuffer = [];
 
+
+
+
+/*agbl edit*/
+function lookupNode(myCP) {
+    for(var j = 0; j < CONNECTOR_MANAGER.connectionPoints.length; j++) {
+        if (myCP == CONNECTOR_MANAGER.connectionPoints[j].id) {
+            console.log("id: " + CONNECTOR_MANAGER.connectionPoints[j].parentId);
+            return CONNECTOR_MANAGER.connectionPoints[j].parentId;
+        }
+    }
+
+    //otherwise we have an issue here
+    return -1;
+}
+
+function generateMatrix(){
+    var matrixString = "";
+    var nodeArray = [];
+    var tailArray = [];
+    var headArray = [];
+    var matrixArray = [];
+
+    //connectionPoints
+    //CONNECTOR_MANAGER.connectionPoints[];
+
+    //glues
+    //CONNECTOR_MANAGER.glues[];
+
+    debugger;
+
+    //get unique boxes to be our row and column headers
+    for (var i = 0; i < CONNECTOR_MANAGER.connectionPoints.length; i++) {
+        if ((CONNECTOR_MANAGER.connectionPoints[i].type == "figure") && 
+            ($.inArray(CONNECTOR_MANAGER.connectionPoints[i].parentId, nodeArray)) == -1) {
+            nodeArray.push(CONNECTOR_MANAGER.connectionPoints[i].parentId);
+        }
+    }
+
+    //come in glue pairs (ex. 0,1)
+    //glue[0].id1 is tail
+    //glue[0].id2 is connection tail
+    //glue[1].id1 is head
+    //glue[1].id2 is connection head
+    for (var i = 0; i < CONNECTOR_MANAGER.glues.length; i = i+2) {
+        tailArray.push(CONNECTOR_MANAGER.glues[i].id1);
+        headArray.push(CONNECTOR_MANAGER.glues[i+1].id1)
+    }
+
+    //initialize matrixArray
+    for (var i = 0; i <= nodeArray.length; i++) {
+        matrixArray[i] = [];
+    }
+
+    //set columns
+    for (var i = 0; i < nodeArray.length; i++) {
+        matrixArray[0][i+1] = nodeArray[i];
+    }
+
+    //set rows
+    for (var i = 0; i < nodeArray.length; i++) {
+        matrixArray[i+1][0] = nodeArray[i];
+    }
+
+    //fill matrix with adjacencies
+
+    //search head in CONNECTOR_MANAGER.connectionPoints[] to determine which 'node' it belongs to
+    //search tail in CONNECTOR_MANAGER.connectionPoints[] to determine which 'node' it belongs to
+
+    debugger;
+
+    var iterations = headArray.length;
+
+    for (var i = 0; i < iterations; i++) {
+        var nodeHead;
+        var nodeTail;
+
+        //might want to replace this with 'pop' from front
+        var tempHeadCP = headArray.pop();
+        var tempTailCP = tailArray.pop();
+
+        //lookupNode: have a CP -> get a node
+        //then we look up node in our nodeArray to determine where it should be inserted in matrix
+        nodeHead = nodeArray.indexOf(lookupNode(tempHeadCP));
+        nodeTail = nodeArray.indexOf(lookupNode(tempTailCP));
+
+        //row header pointing to column header
+        matrixArray[nodeTail+1][nodeHead+1] = 1;
+    }
+
+    //matrix generation
+    for (var row = 0; row < matrixArray.length; row++) {
+        for (var col = 0; col < matrixArray.length; col++) {
+            if(row == 0 && col == 0) {
+                matrixString = matrixString.concat("-");
+            }
+
+            else if(matrixArray[row][col] == undefined){
+                matrixString = matrixString.concat("0");
+            }
+
+            else {
+                matrixString = matrixString.concat(matrixArray[row][col]);
+            }
+
+        }
+        matrixString = matrixString.concat("\n");
+    }
+
+    //look in console to see matrix
+    console.log(matrixString);
+
+    return matrixString;
+}
+
+
+
+
 /**Return current canvas.
  * Current canvas will ALWAYS have the 'a' as DOM id
  * @return {HTMLCanvasElement} the DOM element of <canvas> tag
@@ -370,7 +490,7 @@ var currentSetId = 'basic';
  **/
 function setFigureSet(id){
     Log.info("main.js id = " + id);
-    
+
     //alert(name);
     var div = document.getElementById(id);
     if(div != null){
@@ -408,8 +528,8 @@ function updateShape(shapeId, property, newValue, skipCommand, previousValue){
     if(!obj){
         obj = CONNECTOR_MANAGER.connectorGetById(shapeId);
     }
-    
-    
+
+
     //container?
     if(!obj){
         obj = STACK.containerGetById(shapeId);
@@ -424,7 +544,7 @@ function updateShape(shapeId, property, newValue, skipCommand, previousValue){
 
     /*Going down the object's hierarchy down to the property's parent
      *Example:
-     *  for props = ['primitives','1','str'] 
+     *  for props = ['primitives','1','str']
      *  figure
      *      |_primitives
      *          |_1 (it's a Text)
@@ -446,18 +566,18 @@ function updateShape(shapeId, property, newValue, skipCommand, previousValue){
      *Here we will search for setXXX (where XXX is the property name) method first and if we find one we will use it
      *if not we will simply update the property directly.
      **/
-    
+
     /**Compute setXXX and getXXX*/
     var propSet = "set" + Util.capitaliseFirstLetter(propName);
     var propGet = "get" + Util.capitaliseFirstLetter(propName);
-    
+
     if(propSet in obj){ //@see https://developer.mozilla.org/en/JavaScript/Reference/Operators/Special_Operators/in_Operator
         /*If something is complicated enough to need a function,
          *  likelyhood is it will need access to its parent figure.
          *So we will let the parent to do the update as it likes, if it has
          * a method of form set<property_name> in place
          */
-        
+
         if((typeof(previousValue) !== 'undefined' && previousValue != obj[propGet])
             || (typeof(previousValue) === 'undefined' && newValue != obj[propGet]())){ //update ONLY if new value differ from the old one
             //Log.info('updateShape() : penultimate propSet: ' +  propSet);
@@ -491,14 +611,14 @@ function updateShape(shapeId, property, newValue, skipCommand, previousValue){
         //Log.info("updateShape(): it's a connector 2");
         objSave.updateMiddleText();
     }
-    
+
     //Log.groupEnd();
 
     draw();
 }
 
 
-/**Setup the editor panel for a special shape. 
+/**Setup the editor panel for a special shape.
  *@param shape - can be either Connector or Figure. If null is provided the
  *editor panel will be disabled
  **/
@@ -548,11 +668,11 @@ function setUpTextEditorPopup(shape, textPrimitiveId) {
  **/
 function createFigure(fFunction, thumbURL){
     //Log.info('createFigure (' + fFunction + ',' + thumbURL + ')');
-    
+
     createFigureFunction = fFunction;
-    
+
     selectedFigureThumb = thumbURL;
-    
+
 
     selectedFigureId = -1;
     selectedConnectorId = -1;
@@ -702,10 +822,10 @@ function insertImage(imageFileName, errorMessage){
 }
 
     /**Activate snapToGrip  option*/
-function snapToGrid(){	
+function snapToGrid(){
 	Log.info("snapToGrid called;");
 	snapTo =! snapTo;
-	
+
 	if(snapTo){
             if(!gridVisible){
                 gridVisible = true;
@@ -724,18 +844,18 @@ function snapToGrid(){
  *will be disabled
  **/
 function showGrid(){
-	
+
 	/**If grid was visible and snap to was check we need to take measures*/
-	if(gridVisible){ 
+	if(gridVisible){
             if(snapTo){
                 snapTo = false;
-                document.getElementById("snapCheckbox").checked = false;        
+                document.getElementById("snapCheckbox").checked = false;
             }
     }
-	
+
     gridVisible = !gridVisible;
     backgroundImage = null; // reset cached background image of canvas
-    
+
 	//trigger a repaint;
 	draw();
 }
@@ -805,23 +925,23 @@ function onKeyPress(ev){
  *@see <a href="http://www.quirksmode.org/jskey/keys.html">http://www.quirksmode.org/js/keys.html</a>
  **/
 function onKeyDown(ev){
-    
+
     //Log.info("main.js->onKeyDown()->function call. Event = " + ev.type + " IE = " + IE ); //Janis: comout because messes log on SHIFT
-    
-    
+
+
     //1 - avoid text elements (if you are on a text area and you press the arrow you do not want the figures to move on canvas)
     if( ev.target.className == "text"){
         return true;
     }
-    
-    
+
+
     //2 - "enhance" event TODO: I'm not sure this is really necessary
     ev.KEY = ev.keyCode;
-        
-    
+
+
     //Log.info("e.keyCode = " + ev.keyCode + " ev.KEY = " + ev.KEY); //Janis: comout because messes log on SHIFT
-    
-    
+
+
     switch(ev.KEY){
         case KEY.ESCAPE: //Esc
             //alert('So do you want to escape me');
@@ -831,7 +951,7 @@ function onKeyDown(ev){
             if(selectedFigureId != -1 || selectedConnectionPointId != -1 || selectedConnectorId!=-1){
                 redraw = true;
             }
-            
+
             //deselect any figure
             selectedFigureId = -1;
             selectedConnectionPointId = -1;
@@ -856,9 +976,9 @@ function onKeyDown(ev){
                         var cmdDelFig = new FigureDeleteCommand(selectedFigureId);
                         cmdDelFig.execute();
                         History.addUndo(cmdDelFig);
-                    }                    
+                    }
                     break;
-                    
+
                 case STATE_GROUP_SELECTED:
                     if(selectedGroupId != -1){
                         var cmdDelGrp = new GroupDeleteCommand(selectedGroupId);
@@ -866,27 +986,27 @@ function onKeyDown(ev){
                         History.addUndo(cmdDelGrp);
                     }
 
-                    break;    
+                    break;
 
                 case STATE_CONNECTOR_SELECTED:
                     Log.group("Delete connector");
                     if(selectedConnectorId != -1){
                         var cmdDelCon = new ConnectorDeleteCommand(selectedConnectorId);
                         cmdDelCon.execute();
-                        History.addUndo(cmdDelCon);                                                
+                        History.addUndo(cmdDelCon);
                     }
                     Log.groupEnd();
                     break;
-                    
+
                 case STATE_CONTAINER_SELECTED:
                     Log.group("Delete container");
                     if(selectedContainerId != -1){
                         var cmdDelContainer = new ContainerDeleteCommand(selectedContainerId);
                         cmdDelContainer.execute();
-                        History.addUndo(cmdDelContainer);                                                
+                        History.addUndo(cmdDelContainer);
                     }
                     Log.groupEnd();
-                    break;                                    
+                    break;
             }
             break;
 
@@ -932,7 +1052,7 @@ function onKeyDown(ev){
 //                action('redo');
 //            }
 //            break;
-            
+
         case KEY.G:
             if(CNTRL_PRESSED){
                 action('group');
@@ -947,12 +1067,12 @@ function onKeyDown(ev){
 
         case KEY.D:
             if(CNTRL_PRESSED){
-                if (ev.preventDefault){ 
-                    ev.preventDefault(); 
-                   } 
-                else { 
-                    ev.returnValue = false; 
-                    } 
+                if (ev.preventDefault){
+                    ev.preventDefault();
+                   }
+                else {
+                    ev.returnValue = false;
+                    }
                 action('duplicate');
             }
             break;
@@ -971,7 +1091,7 @@ function onKeyDown(ev){
                 }
             }
             break;
-            
+
         case KEY.V:
             if(CNTRL_PRESSED){
                 /*Description:
@@ -988,8 +1108,8 @@ function onKeyDown(ev){
                  *      - if it is same group as copied, then duplicate it, in this case we can also duplicate permanent group
                  *        also because the duplicate will become selected, add it to the clipboard thus allowing another paste
                  *      - if it is another group, and if we have COPIED THE FIGURE, then apply its style to all group
-                 * 
-                 */                
+                 *
+                 */
                 if(clipboardBuffer[0]){// if something was copied
                     switch(state){
                         case STATE_NONE:
@@ -999,9 +1119,9 @@ function onKeyDown(ev){
                             }else if(clipboardBuffer[0] == "group"){
                                 selectedGroupId = clipboardBuffer[1];
                                 if(STACK.groupGetById(selectedGroupId)){ //if this is true, then the group isn`t permanent
-                                    action('duplicate');    
+                                    action('duplicate');
                                 }
-                            }                            
+                            }
                             break;
                         case STATE_FIGURE_SELECTED:
                             if(clipboardBuffer[0] == "figure"){
@@ -1037,7 +1157,7 @@ function onKeyDown(ev){
                 }
             }
             break;
-            
+
         case KEY.S:
             if(CNTRL_PRESSED){
                 //Log.info("CTRL-S pressed  ");
@@ -1065,7 +1185,7 @@ function onKeyDown(ev){
  *Treats the key up event
  *@param {Event} ev - the event generated when key is up
  **/
-function onKeyUp(ev){    
+function onKeyUp(ev){
     switch(ev.keyCode){
         case KEY.SHIFT: //Shift
             SHIFT_PRESSED = false;
@@ -1098,7 +1218,7 @@ function onMouseDown(ev){
 
     mousePressed = true;
     //alert("onMouseDown() + state " + state + " none state is " + STATE_NONE);
-    
+
     switch(state){
         case STATE_TEXT_EDITING:
 
@@ -1135,11 +1255,11 @@ function onMouseDown(ev){
         case STATE_NONE:
             //alert("onMouseDown() - STATE_NONE");
             snapMonitor = [0,0];
-            
-            
+
+
             /*Description:
              * We are in None state when no action was done....yet.  Here is what can happen:
-             * - if we clicked a Connector than that Connector should be selected  
+             * - if we clicked a Connector than that Connector should be selected
              *  (Connectors are more important than Figures :p)
              * - if we clicked a Group:
              *      - select the Group
@@ -1150,7 +1270,7 @@ function onMouseDown(ev){
              * - if we did not clicked anything....
              *      - we will stay in STATE_NONE
              *      - allow to edit canvas
-             *      
+             *
              */
 
             var selectedObject = Util.getObjectByXY(x,y); // get object under cursor
@@ -1195,12 +1315,12 @@ function onMouseDown(ev){
 //
 //            mousePressed = false;
 //            redraw = true;
-            throw "canvas> onMouseDown> STATE_FIGURE_CREATE> : this should not happen";  
+            throw "canvas> onMouseDown> STATE_FIGURE_CREATE> : this should not happen";
             break;
 
         case STATE_FIGURE_SELECTED:
             snapMonitor = [0,0];
-            
+
             /*Description:
              * If we have a figure selected and we do click here is what can happen:
              * - if we clicked a handle of current selected shape (it should be Figure) then just select that Handle
@@ -1219,15 +1339,15 @@ function onMouseDown(ev){
              *          - else (SHIFT not pressed)
              *              select that figure
              * - if we clicked a Container than it should be selected
-             * - if we click on nothing -> 
+             * - if we click on nothing ->
              *      - if SHIFT pressed then State none
-             *      - else just keep current state (maybe just missed what we needed)    
-             *      
+             *      - else just keep current state (maybe just missed what we needed)
+             *
              */
-            
+
             //CONNECTOR
             if(HandleManager.handleGet(x, y) != null){ //Clicked a handler (of a Figure or Connector)
-                Log.info("onMouseDown() + STATE_FIGURE_SELECTED - handle selected");       
+                Log.info("onMouseDown() + STATE_FIGURE_SELECTED - handle selected");
                 /*Nothing important (??) should happen here. We just clicked the handler of the figure*/
                 HandleManager.handleSelectXY(x, y);
             }
@@ -1316,8 +1436,8 @@ function onMouseDown(ev){
                         redraw = true;
                         break;
                 }
-            }                
-            
+            }
+
             break;
 
         case STATE_GROUP_SELECTED:
@@ -1354,16 +1474,16 @@ function onMouseDown(ev){
              *              delete it
              *          - move to state none
              */
-            
+
             //GROUPS
-            
+
             //if selected group is temporary and we pressed outside of it's border we will destroy it
             var selectedGroup = STACK.groupGetById(selectedGroupId);
-            
+
             if( HandleManager.handleGet(x,y) != null){ //handle ?
                 HandleManager.handleSelectXY(x, y);
                 redraw = true;
-                Log.info('onMouseDown() + STATE_GROUP_SELECTED  + handle selected => STATE_GROUP_SELECTED');                
+                Log.info('onMouseDown() + STATE_GROUP_SELECTED  + handle selected => STATE_GROUP_SELECTED');
             }
             else {
                 // get object under cursor
@@ -1487,12 +1607,16 @@ function onMouseDown(ev){
                         break;
                 }
             }
-            
+
             break;
 
-        
+
         case STATE_CONNECTOR_PICK_FIRST:
             //moved so it can be called from undo action
+            
+            //agbl edit
+            //where kick off happens for connector
+            debugger;
             connectorPickFirst(x,y,ev);
             break;
 
@@ -1506,8 +1630,8 @@ function onMouseDown(ev){
              *Description:
              *If we have a connector selected and we press mouse here is what is happening:
              *- mouse down over a connection point? (trat first current connector)
-             *      - select connection point 
-             *      - set state to STATE_CONNECTOR_MOVE_POINT 
+             *      - select connection point
+             *      - set state to STATE_CONNECTOR_MOVE_POINT
              *      (and wait mouseMove to alter and mouseUp to finish the modification)
              *      - store original state of the connector (to be able to create the undo command later)
              *- mouse down over a handler?
@@ -1523,10 +1647,10 @@ function onMouseDown(ev){
              *      - deselect connector
              *      - select canvasProps
              **/
-                        
+
             var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(selectedConnectorId);
             var start = cps[0];
-            var end = cps[1];
+            var end = cps[2];
             var figureConnectionPointId;
 
             //did we click any of the connection points?
@@ -1535,9 +1659,9 @@ function onMouseDown(ev){
                 selectedConnectionPointId = start.id;
                 state = STATE_CONNECTOR_MOVE_POINT;
                 HTMLCanvas.style.cursor = 'default';
-                
+
                 //this acts like clone of the connector
-                var undoCmd = new ConnectorAlterCommand(selectedConnectorId); 
+                var undoCmd = new ConnectorAlterCommand(selectedConnectorId);
                 History.addUndo(undoCmd);
 
                 // check if current cloud for connection point
@@ -1551,9 +1675,9 @@ function onMouseDown(ev){
                 selectedConnectionPointId = end.id;
                 state = STATE_CONNECTOR_MOVE_POINT;
                 HTMLCanvas.style.cursor = 'default';
-                
+
                 //this acts like clone of the connector
-                var undoCmd = new ConnectorAlterCommand(selectedConnectorId); 
+                var undoCmd = new ConnectorAlterCommand(selectedConnectorId);
                 History.addUndo(undoCmd);
 
                 // check if current cloud for connection point
@@ -1563,14 +1687,14 @@ function onMouseDown(ev){
                 }
             }
             else{ //no connection point selected
-                
+
                 //see if handler selected
                 if(HandleManager.handleGet(x,y) != null){
                     Log.info("onMouseDown() + STATE_CONNECTOR_SELECTED - handle selected");
                     HandleManager.handleSelectXY(x,y);
-                    
+
                     //TODO: just copy/paste code ....this acts like clone of the connector
-                    var undoCmd = new ConnectorAlterCommand(selectedConnectorId); 
+                    var undoCmd = new ConnectorAlterCommand(selectedConnectorId);
                     History.addUndo(undoCmd);
                 }
                 else{
@@ -1612,12 +1736,12 @@ function onMouseDown(ev){
                             redraw = true;
                             break;
                     }
-                }                                                    
-            }                        
-            break; //end case STATE_CONNECTOR_SELECTED 
-            
-            
-            
+                }
+            }
+            break; //end case STATE_CONNECTOR_SELECTED
+
+
+
         case STATE_CONTAINER_SELECTED:
 
             /*Description:
@@ -1632,7 +1756,7 @@ function onMouseDown(ev){
              */
 
             if(HandleManager.handleGet(x, y) != null){ //Clicked a handler (of a Figure or Connector)
-                Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");       
+                Log.info("onMouseDown() + STATE_CONTAINER_SELECTED - handle selected");
                 /*Nothing important (??) should happen here. We just clicked the handler of the figure*/
                 HandleManager.handleSelectXY(x, y);
             }
@@ -1684,7 +1808,7 @@ function onMouseDown(ev){
             }
             break; //end STATE_CONTAINER_SELECTED
 
-            
+
         default:
             //alert("onMouseDown() - switch default - state is " + state);
     }
@@ -1701,41 +1825,41 @@ function onMouseDown(ev){
  **/
 function onMouseUp(ev){
     Log.info("main.js>onMouseUp()");
-    
+
     var coords = getCanvasXY(ev);
     var x = coords[0];
     var y = coords[1];
 
     lastClick = [];
     mousePressed = true;
-    
+
     switch(state){
 
         case STATE_NONE:
             /*Description:
              * TODO: Nothing should happen here
              */
-            
+
             if(HandleManager.handleGetSelected()){
                 HandleManager.clear();
             }
             break;
-        
+
         /* treated on the dragging figure
         case STATE_FIGURE_CREATE:
             Log.info("onMouseUp() + STATE_FIGURE_CREATE");
-            
+
             snapMonitor = [0,0];
-            
+
             //treat new figure
             //do we need to create a figure on the canvas?
             if(createFigureFunction){
                 Log.info("onMouseUp() + STATE_FIGURE_CREATE--> new state STATE_FIGURE_SELECTED");
-                
+
                 var cmdCreateFig = new FigureCreateCommand(createFigureFunction, x, y);
                 cmdCreateFig.execute();
                 History.addUndo(cmdCreateFig);
-                
+
                 HTMLCanvas.style.cursor = 'default';
 
                 selectedConnectorId = -1;
@@ -1749,39 +1873,39 @@ function onMouseUp(ev){
             }
             break;
         */
-       
+
         case STATE_FIGURE_SELECTED:
             /*Description:
              * This means that we have a figure selected and just released the mouse:
              * - if we were altering (rotate/resize) the Figure that will stop (Handler will be deselected)
              * - if we were moving the figure .... that will stop (but figure remains selected)
              */
-            
+
             mousePressed = false;
             HandleManager.handleSelectedIndex = -1; //reset only the handler....the Figure is still selected
-                       
+
             break;
-            
-            
+
+
         case STATE_CONTAINER_SELECTED:
             /*Description:
              * This means that we have a Container selected and just released the mouse:
              * - if we were altering (rotate/resize) the Container that will stop (Handler will be deselected)
              * - if we were moving the Container .... that will stop (but figure remains selected)
              */
-            
+
             mousePressed = false;
             HandleManager.handleSelectedIndex = -1; //reset only the handler....the Figure is still selected
-                       
+
             break;
 
 
         case STATE_GROUP_SELECTED:
             Log.info('onMouseUp() + STATE_GROUP_SELECTED ...');
-            
+
             mousePressed = false;
             HandleManager.handleSelectedIndex = -1; //reset only the handler....the Group is still selected
-            
+
             break;
 
         case STATE_SELECTING_MULTIPLE:
@@ -1790,22 +1914,22 @@ function onMouseUp(ev){
              **/
             Log.info('onMouseUp() + STATE_SELECTING_MULTIPLE => STATE_NONE');
             Log.info('onMouseUp() selection area: ' + selectionArea);
-            
+
             state = STATE_NONE;
-            
+
             var figuresToAdd = [];
-            
-            /* 
-             * If SHIFT pressed add the new selection to the already selected figures, 
+
+            /*
+             * If SHIFT pressed add the new selection to the already selected figures,
              * so here add to array already selected ones
-             */            
+             */
             if(SHIFT_PRESSED){
-                
+
                 //if one figure already selected add it
-                if (selectedFigureId != -1){ 
+                if (selectedFigureId != -1){
                     figuresToAdd.push(selectedFigureId);
                 }
-                
+
                 //if group already selected add it
                 if(selectedGroupId != -1){
                     var selectedGroup = STACK.groupGetById(selectedGroupId);
@@ -1817,11 +1941,11 @@ function onMouseUp(ev){
             }
 
             //add free figures (not belonging to any group) that overlaps with selection region
-            /*TODO: 
-             * From Janis to Alex: Why we are selecting only figures that 
-             *  doesn`t belong to any group, I think we must also add grouped 
+            /*TODO:
+             * From Janis to Alex: Why we are selecting only figures that
+             *  doesn`t belong to any group, I think we must also add grouped
              *  figures
-             * From Alex to Janis: We do not support groups in groups neither 
+             * From Alex to Janis: We do not support groups in groups neither
              *  figures that belong to more than one group
             */
             for(var i = 0; i < STACK.figures.length; i++){
@@ -1836,9 +1960,9 @@ function onMouseUp(ev){
 
                     // flag shows if figure added to figuresToAdd array
                     var figureAddFlag = false;
-                    
-                    
-                    /**Idea: We want to select both figures completely encompassed by 
+
+
+                    /**Idea: We want to select both figures completely encompassed by
                      * selection (case 1) and those that are intersected by selection (case 2)*/
 
                     //1 - test if any figure point inside selection
@@ -1850,12 +1974,12 @@ function onMouseUp(ev){
                             break;
                         }
                     }
-                    
+
                     //2 - test if any figure intersected by selection
                     if(!figureAddFlag){ //run this ONLY if is not already proposed for addition
                         figureAddFlag = Util.polylineIntersectsRectangle(points, selectionArea.getBounds(), true);
                     }
-                    
+
                     //select figures whose line intersects selectionArea
                     if (figureAddFlag){
                         figuresToAdd.push(STACK.figures[i].id);
@@ -1885,14 +2009,14 @@ function onMouseUp(ev){
                 Log.info('onMouseUp() + STATE_SELECTING_MULTIPLE  + 1 figure => STATE_FIGURE_SELECTED');
             }
             break;
-            
-            
+
+
         case STATE_CONNECTOR_PICK_SECOND:
 
             //store undo command
             var cmdCreateCon = new ConnectorCreateCommand(selectedConnectorId);
             History.addUndo(cmdCreateCon);
-            
+
             //reset all {ConnectionPoint}s' color
             CONNECTOR_MANAGER.connectionPointsResetColor();
 
@@ -1906,14 +2030,14 @@ function onMouseUp(ev){
             redraw = true;
             break;
 
-        
+
 
         case STATE_CONNECTOR_MOVE_POINT:
             /**
              *Description:
-             *Simply alter the connector until mouse will be released 
+             *Simply alter the connector until mouse will be released
              **/
-            
+
             //reset all {ConnectionPoint}s' color
             CONNECTOR_MANAGER.connectionPointsResetColor();
 
@@ -1924,8 +2048,8 @@ function onMouseUp(ev){
             selectedConnectionPointId = -1; //but deselect the connection point
             redraw = true;
             break;
-            
-            
+
+
         case STATE_CONNECTOR_SELECTED:
             if(currentMoveUndo){
                 var turns = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints;
@@ -1970,15 +2094,15 @@ function onMouseMove(ev){
     //    }
     var redraw = false;
     var coords = getCanvasXY(ev);
-    
+
     if(coords == null){
         Log.error("main.js onMouseMove() null coordinates");
         return;
     }
-    
+
     var x = coords[0];
     var y = coords[1];
-    
+
     var canvas = getCanvas();
 
     /*change cursor
@@ -1990,7 +2114,7 @@ function onMouseMove(ev){
     switch(state){
 
         case STATE_NONE:
-            
+
             /*Description:
              * We are in None state when no action was done....yet.  Here is what can happen:
              * - if the mouse is pressed, through onMouseDown(), then it's the begining of a multiple selection
@@ -2023,8 +2147,8 @@ function onMouseMove(ev){
                     canvas.style.cursor = 'default';
                     Log.debug('onMouseMove() - STATE_NONE - mouse cursor = default');
                 }
-            }                                    
-            
+            }
+
             break;
 
 
@@ -2033,12 +2157,12 @@ function onMouseMove(ev){
 
             selectionArea.points[2].x = x; //bottom right
             selectionArea.points[2].y = y;
-                
+
             selectionArea.points[3].y = y;//bottom left
             redraw = true;
             break;
 
-            
+
         case STATE_FIGURE_CREATE:
             if(createFigureFunction){ //creating a new figure
                 canvas.style.cursor = 'crosshair';
@@ -2048,7 +2172,7 @@ function onMouseMove(ev){
 
 
         case STATE_FIGURE_SELECTED:
-            
+
             /*Description:
              * We have a figure selected.  Here is what can happen:
              * - if the mouse is pressed
@@ -2057,55 +2181,67 @@ function onMouseMove(ev){
              *          if SHIFT _NOT_ pressed
              *              then move figure
              *          else (SHIFT pressed)
-             *              enter STATE_SELECTING_MULTIPLE state 
+             *              enter STATE_SELECTING_MULTIPLE state
              * - if mouse is not pressed then change the cursor type to :
              *      - "move" if over a figure or connector
              *      - "handle" if over current figure's handle
              *      - "default" if over "nothing"
              */
-            
+
             if(mousePressed){ // mouse is (at least was) pressed
                 if(lastMove != null){ //we are in dragging mode
-                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then 
-                     *as we move the mouse....it can move faster/slower than the figure and we 
+                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then
+                     *as we move the mouse....it can move faster/slower than the figure and we
                      *will lose the Handle selection.
                      **/
                     var handle = HandleManager.handleGetSelected();
-                    
-                    if(handle != null){ //We are over a Handle of selected Figure               
+
+                    if(handle != null){ //We are over a Handle of selected Figure
                         canvas.style.cursor = handle.getCursor();
                         handle.action(lastMove,x,y);
                         redraw = true;
                         Log.info('onMouseMove() - STATE_FIGURE_SELECTED + drag - mouse cursor = ' + canvas.style.cursor);
                     }
                     else{ /*no handle is selected*/
-                        if (!SHIFT_PRESSED){//just translate the figure                            
+                        if (!SHIFT_PRESSED){//just translate the figure
                             canvas.style.cursor = 'move';
                             var translateMatrix = generateMoveMatrix(STACK.figureGetById(selectedFigureId), x, y);
                             Log.info("onMouseMove() + STATE_FIGURE_SELECTED : translation matrix" + translateMatrix);
                             var cmdTranslateFigure = new FigureTranslateCommand(selectedFigureId, translateMatrix);
                             History.addUndo(cmdTranslateFigure);
                             cmdTranslateFigure.execute();
-                            
-                            
+//doesnt really work but jank way to update midpoint when moving box,
+// should be a better way, look into it, for now moving on to look into glueing
+                            // for (var i=0; i < CONNECTOR_MANAGER.connectors.length; i++){
+                            //     var startPoint = CONNECTOR_MANAGER.connectors[i].turningPoints[0];
+                            //     var tempEndPoint = CONNECTOR_MANAGER.connectors[i].turningPoints[1];
+                            //     CONNECTOR_MANAGER.connectors[i].turningPoints[1] = new Point((tempEndPoint.x - startPoint.x)/2 + startPoint.x , (tempEndPoint.y - startPoint.y)/2 + startPoint.y);
+                            //     CONNECTOR_MANAGER.connectors[i].turningPoints[2] = tempEndPoint.clone();
+                            //     var connectionId = CONNECTOR_MANAGER.connectionPointGetAllByParent(CONNECTOR_MANAGER.connectors[i].id)[1].id;
+                            //     CONNECTOR_MANAGER.connectionPoints[connectionId] = new Point((tempEndPoint.x - startPoint.x)/2 + startPoint.x , (tempEndPoint.y - startPoint.y)/2 + startPoint.y);
+                            //
+                            //
+                            // }
+
+
                             /*Algorithm described:
-                            if figure belong to an existing container: 
+                            if figure belong to an existing container:
                                 if we moved it outside of current container (even partially?!)
                                         unglue it from container
-                                           
+
                             if figure dropped inside a container
-                                add it to the (new) container        
+                                add it to the (new) container
                              */
                             var figure = STACK.figureGetById(selectedFigureId);
                             var figBounds = figure.getBounds();
-                            
+
                             var containerId = CONTAINER_MANAGER.getContainerForFigure(selectedFigureId);
                             if(containerId !== -1){ //we are glued to a container
-                                                                
+
                                 var container = STACK.containerGetById(containerId);
                                 var contBounds = container.getBounds();
-                                
-                                //Test if figure' bounds are inside container's bounds?                                
+
+                                //Test if figure' bounds are inside container's bounds?
                                 if(Util.areBoundsInBounds(figBounds, contBounds)){
                                     //do nothing we are still in same container
                                 }
@@ -2124,15 +2260,15 @@ function onMouseMove(ev){
                                         break;
                                     }
                                 }
-                                
+
                                 if(newContainerId !== -1){
                                     //TODO: add figure to container
                                     //throw "main->onMouseMove->FigureSelected: add figure to container";
                                     CONTAINER_MANAGER.addFigure(newContainerId, selectedFigureId);
                                 }
-                                
+
                             }
-                            
+
                             redraw = true;
                             Log.info("onMouseMove() + STATE_FIGURE_SELECTED + drag - move selected figure");
                         }else{ //we are entering a figures selection sesssion
@@ -2149,8 +2285,8 @@ function onMouseMove(ev){
             }
             else{ //no mouse press (only change cursor)
                 var handle = HandleManager.handleGet(x,y); //TODO: we should be able to replace it with .getSelectedHandle()
-                    
-                if(handle != null){ //We are over a Handle of selected Figure               
+
+                if(handle != null){ //We are over a Handle of selected Figure
                     canvas.style.cursor = handle.getCursor();
                     Log.info('onMouseMove() - STATE_FIGURE_SELECTED + over a Handler = change cursor to: ' + canvas.style.cursor);
                 }
@@ -2158,16 +2294,16 @@ function onMouseMove(ev){
                     /*move figure only if no handle is selected*/
                     var tmpFigId = STACK.figureGetByXY(x, y); //pick first figure from (x, y)
                     if(tmpFigId != -1){
-                        canvas.style.cursor = 'move';                            
+                        canvas.style.cursor = 'move';
                         Log.info("onMouseMove() + STATE_FIGURE_SELECTED + over a figure = change cursor");
                     }
                     else{
-                        canvas.style.cursor = 'default';                            
+                        canvas.style.cursor = 'default';
                         Log.info("onMouseMove() + STATE_FIGURE_SELECTED + over nothin = change cursor to default");
                     }
                 }
             }
-            
+
             break;
 
         case STATE_TEXT_EDITING:
@@ -2207,27 +2343,27 @@ function onMouseMove(ev){
             }
 
             break;
-            
+
         case STATE_CONTAINER_SELECTED:
-           //throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";           
-           
+           //throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";
+
            //BRUTE COPY FROM FIGURE
            if(mousePressed){ // mouse is (at least was) pressed
                 if(lastMove != null){ //we are in dragging mode
-                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then 
-                     *as we move the mouse....it can move faster/slower than the figure and we 
+                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then
+                     *as we move the mouse....it can move faster/slower than the figure and we
                      *will lose the Handle selection.
                      **/
                     var handle = HandleManager.handleGetSelected();
-                    
-                    if(handle != null){ //We are over a Handle of selected Container               
+
+                    if(handle != null){ //We are over a Handle of selected Container
                         canvas.style.cursor = handle.getCursor();
                         handle.action(lastMove,x,y);
                         redraw = true;
                         Log.info('onMouseMove() - STATE_CONTAINER_SELECTED + drag - mouse cursor = ' + canvas.style.cursor);
                     }
                     else{ /*no handle is selected*/
-//                        if (!SHIFT_PRESSED){//just translate the figure                            
+//                        if (!SHIFT_PRESSED){//just translate the figure
                             canvas.style.cursor = 'move';
                             var translateMatrix = generateMoveMatrix(STACK.containerGetById(selectedContainerId), x, y);
                             Log.info("onMouseMove() + STATE_CONTAINER_SELECTED : translation matrix" + translateMatrix);
@@ -2250,27 +2386,27 @@ function onMouseMove(ev){
             }
             else{ //no mouse press (only change cursor)
                 var handle = HandleManager.handleGet(x,y); //TODO: we should be able to replace it with .getSelectedHandle()
-                    
-                if(handle != null){ //We are over a Handle of selected Figure               
+
+                if(handle != null){ //We are over a Handle of selected Figure
                     canvas.style.cursor = handle.getCursor();
                     Log.info('onMouseMove() - STATE_CONTAINER_SELECTED + over a Handler = change cursor to: ' + canvas.style.cursor);
                 }
                 else{
 //                    throw "main.js onMouseMove() + STATE_CONTAINER_SELECTED:  Not implemented";
-                    
+
                     /*move figure only if no handle is selected*/
                     if(STACK.containerGetByXY(x, y) !== -1){//pick first container from (x, y)
-                        canvas.style.cursor = 'move';                            
+                        canvas.style.cursor = 'move';
                         Log.info("onMouseMove() + STATE_CONTAINER_SELECTED + over a container's edge = change cursor");
                     }
                     else{
-                        canvas.style.cursor = 'default';                            
+                        canvas.style.cursor = 'default';
                         Log.debug("onMouseMove() + STATE_CONTAINER_SELECTED + over nothing = change cursor to default");
                     }
                 }
             }
             //END BRUTE COPY FROM FIGURE
-            
+
            break;
 
 
@@ -2285,24 +2421,24 @@ function onMouseMove(ev){
              *          if SHIFT _NOT_ pressed:
              *              then move whole group
              *          else (SHIFT pressed)
-             *              enter STATE_SELECTING_MULTIPLE state         
+             *              enter STATE_SELECTING_MULTIPLE state
              * - if mouse is not pressed then change the cursor type to :
              *      - drag group?
-             *      - cursor ? 
+             *      - cursor ?
              *          - "move" if over a figure or connector or group
              *          - "handle" if over current group's handle
              *          - "default" if over "nothing"
              */
-            
+
             if(mousePressed){
                 if(lastMove != null){
                     //Log.debug('onMouseMove() - STATE_GROUP_SELECTED + mouse pressed');
-                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then 
-                     *as we move the mouse....it can move faster/slower than the figure and we 
+                    /*We need to use handleGetSelected() as if we are using handleGet(x,y) then
+                     *as we move the mouse....it can move faster/slower than the figure and we
                      *will lose the Handle selection.
                      **/
                     var handle = HandleManager.handleGetSelected();
-                    
+
                     if(handle != null){ //over a handle
                         Log.info('onMouseMove() - STATE_GROUP_SELECTED + mouse pressed  + over a Handle');
                         //HandleManager.handleSelectXY(x, y);
@@ -2345,11 +2481,11 @@ function onMouseMove(ev){
                 else{
                     canvas.style.cursor = 'default';
                 }
-            }                       
+            }
 
             break;
 
-            
+
         case STATE_CONNECTOR_PICK_FIRST:
             //change FCP (figure connection points) color
             var fCpId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
@@ -2388,13 +2524,13 @@ function onMouseMove(ev){
              *  - if adjusting the handlers
              *      - alter the shape of connector in real time
              **/
-            
+
             //alert('Move but we have a connector');
             //change cursor to move if over a connector's CP
             //var connector = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
             var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(selectedConnectorId);
             var start = cps[0];
-            var end = cps[1];
+            var end = cps[2];
             if(start.point.near(x, y, 3) || end.point.near(x, y, 3)){
                 canvas.style.cursor = 'move';
             }
@@ -2404,7 +2540,7 @@ function onMouseMove(ev){
             else{
                 canvas.style.cursor = 'default';
             }
-            
+
             /*if we have a handle action*/
             if(mousePressed==true && lastMove != null && HandleManager.handleGetSelected() != null){
                 Log.info("onMouseMove() + STATE_CONNECTOR_SELECTED - trigger a handler action");
@@ -2455,7 +2591,7 @@ function onMouseMove(ev){
 
         case STATE_CONNECTOR_MOVE_POINT:
             /**
-             *Description: 
+             *Description:
              *Adjust on real time - WYSIWYG
              *-compute the solution
              *-update connector shape
@@ -2463,9 +2599,9 @@ function onMouseMove(ev){
              *TODO: add description*/
             Log.info("Easy easy easy....it's fragile");
             if(mousePressed){ //only if we are dragging
-                
+
                 /*update connector - but not unglue/glue it (Unglue and glue is handle in onMouseUp)
-                 *as we want the glue-unglue to produce only when mouse is released*/   
+                 *as we want the glue-unglue to produce only when mouse is released*/
                 connectorMovePoint(selectedConnectionPointId, x, y, ev);
 
                 redraw = true;
@@ -2475,7 +2611,7 @@ function onMouseMove(ev){
 
 
     lastMove = [x, y];
-    
+
     if(redraw){
         draw();
     }
@@ -2536,7 +2672,7 @@ function onDblClick(ev) {
         textPrimitiveId = 0; // (0 by default)
     } else {
         cId = CONNECTOR_MANAGER.connectorGetByTextXY(x, y);
-        
+
         // check if we clicked a text of connector
         if (cId != -1) {
             connector = CONNECTOR_MANAGER.connectorGetById(cId);
@@ -2614,18 +2750,20 @@ function onDblClick(ev) {
 
 
 /**Pick the first connector we can get at (x,y) position
- *@param {Number} x - the x position 
- *@param {Number} y - the y position 
+ *@param {Number} x - the x position
+ *@param {Number} y - the y position
  *@param {Event} ev - the event triggered
  *@author Alex, Artyom
  **/
 function connectorPickFirst(x, y, ev){
+    //agbl edit
+    //where we make the connector
     Log.group("connectorPickFirst");
     //create connector
-    var conId = CONNECTOR_MANAGER.connectorCreate(new Point(x, y),new Point(x+10,y+10) /*fake cp*/, connectorType);
+    var conId = CONNECTOR_MANAGER.connectorCreateMidPoint(new Point(x, y),new Point(x+5, y+5), new Point(x+10,y+10) /*fake cp*/, connectorType);
     selectedConnectorId = conId;
     var con = CONNECTOR_MANAGER.connectorGetById(conId);
-    
+
 
     //TRY TO GLUE IT
     //1.get CP of the connector
@@ -2636,6 +2774,16 @@ function connectorPickFirst(x, y, ev){
     //get the ConnectionPoint's id if we are over it (and belonging to a figure)
     var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
 
+    var fCpOverMidId = CONNECTOR_MANAGER.connectionPointConnectorGetByXY(x, y, ConnectionPoint.TYPE_CONNECTOR, selectedConnectorId);  //find midpoint cp
+
+
+    //agbl edit
+    //this is for boxes, we will probably want to limit this to only being able to snap to/from Figures/boxes
+    //then expand to allow for arrow to arrow
+    //if handles new connections from connection points on a Figure
+    //else if handles for creating new connections on the grid itself
+
+    debugger;
     //see if we can snap to a figure
     if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
         var fCp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
@@ -2652,15 +2800,15 @@ function connectorPickFirst(x, y, ev){
         Log.info("First glue created : " + g);
         //alert('First glue ' + g);
     } else if (fOverId !== -1) { //Are we, at least, over the {Figure}?
-        
+
         /*As we are over a {Figure} but not over a {ConnectionPoint} we will switch
          * to automatic connection*/
         var point = new Point(x,y);
         var candidate = CONNECTOR_MANAGER.getClosestPointsOfConnection(
             true,    // automatic start
-            true,    // automatic end 
+            true,    // automatic end
             fOverId, //start figure's id
-            point,   //start point 
+            point,   //start point
             fOverId, //end figure's id
             point    //end point
         );
@@ -2675,8 +2823,12 @@ function connectorPickFirst(x, y, ev){
         con.turningPoints[0].x = con.turningPoints[1].x = connectionPoint.x;
         con.turningPoints[0].y = con.turningPoints[1].y = connectionPoint.y;
 
-        var g = CONNECTOR_MANAGER.glueCreate(candidate[2], conCps[0].id, true);
+        var g = CONNECTOR_MANAGER.glueCreate(candidate[1], conCps[0].id, true);
         Log.info("First glue created : " + g);
+    }else if (fCpOverMidId != -1) { //are we over a midpoint?
+      var cp = CONNECTOR_MANAGER.connectionPointGetById(fCpOverMidId);
+      conCps[0].color = ConnectionPoint.OVER_COLOR;
+      CONNECTOR_MANAGER.glueCreate(fCpOverMidId, cp.id, false);
     }
     state = STATE_CONNECTOR_PICK_SECOND;
     Log.groupEnd();
@@ -2684,23 +2836,24 @@ function connectorPickFirst(x, y, ev){
 
 
 /**Pick the second {ConnectorPoint}  we can get at (x,y) position
- *@param {Number} x - the x position 
- *@param {Number} y - the y position 
+ *@param {Number} x - the x position
+ *@param {Number} y - the y position
  *@param {Event} ev - the event triggered
  **/
 function connectorPickSecond(x, y, ev){
     Log.group("main: connectorPickSecond");
-    
+
     //current connector
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId); //it should be the last one
     var cps = CONNECTOR_MANAGER.connectionPointGetAllByParent(con.id);
 
     //get the ConnectionPoint's id if we are over it (and belonging to a figure)
     var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x, y, ConnectionPoint.TYPE_FIGURE); //find figure's CP
+    var fCpOverMidId = CONNECTOR_MANAGER.connectionPointConnectorGetByXY(x, y, ConnectionPoint.TYPE_CONNECTOR, selectedConnectorId);  //find midpoint cp
     //get Figure's id if over it
     var fOverId = STACK.figureGetByXY(x,y);
 
-    //TODO: remove 
+    //TODO: remove
     //play with algorithm
     {
         //We will try to find the startFigure, endFigure, startPoint, endPoint, etc
@@ -2714,7 +2867,7 @@ function connectorPickSecond(x, y, ev){
         else{
             Log.info(":( WE DO NOT HAVE A START FIGURE");
         }
-        
+
         //end point
         var rEndPoint = new Point(x, y);
         var rEndFigure = null;
@@ -2722,10 +2875,10 @@ function connectorPickSecond(x, y, ev){
         if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
             var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
             Log.info("End Figure's ConnectionPoint present id = " + fCpOverId);
-            
+
             //As we found the connection point by a vicinity (so not exactly x,y match) we will adjust the end point too
             rEndPoint = r_figureConnectionPoint.point.clone();
-            
+
             rEndFigure = STACK.figureGetById(r_figureConnectionPoint.parentId);
             Log.info(":) WE HAVE AN END FIGURE id = " + rEndFigure.id);
         } else if (fOverId != -1) {  //Are we, at least, over a Figure?
@@ -2738,7 +2891,7 @@ function connectorPickSecond(x, y, ev){
         } else{
             Log.info(":( WE DO NOT HAVE AN END FIGURE " );
         }
-        
+
         var rStartBounds = rStartFigure ? rStartFigure.getBounds() : null;
         var rEndBounds = rEndFigure ? rEndFigure.getBounds() : null;
 
@@ -2759,36 +2912,38 @@ function connectorPickSecond(x, y, ev){
             rEndFigure ? rEndFigure.id : -1, //end figure's id
             rEndPoint //end figure's point
             );
-        
+
         DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(
-            con.type, 
+            Connector.TYPE_STRMIDPOINT,
             candidate[0], /*Start point*/
             candidate[1], /*End point*/
-            rStartBounds, 
+            rStartBounds,
             rEndBounds
         );
 
     }
-    
+
     //end remove block
 
     //COLOR MANAGEMENT FOR {ConnectionPoint}
     //Find any {ConnectionPoint} from a figure at (x,y). Change FCP (figure connection points) color
-    if (fCpOverId != -1 || fOverId != -1) { //Are we over a ConnectionPoint from a Figure or over a Figure?
-        cps[1].color = ConnectionPoint.OVER_COLOR;
+    if (fCpOverId != -1 || fOverId != -1|| fCpOverMidId != -1) { //Are we over a ConnectionPoint from a Figure or over a Figure?
+        cps[2].color = ConnectionPoint.OVER_COLOR;
     } else {
-        cps[1].color = ConnectionPoint.NORMAL_COLOR;
+        cps[2].color = ConnectionPoint.NORMAL_COLOR;
     }
 
-    
+
     var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
+    var midConPoint = CONNECTOR_MANAGER.connectionPointGetMidForConnector(selectedConnectorId);
     var secConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
     //adjust connector
     Log.info("connectorPickSecond() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
-    
+
     con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
     //CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId).point = con.turningPoints[0].clone();
     firstConPoint.point = con.turningPoints[0].clone();
+    midConPoint.point = con.turningPoints[1].clone();
     secConPoint.point = con.turningPoints[con.turningPoints.length-1].clone();
 
     // MANAGE TEXT
@@ -2797,7 +2952,7 @@ function connectorPickSecond(x, y, ev){
 
     // before defining of {ConnectionPoint}'s position we reset currentCloud
     currentCloud = [];
-        
+
     //GLUES MANAGEMENT
     //remove all previous glues to {Connector}'s second {ConnectionPoint}
     CONNECTOR_MANAGER.glueRemoveAllBySecondId(secConPoint.id);
@@ -2807,27 +2962,28 @@ function connectorPickSecond(x, y, ev){
         CONNECTOR_MANAGER.glueCreate(fCpOverId, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, false);
     } else if(fOverId != -1){ //Are we, at least, over a Figure?
         CONNECTOR_MANAGER.glueCreate(candidate[3]/*end Figure's ConnectionPoint Id*/, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, true);
+    }else if(fCpOverMidId !=-1){//Are we over a ConnectionPoint from a midpoint?
+        CONNECTOR_MANAGER.glueCreate(fCpOverMidId, CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId).id, false);
     } else { //No ConnectionPoint, no Figure (I'm lonely)
         fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
         if(fCpOverId !== -1){
             currentCloud = [fCpOverId, secConPoint.id];
         }
     }
-    
+
     Log.groupEnd();
 }
 
 
 /**
  *Alter the {Connector}  in real time
- *@param {Number} connectionPointId - the id of the current dragged {ConnectionPoint} 
- *@param {Number} x - the x position 
- *@param {Number} y - the y position 
+ *@param {Number} connectionPointId - the id of the current dragged {ConnectionPoint}
+ *@param {Number} x - the x position
+ *@param {Number} y - the y position
  *@param {Event} ev - the event triggered
  **/
 function connectorMovePoint(connectionPointId, x, y, ev){
     Log.group("main: connectorMovePoint");
-
 
     //current connector
     var con = CONNECTOR_MANAGER.connectorGetById(selectedConnectorId);
@@ -2835,23 +2991,23 @@ function connectorMovePoint(connectionPointId, x, y, ev){
 
     //get the ConnectionPoint's id if we are over it (and belonging to a figure)
     var fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXY(x,y, ConnectionPoint.TYPE_FIGURE);
-
+    var fCpOverMidId = CONNECTOR_MANAGER.connectionPointConnectorGetByXY(x, y, ConnectionPoint.TYPE_CONNECTOR, selectedConnectorId);  //find midpoint cp
     //get Figure's id if over it
     var fOverId = STACK.figureGetByXY(x,y);
 
     // MANAGE TEXT
     // update position of connector's text
     con.updateMiddleText();
-    
+
     //MANAGE COLOR
     //update cursor if over a figure's cp
-    if(fCpOverId != -1 || fOverId != -1){ //Are we over a ConnectionPoint from a Figure or over a Figure?
+    if(fCpOverId != -1 || fOverId != -1 || fCpOverMidId != -1){ //Are we over a ConnectionPoint from a Figure or over a Figure?
         //canvas.style.cursor = 'default';
         if(cps[0].id == selectedConnectionPointId){
             cps[0].color = ConnectionPoint.OVER_COLOR;
         }
         else{
-            cps[1].color = ConnectionPoint.OVER_COLOR;
+            cps[2].color = ConnectionPoint.OVER_COLOR;
         }
     }
     else{
@@ -2860,7 +3016,7 @@ function connectorMovePoint(connectionPointId, x, y, ev){
             cps[0].color = ConnectionPoint.NORMAL_COLOR;
         }
         else{
-            cps[1].color = ConnectionPoint.NORMAL_COLOR;
+            cps[2].color = ConnectionPoint.NORMAL_COLOR;
         }
     }
 
@@ -2869,30 +3025,37 @@ function connectorMovePoint(connectionPointId, x, y, ev){
      * who is the start Figure, end Figure, starting Glue, ending Glue, etc*/
     var rStartPoint = con.turningPoints[0].clone();
     var rStartFigure = null; //starting figure (it can be null - as no Figure)
+    var rMidPoint = con.turningPoints[1].clone();
+    var rMidFigure = null; //starting figure (it can be null - as no Figure)
     var rEndPoint = con.turningPoints[con.turningPoints.length-1].clone();
     var rEndFigure = null; //ending figure (it can be null - as no Figure)
     var rStartGlues = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(cps[0].id);
-    var rEndGlues = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(cps[1].id);
+    var rMidGlues = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(cps[1].id);
+    var rEndGlues = CONNECTOR_MANAGER.glueGetBySecondConnectionPointId(cps[2].id);
 
     // before solution we reset currentCloud
     currentCloud = [];
-    
+
     if(cps[0].id == connectionPointId){ //FIRST POINT
         if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
             var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
-                
+
             //start point and figure
-            rStartPoint = r_figureConnectionPoint.point.clone();                
+            rStartPoint = r_figureConnectionPoint.point.clone();
+            rMidPoint = new Point((rEndPoint.x - rStartPoint.x)/2 + rStartPoint.x , (rEndPoint.y - rStartPoint.y)/2 + rStartPoint.y);
             rStartFigure = STACK.figureGetById(r_figureConnectionPoint.parentId);
-        }     
+        }
         else if (fOverId != -1) { //Are we, at least, over a Figure?
             //start point and figure
             rStartPoint = new Point(x, y);
+            rMidPoint = new Point((rEndPoint.x - rStartPoint.x)/2 + rStartPoint.x , (rEndPoint.y - rStartPoint.y)/2 + rStartPoint.y);
             rStartFigure = STACK.figureGetById(fOverId);
         } else {
             rStartPoint = new Point(x, y);
+            //maybe need to create midpoint here again
+            rMidPoint = new Point((rEndPoint.x - rStartPoint.x)/2 + rStartPoint.x , (rEndPoint.y - rStartPoint.y)/2 + rStartPoint.y);
         }
-         
+
         //end figure
         rEndFigure = STACK.figureGetAsSecondFigureForConnector(con.id);
 
@@ -2919,22 +3082,28 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         );
 
         //solutions
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
+      //  DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
 
 
-        //UPDATE CONNECTOR 
+        //UPDATE CONNECTOR
         var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
+        var midConPoint = CONNECTOR_MANAGER.connectionPointGetMidForConnector(selectedConnectorId);
         var secondConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
         //adjust connector
-        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
+      //  Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
 
-        con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
-        
-        firstConPoint.point = con.turningPoints[0].clone();
+        //con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
+
+        firstConPoint.point = rStartPoint.clone();
+        CONNECTOR_MANAGER.connectionPointGetById(firstConPoint.id).point = rStartPoint.clone();
+        midConPoint.point = rMidPoint.clone();
+        CONNECTOR_MANAGER.connectionPointGetById(midConPoint.id).point = rMidPoint.clone();
         secondConPoint.point = con.turningPoints[con.turningPoints.length - 1].clone();
+        CONNECTOR_MANAGER.connectionPointGetById(secondConPoint.id).point = rEndPoint.clone();
 
-
-
+        CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints[0] = rStartPoint.clone();
+        CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints[1] = rMidPoint.clone();
+        CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints[2] = rEndPoint.clone();
         //GLUES MANAGEMENT
         //remove all previous glues to {Connector}'s second {ConnectionPoint}
         CONNECTOR_MANAGER.glueRemoveAllBySecondId(firstConPoint.id);
@@ -2943,30 +3112,35 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
             CONNECTOR_MANAGER.glueCreate(fCpOverId, firstConPoint.id, false);
         } else if(fOverId != -1){ //Are we, at least, over a Figure?
-            CONNECTOR_MANAGER.glueCreate(candidate[2], firstConPoint.id, true);
+            CONNECTOR_MANAGER.glueCreate(candidate[1], firstConPoint.id, true);
+        }else if (fCpOverMidId != -1){
+            CONNECTOR_MANAGER.glueCreate(fCpOverMidId, firstConPoint.id, false);
         } else {
             fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, secondConPoint);
             if(fCpOverId !== -1){
                 currentCloud = [fCpOverId, firstConPoint.id];
             }
         }
-    }     
-    else if (cps[1].id == connectionPointId){ //SECOND POINT
+    }
+    else if (cps[2].id == connectionPointId){ //SECOND POINT
         if(fCpOverId != -1){ //Are we over a ConnectionPoint from a Figure?
             var r_figureConnectionPoint = CONNECTOR_MANAGER.connectionPointGetById(fCpOverId);
-                
+
             //end point and figure
-            rEndPoint = r_figureConnectionPoint.point.clone();                
+            rEndPoint = r_figureConnectionPoint.point.clone();
+            rMidPoint = new Point((rEndPoint.x - rStartPoint.x)/2 + rStartPoint.x , (rEndPoint.y - rStartPoint.y)/2 + rStartPoint.y);
             rEndFigure = STACK.figureGetById(r_figureConnectionPoint.parentId);
         }
         else if (fOverId != -1) { //Are we, at least, over a Figure?
             //end point and figure
             rEndPoint = new Point(x, y);
+            rMidPoint = new Point((rEndPoint.x - rStartPoint.x)/2 + rStartPoint.x , (rEndPoint.y - rStartPoint.y)/2 + rStartPoint.y);
             rEndFigure = STACK.figureGetById(fOverId);
         } else {
             rEndPoint = new Point(x, y);
+            rMidPoint = new Point((rEndPoint.x - rStartPoint.x)/2 + rStartPoint.x , (rEndPoint.y - rStartPoint.y)/2 + rStartPoint.y);
         }
-         
+
         //start figure
         rStartFigure = STACK.figureGetAsFirstFigureForConnector(con.id);
 
@@ -2994,21 +3168,28 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         );
 
         //solutions
-        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
+//        DIAGRAMO.debugSolutions = CONNECTOR_MANAGER.connector2Points(con.type, candidate[0], candidate[1], rStartBounds, rEndBounds);
 
 
         //UPDATE CONNECTOR
         var firstConPoint = CONNECTOR_MANAGER.connectionPointGetFirstForConnector(selectedConnectorId);
+        var midConPoint = CONNECTOR_MANAGER.connectionPointGetMidForConnector(selectedConnectorId);
         var secondConPoint = CONNECTOR_MANAGER.connectionPointGetSecondForConnector(selectedConnectorId);
-        
+
         //adjust connector
-        Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
+    //    Log.info("connectorMovePoint() -> Solution: " + DIAGRAMO.debugSolutions[0][2]);
 
-        con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
-        firstConPoint.point = con.turningPoints[0].clone();
-        secondConPoint.point = con.turningPoints[con.turningPoints.length - 1].clone();
+      //  con.turningPoints = Point.cloneArray(DIAGRAMO.debugSolutions[0][2]);
+      firstConPoint.point = con.turningPoints[0].clone();
+      CONNECTOR_MANAGER.connectionPointGetById(firstConPoint.id).point = rStartPoint.clone();
+      midConPoint.point = rMidPoint.clone();
+      CONNECTOR_MANAGER.connectionPointGetById(midConPoint.id).point = rMidPoint.clone();
+      secondConPoint.point = rEndPoint.clone();
+      CONNECTOR_MANAGER.connectionPointGetById(secondConPoint.id).point = rEndPoint.clone();
 
-
+      CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints[0] = rStartPoint.clone();
+      CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints[1] = rMidPoint.clone();
+      CONNECTOR_MANAGER.connectorGetById(selectedConnectorId).turningPoints[2] = rEndPoint.clone();
         //GLUES MANAGEMENT
         //remove all previous glues to {Connector}'s second {ConnectionPoint}
         CONNECTOR_MANAGER.glueRemoveAllBySecondId(secondConPoint.id);
@@ -3018,7 +3199,9 @@ function connectorMovePoint(connectionPointId, x, y, ev){
             CONNECTOR_MANAGER.glueCreate(fCpOverId, secondConPoint.id, false);
         } else if(fOverId != -1){ //Are we, at least, over a Figure?
             CONNECTOR_MANAGER.glueCreate(candidate[3], secondConPoint.id, true);
-        } else {
+        }else if (fCpOverMidId != -1) {
+            CONNECTOR_MANAGER.glueCreate(fCpOverMidId, secondConPoint.id, false);
+        }else {
             fCpOverId = CONNECTOR_MANAGER.connectionPointGetByXYRadius(x,y, FIGURE_CLOUD_DISTANCE, ConnectionPoint.TYPE_FIGURE, firstConPoint);
             if(fCpOverId !== -1){
                 currentCloud = [fCpOverId, secondConPoint.id];
@@ -3026,9 +3209,9 @@ function connectorMovePoint(connectionPointId, x, y, ev){
         }
     } else{
         throw "main:connectorMovePoint() - this should never happen";
-    }   
-    
-    
+    }
+
+
     Log.groupEnd();
 }
 
@@ -3048,25 +3231,25 @@ function generateMoveMatrix(fig, x,y){
     if(typeof x === 'undefined'){
         throw "Exception in generateMoveMatrix, x is undefined";
     }
-    
+
     if(typeof y === 'undefined'){
         throw "Exception in generateMoveMatrix,  is undefined";
     }
-    
+
     Log.info("main.js --> generateMoveMatrix x:" + x + ' y:' + y + ' lastMove=[' + lastMove + ']' );
     var dx = x - lastMove[0];
     var dy = y - lastMove[1];
     //    Log.info("generateMoveMatrix() - delta  " + dx + ',  ' + dy);
-    
+
     var moveMatrix = null;
-        
+
     if(snapTo){ //snap effect
         moveMatrix = [
         [1, 0, 0],
         [0, 1, 0],
         [0, 0, 1]
         ];
-                    
+
         //Log.info("generateMoveMatrix() - old snapMonitor : " + snapMonitor);
         //Log.info("generateMoveMatrix() - dx : " + dx + " dy: " + dy);
         snapMonitor[0] += dx;
@@ -3075,38 +3258,38 @@ function generateMoveMatrix(fig, x,y){
         //Log.info("generateMoveMatrix() - figure bounds : " + fig.getBounds());
 
         var jump = GRIDWIDTH / 2; //the figure will jump half of grid cell width
-        
+
         //HORIZONTAL
         if(dx != 0){ //dragged to right
-            
+
             /*Idea:
-             *As you move the shape to right it might snap to next snap line  
+             *As you move the shape to right it might snap to next snap line
              *regarding figure's start bounds (startNextGridX)
              *or snap to the snap line regarding figure's end bounds (endNextGridX)
              *We just need to see to which snap line will actually snap (the one that is closer)
              **/
-                       
-            var startGridX = ( Math.floor( (fig.getBounds()[0] + snapMonitor[0])  / jump ) + 1 ) * jump;            
+
+            var startGridX = ( Math.floor( (fig.getBounds()[0] + snapMonitor[0])  / jump ) + 1 ) * jump;
             var deltaStart = startGridX - fig.getBounds()[0];
 //            Log.info("snapMonitor: [" + snapMonitor +  "] Start grid X: " + startGridX + "Figure start x: " + fig.getBounds()[0] + " deltaStart: " + deltaStart );
-            
-            
-            
+
+
+
             var endGridX = (Math.floor( (fig.getBounds()[2] + snapMonitor[0])  / jump ) + 1) * jump;
             var deltaEnd = endGridX - fig.getBounds()[2];
-            
+
             if(deltaStart < deltaEnd){
                 if( fig.getBounds()[0] + snapMonitor[0]  >= startGridX - SNAP_DISTANCE ){
                     moveMatrix[0][2] = deltaStart;
                     snapMonitor[0] -= deltaStart;
                 }
-                else if( fig.getBounds()[2] + snapMonitor[0]  >= endGridX - SNAP_DISTANCE ){ 
+                else if( fig.getBounds()[2] + snapMonitor[0]  >= endGridX - SNAP_DISTANCE ){
                     moveMatrix[0][2] = deltaEnd;
                     snapMonitor[0] -= deltaEnd;
                 }
             }
             else{
-                if( fig.getBounds()[2] + snapMonitor[0]  >= endGridX - SNAP_DISTANCE ){ 
+                if( fig.getBounds()[2] + snapMonitor[0]  >= endGridX - SNAP_DISTANCE ){
                     moveMatrix[0][2] = deltaEnd;
                     snapMonitor[0] -= deltaEnd;
                 }
@@ -3114,33 +3297,33 @@ function generateMoveMatrix(fig, x,y){
                     moveMatrix[0][2] = deltaStart;
                     snapMonitor[0] -= deltaStart;
                 }
-            }            
+            }
         }
 
 
         //VERTICAL
         if(dy != 0){ //dragged to bottom
-            var upperGridY = ( Math.floor( (fig.getBounds()[1] + snapMonitor[1])  / jump ) + 1 ) * jump;            
+            var upperGridY = ( Math.floor( (fig.getBounds()[1] + snapMonitor[1])  / jump ) + 1 ) * jump;
             var deltaUpper = upperGridY - fig.getBounds()[1];
 //            Log.info("snapMonitor: [" + snapMonitor +  "] Upper grid Y: " + upperGridY + "Figure start y: " + fig.getBounds()[1] + " deltaUpper: " + deltaUpper );
-            
-            
-            
+
+
+
             var lowerGridY = (Math.floor( (fig.getBounds()[3] + snapMonitor[1])  / jump ) + 1) * jump;
             var deltaLower = lowerGridY - fig.getBounds()[3];
-            
+
             if(deltaUpper < deltaLower){
                 if( fig.getBounds()[1] + snapMonitor[1]  >= upperGridY - SNAP_DISTANCE ){
                     moveMatrix[1][2] = deltaUpper;
                     snapMonitor[1] -= deltaUpper;
                 }
-                else if( fig.getBounds()[3] + snapMonitor[1]  >= lowerGridY - SNAP_DISTANCE ){ 
+                else if( fig.getBounds()[3] + snapMonitor[1]  >= lowerGridY - SNAP_DISTANCE ){
                     moveMatrix[1][2] = deltaLower;
                     snapMonitor[1] -= deltaLower;
                 }
             }
             else{
-                if( fig.getBounds()[3] + snapMonitor[1]  >= lowerGridY - SNAP_DISTANCE ){ 
+                if( fig.getBounds()[3] + snapMonitor[1]  >= lowerGridY - SNAP_DISTANCE ){
                     moveMatrix[1][2] = deltaLower;
                     snapMonitor[1] -= deltaLower;
                 }
@@ -3148,12 +3331,12 @@ function generateMoveMatrix(fig, x,y){
                     moveMatrix[1][2] = deltaUpper;
                     snapMonitor[1] -= deltaUpper;
                 }
-            }               
+            }
         }
 
 
     //Log.info("generateMoveMatrix() - 'trimmed' snapMonitor : " + snapMonitor);
-        
+
     } else{ //normal move
         moveMatrix = [
         [1, 0, dx],
@@ -3173,7 +3356,7 @@ function generateMoveMatrix(fig, x,y){
 function getCanvasBounds(){
     var canvasMinX = $("#a").offset().left;
     var canvasMaxX = canvasMinX + $("#a").width();
-    
+
     var canvasMinY = $("#a").offset().top;
     var canvasMaxY = canvasMinY + $("#a").height();
 
@@ -3198,11 +3381,11 @@ function getCanvasXY(ev){
     var canvasBounds = getCanvasBounds();
 //    Log.group("main.js->getCanvasXY()");
     Log.debug("Canvas bounds: [" + canvasBounds + ']');
-    
+
     var tempPageX = null;
     var tempPageY = null;
-    
-    if(ev.touches){ //iPad 
+
+    if(ev.touches){ //iPad
         if(ev.touches.length > 0){
             tempPageX = ev.touches[0].pageX;
             tempPageY = ev.touches[0].pageY;
@@ -3210,10 +3393,10 @@ function getCanvasXY(ev){
     }
     else{ //normal Desktop
         tempPageX = ev.pageX; //Retrieves the x-coordinate of the mouse pointer relative to the top-left corner of the document.
-        tempPageY = ev.pageY; //Retrieves the y-coordinate of the mouse pointer relative to the top-left corner of the document.          
+        tempPageY = ev.pageY; //Retrieves the y-coordinate of the mouse pointer relative to the top-left corner of the document.
         Log.debug("ev.pageX:" + ev.pageX + " ev.pageY:" + ev.pageY);
     }
-    
+
     if(canvasBounds[0] <= tempPageX && tempPageX <= canvasBounds[2]
         && canvasBounds[1] <= tempPageY && tempPageY <= canvasBounds[3])
     {
@@ -3290,8 +3473,8 @@ function addBackground(canvasElement){
     }
 
 }//end function
-			
-			
+
+
 
 /**Cleans up the canvas. It also add a white background to avoid "transparent"
  *background issue in PNG
@@ -3300,9 +3483,9 @@ function addBackground(canvasElement){
  **/
 function reset(canvas){
 	var ctx = canvas.getContext('2d');
-	ctx.clearRect(0,0,canvas.width,canvas.height);   
+	ctx.clearRect(0,0,canvas.width,canvas.height);
 	ctx.fillStyle = '#FFFFFF';
-	ctx.fillRect(0,0,canvas.width,canvas.height);			
+	ctx.fillRect(0,0,canvas.width,canvas.height);
 }
 
 
@@ -3313,16 +3496,16 @@ function draw(){
 
     //    Log.group("A draw started");
     //alert('Paint 1')
-    reset(getCanvas());    
-	
+    reset(getCanvas());
+
 	//if grid visible paint it
 //	if(gridVisible){ //paint grid
 		addBackground(getCanvas());
 //	}
-	
+
     //alert('Paint 2')
     STACK.paint(ctx);
-    
+
     minimap.updateMinimap();
 //    Log.groupEnd();
 //alert('Paint 3')
@@ -3342,7 +3525,7 @@ function renderedCanvas(){
    var tempCanvas = document.getElementById('tempCanvas');
    if(tempCanvas === null){
            tempCanvas = document.createElement('canvas');
-           tempCanvas.setAttribute('id', 'tempCanvas');					
+           tempCanvas.setAttribute('id', 'tempCanvas');
            tempCanvas.style.display = 'none';
 
            //it seems that there is no need to actually add it to the dom tree to be able to render (tested: IE9, FF9, Chrome 19)
@@ -3369,7 +3552,7 @@ function linkMap(){
         if(figure.url != ''){
             var bounds = figure.getBounds();
             if(first){
-                first = false;                                                        
+                first = false;
             }
             else{
                 csvBounds += "\n";
@@ -3394,21 +3577,21 @@ function linkMap(){
  *http://www.onegeek.com.au/articles/programming/javascript-serialization.php
  **/
 function save(){
-    
+
     //alert("save triggered! diagramId = " + diagramId  );
     Log.info('Save pressed');
-    
+
     if (state == STATE_TEXT_EDITING) {
         currentTextEditor.destroy();
         currentTextEditor = null;
         state = STATE_NONE;
     }
-    
+
     var dataURL = null;
     try{
         dataURL = renderedCanvas();
-    } 
-    catch(e){                
+    }
+    catch(e){
         if(e.name === 'SecurityError' && e.code === 18){
             /*This is usually happening as we load an image from another host than the one Diagramo is hosted*/
             alert("A figure contains an image loaded from another host. \
@@ -3442,7 +3625,7 @@ function save(){
 //                alert(svgDiagram);
     //Log.info('SVG : ' + svgDiagram);
 
-    //save the URLs of figures as a CSV 
+    //save the URLs of figures as a CSV
     var lMap = linkMap();
 
     //see: http://api.jquery.com/jQuery.post/
@@ -3451,7 +3634,7 @@ function save(){
         function(data){
             if(data === 'firstSave'){
                 Log.info('firstSave!');
-                window.location = './saveDiagram.php';                            
+                window.location = './saveDiagram.php';
             }
             else if(data === 'saved'){
                 //Log.info('saved!');
@@ -3565,14 +3748,14 @@ function exportCanvas(){
     //open a new window that will display the SVG
     window.open('./svg.php', 'SVG', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
 }
-            
+
 
 /**Loads a saved diagram
  *@param {Number} diagramId - the id of the diagram you want to load
  **/
 function load(diagramId){
     //alert("load diagram [" + diagramId + ']');
-    
+
     $.post("./common/controller.php", {action: 'load', diagramId: diagramId},
         function(data){
 //                        alert(data);
@@ -3620,7 +3803,7 @@ function loadTempDiagram(tempDiagramName){
                 canvasProps.sync();
                 setUpEditPanel(canvasProps);
 
-                CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);            
+                CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
                 CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
                 draw();
 
@@ -3648,7 +3831,7 @@ function loadQuickStartDiagram(){
                 canvasProps.sync();
                 setUpEditPanel(canvasProps);
 
-                CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);            
+                CONNECTOR_MANAGER = ConnectorManager.load(obj['m']);
                 CONTAINER_MANAGER = ContainerFigureManager.load(obj['p']);
                 draw();
 
@@ -3673,7 +3856,7 @@ function saveAs(){
 //   $serializedDiagram = JSON.stringify($diagram,  Util.operaReplacer);
    var svgDiagram = toSVG();
 
-   //save the URLs of figures as a CSV 
+   //save the URLs of figures as a CSV
    var lMap = linkMap();
 
    //alert($serializedDiagram);
@@ -3703,7 +3886,7 @@ function addListeners(){
     document.addEventListener("keypress", onKeyPress, false);
     document.addEventListener("keydown", onKeyDown, false);
     document.addEventListener("keyup", onKeyUp, false);
-    document.addEventListener("selectstart", stopselection, false);                
+    document.addEventListener("selectstart", stopselection, false);
 
     //add event handlers for Canvas
     canvas.addEventListener("mousemove", onMouseMove, false);
@@ -3772,7 +3955,7 @@ function init(diagramId){
    //loads diagram ONLY if the parameter is numeric
    if(isNumeric(diagramId)){
        currentDiagramId = diagramId;
-       load(diagramId);       
+       load(diagramId);
    }
    else if(diagramId.substring && diagramId.substring(0, 3) === 'tmp'){ //it is a string and starts with "tmp"
        loadTempDiagram(diagramId);
@@ -3786,7 +3969,7 @@ function init(diagramId){
    // close layer when click-out
 
    addListeners();
-   
+
     window.addEventListener("mousedown", documentOnMouseDown, false);
     window.addEventListener("mousemove", documentOnMouseMove, false);
     window.addEventListener("mouseup", documentOnMouseUp, false);
@@ -3802,19 +3985,19 @@ var redraw = false;
 function action(action){
     redraw = false;
     switch(action){
-        
+
         case 'undo':
             Log.info("main.js->action()->Undo. Nr of actions in the STACK: " + History.COMMANDS.length);
             History.undo();
             redraw = true;
             break;
-            
+
 //        case 'redo':
 //            Log.info("main.js->action()->Redo. Nr of actions in the STACK: " + History.COMMANDS.length);
 //            History.redo();
 //            redraw = true;
 //            break;
-            
+
         case 'group':
             /*After we pressed Ctrl-G any temporary group will became permanent*/
             if(selectedGroupId != -1){
@@ -3828,11 +4011,11 @@ function action(action){
                 else{
                     Log.info("main.js->action()->Group. Group ALREADY permanent.  Group id = " + selectedGroupId);
                 }
-                
+
             }
             redraw = true;
             break;
-            
+
         case 'container':
             Log.info("main.js->action()->container. Nr of actions in the STACK: " + History.COMMANDS.length);
 
@@ -3845,9 +4028,9 @@ function action(action){
             var cmdContainerCreate = new ContainerCreateCommand(300, 300);
             cmdContainerCreate.execute();
             History.addUndo(cmdContainerCreate);
-            
+
             redraw = true;
-            
+
             break;
 
         case 'insertImage':
@@ -3866,7 +4049,7 @@ function action(action){
             redraw = true;
 
             break;
-        
+
         case 'ungroup':
             if(selectedGroupId != -1){
                 var group = STACK.groupGetById(selectedGroupId);
@@ -3879,11 +4062,11 @@ function action(action){
                 else{
                     Log.info("main.js->action()->Ungroup. Ignore. Group is not permanent.  Group id = " + selectedGroupId);
                 }
-                
+
                 redraw = true;
             }
             break;
-       
+
         case 'connector-jagged':
             if (state == STATE_TEXT_EDITING) {
                 currentTextEditor.destroy();
@@ -3900,18 +4083,18 @@ function action(action){
                 currentTextEditor.destroy();
                 currentTextEditor = null;
             }
-            selectedFigureId = -1;            
+            selectedFigureId = -1;
             state  = STATE_CONNECTOR_PICK_FIRST;
             connectorType = Connector.TYPE_STRAIGHT;
             redraw = true;
             break;
-            
+
         case 'connector-organic':
             if (state == STATE_TEXT_EDITING) {
                 currentTextEditor.destroy();
                 currentTextEditor = null;
             }
-            selectedFigureId = -1;            
+            selectedFigureId = -1;
             state  = STATE_CONNECTOR_PICK_FIRST;
             connectorType = Connector.TYPE_ORGANIC;
             redraw = true;
@@ -3955,7 +4138,7 @@ function action(action){
             }
             break;
 
-        case 'up': //decrease Y                                   
+        case 'up': //decrease Y
             switch(state){
                 case STATE_FIGURE_SELECTED:
                     var cmdFigUp = new FigureTranslateCommand(selectedFigureId, Matrix.UP);
@@ -3978,7 +4161,7 @@ function action(action){
                     redraw = true;
                     break;
             }
-                        
+
             break;
 
         case 'down': //increase Y
@@ -4003,7 +4186,7 @@ function action(action){
                     cmdContDown.execute();
                     redraw = true;
                     break;
-            }                        
+            }
             break;
 
         case 'right': //increase X
@@ -4014,7 +4197,7 @@ function action(action){
                     cmdFigRight.execute();
                     redraw = true;
                     break;
-                    
+
                 case STATE_GROUP_SELECTED:
                     var cmdGrpRight = new GroupTranslateCommand(selectedGroupId, Matrix.RIGHT);
                     History.addUndo(cmdGrpRight);
@@ -4028,7 +4211,7 @@ function action(action){
                     cmdContRight.execute();
                     redraw = true;
                     break;
-            } 
+            }
             break;
 
         case 'left': //decrease X
@@ -4039,7 +4222,7 @@ function action(action){
                     cmdFigLeft.execute();
                     redraw = true;
                     break;
-                    
+
                 case STATE_GROUP_SELECTED:
                     var cmdGrpLeft = new GroupTranslateCommand(selectedGroupId, Matrix.LEFT);
                     History.addUndo(cmdGrpLeft);
@@ -4126,16 +4309,16 @@ function action(action){
                 redraw = true;
             }
             break;
-            
+
         case 'duplicate':
             //TODO: From Janis: Connectors are not cloned
-            
+
             if(selectedFigureId != -1){ //duplicate one figure
                 var cmdDupl = new FigureCloneCommand(selectedFigureId);
                 cmdDupl.execute();
-                History.addUndo(cmdDupl);                
+                History.addUndo(cmdDupl);
             }
-            
+
             if(selectedGroupId != -1){ //copies a group or multiple figures
                 var cmdDupl = new GroupCloneCommand(selectedGroupId);
                 cmdDupl.execute();
@@ -4159,9 +4342,9 @@ function action(action){
             if(selectedFigureId != -1){
                 var cmdFront = new FigureZOrderCommand(selectedFigureId, STACK.figures.length-1);
                 cmdFront.execute();
-                History.addUndo(cmdFront);                
+                History.addUndo(cmdFront);
                 redraw = true;
-            }            
+            }
             break;
 
         case 'moveback':
@@ -4179,7 +4362,7 @@ function action(action){
                 cmdMoveForward.execute();
                 History.addUndo(cmdMoveForward);
                 redraw = true;
-            }            
+            }
             break;
 
     }//end switch
@@ -4258,7 +4441,7 @@ function documentOnMouseMove(evt){
 
 
             //Log.info("editor.php>documentOnMouseMove>STATE_FIGURE_CREATE: selectedFigureThumb=" + selectedFigureThumb);
-            draggingFigure.setAttribute('src', selectedFigureThumb);                        
+            draggingFigure.setAttribute('src', selectedFigureThumb);
             draggingFigure.style.width = '100px';
             draggingFigure.style.height = '100px';
             draggingFigure.style.left = (evt.pageX - 50) + 'px';
@@ -4279,7 +4462,7 @@ function documentOnMouseMove(evt){
 
                 var x = coords[0];
                 var y = coords[1];
-                switch(state){                                
+                switch(state){
                     case STATE_FIGURE_CREATE:
                         Log.info("draggingFigure>onMouseUp() + STATE_FIGURE_CREATE");
 
@@ -4306,7 +4489,7 @@ function documentOnMouseMove(evt){
                             //TODO: a way around to hide this dragging DIV
                             document.getElementById('draggingThumb').style.display  = 'none';
 
-                            //TODO: the horror 
+                            //TODO: the horror
                             //body.removeChild(document.getElementById('draggingThumb'));
 
                         }
@@ -4346,8 +4529,8 @@ function documentOnMouseUp(evt){
             break;
     }
 }
-            
-            
+
+
 /*Returns a text containing all the URL in a diagram */
 function linkMap(){
     var csvBounds = '';
@@ -4357,7 +4540,7 @@ function linkMap(){
         if(figure.url != ''){
             var bounds = figure.getBounds();
             if(first){
-                first = false;                                                        
+                first = false;
             }
             else{
                 csvBounds += "\n";
@@ -4369,7 +4552,7 @@ function linkMap(){
     Log.info("editor.php->linkMap()->csv bounds: " + csvBounds);
 
     return csvBounds;
-}            
+}
 /*======================APPLE=====================================*/
 /**Triggered when an touch is initiated (iPad/iPhone).
  *Simply forward to onMouseDown
@@ -4378,7 +4561,7 @@ function linkMap(){
 function touchStart(event){
     event.preventDefault();
 
-    onMouseDown(event);                                                
+    onMouseDown(event);
 }
 
 
@@ -4389,7 +4572,7 @@ function touchStart(event){
 function touchMove(event){
     event.preventDefault();
 
-    onMouseMove(event);                
+    onMouseMove(event);
 }
 
 
@@ -4408,4 +4591,3 @@ function touchCancel(event){
 //nothing
 }
 /*======================END APPLE=================================*/
-
