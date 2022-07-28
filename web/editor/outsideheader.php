@@ -4,7 +4,7 @@
 
 <div style="clear:both;"></div>
 
-<a href="/" title="<?= $title; ?>">
-    <img src="./assets/images/logo.gif" class="logo" alt="<?= $title; ?>" title="<?= $title; ?>" border="0" /> 
+<a href="/" title="<?php echo  $title; ?>">
+    <img src="./assets/images/logo.gif" class="logo" alt="<?php echo  $title; ?>" title="<?php echo  $title; ?>" border="0" /> 
 </a>
-v<?=$VERSION?>
+v<?php echo $VERSION?>

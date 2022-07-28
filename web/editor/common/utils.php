@@ -638,7 +638,7 @@ function rrmdir($dir) {
     
     $fp = opendir($dir);
     
-    if(!fp){
+    if(!$fp){
         return false;
     }
     
@@ -734,7 +734,7 @@ function asplit($delimiter,$string){
  * @see http://dev.kanngard.net/Permalinks/ID_20050507183447.html
  */
 function selfURL() {
-    $s = empty($_SERVER["HTTPS"]) ? '' : ($_SERVER["HTTPS"] == "on") ? "s" : "";
+    $s = empty($_SERVER["HTTPS"]) ? '' : ( ($_SERVER["HTTPS"] == "on") ? "s" : "" );
     
     $protocol = strleft(strtolower($_SERVER["SERVER_PROTOCOL"]), "/") . $s;
     
@@ -915,19 +915,19 @@ function getSQLCommands($fileName) {
         while (($buffer = fgets($fh, 4096)) !== false) {
             if (strpos($buffer, '--') === 0) {  //we have a 'special' comment
                 //add current command to commands
-                if (count(trim($command)) > 0) {
+                if (!empty(trim($command))) {
                     $commands[] = $command;
                 }
 
                 //reset current command
                 $command = '';
-            } else if (count(trim($buffer)) > 0) { //we have a command (fragment), try to ignore blank lines
+            } else if (!empty(trim($buffer))) { //we have a command (fragment), try to ignore blank lines
                 $command .= ' ' . $buffer;
             }
         }
 
         //add last line command to commands
-        if (count(trim($command)) > 0) {
+        if (!empty(trim($command))) {
             $commands[] = $command;
         }
 

@@ -14,15 +14,15 @@ echo '<?xml version="1.0" encoding="UTF-8"?>';
     <table border="1">
         <tr>
             <td>Simple</td>
-            <td><?include './example1.svg'?></td>
+            <td><?php include './example1.svg'?></td>
         </tr>
         <tr>
             <td>Rotate group of figure</td>
-            <td><?include './example2.svg'?></td>
+            <td><?php include './example2.svg'?></td>
         </tr>
         <tr>
             <td>Rotate a containing SVG</td>
-            <td><?include './example3.svg'?></td>
+            <td><?php include './example3.svg'?></td>
         </tr>	
     </table>
   

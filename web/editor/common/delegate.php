@@ -422,7 +422,7 @@ class Delegate extends SQLite3 {
         $query = sprintf("SELECT * FROM `%s`", $tableName);
 
         //conditions
-        if (count($conditions) > 0) {
+        if (isset($conditions) && count($conditions) > 0) {
             $query .= " WHERE ";
             $and = false;
             foreach ($conditions as $conditionName => $conditionValue) {
@@ -451,7 +451,7 @@ class Delegate extends SQLite3 {
 
 
         //add orders
-        if (count($orders) > 0) {
+        if (!empty($orders) && count($orders) > 0) {
             $query .= " ORDER BY ";
             $comma = false;
             foreach ($orders as $order => $direction) {
@@ -485,7 +485,6 @@ class Delegate extends SQLite3 {
             $object->loadFromSQL($row);
             $objects[] = $object;
         }
-
 
 
         return $objects;
@@ -524,7 +523,7 @@ class Delegate extends SQLite3 {
         $query = sprintf("DELETE FROM `%s`", $tableName);
 
         //conditions
-        if (count($conditions) > 0) {
+        if (isset($conditions) && count($conditions) > 0) {
             $query .= " WHERE ";
             $and = false;
             foreach ($conditions as $conditionName => $conditionValue) {

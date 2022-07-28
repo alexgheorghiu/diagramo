@@ -59,7 +59,7 @@ define('STEP', 'step4');
         <div id="content">
             <?php include 'logo.php' ?>
             <?php include 'breadcrumb.php' ?>
-            <?if(count($errors) > 0){
+            <?php if(isset($errors) && count($errors) > 0){
                     foreach($errors as $error){
                         print('<div class="error">' . $error . '</div>');
                     }
@@ -73,10 +73,10 @@ define('STEP', 'step4');
             <div id="navigator">
                 <a id="linkNext" href="../editor/login.php"><img src="./assets/next.png" border="0"/></a>
             </div>
-            <?}?>
+            <?php }?>
             
             
-            <img style="display: none;" src="<?=DIAGRAMO?>/install.php?step=step4&version=<?=VERSION?>&session=<?=session_id()?>&url=<?=urlencode($appUrl)?>"/>
+            <img style="display: none;" src="<?php echo DIAGRAMO?>/install.php?step=step4&version=<?php echo VERSION?>&session=<?php echo session_id()?>&url=<?php echo urlencode($appUrl)?>"/>
             <?php include 'buildno.php'?>
         </div>
     </body>

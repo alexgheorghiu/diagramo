@@ -211,7 +211,7 @@ function loginExe() {
         }
         exit(0);        
     } else {
-        addError("Authetication failed");
+        addError("Authentication failed");
         //outer site
         redirect("../login.php");
         exit(0);

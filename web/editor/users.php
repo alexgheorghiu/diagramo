@@ -62,7 +62,7 @@ if(strpos($currentHost, ':')){
         <title>Users - Diagramo</title>
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
         <link rel="stylesheet" media="screen" type="text/css" href="assets/css/style.css" />
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
+        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?php echo time()?>"></script>    
         <script type="text/javascript">
             function confirmation(message){
                 var answer = confirm(message);
@@ -74,18 +74,18 @@ if(strpos($currentHost, ':')){
             }                        
         </script>
         
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
-        <script type="text/javascript" src="./lib/browserReady.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/log.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?php echo time()?>"></script>    
+        <script type="text/javascript" src="./lib/browserReady.js?<?php echo time()?>"></script>
+        <script type="text/javascript" src="./lib/log.js?<?php echo time()?>"></script>
     </head>
     <body>
-        <? require_once dirname(__FILE__) . '/header.php'; ?>
+        <?php require_once dirname(__FILE__) . '/header.php'; ?>
 
         <div id="content" style="text-align: left; /*border: solid 1px red;*/ padding-left: 100px;">
-            <? require_once dirname(__FILE__) . '/common/messages.php'; ?>
+            <?php require_once dirname(__FILE__) . '/common/messages.php'; ?>
             <br/>
 
-            <?if(!$l->checkLicense() ){ ?>    
+            <?php if(!$l->checkLicense() ){ ?>    
                 <div>
                     <div style="margin: 10px auto; width: 600px;">
                         This feature is disable in free version. 
@@ -93,15 +93,15 @@ if(strpos($currentHost, ':')){
                         Please <a href="./license.php"><img style="vertical-align: middle;" src="assets/images/upgrade-button.png" /></a> to be enable these feature.
                     </div> 
                 </div>            
-            <?} else if(false && $l->host != $currentHost) {?>
+            <?php } else if(false && $l->host != $currentHost) {?>
                 <div style="margin: 10px auto; width: 600px;">
-                    License host (<?=$l->host?>) is wrong. IT should be <?=$currentHost?> 
+                    License host (<?php echo $l->host?>) is wrong. IT should be <?php echo $currentHost?> 
                     <p/> 
                     Please <a href="./license.php"><img style="vertical-align: middle;" src="assets/images/upgrade-button.png" /></a> to be enable these feature.
                 </div>            
-            <?} else {?>
+            <?php } else {?>
                 <!--Collaborators-->
-                <?if(count($users) > 0 ){?>
+                <?php if(count($users) > 0 ){?>
                 <div class="form"  style="width: 600px;">
                     <div class="formTitle" >
                         <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -117,27 +117,27 @@ if(strpos($currentHost, ':')){
                             <td><span class="formLabel">Email</span></td>
                             <td align="center"><span class="formLabel">Remove user</span></td>
                         </tr>
-                        <?foreach($users as $user){                        
+                        <?php foreach($users as $user){                        
                         ?>
                         <tr>
                             <td align="center">
-                                <?=$user->email?>
+                                <?php echo $user->email?>
                             </td>
 
                             <td align="center">
-                                <? if($user->id == $_SESSION['userId']){?>
+                                <?php if($user->id == $_SESSION['userId']){?>
                                     N/A
-                                <?}else{?>                            
-                                    <a onclick="return confirmation('Are you sure you want to remove the collaborator?');" href="./common/controller.php?action=removeUser&userId=<?=$user->id?>"><img style="vertical-align:middle; margin-right: 3px;" src="./assets/images/remove.gif" border="0" width="24" height="24"/></a>                        
-                                <?}?>
+                                <?php }else{?>                            
+                                    <a onclick="return confirmation('Are you sure you want to remove the collaborator?');" href="./common/controller.php?action=removeUser&userId=<?php echo $user->id?>"><img style="vertical-align:middle; margin-right: 3px;" src="./assets/images/remove.gif" border="0" width="24" height="24"/></a>                        
+                                <?php }?>
                             </td>
                         </tr>
-                        <?}?>
+                        <?php }?>
                     </table>
                 </div>            
-                <?}else{?>
+                <?php }else{?>
                     No users to manage
-                <?}?>
+                <?php }?>
                 <!--End collaborators-->
 
 
@@ -172,14 +172,14 @@ if(strpos($currentHost, ':')){
 
                 <p/>
     <!--            <div class="form"  style="width: 600px;">
-                    <a href="./editor.php?diagramId=<?=$_REQUEST['diagramId']?>">back to diagram</a>
+                    <a href="./editor.php?diagramId=<?php echo $_REQUEST['diagramId']?>">back to diagram</a>
                 </div>-->
             
-            <?}?>
+            <?php }?>
         </div>
 
         <p></p>
-        <div class="copyright">&copy; <?=date('Y') ?> Diagramo</div>
+        <div class="copyright">&copy; <?php echo date('Y') ?> Diagramo</div>
 
     </body>
 </html>

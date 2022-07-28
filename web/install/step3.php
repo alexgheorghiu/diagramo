@@ -234,15 +234,15 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
             <?php include 'logo.php'?>
             <?php include 'breadcrumb.php' ?>
             <div id="main">
-                <?if(count($errors) > 0){?>
+                <?php if(count($errors) > 0){?>
                 <div style="margin: 5px auto; width: 500px;" >
-                    <?
+                    <?php
                     foreach($errors as $error){
                         print('<div class="error">' . $error . '</div>');
                     }
                     ?>
                 </div>
-                <?}?>
+                <?php }?>
                 <form action="step3.php" name="settingsForm" method="post">
                     <input type="hidden" name="action" value="verify"/>
                     <table align="center" cellpadding="3" cellspacing="2" border="0">
@@ -257,19 +257,19 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
                                     <tr>
                                         <td>Your name:</td>
                                         <td>&nbsp;&nbsp;</td>
-                                        <td><input tabindex="1" type="text" name="admin_name" value="<?=$_REQUEST['admin_name']?>" /><span class="required">*</span></td>
+                                        <td><input tabindex="1" type="text" name="admin_name" value="<?php echo $_REQUEST['admin_name']?>" /><span class="required">*</span></td>
                                     </tr>
 
                                     <tr>
                                         <td>Your email:</td>
                                         <td>&nbsp;&nbsp;</td>
-                                        <td><input tabindex="2" type="text" name="admin_email" value="<?=$_REQUEST['admin_email']?>" /><span class="required">*</span></td>
+                                        <td><input tabindex="2" type="text" name="admin_email" value="<?php echo $_REQUEST['admin_email']?>" /><span class="required">*</span></td>
                                     </tr>
 
                                     <tr>
                                         <td>Your password:</td>
                                         <td>&nbsp;&nbsp;</td>
-                                        <td><input tabindex="3" type="password" name="admin_pass" value="<?=$_REQUEST['admin_pass']?>" /><span class="required">*</span></td>
+                                        <td><input tabindex="3" type="password" name="admin_pass" value="<?php echo $_REQUEST['admin_pass']?>" /><span class="required">*</span></td>
 
                                     </tr>
 
@@ -290,16 +290,16 @@ if(isset ($_REQUEST['action']) && $_REQUEST['action'] == 'verify'){
             <div id="navigator">
                 
                 <a href="#" onclick="submitSettingsForm(); return false;">
-                    <?if(count($errors) > 0){?>
+                    <?php if(count($errors) > 0){?>
                         <img src="./assets/retry.png" border="0"/>
-                    <?}else{?>
+                    <?php }else{?>
                         <img src="./assets/next.png" border="0"/>
-                    <?}?>
+                    <?php }?>
                 </a>
             </div>            
             
             
-            <img style="display: none;" src="<?=DIAGRAMO?>/install.php?step=step3&version=<?=VERSION?>&session=<?=session_id()?>&url=<?=urlencode($appUrl)?>"/>
+            <img style="display: none;" src="<?php echo DIAGRAMO?>/install.php?step=step3&version=<?php echo VERSION?>&session=<?php echo session_id()?>&url=<?php echo urlencode($appUrl)?>"/>
             <?php include 'buildno.php'?>
         </div>
     </body>

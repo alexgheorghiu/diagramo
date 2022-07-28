@@ -36,10 +36,10 @@ for ($i = 1; $i < count($key); $i++){
 <html>
 
     <head>
-        <title><? echo $title; ?></title>
+        <title><?php echo $title; ?></title>
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
-        <meta name="description" content="<? echo $description; ?>" />
-        <meta name="keywords" content="<? echo $keywords; ?>" />
+        <meta name="description" content="<?php echo $description; ?>" />
+        <meta name="keywords" content="<?php echo $keywords; ?>" />
         <meta name="distribution" content="Global" />
         <meta name="rating" content="General" />
         <meta name="author" content="http://diagramo.com" />
@@ -53,13 +53,13 @@ for ($i = 1; $i < count($key); $i++){
 
     <body>
 
-        <? include "outsideheader.php"; ?>
+        <?php include "outsideheader.php"; ?>
 
         <h1>Forgot password</h1>
 
         <div class="content">
 
-            <? require_once './common/messages.php'; ?>
+            <?php require_once './common/messages.php'; ?>
             <form action="./common/controller.php" method="POST">
                 <input type="hidden" name="action" value="forgotPasswordExe"/>
                 Email:<br />
@@ -73,7 +73,7 @@ for ($i = 1; $i < count($key); $i++){
 
         </div>
 
-        <? include "footer.php"; ?>
+        <?php include "footer.php"; ?>
 
     </body>
 </html>

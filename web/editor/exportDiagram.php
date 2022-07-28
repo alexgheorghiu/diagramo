@@ -82,67 +82,67 @@ if(strpos($currentHost, ':')){
             }
         </script>
         
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
-        <script type="text/javascript" src="./lib/browserReady.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/log.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?php echo time()?>"></script>    
+        <script type="text/javascript" src="./lib/browserReady.js?<?php echo time()?>"></script>
+        <script type="text/javascript" src="./lib/log.js?<?php echo time()?>"></script>
     </head>
     <body>
-        <? require_once dirname(__FILE__) . '/header.php'; ?>
+        <?php require_once dirname(__FILE__) . '/header.php'; ?>
 
         <div id="content" style="text-align: left; /*border: solid 1px red;*/ padding-left: 100px;">
-            <? require_once dirname(__FILE__) . '/common/messages.php'; ?>
+            <?php require_once dirname(__FILE__) . '/common/messages.php'; ?>
 
             <br/>
             <div class="form"  style="width: 600px;">
                 <div class="formTitle" >
                     <table width="100%" border="0" cellpadding="0" cellspacing="0">
                         <tr>
-                            <td width="400"><span class="formLabel" style="font-size: 14px; font-family: Arial; color: #6E6E6E;">Export diagram: <?=$diagram->title?></span></td>
+                            <td width="400"><span class="formLabel" style="font-size: 14px; font-family: Arial; color: #6E6E6E;">Export diagram: <?php echo $diagram->title?></span></td>
                             <td colspan="2">&nbsp;</td>
                         </tr>
                     </table>
                 </div>
                 
-                <?if(false && !$l->checkLicense() ){ ?>    
+                <?php if(false && !$l->checkLicense() ){ ?>    
                     <div>
                         This feature (export as PNG and as DMO) is disable in free version.
                         <p/>
                         Please <a href="./license.php"><img style="vertical-align: middle;" src="assets/images/upgrade-button.png" /></a> to be enable these feature.
                     </div>            
-                <?} else if(false && $l->host != $currentHost) {?>
+                <?php } else if(false && $l->host != $currentHost) {?>
                     <div style="background-color: yellow; font-size: 30px;">
-                        License host (<?=$l->host?>) is wrong. It should be: <?=$currentHost?> <p/> 
+                        License host (<?php echo $l->host?>) is wrong. It should be: <?php echo $currentHost?> <p/> 
                         Please <a href="./license.php"><img style="vertical-align: middle;" src="assets/images/upgrade-button.png" /></a> to be enable these feature.
                     </div>            
-                <?} else {?>
+                <?php } else {?>
                     <!--
                     <h3>As SVG</h3>
-                    <input type="text" value="<?=$svgLink?>"  style="width: 400px;"/> <br/>
-                    <a href="<?=$svgLink?>" target="_blank"><?=$svgLink?></a>
+                    <input type="text" value="<?php echo $svgLink?>"  style="width: 400px;"/> <br/>
+                    <a href="<?php echo $svgLink?>" target="_blank"><?php echo $svgLink?></a>
                     <p/>
                     -->
 
                     <h3>As PNG</h3>
-                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?=$pngLink?>" style="width: 348px;" readonly="readonly"/><br/>
-                    <a href="<?=$pngLink?>" target="_blank">Download PNG</a>
+                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?php echo $pngLink?>" style="width: 348px;" readonly="readonly"/><br/>
+                    <a href="<?php echo $pngLink?>" target="_blank">Download PNG</a>
                     <p/>
 
                     <h3>As DMO</h3>
-                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?=$dmoLink?>" style="width: 289px;" readonly="readonly"/><br/>
-                    <a href="<?=$dmoLink?>" target="_blank">Download DMO</a>
+                    <input type="text" onclick="this.select()" onmouseup="return false" value="<?php echo $dmoLink?>" style="width: 289px;" readonly="readonly"/><br/>
+                    <a href="<?php echo $dmoLink?>" target="_blank">Download DMO</a>
                     <p/>
 
                     <!--
                     <h3>As JPG</h3>
-                    <input type="text" value="<?=$jpgLink?>" style="width: 400px;"/><br/>
-                    <a href="<?=$jpgLink?>" target="_blank"><?=$jpgLink?></a>
+                    <input type="text" value="<?php echo $jpgLink?>" style="width: 400px;"/><br/>
+                    <a href="<?php echo $jpgLink?>" target="_blank"><?php echo $jpgLink?></a>
                     <p/>
                     -->
-                <?}?>
+                <?php }?>
                 
                 
 
-                <a href="./editor.php?diagramId=<?=$diagram->id?>">back to edit diagram</a>
+                <a href="./editor.php?diagramId=<?php echo $diagram->id?>">back to edit diagram</a>
             </div>
         </div>
 

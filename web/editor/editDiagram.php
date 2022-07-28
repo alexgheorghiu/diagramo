@@ -55,19 +55,19 @@ $page = 'editDiagram';
         <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
         <link href="./assets/css/style.css" type="text/css" rel="stylesheet"/>
         
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
-        <script type="text/javascript" src="./lib/browserReady.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/log.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?php echo time()?>"></script>    
+        <script type="text/javascript" src="./lib/browserReady.js?<?php echo time()?>"></script>
+        <script type="text/javascript" src="./lib/log.js?<?php echo time()?>"></script>
     </head>
     <body>
         <div id="page">
-            <? require_once dirname(__FILE__) . '/header.php'; ?>
+            <?php require_once dirname(__FILE__) . '/header.php'; ?>
 
             
 
             <div id="content">
                 
-                <? require_once dirname(__FILE__) . '/common/messages.php'; ?>
+                <?php require_once dirname(__FILE__) . '/common/messages.php'; ?>
                 <br/>
                 <div class="form" style="width: 400px;">
                     <div class="formTitle" >
@@ -76,13 +76,13 @@ $page = 'editDiagram';
                     
                     <form  style="position: relative; height: 270px;" action="./common/controller.php" method="post">
                         <input type="hidden" name="action" value="editDiagramExe"/>
-                        <input type="hidden" name="diagramId" value="<?=$diagram->id ?>"/>
+                        <input type="hidden" name="diagramId" value="<?php echo $diagram->id ?>"/>
                         <div style="position: absolute; top: 10px; left: 20px; right: 20px;">
                             <table width="100%" cellpadding="0" cellspacing="0">
                                 <tr>
                                     <td><span class="formLabel">Title</span></td>
                                     <td width="100%">&nbsp;</td>
-                                    <td> <input class="formField" style="margin-right: 0;" type="text" name="title" size="40" value="<?=$diagram->title?>"/></td>
+                                    <td> <input class="formField" style="margin-right: 0;" type="text" name="title" size="40" value="<?php echo $diagram->title?>"/></td>
                                 </tr>
                             </table>
                         </div>
@@ -92,11 +92,11 @@ $page = 'editDiagram';
                         </div>
 
                         <div style="position: absolute; top: 70px; left: 20px; right: 20px; text-align: right;">
-                            <textarea name="description" style="left: 0; right: 0; width: 100%; height: 75px;"><?=$diagram->description ?></textarea>
+                            <textarea name="description" style="left: 0; right: 0; width: 100%; height: 75px;"><?php echo $diagram->description ?></textarea>
                         </div>
 
                         <div style="position: absolute; top: 160px; left: 20px;">
-                            <input type="checkbox" name="public" value="true" <?=$diagram->public ? 'checked' : '' ?>/><span class="formLabel">Public</span>
+                            <input type="checkbox" name="public" value="true" <?php echo $diagram->public ? 'checked' : '' ?>/><span class="formLabel">Public</span>
                         </div>
                         
                         <div style="position: absolute; top: 180px; left: 20px; color: gray; text-align: left;">
@@ -114,7 +114,7 @@ $page = 'editDiagram';
 
             <p/>
 
-            <div class="copyright">&copy; <?=date('Y') ?> Diagramo</div>
+            <div class="copyright">&copy; <?php echo date('Y') ?> Diagramo</div>
         </div>
     </body>
 </html>

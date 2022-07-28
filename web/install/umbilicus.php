@@ -16,6 +16,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-define(DIAGRAMO, 'http://diagramo.test');
-define(VERSION, '2.3beta4');
+define("DIAGRAMO", 'http://diagramo.test');
+define("VERSION", '2.3beta4');
 ?>

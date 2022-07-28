@@ -39,10 +39,10 @@ if(!isset($_SESSION['userId'])){
 <!DOCTYPE html>
 <html>
     <head>
-        <title><? echo $title; ?></title>
+        <title><?php echo $title; ?></title>
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
-        <meta name="description" content="<? echo $description; ?>" />
-        <meta name="keywords" content="<? echo $keywords; ?>" />
+        <meta name="description" content="<?php echo $description; ?>" />
+        <meta name="keywords" content="<?php echo $keywords; ?>" />
         <meta name="distribution" content="Global" />
         <meta name="rating" content="General" />
         <meta name="author" content="http://diagramo.com" />
@@ -55,13 +55,13 @@ if(!isset($_SESSION['userId'])){
     </head>
     <body>
         <div id="page">
-            <? include "outerheader.php"; ?>
+            <?php include "outerheader.php"; ?>
 
             <h1>Reset password</h1>
 
             <div class="content">
 
-                <? require_once './common/messages.php'; ?>
+                <?php require_once './common/messages.php'; ?>
                 <form action="./common/controller.php" method="POST">
                     <input type="hidden" name="action" value="resetPasswordExe"/>
                     New password:<br />
@@ -72,7 +72,7 @@ if(!isset($_SESSION['userId'])){
 
             </div>
 
-            <? include "footer.php"; ?>
+            <?php include "footer.php"; ?>
         
         </div>
     </body>

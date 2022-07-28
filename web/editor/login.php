@@ -69,7 +69,7 @@ if (isset($_SESSION['userId']) AND is_numeric($_SESSION['userId'])) {
 <!DOCTYPE html>
 <html>
 
-<?
+<?php
 $title = "Login | Diagramo";
 $description = $title;
 
@@ -79,10 +79,10 @@ for ($i = 1; $i < count($key); $i++)
     $keywords .= "," . trim($key[$i]);
 ?>
     <head>
-        <title><? echo $title; ?></title>
+        <title><?php echo $title; ?></title>
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
-        <meta name="description" content="<? echo $description; ?>" />
-        <meta name="keywords" content="<? echo $keywords; ?>" />
+        <meta name="description" content="<?php echo $description; ?>" />
+        <meta name="keywords" content="<?php echo $keywords; ?>" />
         <meta name="distribution" content="Global" />
         <meta name="rating" content="General" />
         <meta name="author" content="http://diagramo.com" />
@@ -93,26 +93,26 @@ for ($i = 1; $i < count($key); $i++)
         <link rel="stylesheet" type="text/css" href="./assets/css/style.css" />
         <link rel="stylesheet" type="text/css" href="./assets/css/style_1.css" />
 
-        <? include "qunit-tests-header.php"; ?>
+        <?php include "qunit-tests-header.php"; ?>
     </head>
 
     <body>
 
-<? include "outsideheader.php"; ?>
+<?php include "outsideheader.php"; ?>
 
         <h1>Login</h1>
 
         <div class="content">
-            <?require_once './common/messages.php';?>
+            <?php require_once './common/messages.php';?>
 
             <form action="./common/controller.php" method="POST">
                 <input type="hidden" name="action" value="loginExe"/>
                 <table>
                     <tr>
-                        <td>Email:<br /><input tabindex="1" type="text" name="email" value="<?=@$_REQUEST['email']?>" class="myinput" /></td>
+                        <td>Email:<br /><input tabindex="1" type="text" name="email" value="<?php echo @$_REQUEST['email']?>" class="myinput" /></td>
                     </tr>
                     <tr>
-                        <td><br />Password:<br /><input tabindex="2" type="password" name="password" size="15" class="myinput" value="<?=@$_REQUEST['password']?>" /></td>
+                        <td><br />Password:<br /><input tabindex="2" type="password" name="password" size="15" class="myinput" value="<?php echo @$_REQUEST['password']?>" /></td>
                     </tr>
                     <tr>
                         <td><input type="checkbox" checked name="rememberMe" value="true" /> Stay signed in</td>
@@ -128,7 +128,7 @@ for ($i = 1; $i < count($key); $i++)
 
         </div>
 
-        <? include "footer.php"; ?>
+        <?php include "footer.php"; ?>
 
     </body>
 </html>
