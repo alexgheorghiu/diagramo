@@ -202,28 +202,28 @@ if($_REQUEST['action'] == 'init'){
                     <td>lastUpdate</td>
                     <td>delete</td>
                 </tr>
-            <?
+            <?php
             $diagrams = diagramGetAll($dbhandle);
             foreach($diagrams as $diagram){?>
                 <tr>
-                    <td><?=$diagram->id?></td>
-                    <td><?=$diagram->title?></td>
-                    <td><?=$diagram->description?></td>
-                    <td><?=$diagram->public?></td>
-                    <td><?=$diagram->createdDate?></td>
-                    <td><?=$diagram->lastUpdate?></td>
-                    <td><a href="?action=delete&diagramId=<?=$diagram->id?>">delete</a></td>
+                    <td><?php echo $diagram->id?></td>
+                    <td><?php echo $diagram->title?></td>
+                    <td><?php echo $diagram->description?></td>
+                    <td><?php echo $diagram->public?></td>
+                    <td><?php echo $diagram->createdDate?></td>
+                    <td><?php echo $diagram->lastUpdate?></td>
+                    <td><a href="?action=delete&diagramId=<?php echo $diagram->id?>">delete</a></td>
                 </tr>
-            <?}?>
+            <?php }?>
             </table> 
             <a href="?action=init">Init</a> | 
             <a href="?action=populate">Populate</a>
         </body>
     </html>
-<?}?>
+<?php }?>
         
 
 
-<?
+<?php
 sqlite_close($dbhandle);
 ?>

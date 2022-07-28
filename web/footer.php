@@ -1,6 +1,6 @@
 <div class="footer">
     <div class="copyright">
-        &copy;2010-<?=date('Y')?> <a href="http://scriptoid.com">Diagramo</a>
+        &copy;2010-<?php echo date('Y')?> <a href="http://scriptoid.com">Diagramo</a>
     </div>
         
     <a href="./">Home</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -11,7 +11,7 @@
 
 
 
-<?if(false){?>
+<?php if(false){?>
     <script type="text/javascript">
 
         var _gaq = _gaq || [];
@@ -25,4 +25,4 @@
         })();
 
     </script>
-<?}?>
+<?php }?>

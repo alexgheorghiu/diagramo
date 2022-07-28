@@ -45,17 +45,17 @@ $page = "mysqttings";
         <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
         <link href="./assets/css/style.css" type="text/css" rel="stylesheet"/>
         
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
-        <script type="text/javascript" src="./lib/browserReady.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/log.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?php echo time()?>"></script>    
+        <script type="text/javascript" src="./lib/browserReady.js?<?php echo time()?>"></script>
+        <script type="text/javascript" src="./lib/log.js?<?php echo time()?>"></script>
     </head>
     <body>
         <div id="page">
-            <?require_once dirname(__FILE__) . '/header.php'; ?>
+            <?php require_once dirname(__FILE__) . '/header.php'; ?>
             
             
             <div id="content"  style="text-align: center;">
-                <?require_once dirname(__FILE__) . '/common/messages.php';?>
+                <?php require_once dirname(__FILE__) . '/common/messages.php';?>
                 <br/>
 
                 <div class="form" style="width: 400px;">
@@ -67,11 +67,11 @@ $page = "mysqttings";
                         <table align="center" width="380" style="margin-bottom: 10px;">
                             <tr>
                                 <td align="left"><span class="formLabel">Email</span></td>
-                                <td align="right"><span class="formLabel"><?=$loggedUser->email?></span></td>
+                                <td align="right"><span class="formLabel"><?php echo $loggedUser->email?></span></td>
                             </tr>
                             <tr>
                                 <td align="left"><span class="formLabel">Name</span></td>
-                                <td align="right"><span class="formLabel"><?=$loggedUser->name?></span></td>
+                                <td align="right"><span class="formLabel"><?php echo $loggedUser->name?></span></td>
                             </tr> 
                             <tr>
                                 <td align="left"><span class="formLabel">Current password</span></td>
@@ -98,7 +98,7 @@ $page = "mysqttings";
 
             <p/>
 
-            <div class="copyright">&copy; <?=date('Y')?> Diagramo</div>
+            <div class="copyright">&copy; <?php echo date('Y')?> Diagramo</div>
         </div>
     </body>
 </html>

@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 Copyright [2014] [Scriptoid s.r.l]

@@ -28,7 +28,7 @@ $appUrl = substr($fullURL, 0, strpos($fullURL, '/install'));
 
 
 $extensions = get_loaded_extensions();
-
+//print_r($extensions);
 /**Returns a vector or requirements.
  * Each requirement is made out of (name, type, requested value, present value)
  * Type can be: 
@@ -64,14 +64,14 @@ function loadRequirements(){
             'current' => (ini_get('magic_quotes_gpc') == 1) ? 'on' : 'off',
             'help' => 'directive_magic_quotes'
         ),
-        array(
+/*        array(
             'name' => 'PHP Directive: Short Open Tags',
             'wanted' => 'mandatory',
             'type' => 'string',
             'requested' => 'on',
             'current' => (ini_get('short_open_tag') == 1) ? 'on' : 'off',
             'help' => 'directive_short_open_tags'
-        ),
+        ),*/
         array(
             'name' => 'PHP Directive: Allow Url Fopen',
             'wanted' => 'mandatory',
@@ -223,11 +223,11 @@ $requirements = loadRequirements();
                     $style = 'sandwitch' . (($i%2) == 0 ? '2' : '');
                 ?>
                     <tr>
-                        <td class="<?=$style?>">
+                        <td class="<?php echo $style?>">
                             <?php echo $requirement['name']?>
                             <?php if ($requirement['name'] == 'Internet connection' && $internetConnection == false) echo '<text class="error">(check help)</text>' ?>
                         </td>
-                        <td class="<?=$style?>">
+                        <td class="<?php echo $style?>">
                             <?php 
                             if($valid){
                                 echo '<img src="./assets/green.png" border="0"/>';
@@ -243,9 +243,9 @@ $requirements = loadRequirements();
                             
                             ?>
                         </td>   
-                        <td class="<?=$style?>"><?php echo $requirement['requested']?></td>
-                        <td class="<?=$style?>"><?php echo $requirement['current']?></td>
-                        <td class="<?=$style?>">
+                        <td class="<?php echo $style?>"><?php echo $requirement['requested']?></td>
+                        <td class="<?php echo $style?>"><?php echo $requirement['current']?></td>
+                        <td class="<?php echo $style?>">
                             <a href="javascript:void(0);" onclick="showMessage('<?php echo $requirement['help']?>')">
                                 <img src="./assets/help.png" border="0"  alt="help" />
                             </a>
@@ -268,7 +268,7 @@ $requirements = loadRequirements();
             </div>
             
             
-            <img style="display: none;" src="<?=DIAGRAMO?>/install.php?step=step2&version=<?=VERSION?>&session=<?=session_id()?>&url=<?=urlencode($appUrl)?>"/>
+            <img style="display: none;" src="<?php echo DIAGRAMO?>/install.php?step=step2&version=<?php echo VERSION?>&session=<?php echo session_id()?>&url=<?php echo urlencode($appUrl)?>"/>
             <?php include 'buildno.php'?>
         </div>
     </body>

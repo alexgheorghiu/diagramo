@@ -58,9 +58,9 @@ function firstName($email){
         <meta http-equiv="X-UA-Compatible" content="IE=9" />
         <link rel="stylesheet" media="screen" type="text/css" href="assets/css/style.css" />
         
-        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?=time()?>"></script>    
-        <script type="text/javascript" src="./lib/browserReady.js?<?=time()?>"></script>
-        <script type="text/javascript" src="./lib/log.js?<?=time()?>"></script>
+        <script type="text/javascript" src="./assets/javascript/dropdownmenu.js?<?php echo time()?>"></script>    
+        <script type="text/javascript" src="./lib/browserReady.js?<?php echo time()?>"></script>
+        <script type="text/javascript" src="./lib/log.js?<?php echo time()?>"></script>
         
         <script type="text/javascript">
             function confirmation(message){
@@ -74,10 +74,10 @@ function firstName($email){
         </script>
     </head>
     <body>
-        <? require_once dirname(__FILE__) . '/header.php'; ?>
+        <?php require_once dirname(__FILE__) . '/header.php'; ?>
         
         <div id="content" style="text-align: center; margin-left: auto; margin-right: auto;">
-            <? require_once dirname(__FILE__) . '/common/messages.php'; ?>
+            <?php require_once dirname(__FILE__) . '/common/messages.php'; ?>
             <br/>
             
             
@@ -110,7 +110,7 @@ function firstName($email){
                     </tr>     
                     
                     <!--Data-->
-                    <? for ($i=0; $i < count($allDiagrams); $i++) {
+                    <?php for ($i=0; $i < count($allDiagrams); $i++) {
                          $myDiagram = $allDiagrams[$i];
                         //$svgLink = $url . '/diagram/' . $allDiagrams->hash . '.svg';
                         $svgLink = sprintf('./png.php?type=svg&diagramId=%d', $myDiagram->id);
@@ -118,39 +118,39 @@ function firstName($email){
                     ?>
                         <tr>
                             <td align="center">
-                                <a href="./editor.php?diagramId=<?=$myDiagram->id ?>">               
-                                    <img style="background-color: white; border: 1px solid #CCCCCC;" width="100" height="100" src="<?=$pngLink?>"/>
+                                <a href="./editor.php?diagramId=<?php echo $myDiagram->id ?>">               
+                                    <img style="background-color: white; border: 1px solid #CCCCCC;" width="100" height="100" src="<?php echo $pngLink?>"/>
                                 </a>
                             </td>
-                            <td style="border-bottom: 1px solid white;" align="left" ><a href="./editor.php?diagramId=<?=$myDiagram->id ?>"><span class="formLabel"><?=$myDiagram->title ?></span></a></td>
+                            <td style="border-bottom: 1px solid white;" align="left" ><a href="./editor.php?diagramId=<?php echo $myDiagram->id ?>"><span class="formLabel"><?php echo $myDiagram->title ?></span></a></td>
                             <td align="center">
-                                <a href="./viewDiagram.php?diagramId=<?=$myDiagram->id ?>">
+                                <a href="./viewDiagram.php?diagramId=<?php echo $myDiagram->id ?>">
                                     as PNG
                                 </a>
                             </td>
                             <td align="center">
-                                <a href="./dmo.php?diagramId=<?=$myDiagram->id ?>">
+                                <a href="./dmo.php?diagramId=<?php echo $myDiagram->id ?>">
                                     export
                                 </a>
                             </td>
                             
-                            <td style="border-bottom: 1px solid white;" align="left" ><span class="formLabel"><?=strtolower(date('F', strtotime($myDiagram->lastUpdate))) . date(',d Y', strtotime($myDiagram->lastUpdate)) ?></span></td>                            
-                            <td style="border-bottom: 1px solid white;" align="center" ><span class="formLabel"><?=$myDiagram->public ? 'public' : 'private' ?></span></td>
-                            <td style="border-bottom: 1px solid white;" align="center"><a href="./editDiagram.php?diagramId=<?=$myDiagram->id ?>"><img style="vertical-align:middle; margin-right: 3px;" src="./assets/images/editdiagram.png" border="0" width="22" height="22"/></a></td>
-                            <td style="border-bottom: 1px solid white;" align="center" ><a onclick="javascript: return confirmation('Do you really want to delete diagram?');" href="./common/controller.php?diagramId=<?=$myDiagram->id ?>&action=deleteDiagramExe"><img style="vertical-align:middle; margin-right: 3px;" src="./assets/images/deletediagram.png" border="0" width="22" height="22"/></a></td>
+                            <td style="border-bottom: 1px solid white;" align="left" ><span class="formLabel"><?php echo strtolower(date('F', strtotime($myDiagram->lastUpdate))) . date(',d Y', strtotime($myDiagram->lastUpdate)) ?></span></td>                            
+                            <td style="border-bottom: 1px solid white;" align="center" ><span class="formLabel"><?php echo $myDiagram->public ? 'public' : 'private' ?></span></td>
+                            <td style="border-bottom: 1px solid white;" align="center"><a href="./editDiagram.php?diagramId=<?php echo $myDiagram->id ?>"><img style="vertical-align:middle; margin-right: 3px;" src="./assets/images/editdiagram.png" border="0" width="22" height="22"/></a></td>
+                            <td style="border-bottom: 1px solid white;" align="center" ><a onclick="javascript: return confirmation('Do you really want to delete diagram?');" href="./common/controller.php?diagramId=<?php echo $myDiagram->id ?>&action=deleteDiagramExe"><img style="vertical-align:middle; margin-right: 3px;" src="./assets/images/deletediagram.png" border="0" width="22" height="22"/></a></td>
                         </tr>
                     
                         <tr>
                             <td colspan="3">&nbsp;</td>                            
                         </tr>
                     
-                        <?if($i < count($allDiagrams) - 1){ ?>
+                        <?php if($i < count($allDiagrams) - 1){ ?>
                         <tr>
                             <td colspan="6" style="border-top: 1px solid gray;">&nbsp;</td>
                         </tr>
-                        <?}?>
+                        <?php }?>
                     
-                    <? } ?>
+                    <?php } ?>
                 </table>
             </div>
 
@@ -162,7 +162,7 @@ function firstName($email){
             
         </div>
         <p></p>
-        <div class="copyright">&copy; <?=date('Y')?> Diagramo</div>
+        <div class="copyright">&copy; <?php echo date('Y')?> Diagramo</div>
                 
     </body>
 </html>

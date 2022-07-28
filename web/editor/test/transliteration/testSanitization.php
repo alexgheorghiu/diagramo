@@ -74,14 +74,14 @@ function seo($str){
         </form>
         
         <div style="background-color: beige;">
-            <?
+            <?php
             if( isset($_REQUEST['text']) ){
                 print seo($_REQUEST['text']);
             }
             ?>                        
         </div>
         <div>
-            <?
+            <?php
             foreach($strings as $string){
                 print $string . "<p/>";
             }

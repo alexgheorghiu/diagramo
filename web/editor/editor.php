@@ -1,4 +1,4 @@
-<?
+<?php
 
 /*
 Copyright [2014] [Diagramo]
@@ -80,7 +80,7 @@ $page = 'editor';
              * Option 2:
              * Use http://code.google.com/p/js-uri/
              **/
-            var appURL = '<?=$WEBADDRESS?>';
+            var appURL = '<?php echo $WEBADDRESS?>';
             var figureSetsURL = appURL + '/editor/lib/sets';
             var insertImageURL = appURL + '/editor/data/import/';
 
@@ -171,9 +171,9 @@ $page = 'editor';
         <![endif]-->
        
     </head>
-    <body onload="init('<?= isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId']:''?>');" id="body">
+    <body onload="init('<?php echo  isset($_REQUEST['diagramId']) ? $_REQUEST['diagramId']:''?>');" id="body">
         
-        <? require_once dirname(__FILE__) . '/header.php'; ?>
+        <?php require_once dirname(__FILE__) . '/header.php'; ?>
 
         <div id="actions">
             
@@ -185,10 +185,10 @@ $page = 'editor';
             
             <a style="text-decoration: none;" href="./myDiagrams.php" title="Open diagram"><img src="assets/images/icon_open.jpg" border="0" width="16" height="16"/></a>
 
-            <?if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
+            <?php if(isset($_REQUEST['diagramId']) &&  is_numeric($_REQUEST['diagramId']) ){//option available ony when the diagram was saved?>
                 <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
                 <a style="text-decoration: none;" href="#" onclick="return print_diagram();" title="Print diagram"><img src="assets/images/icon_print.png" border="0" width="16" height="16"/></a>
-            <?}?>
+            <?php }?>
 
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
@@ -243,7 +243,7 @@ $page = 'editor';
             <a href="javascript:createFigure(figure_Text, 'assets/images/text.gif');"  title="Add text"><img  src="assets/images/text.gif" border="0" height ="16"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
             
-            <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="/editor/assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
+            <a href="javascript:showInsertImageDialog();"  title="Add image"><img src="assets/images/image.gif" border="0" height ="16" alt="Image"/></a>
             <img class="separator" src="assets/images/toolbar_separator.gif" border="0" width="1" height="16"/>
 
             <a href="javascript:action('undo');" title="Undo (Ctrl-Z)"><img src="assets/images/arrow_undo.png" border="0"/></a>
@@ -476,6 +476,6 @@ $page = 'editor';
             }
         </script>
         <br/>
-         <? //require_once dirname(__FILE__) . '/common/analytics.php';?>
+         <?php //require_once dirname(__FILE__) . '/common/analytics.php';?>
     </body>
 </html>
